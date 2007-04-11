@@ -128,7 +128,9 @@ class PinholePhoto extends SwatDBDataObject
 		if ($transformer->image === null)
 			throw new SwatException('No image loaded.');
 
-		if ($dimension->crop_to_max)
+		if ($dimension->max_height !== null &&
+			$dimension->max_width !== null &&
+			$dimension->crop_to_max)
 			$this->cropToMax($transformer, $dimension);
 		else
 			$this->fitToMax($transformer, $dimension);
@@ -159,43 +161,31 @@ class PinholePhoto extends SwatDBDataObject
 	private function cropToMax(Image_Transform $transformer,
 		PinholeDimension $dimension)
 	{
-		if ($dimension->max_height !== null &&
-			$dimension->max_width !== null) {
-			$height = $dimension->max_height;
-			$width = $dimension->max_width;
-		} elseif ($dimension->max_width !== null) {
-			$height = $dimension->max_width;
-			$width = $dimension->max_width;
-		} elseif ($dimension->max_height !== null) {
-			$height = $dimension->max_height;
-			$width = $dimension->max_height;
-		} else {
-			// nothing to do
-			return;
-		}
+		$max_y = $dimension->max_height;
+		$max_x = $dimension->max_width;
 
-		if ($transformer->img_x / $width > $transformer->img_y / $height) {
-			$new_y = $height;
+		if ($transformer->img_x / $max_x > $transformer->img_y / $max_y) {
+			$new_y = $max_y;
 			$new_x = ceil(($new_y / $transformer->img_y) * $transformer->img_x);
 		} else {
-			$new_x = $width;
+			$new_x = $max_x;
 			$new_y = ceil(($new_x / $transformer->img_x) * $transformer->img_y);
 		}
 
 		$transformer->resize($new_x, $new_y);
 
 		// crop to fit
-		if ($transformer->new_x != $width || $transformer->new_y != $height) {
+		if ($transformer->new_x != $max_x || $transformer->new_y != $max_y) {
 			$offset_x = 0;
 			$offset_y = 0;
 
-			if ($transformer->new_x > $width)
-				$offset_x = ceil(($transformer->new_x - $width) / 2);
+			if ($transformer->new_x > $max_x)
+				$offset_x = ceil(($transformer->new_x - $max_x) / 2);
 
-			if ($transformer->new_y > $height)
-				$offset_y = ceil(($transformer->new_y - $height) / 2);
+			if ($transformer->new_y > $max_y)
+				$offset_y = ceil(($transformer->new_y - $max_y) / 2);
 
-			$transformer->crop($width, $height, $offset_x, $offset_y);
+			$transformer->crop($max_x, $max_y, $offset_x, $offset_y);
 		}
 	}
 

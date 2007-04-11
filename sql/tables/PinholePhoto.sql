@@ -2,6 +2,17 @@ create table PinholePhoto (
 	id serial,
 	title varchar(255),
 	description text,
-	createdate timestamp not null,
+
+	upload_date timestamp,
+	original_filename varchar(255),
+	exif text,
+	photographer integer references PinholePhotographer(id),
+
+	photo_date timestamp,
+	photo_date_parts integer not null default 0,
+
+	publish_date timestamp,
+	published boolean not null default false,
+	
 	primary key (id)
 );

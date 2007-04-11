@@ -32,7 +32,7 @@ class PinholePhotographer extends SwatDBDataObject
 	 *
 	 * @var string
 	 */
-	public $bodytext;
+	public $description;
 
 	/**
 	 * not null default true,
@@ -47,13 +47,6 @@ class PinholePhotographer extends SwatDBDataObject
 	 * @var boolean
 	 */
 	public $archived;
-
-	/**
-	 * 
-	 *
-	 * @var Date
-	 */
-	public $createdate;
 
 	// }}}
 }

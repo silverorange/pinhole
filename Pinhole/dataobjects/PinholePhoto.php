@@ -3,10 +3,11 @@
 require_once 'SwatDB/SwatDBDataObject.php';
 
 /**
- *
+ * A dataobject class for photos
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhoto extends SwatDBDataObject
 {

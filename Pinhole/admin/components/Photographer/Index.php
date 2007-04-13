@@ -16,7 +16,7 @@ class PinholePhotographerIndex extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/PinholePhotographer/index.xml';
+		'Pinhole/admin/components/Photographer/index.xml';
 
 	// }}}
 
@@ -45,7 +45,7 @@ class PinholePhotographerIndex extends AdminIndex
 	{
 		switch ($actions->selected->id) {
 		case 'delete':
-			$this->app->replacePage('PinholePhotographer/Delete');
+			$this->app->replacePage('Photographer/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
 		}

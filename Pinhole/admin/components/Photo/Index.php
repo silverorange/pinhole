@@ -5,6 +5,7 @@ require_once 'Admin/AdminTableStore.php';
 require_once 'Admin/AdminSearchClause.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'NateGoSearch/NateGoSearchQuery.php';
+require_once 'Pinhole/dataobjects/PinholePhoto.php';
 
 /**
  * Index page for photographs
@@ -64,7 +65,9 @@ class PinholePhotoIndex extends AdminSearch
 	protected function getWhereClause()
 	{
 		if ($this->where_clause === null) {
-			$where = '1 = 1';
+			$where = sprintf('PinholePhoto.status != %s',
+				$this->app->db->quote(PinholePhoto::STATUS_PENDING,
+					'integer'));
 
 			// keywords are included in the where clause if fulltext searching
 			// is turned off

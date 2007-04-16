@@ -12,7 +12,7 @@ create table PinholePhoto (
 	photo_date_parts integer not null default 0,
 
 	publish_date timestamp,
-	published boolean not null default false,
+	status integer not null default 0,
 	
 	primary key (id)
 );

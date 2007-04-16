@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Swat/SwatDate.php';
 require_once 'SwatDB/SwatDBDataObject.php';
 
 /**
@@ -11,6 +12,13 @@ require_once 'SwatDB/SwatDBDataObject.php';
  */
 class PinholePhoto extends SwatDBDataObject
 {
+	// {{{ constants
+
+	const STATUS_PENDING = 0;
+	const STATUS_PUBLISHED = 1;
+	const STATUS_UNPUBLISHED = 2;
+
+	// }}}
 	// {{{ public properties
 
 	/**
@@ -84,11 +92,16 @@ class PinholePhoto extends SwatDBDataObject
 	public $publish_date;
 
 	/**
-	 * not null default false,
+	 * Visibility status
 	 *
-	 * @var boolean
+	 * Set using class contstants:
+	 * STATUS_PENDING - uploaded but not yet added to the site
+	 * STATUS_PUBLISHED - photo info added and shown on site
+	 * STATUS_UNPUBLISHED - not shown on the site
+	 *
+	 * @var integer
 	 */
-	public $published;
+	public $status;
 
 	// }}}
 	// {{{ protected function getCompressionQuality()
@@ -140,6 +153,24 @@ class PinholePhoto extends SwatDBDataObject
 
 		if ($dimension->strip)
 			$transformer->strip();
+	}
+
+	// }}}
+	// {{{ public function publish()
+
+	/**
+	 * Publish photo to the site
+	 *
+	 * @param boolean $set_publish_date 
+	 */
+	public function publish($set_publish_date = true)
+	{
+		// TODO: make sure this works
+
+		if ($set_publish_date)
+			$this->publish_date = new SwatDate();
+
+		$this->status = self::STATUS_PUBLISHED;
 	}
 
 	// }}}

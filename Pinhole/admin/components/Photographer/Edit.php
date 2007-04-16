@@ -46,7 +46,8 @@ class PinholePhotographerEdit extends AdminDBEdit
 		} else {
 			if (!$this->photographer->load($this->id))
 				throw new AdminNotFoundException(
-					Pinhole::_('Photographer with id “%s” not found.'));
+					sprintf(Pinhole::_('Photographer with id “%s” not found.'),
+						$this->id));
 		}
 	}
 

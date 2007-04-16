@@ -174,6 +174,22 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
+	// {{{ public function getTitle()
+
+	/**
+	 * Get a readable title for a photo
+	 *
+	 * @return string a readable title for a photo 
+	 */
+	public function getTitle()
+	{
+		if ($this->title === null)
+			return $this->original_filename;
+		else
+			return $this->title;
+	}
+
+	// }}}
 	// {{{ private function fitToMax()
 
 	private function fitToMax(Image_Transform $transformer,

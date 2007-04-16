@@ -104,6 +104,15 @@ class PinholePhoto extends SwatDBDataObject
 	public $status;
 
 	// }}}
+	// {{{ protected function init()
+
+	protected function init()
+	{
+		$this->table = 'PinholePhoto';
+		$this->id_field = 'integer:id';
+	}
+
+	// }}}
 	// {{{ protected function getCompressionQuality()
 
 	protected function getCompressionQuality()

@@ -1,11 +1,14 @@
 <?php
 
+require_once 'Pinhole/Pinhole.php';
+
 require_once 'Swat/SwatForm.php';
 require_once 'Swat/SwatFileEntry.php';
 require_once 'Swat/SwatProgressBar.php';
 require_once 'Swat/SwatButton.php';
 require_once 'Swat/SwatYUI.php';
 require_once 'Swat/exceptions/SwatException.php';
+
 require_once 'XML/RPCAjax.php';
 
 /**
@@ -55,8 +58,11 @@ class Uploader extends SwatFileEntry
 		$ajax = new XML_RPCAjax();
 		$this->html_head_entry_set->addEntrySet($ajax->getHtmlHeadEntrySet());
 
-		$this->addJavaScript('javascript/uploader.js');
-		$this->addStyleSheet('styles/uploader.css');
+		$this->addJavaScript('packages/pinhole/javascript/uploader.js',
+			Pinhole::PACKAGE_ID);
+
+		$this->addStyleSheet('packages/pinhole/styles/uploader.css',
+			Pinhole::PACKAGE_ID);
 	}
 
 	// }}}

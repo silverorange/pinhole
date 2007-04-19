@@ -1,0 +1,7 @@
+div.uploader-progress-bar {
+	display: none;
+}
+
+input.uploader-submit-button {
+	font-weight: bold;
+}

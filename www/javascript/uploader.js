@@ -1,6 +1,5 @@
 /**
  * @copyright 2007 silverorange
- * @todo      add sequence numbers to ensure we never get inaccurate status.
  */
 
 UploadManager = {};
@@ -8,8 +7,10 @@ UploadManager = {};
 UploadManager.status_client = null;
 UploadManager.clients = [];
 UploadManager.client_upload_ids = [];
-UploadManager.interval_period = 1000; // in milliseconds
+UploadManager.interval_period = 1500; // in milliseconds
 UploadManager.interval = null;
+UploadManager.sequence = 0;
+UploadManager.received_sequence = 0;
 
 UploadManager.setStatusClient = function(uri)
 {
@@ -43,6 +44,18 @@ UploadManager.removeClient = function(client)
 		UploadManager.clearInterval();
 }
 
+UploadManager.getClient = function(id)
+{
+	var client = null;
+	for (var i = 0; i < UploadManager.clients.length; i++) {
+		if (UploadManager.clients[i].id === id) {
+			client = UploadManager.clients[i];
+			break;
+		}
+	}
+	return client;
+}
+
 UploadManager.setInterval = function()
 {
 	if (UploadManager.interval === null) {
@@ -60,25 +73,40 @@ UploadManager.clearInterval = function()
 UploadManager.updateStatus = function()
 {
 	if (UploadManager.clients.length > 0) {
+
+		var client_map = {};
+		var client;
+		for (var i = 0; i < UploadManager.clients.length; i++) {
+			client = UploadManager.clients[i];
+			client_map[client.id] = client.getUploadIdentifier();
+		}
+
+		UploadManager.sequence++;
+
 		UploadManager.status_client.callProcedure('getStatus',
 			UploadManager.statusCallback,
-			[UploadManager.client_upload_ids], ['array']);
+			[UploadManager.sequence, client_map], ['int', 'struct']);
 	}
 }
 
-UploadManager.statusCallback = function(statuses)
+UploadManager.statusCallback = function(response)
 {
-	var client;
-	for (var i = 0; i < statuses.length; i++) {
-		client = UploadManager.clients[i];
-		if (statuses[i] === false) {
-			client.complete();
-		} else if (statuses[i] === true) {
-			client.progress();
-		} else {
-			var percent = statuses[i].bytes_uploaded / statuses[i].bytes_total;
-			client.setStatus(percent);
+	if (response.sequence > UploadManager.received_sequence) {
+		var client;
+		for (client_id in response.statuses) {
+			client = UploadManager.getClient(client_id);
+			if (client) {
+				if (response.statuses[client_id] === 'none') {
+					client.progress();
+				} else {
+					var percent = response.statuses[client_id].bytes_uploaded /
+						response.statuses[client_id].bytes_total;
+
+					client.setStatus(percent);
+				}
+			}
 		}
+		UploadManager.received_sequence = response.sequence;
 	}
 }
 

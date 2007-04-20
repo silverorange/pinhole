@@ -159,7 +159,7 @@ class PinholeTagEdit extends AdminDBEdit
 	protected function buildNavBar()
 	{
 		if ($this->id !== null) {
-			$navbar_rs = SwatDB::executePinholedProc($this->app->db,
+			$navbar_rs = SwatDB::executeStoredProc($this->app->db,
 				'getPinholeTagNavBar', array($this->id));
 
 			foreach ($navbar_rs as $elem)
@@ -167,7 +167,7 @@ class PinholeTagEdit extends AdminDBEdit
 					'Tag/Details?id='.$elem->id));
 
 		} elseif ($this->parent !== null) {
-			$navbar_rs = SwatDB::executePinholedProc($this->app->db,
+			$navbar_rs = SwatDB::executeStoredProc($this->app->db,
 				'getPinholeTagNavBar', array($this->parent));
 
 			foreach ($navbar_rs as $elem)

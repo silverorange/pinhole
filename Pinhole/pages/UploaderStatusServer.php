@@ -29,36 +29,38 @@ class UploaderStatusServer
 	 * If the uploadprogress extension is loaded and a file upload is in
 	 * progress for the given ids:
 	 *
-	 *   <code>{ sequence_number, percent_complete }</code>
+	 *   <code>{ sequence: sequence_number, status: status_struct }</code>
 	 *
 	 * Otherwise:
 	 *
-	 *   <code>{ sequence_number, 'none' }</code>
+	 *   <code>{ sequence: sequence_number, status: 'none' }</code>
 	 *
-	 * @param array an array of strings containing upload identifiers.
+	 * @param array $ids an array of strings containing upload identifiers.
+	 * @param ineger $sequence the sequence id of this request to prevent race
+	 *                          conditions.
 	 *
 	 * @return array an array of structs containing upload status information.
 	 */
-	public function getStatus(array $ids)
+	public function getStatus(array $ids, $sequence)
 	{
 		$return = array();
 
 		foreach ($ids as $id) {
-			if (function_exists('uploadprogress_get_info')) {
-				$status = uploadprogress_get_info($id);
+			$response = array();
+			$response['sequence'] = $sequence;
 
-				if ($status === null) {
-					$obj = false;
-				} else {
-					$obj = array();
-					foreach ($status as $key => $value)
-						$obj[$key] = $value;
-				}
+			if (function_exists('uploadprogress_get_info') &&
+				$uploadprogress_status = uploadprogress_get_info($id)) {
+				$status = array();
+				foreach ($uploadprogress_status as $key => $value)
+					$status[$key] = $value;
+
+				$response['status'] = $status;
 			} else {
-				$obj = true;
+				$response['status'] = 'none';
 			}
 
-			$return[] = $obj;
+			$return[] = $response;
 		}
 
 		return $return;

@@ -55,14 +55,12 @@ class UploaderStatusServer
 	public function getStatus($sequence, array $clients)
 	{
 		$response = array();
-		$response['sequence'] = (int)$sequence;
+		$response['sequence'] = $sequence;
 
 		if (count($clients) > 0) {
 			$response['statuses'] = array();
 
 			foreach ($clients as $client_id => $upload_id) {
-				$response = array();
-
 				if (function_exists('uploadprogress_get_info') &&
 					$status = uploadprogress_get_info($upload_id)) {
 					$status_struct = array();

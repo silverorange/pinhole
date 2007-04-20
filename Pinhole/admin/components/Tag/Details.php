@@ -78,20 +78,9 @@ class PinholeTagDetails extends AdminIndex
 
 		$toolbar = $this->ui->getWidget('details_toolbar');
 		$toolbar->setToolLinkValues(array($this->id));
-		$this->buildViewOnSiteToolLinks($tag);
+		$this->ui->getWidget('view_in_gallery')->link =
+			'photos/'.$tag->path;
 		$this->buildNavBar($tag);
-	}
-
-	// }}}
-	// {{{ private function buildViewOnSiteToolLinks()
-
-	private function buildViewOnSiteToolLinks($tag)
-	{
-		//TODO
-		/*
-		$gallery_link = $this->ui->getWidget('view_in_gallery');
-		$path = $some_category->path;
-		*/
 	}
 
 	// }}}
@@ -107,8 +96,10 @@ class PinholeTagDetails extends AdminIndex
 			'getPinholeTagNavbar', array($this->id));
 
 		foreach ($tag_navbar_rs as $entry)
-			$this->navbar->addEntry(new SwatNavBarEntry($entry->title,
-				'Tag/Details?id='.$entry->id));
+			if ($entry->id !== $tag->id)
+				$this->navbar->addEntry(new SwatNavBarEntry(
+					$entry->title,
+					'Tag/Details?id='.$entry->id));
 
 		$this->navbar->addEntry(new SwatNavBarEntry($tag->title));
 	}

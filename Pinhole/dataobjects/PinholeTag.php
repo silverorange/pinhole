@@ -58,6 +58,35 @@ class PinholeTag extends SwatDBDataObject
 	}
 
 	// }}}
+	// {{{ protected function loadPath()
+
+	/**
+	 * Loads the URL fragment of this tag
+	 *
+	 * If the path was part of the initial query to load this path, that
+	 * value is returned. Otherwise, a separate query gets the path of this
+	 * path. If you are calling this method frequently during a single
+	 * request, it is more efficient to include the path in the initial
+	 * path query.
+	 */
+	protected function loadPath()
+	{
+		$path = '';
+
+		if ($this->hasInternalValue('path') &&
+			$this->getInternameValue('path') !== null) {
+			$path = $this->getInternalValue('path');
+		} else {
+			$sql = sprintf('select getPinholeTagPath(%s)',
+				$this->db->quote($this->id, 'integer'));
+
+			$path = SwatDB::queryOne($this->db, $sql);
+		}
+
+		return $path;
+	}
+
+	// }}}
 }
 
 ?>

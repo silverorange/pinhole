@@ -13,6 +13,10 @@ INSERT INTO AdminComponent (id, section, displayorder, shortname, title, descrip
 	INSERT INTO AdminSubComponent (id, component, displayorder, shortname, title, show)
 		VALUES (101, 101, 10, 'Pending', 'Pending Photos', true);
 
+INSERT INTO AdminComponent (id, section, displayorder, shortname, title, description, enabled, show)
+	VALUES (102, 101, 20, 'Tag', 'Tags', NULL, true, true);
+
+
 SELECT setval('adminsection_id_seq', max(id)) FROM AdminSection;
 SELECT setval('admincomponent_id_seq', max(id)) FROM AdminComponent;
 SELECT setval('adminsubcomponent_id_seq', max(id)) FROM AdminSubComponent;

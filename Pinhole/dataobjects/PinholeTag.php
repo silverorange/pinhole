@@ -49,6 +49,15 @@ class PinholeTag extends SwatDBDataObject
 	public $createdate;
 
 	// }}}
+	// {{{ protected function init()
+
+	protected function init()
+	{
+		$this->table = 'PinholeTag';
+		$this->id_field = 'integer:id';
+	}
+
+	// }}}
 }
 
 ?>

@@ -1,0 +1,70 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<!-- {{{ Tag Details -->
+	<widget class="SwatFrame" id="details_frame">
+		<widget class="SwatToolbar" id="details_toolbar">
+			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">Edit Tag</property>
+				<property name="link">Tag/Edit?id=%s</property>
+				<property name="stock_id">edit</property>
+			</widget>
+			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">Delete Tag</property>
+				<property name="link">Tag/Delete?id=%s</property>
+				<property name="stock_id">delete</property>
+			</widget>
+			<widget class="SwatToolLink" id="view_in_gallery">
+				<property name="title" translatable="yes">View in Gallery</property>
+				<property name="link">../%s</property>
+			</widget>
+		</widget>
+		<widget class="SwatDetailsView" id="details_view">
+			<object class="SwatDetailsViewField">
+				<property name="title" translatable="yes">Title</property>
+				<object class="SwatTextCellRenderer">
+					<property name="text" type="data">title</property>
+				</object>
+			</object>
+			<object class="SwatDetailsViewField">
+				<property name="title" translatable="yes">Short Name</property>
+				<object class="SwatTextCellRenderer">
+					<property name="text" type="data">shortname</property>
+				</object>
+			</object>
+		</widget>
+		<!-- }}} -->
+		<!-- {{{ Child Tags -->
+		<widget class="SwatFrame">
+			<property name="title" translatable="yes">Sub-tags</property>
+			<widget class="SwatToolBar" id="children_toolbar">
+				<widget class="SwatToolLink">
+					<property name="title" translatable="yes">Add a Sub-Tag</property>
+					<property name="stock_id">create</property>
+					<property name="link">Tag/Edit?parent=%s</property>
+				</widget>
+			</widget>
+			<widget class="SwatForm" id="children_form">
+				<widget class="SwatTableView" id="children_view">
+					<object class="SwatTableViewColumn">
+						<property name="title" translatable="yes">Title</property>
+						<object class="AdminTitleLinkCellRenderer">
+							<property name="text" type="data">title</property>
+							<property name="link">Tag/Details?id=%s</property>
+							<property name="link_value" type="data">id</property>
+							<property name="stock_id">product</property>
+						</object>
+					</object>
+					<object class="AdminTableViewOrderableColumn" id="shortname">
+						<property name="title" translatable="yes">Shortname</property>
+						<object class="SwatTextCellRenderer">
+							<property name="text" type="data">shortname</property>
+						</object>
+					</object>
+				</widget>
+			</widget>
+		</widget>
+		<!-- }}} -->
+	</widget>
+</swatml>

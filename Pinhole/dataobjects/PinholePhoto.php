@@ -180,6 +180,8 @@ class PinholePhoto extends SwatDBDataObject
 			$this->publish_date = new SwatDate();
 
 		$this->status = self::STATUS_PUBLISHED;
+
+		$this->save();
 	}
 
 	// }}}

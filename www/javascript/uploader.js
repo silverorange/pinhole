@@ -6,7 +6,6 @@ UploadManager = {};
 
 UploadManager.status_client = null;
 UploadManager.clients = [];
-UploadManager.client_upload_ids = [];
 UploadManager.interval_period = 1500; // in milliseconds
 UploadManager.interval = null;
 UploadManager.sequence = 0;
@@ -23,7 +22,6 @@ UploadManager.addClient = function(client)
 {
 	var first_client = (UploadManager.clients.length == 0);
 
-	UploadManager.client_upload_ids.push(client.getUploadIdentifier());
 	UploadManager.clients.push(client);
 
 	if (first_client)
@@ -35,7 +33,6 @@ UploadManager.removeClient = function(client)
 	for (var i = 0; i < UploadManager.clients.length; i++) {
 		if (UploadManager.clients[i] === client) {
 			UploadManager.clients.splice(i, 1);
-			UploadManager.client_upload_ids.splice(i, 1);
 			break;
 		}
 	}

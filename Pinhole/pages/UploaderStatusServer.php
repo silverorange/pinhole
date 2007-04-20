@@ -30,11 +30,11 @@ class UploaderStatusServer
 	 * {
 	 *     sequence: sequence_number,
 	 *     statuses:
-	 *     [
-	 *         status_struct,
-	 *         status_struct,
-	 *         status_struct
-	 *     ]
+	 *     {
+	 *         client_id: status_struct,
+	 *         client_id: status_struct,
+	 *         client_id: status_struct
+	 *     }
 	 * }
 	 * </code>
 	 *
@@ -45,32 +45,33 @@ class UploaderStatusServer
 	 * If there are no identifiers in the <i>$ids</i> array, the
 	 * <i>statuses</i> field is returned as false.
 	 *
-	 * @param array $ids an array of strings containing upload identifiers.
 	 * @param ineger $sequence the sequence id of this request to prevent race
 	 *                          conditions.
+	 * @param array $clients a struct containing upload identifiers indexed by
+	 *                        client identifier.
 	 *
 	 * @return array an array of structs containing upload status information.
 	 */
-	public function getStatus(array $ids, $sequence)
+	public function getStatus($sequence, array $clients)
 	{
 		$response = array();
-		$response['sequence'] = $sequence;
+		$response['sequence'] = (int)$sequence;
 
-		if (count($ids) > 0) {
+		if (count($clients) > 0) {
 			$response['statuses'] = array();
 
-			foreach ($ids as $id) {
+			foreach ($clients as $client_id => $upload_id) {
 				$response = array();
 
 				if (function_exists('uploadprogress_get_info') &&
-					$uploadprogress_status = uploadprogress_get_info($id)) {
-					$status = array();
-					foreach ($uploadprogress_status as $key => $value)
-						$status[$key] = $value;
+					$status = uploadprogress_get_info($upload_id)) {
+					$status_struct = array();
+					foreach ($status as $key => $value)
+						$status_struct[$key] = $value;
 
-					$response['statuses'][] = $status;
+					$response['statuses'][$client_id] = $status_struct;
 				} else {
-					$response['statuses'][] = 'none';
+					$response['statuses'][$client_id] = 'none';
 				}
 			}
 

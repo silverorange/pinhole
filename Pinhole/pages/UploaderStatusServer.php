@@ -39,10 +39,11 @@ class UploaderStatusServer
 	 * </code>
 	 *
 	 * If the uploadprogress extension is loaded and a file upload is in
-	 * progress, the status_struct will contain detailed information about
-	 * upload status. Otherwise, the status_struct will be the string 'none'.
+	 * progress, the <i>status_struct</i> will contain detailed information
+	 * about a single upload status. Otherwise, the <i>status_struct</i> will
+	 * be the string 'none'.
 	 *
-	 * If there are no identifiers in the <i>$ids</i> array, the
+	 * If there are no clients in the <i>$clients</i> array, the
 	 * <i>statuses</i> field is returned as false.
 	 *
 	 * @param ineger $sequence the sequence id of this request to prevent race
@@ -50,7 +51,9 @@ class UploaderStatusServer
 	 * @param array $clients a struct containing upload identifiers indexed by
 	 *                        client identifier.
 	 *
-	 * @return array an array of structs containing upload status information.
+	 * @return array a two member struct containing both the sequence number of
+	 *                this request and the upload status information for all of
+	 *                the given clients.
 	 */
 	public function getStatus($sequence, array $clients)
 	{

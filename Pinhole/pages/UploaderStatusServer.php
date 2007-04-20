@@ -24,6 +24,17 @@ class UploaderStatusServer
 	/** 
 	 * Gets upload status for the given upload identifiers
 	 *
+	 * Statuses for the given identifiers are returned in an array as follows:
+	 *
+	 * If the uploadprogress extension is loaded and a file upload is in
+	 * progress for the given ids:
+	 *
+	 *   <code>{ sequence_number, percent_complete }</code>
+	 *
+	 * Otherwise:
+	 *
+	 *   <code>{ sequence_number, 'none' }</code>
+	 *
 	 * @param array an array of strings containing upload identifiers.
 	 *
 	 * @return array an array of structs containing upload status information.

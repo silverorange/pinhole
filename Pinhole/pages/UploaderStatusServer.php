@@ -24,16 +24,26 @@ class UploaderStatusServer
 	/** 
 	 * Gets upload status for the given upload identifiers
 	 *
-	 * Statuses for the given identifiers are returned in an array as follows:
+	 * Statuses for the given identifiers are returned as follows:
+	 *
+	 * <code>
+	 * {
+	 *     sequence: sequence_number,
+	 *     statuses:
+	 *     [
+	 *         status_struct,
+	 *         status_struct,
+	 *         status_struct
+	 *     ]
+	 * }
+	 * </code>
 	 *
 	 * If the uploadprogress extension is loaded and a file upload is in
-	 * progress for the given ids:
+	 * progress, the status_struct will contain detailed information about
+	 * upload status. Otherwise, the status_struct will be the string 'none'.
 	 *
-	 *   <code>{ sequence: sequence_number, status: status_struct }</code>
-	 *
-	 * Otherwise:
-	 *
-	 *   <code>{ sequence: sequence_number, status: 'none' }</code>
+	 * If there are no identifiers in the <i>$ids</i> array, the
+	 * <i>statuses</i> field is returned as false.
 	 *
 	 * @param array $ids an array of strings containing upload identifiers.
 	 * @param ineger $sequence the sequence id of this request to prevent race
@@ -43,27 +53,32 @@ class UploaderStatusServer
 	 */
 	public function getStatus(array $ids, $sequence)
 	{
-		$return = array();
+		$response = array();
+		$response['sequence'] = $sequence;
 
-		foreach ($ids as $id) {
-			$response = array();
-			$response['sequence'] = $sequence;
+		if (count($ids) > 0) {
+			$response['statuses'] = array();
 
-			if (function_exists('uploadprogress_get_info') &&
-				$uploadprogress_status = uploadprogress_get_info($id)) {
-				$status = array();
-				foreach ($uploadprogress_status as $key => $value)
-					$status[$key] = $value;
+			foreach ($ids as $id) {
+				$response = array();
 
-				$response['status'] = $status;
-			} else {
-				$response['status'] = 'none';
+				if (function_exists('uploadprogress_get_info') &&
+					$uploadprogress_status = uploadprogress_get_info($id)) {
+					$status = array();
+					foreach ($uploadprogress_status as $key => $value)
+						$status[$key] = $value;
+
+					$response['statuses'][] = $status;
+				} else {
+					$response['statuses'][] = 'none';
+				}
 			}
 
-			$return[] = $response;
+		} else  {
+			$response['statuses'] = false;
 		}
 
-		return $return;
+		return $response;
 	}
 
 	/**

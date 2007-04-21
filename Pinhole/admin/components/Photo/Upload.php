@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Admin/pages/AdminPage.php';
+require_once 'Pinhole/admin/components/Photo/include/PinholePhotoUploader.php';
 
 /**
  * Page for uploading photos
@@ -8,6 +9,8 @@ require_once 'Admin/pages/AdminPage.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ * @todo      When there is no JavaScript, this page is responsible for
+ *            processing photos. It should use UploadProcessor to achieve this.
  */
 class PinholePhotoUpload extends AdminPage
 {

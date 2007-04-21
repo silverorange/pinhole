@@ -11,6 +11,8 @@ require_once 'Admin/pages/AdminXMLRPCServer.php';
  */
 class UploaderStatusServer extends AdminXMLRPCServer
 {
+	// {{{ public function getStatus()
+
 	/** 
 	 * Gets upload status for the given upload identifiers
 	 *
@@ -72,6 +74,8 @@ class UploaderStatusServer extends AdminXMLRPCServer
 
 		return $response;
 	}
+
+	// }}}
 }
 
 ?>

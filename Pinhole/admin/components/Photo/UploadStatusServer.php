@@ -1,26 +1,16 @@
 <?php
 
-require_once 'XML/RPC2/Server.php';
+require_once 'Admin/pages/AdminXMLRPCServer.php';
 
 /**
+ * An XML-RPC server for upload status
+ *
+ * @package   Pinhole
  * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class UploaderStatusServer
+class UploaderStatusServer extends AdminXMLRPCServer
 {
-	/**
-	 * @xmlrpc.hidden()
-	 */
-	public function __construct()
-	{
-		if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
-			$server = XML_RPC2_Server::create($this);
-			$this->setHeaders();
-			$server->handleCall();
-		} else {
-			echo 'No HTTP POST data found.', "\n";
-		}
-	}
-
 	/** 
 	 * Gets upload status for the given upload identifiers
 	 *
@@ -82,28 +72,6 @@ class UploaderStatusServer
 
 		return $response;
 	}
-
-	/**
-	 * @xmlrpc.hidden
-	 */
-	protected function setHeaders()
-	{
-		// Set content type to XML
-		header('Content-type: text/xml; charset=UTF-8');
-
-		// Disable any caching with HTTP headers
-		// Any date in the past will do here
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-
-		// Set always modified
-		// for HTTP/1.1
-		header('Cache-Control: no-cache, must-revalidate max-age=0');
-		// for HTTP/1.0
-		header('Pragma: no-cache');
-	}
 }
-
-$server = new UploaderStatusServer();
 
 ?>

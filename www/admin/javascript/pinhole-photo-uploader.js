@@ -16,7 +16,7 @@ PinholePhotoUploadManager.setStatusClient = function(uri)
 	PinholePhotoUploadManager.status_client = new XML_RPC_Client(uri);
 }
 
-PinholePhotoUploadManager.setStatusClient('UploaderStatusServer.php');
+PinholePhotoUploadManager.setStatusClient('Photo/UploadStatusServer');
 
 PinholePhotoUploadManager.addClient = function(client)
 {

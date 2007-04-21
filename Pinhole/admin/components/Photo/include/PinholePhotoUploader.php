@@ -173,7 +173,8 @@ class PinholePhotoUploader extends SwatFileEntry
 			$this->action : $this->target_action;
 
 		$progress_bar_object_id = $this->id.'_progress_bar_obj';
-		return sprintf("%s_obj = new UploadClient('%s', '%s', %s);",
+		return sprintf(
+			"%s_obj = new PinholePhotoUploadClient('%s', '%s', %s);",
 			$this->id, $this->id, $action, $progress_bar_object_id);
 	}
 

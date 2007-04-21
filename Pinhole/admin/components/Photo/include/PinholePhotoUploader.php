@@ -133,14 +133,14 @@ class PinholePhotoUploader extends SwatFileEntry
 		$button_input_tag = new SwatHtmlTag('input');
 		$button_input_tag->type = 'submit';
 		$button_input_tag->id = $this->id.'_button';
-		$button_input_tag->class = 'uploader-submit-button';
+		$button_input_tag->class = 'pinhole-photo-uploader-submit-button';
 		$button_input_tag->value = $this->title;
 		$button_input_tag->display();
 
 		$div_tag->close();
 
 		$progress_bar_div_tag = new SwatHtmlTag('div');
-		$progress_bar_div_tag->class = 'uploader-progress-bar';
+		$progress_bar_div_tag->class = 'pinhole-photo-uploader-progress-bar';
 		$progress_bar_div_tag->open();
 		$this->progress_bar->display();
 		$progress_bar_div_tag->close();

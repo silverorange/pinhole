@@ -2,96 +2,98 @@
  * @copyright 2007 silverorange
  */
 
-UploadManager = {};
+PinholePhotoUploadManager = {};
 
-UploadManager.status_client = null;
-UploadManager.clients = [];
-UploadManager.interval_period = 1500; // in milliseconds
-UploadManager.interval = null;
-UploadManager.sequence = 0;
-UploadManager.received_sequence = 0;
+PinholePhotoUploadManager.status_client = null;
+PinholePhotoUploadManager.clients = [];
+PinholePhotoUploadManager.interval_period = 1500; // in milliseconds
+PinholePhotoUploadManager.interval = null;
+PinholePhotoUploadManager.sequence = 0;
+PinholePhotoUploadManager.received_sequence = 0;
 
-UploadManager.setStatusClient = function(uri)
+PinholePhotoUploadManager.setStatusClient = function(uri)
 {
-	UploadManager.status_client = new XML_RPC_Client(uri);
+	PinholePhotoUploadManager.status_client = new XML_RPC_Client(uri);
 }
 
-UploadManager.setStatusClient('UploaderStatusServer.php');
+PinholePhotoUploadManager.setStatusClient('UploaderStatusServer.php');
 
-UploadManager.addClient = function(client)
+PinholePhotoUploadManager.addClient = function(client)
 {
-	var first_client = (UploadManager.clients.length == 0);
+	var first_client = (PinholePhotoUploadManager.clients.length == 0);
 
-	UploadManager.clients.push(client);
+	PinholePhotoUploadManager.clients.push(client);
 
 	if (first_client)
-		UploadManager.setInterval();
+		PinholePhotoUploadManager.setInterval();
 }
 
-UploadManager.removeClient = function(client)
+PinholePhotoUploadManager.removeClient = function(client)
 {
-	for (var i = 0; i < UploadManager.clients.length; i++) {
-		if (UploadManager.clients[i] === client) {
-			UploadManager.clients.splice(i, 1);
+	for (var i = 0; i < PinholePhotoUploadManager.clients.length; i++) {
+		if (PinholePhotoUploadManager.clients[i] === client) {
+			PinholePhotoUploadManager.clients.splice(i, 1);
 			break;
 		}
 	}
 
-	if (UploadManager.clients.length == 0)
-		UploadManager.clearInterval();
+	if (PinholePhotoUploadManager.clients.length == 0)
+		PinholePhotoUploadManager.clearInterval();
 }
 
-UploadManager.getClient = function(id)
+PinholePhotoUploadManager.getClient = function(id)
 {
 	var client = null;
-	for (var i = 0; i < UploadManager.clients.length; i++) {
-		if (UploadManager.clients[i].id === id) {
-			client = UploadManager.clients[i];
+	for (var i = 0; i < PinholePhotoUploadManager.clients.length; i++) {
+		if (PinholePhotoUploadManager.clients[i].id === id) {
+			client = PinholePhotoUploadManager.clients[i];
 			break;
 		}
 	}
 	return client;
 }
 
-UploadManager.setInterval = function()
+PinholePhotoUploadManager.setInterval = function()
 {
-	if (UploadManager.interval === null) {
-		UploadManager.interval = window.setInterval(
-			UploadManager.updateStatus, UploadManager.interval_period);
+	if (PinholePhotoUploadManager.interval === null) {
+		PinholePhotoUploadManager.interval = window.setInterval(
+			PinholePhotoUploadManager.updateStatus,
+			PinholePhotoUploadManager.interval_period);
 	}
 }
 
-UploadManager.clearInterval = function()
+PinholePhotoUploadManager.clearInterval = function()
 {
-	window.clearInterval(UploadManager.interval);
-	UploadManager.interval = null;
+	window.clearInterval(PinholePhotoUploadManager.interval);
+	PinholePhotoUploadManager.interval = null;
 }
 
-UploadManager.updateStatus = function()
+PinholePhotoUploadManager.updateStatus = function()
 {
-	if (UploadManager.clients.length > 0) {
+	if (PinholePhotoUploadManager.clients.length > 0) {
 
 		var client_map = {};
 		var client;
-		for (var i = 0; i < UploadManager.clients.length; i++) {
-			client = UploadManager.clients[i];
+		for (var i = 0; i < PinholePhotoUploadManager.clients.length; i++) {
+			client = PinholePhotoUploadManager.clients[i];
 			client_map[client.id] = client.getUploadIdentifier();
 		}
 
-		UploadManager.sequence++;
+		PinholePhotoUploadManager.sequence++;
 
-		UploadManager.status_client.callProcedure('getStatus',
-			UploadManager.statusCallback,
-			[UploadManager.sequence, client_map], ['int', 'struct']);
+		PinholePhotoUploadManager.status_client.callProcedure('getStatus',
+			PinholePhotoUploadManager.statusCallback,
+			[PinholePhotoUploadManager.sequence, client_map],
+			['int', 'struct']);
 	}
 }
 
-UploadManager.statusCallback = function(response)
+PinholePhotoUploadManager.statusCallback = function(response)
 {
-	if (response.sequence > UploadManager.received_sequence) {
+	if (response.sequence > PinholePhotoUploadManager.received_sequence) {
 		var client;
 		for (client_id in response.statuses) {
-			client = UploadManager.getClient(client_id);
+			client = PinholePhotoUploadManager.getClient(client_id);
 			if (client) {
 				if (response.statuses[client_id] === 'none') {
 					client.progress();
@@ -103,11 +105,11 @@ UploadManager.statusCallback = function(response)
 				}
 			}
 		}
-		UploadManager.received_sequence = response.sequence;
+		PinholePhotoUploadManager.received_sequence = response.sequence;
 	}
 }
 
-UploadClient = function(id, form_action, progress_bar)
+PinholePhotoUploadClient = function(id, form_action, progress_bar)
 {
 	this.id = id;
 	this.form_action = form_action;
@@ -124,46 +126,46 @@ UploadClient = function(id, form_action, progress_bar)
 		this, true);
 }
 
-UploadClient.complete_text = 'complete';
-UploadClient.progress_text = '% complete';
-UploadClient.progress_unknown_text = 'uploading ...';
+PinholePhotoUploadClient.complete_text = 'complete';
+PinholePhotoUploadClient.progress_text = '% complete';
+PinholePhotoUploadClient.progress_unknown_text = 'uploading ...';
 
-UploadClient.prototype.progress = function()
+PinholePhotoUploadClient.prototype.progress = function()
 {
 	this.progress_bar.pulse();
-	this.progress_bar.setText(UploadClient.progress_unknown_text);
+	this.progress_bar.setText(PinholePhotoUploadClient.progress_unknown_text);
 }
 
-UploadClient.prototype.setStatus = function(percent)
+PinholePhotoUploadClient.prototype.setStatus = function(percent)
 {
 	var text = Math.round(percent * 100);
 	this.progress_bar.setValue(percent);
-	this.progress_bar.setText(text + UploadClient.progress_text);
+	this.progress_bar.setText(text + PinholePhotoUploadClient.progress_text);
 }
 
-UploadClient.prototype.complete = function()
+PinholePhotoUploadClient.prototype.complete = function()
 {
 	this.progress_bar.setValue(1);
-	this.progress_bar.setText(UploadClient.complete_text);
-	UploadManager.removeClient(this);
+	this.progress_bar.setText(PinholePhotoUploadClient.complete_text);
+	PinholePhotoUploadManager.removeClient(this);
 }
 
-UploadClient.prototype.upload = function(event)
+PinholePhotoUploadClient.prototype.upload = function(event)
 {
 	YAHOO.util.Event.preventDefault(event);
 	this.input.form.action = this.form_action;
 	this.input.form.target = this.id + '_iframe';
 	this.input.form.submit();
 	this.progress_bar.setValue(0);
-	this.progress_bar.setText(UploadClient.progress_unknown_text);
+	this.progress_bar.setText(PinholePhotoUploadClient.progress_unknown_text);
 	this.showProgressBar();
-	UploadManager.addClient(this);
+	PinholePhotoUploadManager.addClient(this);
 }
 
 /**
  * Shows the progress bar for this uploader using a smooth animation
  */
-UploadClient.prototype.showProgressBar = function()
+PinholePhotoUploadClient.prototype.showProgressBar = function()
 {
 	var animate_div = this.progress_bar.container;
 	animate_div.parentNode.style.display = 'block';
@@ -192,7 +194,7 @@ UploadClient.prototype.showProgressBar = function()
 	slide_animation.animate();
 }
 
-UploadClient.prototype.createIFrame = function()
+PinholePhotoUploadClient.prototype.createIFrame = function()
 {
 	this.iframe = document.createElement('iframe');
 	this.iframe.name = this.id + '_iframe';
@@ -202,7 +204,7 @@ UploadClient.prototype.createIFrame = function()
 	this.button.parentNode.insertBefore(this.iframe, this.button);
 }
 
-UploadClient.prototype.getUploadIdentifier = function()
+PinholePhotoUploadClient.prototype.getUploadIdentifier = function()
 {
 	return this.input.value;
 }

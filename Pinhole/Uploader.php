@@ -12,16 +12,29 @@ require_once 'Swat/exceptions/SwatException.php';
 require_once 'XML/RPCAjax.php';
 
 /**
+ * Widget for uploading files asynchronously with an upload progress bar
+ *
+ * @package   Pinhole
  * @copyright 2007 silverorange
- * @todo      add progressive enhancement to JavaScript
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ * @todo      test JavaScript progressive-enhancement support
  */
-class Uploader extends SwatFileEntry
+class PinholeUploader extends SwatFileEntry
 {
 	// {{{ public properties
 
 	public $action = '#';
 
 	public $target_action;
+
+	/**
+	 * The title of the upload button for this uploader
+	 *
+	 * Defaults to 'Upload'.
+	 *
+	 * @var String
+	 */
+	public $title;
 
 	// }}}
 	// {{{ private properties
@@ -63,6 +76,8 @@ class Uploader extends SwatFileEntry
 
 		$this->addStyleSheet('packages/pinhole/styles/uploader.css',
 			Pinhole::PACKAGE_ID);
+
+		$this->title = Pinhole::_('Upload');
 	}
 
 	// }}}
@@ -113,7 +128,7 @@ class Uploader extends SwatFileEntry
 		$button_input_tag->type = 'submit';
 		$button_input_tag->id = $this->id.'_button';
 		$button_input_tag->class = 'uploader-submit-button';
-		$button_input_tag->value = Swat::_('Upload');
+		$button_input_tag->value = $this->title;
 		$button_input_tag->display();
 
 		$div_tag = new SwatHtmlTag('div');
@@ -171,7 +186,8 @@ class Uploader extends SwatFileEntry
 			$this->progress_bar =
 				new SwatProgressBar($this->id.'_progress_bar');
 
-			$this->progress_bar->text = Swat::_('0% complete');
+			$this->progress_bar->text = sprintf(Pinhole::_('%s%% complete'),
+				'0');
 
 			$this->widgets_created = true;
 		}

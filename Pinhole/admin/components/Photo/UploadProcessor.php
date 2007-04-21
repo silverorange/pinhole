@@ -1,8 +1,22 @@
 <?php
 
-require_once 'Swat/Swat.php';
+require_once 'Admin/pages/AdminPage.php';
+require_once 'Pinhole/dataobjects/Photo.php';
 
-class UploaderTarget
+/**
+ * Page for processing uploaded photos
+ *
+ * This page is responsible for and decompressing, resizing, cropping and
+ * database insertion required for new photos. It is the target of the
+ * photo upload form.
+ *
+ * @package   Pinhole
+ * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ * @todo      use custom layout to only display javascript
+ * @todo      throw not found exception if there is no post data
+ */
+class PinholePhotoUploadProcessor extends AdminPage
 {
 	public function __construct()
 	{
@@ -32,7 +46,5 @@ class UploaderTarget
 		return $javascript;
 	}
 }
-
-$target = new UploaderTarget();
 
 ?>

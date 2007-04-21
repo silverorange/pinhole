@@ -71,10 +71,12 @@ class PinholePhotoUploader extends SwatFileEntry
 		$ajax = new XML_RPCAjax();
 		$this->html_head_entry_set->addEntrySet($ajax->getHtmlHeadEntrySet());
 
-		$this->addJavaScript('packages/pinhole/javascript/uploader.js',
+		$this->addJavaScript(
+			'packages/pinhole/admin/javascript/pinhole-photo-uploader.js',
 			Pinhole::PACKAGE_ID);
 
-		$this->addStyleSheet('packages/pinhole/styles/uploader.css',
+		$this->addStyleSheet(
+			'packages/pinhole/admin/styles/pinhole-photo-uploader.css',
 			Pinhole::PACKAGE_ID);
 
 		$this->title = Pinhole::_('Upload');

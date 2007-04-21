@@ -108,6 +108,7 @@ class PinholeUploader extends SwatFileEntry
 
 		$form_tag = new SwatHtmlTag('form');
 		$form_tag->id = $this->id.'_form';
+		$form_tag->class = 'swat-form';
 		$form_tag->method = 'post';
 		$form_tag->action = $this->action;
 		$form_tag->enctype = 'multipart/form-data';

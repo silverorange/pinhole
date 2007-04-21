@@ -1,7 +1,8 @@
-div.uploader-progress-bar {
+div.pinhole-photo-uploader-progress-bar {
+	margin-top: 2px;
 	display: none;
 }
 
-input.uploader-submit-button {
+input.ipinhole-photo-uploader-submit-button {
 	font-weight: bold;
 }

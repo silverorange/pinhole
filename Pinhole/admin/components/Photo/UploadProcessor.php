@@ -16,10 +16,24 @@ require_once 'Pinhole/layouts/PinholePhotoUploadProcessorLayout.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @todo      throw not found exception if there is no post data
  */
 class PinholePhotoUploadProcessor extends SitePage
 {
+	// {{{ public function init()
+
+	/**
+	 * Makes sure this page was loaded in a file upload context
+	 *
+	 * @throws AdminNotFoundException if this page was not loaded from a file
+	 *                                upload context.
+	 */
+	public function init()
+	{
+		if (!isset($_FILES))
+			throw new AdminNotFoundException(Pinhole::_('Page not found.'));
+	}
+
+	// }}}
 	// {{{ public function process()
 
 	/**

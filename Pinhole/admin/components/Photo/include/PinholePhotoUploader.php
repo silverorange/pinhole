@@ -12,14 +12,14 @@ require_once 'Swat/exceptions/SwatException.php';
 require_once 'XML/RPCAjax.php';
 
 /**
- * Widget for uploading files asynchronously with an upload progress bar
+ * Widget for uploading photo files asynchronously with an upload progress bar
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @todo      test JavaScript progressive-enhancement support
  */
-class PinholeUploader extends SwatFileEntry
+class PinholePhotoUploader extends SwatFileEntry
 {
 	// {{{ public properties
 

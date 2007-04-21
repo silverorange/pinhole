@@ -1,7 +1,10 @@
 <?php
 
-require_once 'Admin/pages/AdminPage.php';
-require_once 'Pinhole/dataobjects/Photo.php';
+require_once 'Swat/Swat.php';
+require_once 'Site/pages/SitePage.php';
+require_once 'Admin/exceptions/AdminNotFoundException.php';
+require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Pinhole/layouts/PinholePhotoUploadProcessorLayout.php';
 
 /**
  * Page for processing uploaded photos
@@ -13,30 +16,49 @@ require_once 'Pinhole/dataobjects/Photo.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @todo      use custom layout to only display javascript
  * @todo      throw not found exception if there is no post data
  */
-class PinholePhotoUploadProcessor extends AdminPage
+class PinholePhotoUploadProcessor extends SitePage
 {
-	public function __construct()
-	{
-		$this->processFiles();
-		$this->display();
-	}
+	// {{{ public function process()
 
-	protected function processFiles()
+	/**
+	 * Processes uploaded photo files
+	 */
+	public function process()
 	{
 		foreach ($_FILES as $file) {
 		}
 	}
 
-	protected function display()
+	// }}}
+	// {{{ public function build()
+
+	/**
+	 * Builds the layout content of this upload processor
+	 *
+	 * This displays the required inline JavaScript to mark this file upload
+	 * as complete.
+	 *
+	 * @see PinholePhotoUploadProcessor::getInlineJavaScript()
+	 */
+	public function build()
 	{
+		$this->layout->startCapture('content');
+
 		Swat::printObject($_POST);
 		Swat::printObject($_FILES);
 		Swat::displayInlineJavaScript($this->getInlineJavaScript());
+
+		$this->layout->endCapture();
 	}
 
+	// }}}
+	// {{{ protected function getInlineJavaScript()
+
+	/**
+	 * Gets inline JavaScript that marks this file upload as complete
+	 */
 	protected function getInlineJavaScript()
 	{
 		$javascript = '';
@@ -45,6 +67,16 @@ class PinholePhotoUploadProcessor extends AdminPage
 
 		return $javascript;
 	}
+
+	// }}}
+	// {{{ protected function createLayout()
+
+	protected function createLayout()
+	{
+		return new PinholePhotoUploadProcessorLayout($this->app);
+	}
+
+	// }}}
 }
 
 ?>

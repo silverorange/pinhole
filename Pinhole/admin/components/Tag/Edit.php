@@ -4,6 +4,7 @@ require_once 'Admin/pages/AdminDBEdit.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Swat/SwatDate.php';
+require_once 'Pinhole/dataobjects/PinholeTag.php';
 
 /**
  * Edit page for Tags
@@ -14,14 +15,14 @@ require_once 'Swat/SwatDate.php';
  */
 class PinholeTagEdit extends AdminDBEdit
 {
-	// {{{ protected properties 
+	// {{{ protected properties
 
-	protected $fields;
+	protected $ui_xml = 'Pinhole/admin/components/Tag/edit.xml';
 
-	// }}}
-	// {{{ private properties 
-
-	private $parent;
+	/**
+	 * @var PinholeTag
+	 */
+	protected $tag;
 
 	// }}}
 
@@ -32,23 +33,29 @@ class PinholeTagEdit extends AdminDBEdit
 	{
 		parent::initInternal();
 
-		$this->ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
-		$this->ui->loadFromXML(dirname(__FILE__).'/edit.xml');
+		$this->ui->loadFromXML($this->ui_xml);
+		$this->initTag();
+	}
 
-		$this->fields = array(
-			'title',
-			'shortname',
-		);
+	// }}}
+	// {{{ protected function initTag()
 
-		$this->parent = SiteApplication::initVar('parent');
+	protected function initTag()
+	{
+		$this->tag = new PinholeTag();
+		$this->tag->setDatabase($this->app->db);
 
 		if ($this->id === null) {
-			$this->ui->getWidget('shortname_field')->visible = false;
+			$parent_id = SiteApplication::initVar('parent');
+			$parent_tag = new PinholeTag();
+			$parent_tag->setDatabase($this->app->db);
+			$parent_tag->load($parent_id);
+			$this->tag->parent = $parent_tag;
 		} else {
-			$sql = sprintf('select parent from PinholeTag where id = %s',
-				$this->app->db->quote($this->id, 'integer'));
-
-			$this->parent = SwatDB::queryOne($this->app->db, $sql);
+			if (!$this->tag->load($this->id))
+				throw new AdminNotFoundException(
+					sprintf(Pinhole::_('Tag with id “%s” not found.'),
+						$this->id));
 		}
 	}
 
@@ -64,6 +71,7 @@ class PinholeTagEdit extends AdminDBEdit
 		if ($this->id === null && $shortname === null) {
 			$shortname = $this->generateShortname(
 				$this->ui->getWidget('title')->value);
+
 			$this->ui->getWidget('shortname')->value = $shortname;
 
 		} elseif (!$this->validateShortname($shortname)) {
@@ -83,10 +91,12 @@ class PinholeTagEdit extends AdminDBEdit
 		$sql = 'select shortname from PinholeTag
 			where shortname = %s and parent %s %s and id %s %s';
 
+		$parent_id = ($this->tag->parent === null) ? null : $this->tag->parent->id;
+
 		$sql = sprintf($sql,
 			$this->app->db->quote($shortname, 'text'),
-			SwatDB::equalityOperator($this->parent, false),
-			$this->app->db->quote($this->parent, 'integer'),
+			SwatDB::equalityOperator($parent_id, false),
+			$this->app->db->quote($parent_id, 'integer'),
 			SwatDB::equalityOperator($this->id, true),
 			$this->app->db->quote($this->id, 'integer'));
 
@@ -100,26 +110,28 @@ class PinholeTagEdit extends AdminDBEdit
 
 	protected function saveDBData()
 	{
-		$values = $this->ui->getValues(array('title', 'shortname'));
+		$values = $this->ui->getValues(array(
+			'title',
+			'shortname',
+			'status',
+		));
+
+		$this->tag->title     = $values['title'];
+		$this->tag->shortname = $values['shortname'];
+		$this->tag->status    = $values['status'];
 
 		if ($this->id === null) {
-			$this->fields[] = 'date:createdate';
 			$now = new SwatDate();
-			$values['createdate'] = $now->getDate();
-			
-			$this->fields[] = 'integer:parent';
-			$values['parent'] = 
+			$this->tag->createdate = $now->getDate();
+			$this->tag->parent =
 				$this->ui->getWidget('edit_form')->getHiddenField('parent');
-			
-			$this->id = SwatDB::insertRow($this->app->db, 'PinholeTag',
-				$this->fields, $values, 'integer:id');
-		} else {
-			SwatDB::updateRow($this->app->db, 'PinholeTag', $this->fields, 
-				$values, 'integer:id', $this->id);
 		}
 
-		$message = new SwatMessage(
-			sprintf(Pinhole::_('“%s” has been saved.'), $values['title']));
+		$this->tag->save();
+
+		$message = new SwatMessage(sprintf(
+			Pinhole::_('“%s” has been saved.'),
+			$this->tag->title));
 
 		$this->app->messages->add($message);
 	}
@@ -134,7 +146,12 @@ class PinholeTagEdit extends AdminDBEdit
 		parent::buildInternal();
 
 		$form = $this->ui->getWidget('edit_form');
-		$form->addHiddenField('parent', $this->parent);
+
+		if ($this->tag->parent !== null)
+			$form->addHiddenField('parent', $this->tag->parent->id);
+
+		$this->ui->getWidget('status')->addOptionsByArray(
+			PinholeTag::getStatuses());
 	}
 
 	// }}}
@@ -142,15 +159,7 @@ class PinholeTagEdit extends AdminDBEdit
 
 	protected function loadDBData()
 	{
-		$row = SwatDB::queryRowFromTable($this->app->db, 'PinholeTag',
-			$this->fields, 'integer:id', $this->id);
-
-		if ($row === null)
-			throw new AdminNotFoundException(
-				sprintf(Pinhole::_('Tag with id ‘%s’ not found.'),
-					$this->id));
-
-		$this->ui->setValues(get_object_vars($row));
+		$this->ui->setValues(get_object_vars($this->tag));
 	}
 
 	// }}}
@@ -158,17 +167,11 @@ class PinholeTagEdit extends AdminDBEdit
 
 	protected function buildNavBar()
 	{
-		if ($this->id !== null) {
-			$navbar_rs = SwatDB::executeStoredProc($this->app->db,
-				'getPinholeTagNavBar', array($this->id));
+		if ($this->tag->parent !== null || $this->id !== null) {
+			$id = ($this->id !== null) ? $this->id : $this->tag->parent->id;
 
-			foreach ($navbar_rs as $elem)
-				$this->navbar->addEntry(new SwatNavBarEntry($elem->title,
-					'Tag/Details?id='.$elem->id));
-
-		} elseif ($this->parent !== null) {
 			$navbar_rs = SwatDB::executeStoredProc($this->app->db,
-				'getPinholeTagNavBar', array($this->parent));
+				'getPinholeTagNavBar', array($id));
 
 			foreach ($navbar_rs as $elem)
 				$this->navbar->addEntry(new SwatNavBarEntry($elem->title,

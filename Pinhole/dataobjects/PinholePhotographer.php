@@ -11,6 +11,18 @@ require_once 'SwatDB/SwatDBDataObject.php';
  */
 class PinholePhotographer extends SwatDBDataObject
 {
+	// {{{ constants
+
+	const STATUS_ENABLED = 0;
+	const STATUS_ARCHIVED = 1;
+	const STATUS_DISABLED = 2;
+
+	// }}}
+	// {{{ private properties
+
+	private $statuses = array();
+
+	// }}}
 	// {{{ public properties
 
 	/**
@@ -35,18 +47,32 @@ class PinholePhotographer extends SwatDBDataObject
 	public $description;
 
 	/**
-	 * not null default true,
+	 * status
 	 *
-	 * @var boolean
+	 * @var integer
 	 */
-	public $enabled;
+	public $status;
 
-	/**
-	 * not null default false,
-	 *
-	 * @var boolean
-	 */
-	public $archived;
+	// }}}
+	// {{{ public static function getStatuses()
+
+	public function getStatuses()
+	{
+		return array(
+			self::STATUS_ENABLED  => Pinhole::_('Visible on Site & Admin Photo Tools'),
+			self::STATUS_ARCHIVED => Pinhole::_('Visible on Site & Archived in Admin Photo Tools'),
+			self::STATUS_DISABLED => Pinhole::_('Not Visible on Site or Admin Photo Tools'),
+		);
+	}
+
+	// }}}
+	// {{{ public static function getStatusTitle()
+
+	public static function getStatusTitle($status)
+	{
+		$statuses = self::getStatuses();
+		return $statuses[$status];
+	}
 
 	// }}}
 	// {{{ protected function init()

@@ -3,6 +3,7 @@
 require_once 'Admin/pages/AdminIndex.php';
 require_once 'Admin/AdminTableStore.php';
 require_once 'SwatDB/SwatDB.php';
+require_once 'Pinhole/dataobjects/PinholePhotographer.php';
 
 /**
  * Index page for photographers
@@ -48,7 +49,36 @@ class PinholePhotographerIndex extends AdminIndex
 			$this->app->replacePage('Photographer/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
+		case 'status_action':
+			$num = count($view->checked_items);
+
+			$status = $this->ui->getWidget('status_flydown')->value;
+
+			SwatDB::updateColumn($this->app->db, 'PinholePhotographer',
+				'integer:status', $status,
+				'id', $view->checked_items);
+
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
+				'The status of one photographer has been changed.',
+				'The status of %s photographers has been changed.', $num),
+				SwatString::numberFormat($num)));
+
+			$this->app->messages->add($message);
+			break;
 		}
+	}
+
+	// }}}
+
+	// build phase
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
+	{
+		parent::buildInternal();
+
+		$this->ui->getWidget('status_flydown')->addOptionsByArray(
+			PinholePhotographer::getStatuses());
 	}
 
 	// }}}
@@ -67,7 +97,12 @@ class PinholePhotographerIndex extends AdminIndex
 		$sql = sprintf($sql,
 			$this->getOrderByClause($view, 'id'));
 		
-		return SwatDB::query($this->app->db, $sql, 'AdminTableStore');
+		$store = SwatDB::query($this->app->db, $sql, 'AdminTableStore');
+
+		foreach ($store->getRows() as $row)
+			$row->status_title = PinholePhotographer::getStatusTitle($row->status);
+
+		return $store;
 	}
 
 	// }}}

@@ -3,6 +3,7 @@ create table PinholeTag (
 	parent int,
 	shortname varchar(255),
 	title varchar(255),
+	status int not null default 0,
 	createdate timestamp,
 	primary key (id)
 );

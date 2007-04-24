@@ -4,6 +4,7 @@ require_once 'Admin/pages/AdminSearch.php';
 require_once 'Admin/AdminTableStore.php';
 require_once 'Admin/AdminSearchClause.php';
 require_once 'SwatDB/SwatDB.php';
+require_once 'Pinhole/dataobjects/PinholeTag.php';
 
 /**
  * Search page for Tags
@@ -66,6 +67,22 @@ class PinholeTagIndex extends AdminSearch
 			$this->app->replacePage('Tag/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
+		case 'status_action':
+			$num = count($view->checked_items);
+
+			$status = $this->ui->getWidget('status_flydown')->value;
+
+			SwatDB::updateColumn($this->app->db, 'PinholeTag',
+				'integer:status', $status,
+				'id', $view->checked_items);
+
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
+				'The status of one tag has been changed.',
+				'The status of %s tags has been changed.', $num),
+				SwatString::numberFormat($num)));
+
+			$this->app->messages->add($message);
+			break;
 		}
 	}
 
@@ -81,6 +98,9 @@ class PinholeTagIndex extends AdminSearch
 		$rs = SwatDB::executeStoredProc($this->app->db, 'getPinholeTagTree', array('null'));
 		$tree = SwatDB::getDataTree($rs, 'title', 'id', 'levelnum');
 		$this->ui->getWidget('search_parent')->setTree($tree);
+
+		$this->ui->getWidget('status_flydown')->addOptionsByArray(
+			PinholeTag::getStatuses());
 	}
 
 	// }}}
@@ -122,7 +142,8 @@ class PinholeTagIndex extends AdminSearch
 
 		$sql = 'select PinholeTag.id,
 					PinholeTag.title, 
-					PinholeTag.shortname
+					PinholeTag.shortname,
+					PinholeTag.status
 				from PinholeTag
 				where %s
 				order by %s';
@@ -140,6 +161,9 @@ class PinholeTagIndex extends AdminSearch
 			$this->ui->getWidget('results_message')->content =
 				$pager->getResultsMessage(Pinhole::_('result'), 
 					Pinhole::_('results'));
+
+		foreach ($store->getRows() as $row)
+			$row->status_title = PinholeTag::getStatusTitle($row->status);
 
 		return $store;
 	}

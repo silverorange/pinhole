@@ -2,7 +2,6 @@ create table PinholePhotographer (
 	id serial,
 	fullname varchar(255),
 	description text,
-	enabled boolean not null default true,
-	archived boolean not null default false,
+	status int not null default 0,
 	primary key (id)
 );

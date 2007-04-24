@@ -61,14 +61,12 @@ class PinholePhotographerEdit extends AdminDBEdit
 		$values = $this->ui->getValues(array(
 			'fullname',
 			'description',
-			'enabled',
-			'archived',
+			'status',
 		));
 
 		$this->photographer->fullname    = $values['fullname'];
 		$this->photographer->description = $values['description'];
-		$this->photographer->enabled     = $values['enabled'];
-		$this->photographer->archived    = $values['archived'];
+		$this->photographer->status      = $values['status'];
 		$this->photographer->save();
 
 		$message = new SwatMessage(sprintf(
@@ -81,6 +79,17 @@ class PinholePhotographerEdit extends AdminDBEdit
 	// }}}
 
 	// build phase
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
+	{
+		parent::buildInternal();
+
+		$this->ui->getWidget('status')->addOptionsByArray(
+			PinholePhotographer::getStatuses());
+	}
+
+	// }}}
 	// {{{ protected function loadDBData()
 
 	protected function loadDBData()

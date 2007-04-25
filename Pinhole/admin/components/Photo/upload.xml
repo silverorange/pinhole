@@ -11,5 +11,6 @@
 		<widget class="AdminNote">
 			<property name="content" translatable="yes">REWRITE Pinhole can process most common image types. You may include multiple photos in an archive file (ZIP or TGZ).</property>
 		</widget>
+		<widget class="SwatDisplayableContainer" id="photo_container" />
 	</widget>
 </swatml>

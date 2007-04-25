@@ -10,9 +10,9 @@ require_once 'Site/pages/SitePage.php';
  */
 abstract class PinholeBrowserPage extends SitePage
 {
-	// {{{ private properties
+	// {{{ protected properties
 
-	private $tags;
+	protected $tag_intersection;
 
 	// }}}
 	// {{{ public function __construct()
@@ -21,10 +21,10 @@ abstract class PinholeBrowserPage extends SitePage
 	{
 		parent::__construct($app, $layout);
 
-		$this->tags = new PinholeTagIntersection($app->db);
+		$this->tag_intersection = new PinholeTagIntersection($app->db);
 
 		foreach (explode('/', $tags) as $tag)
-			$this->tags->addTagByShortname($tag);
+			$this->tag_intersection->addTagByShortname($tag);
 	}
 
 	// }}}
@@ -57,7 +57,7 @@ abstract class PinholeBrowserPage extends SitePage
 
 	protected function displayIntersectingTags()
 	{
-		$tags = $this->tags->getIntersectingTags();
+		$tags = $this->tag_intersection->getIntersectingTags();
 
 		if (count($tags) == 0)
 			return;

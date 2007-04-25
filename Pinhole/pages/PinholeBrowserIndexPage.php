@@ -18,16 +18,31 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	{
 		parent::build();
 
-		/*
-		$this->layout->data->title = 
-			SwatString::minimizeEntities($category->title);
+		$this->layout->startCapture('content');
+		$this->displayPhotos();
+		$this->layout->endCapture();
+	}
 
-		$this->layout->data->description = 
-			SwatString::minimizeEntities($category->description);
+	// }}}
+	// {{{ protected function displayPhotos()
 
-		$this->layout->data->content= 
-			SwatString::toXHTML($category->bodytext);
-		*/
+	protected function displayPhotos()
+	{
+		$photos = $this->tag_intersection->getPhotos();
+
+		if (count($photos) == 0)
+			return;
+
+		echo '<ul class="photos">';
+
+		foreach ($photos as $photo) {
+			echo '<li>';
+			//$link = $this->source.'/'.$category->shortname;
+			echo $photo->title;
+			echo '</li>';
+		}
+
+		echo '</ul>';
 	}
 
 	// }}}

@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
+require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**
  * @package   Pinhole
@@ -67,6 +68,27 @@ class PinholeTagIntersection
 	public function getIntersectingTags()
 	{
 		return $this->tags;
+	}
+
+	// }}}
+	// {{{ protected function getPhotos()
+
+	public function getPhotos()
+	{
+		$sql ='select * from PinholePhoto where 1 = 1';
+
+		foreach ($this->tags as $tag) {
+			$sql.= sprintf(' and id in (select photo from '.
+				'PinholePhotoTagBinding where tag = %s)',
+				$this->db->quote($tag->id, 'integer'));
+		}
+
+		$sql.= ' order by publish_date desc';
+
+		// TODO: use classmap
+		$photos = SwatDB::query($this->db, $sql, 'PinholePhotoWrapper');
+
+		return $photos;
 	}
 
 	// }}}

@@ -2,6 +2,8 @@
  * @copyright 2007 silverorange
  */
 
+// {{{ PinholePhotoUploadManager
+
 PinholePhotoUploadManager = {};
 
 PinholePhotoUploadManager.status_client = null;
@@ -109,6 +111,9 @@ PinholePhotoUploadManager.statusCallback = function(response)
 	}
 }
 
+// }}}
+// {{{ PinholePhotoUploadClient
+
 PinholePhotoUploadClient = function(id, form_action, progress_bar)
 {
 	this.id = id;
@@ -121,6 +126,7 @@ PinholePhotoUploadClient = function(id, form_action, progress_bar)
 	this.button = document.getElementById(this.id + '_button');
 
 	this.createIFrame();
+	this.uploadCompleteEvent = new YAHOO.util.CustomEvent('upload-complete');
 
 	YAHOO.util.Event.addListener(this.button, 'click', this.upload,
 		this, true);
@@ -147,6 +153,7 @@ PinholePhotoUploadClient.prototype.complete = function()
 {
 	this.progress_bar.setValue(1);
 	this.progress_bar.setText(PinholePhotoUploadClient.complete_text);
+	this.uploadCompleteEvent.fire();
 	PinholePhotoUploadManager.removeClient(this);
 }
 

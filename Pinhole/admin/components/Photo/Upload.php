@@ -27,6 +27,10 @@ class PinholePhotoUpload extends AdminPage
 	{
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
+
+		$this->layout->addHtmlHeadEntry(new SwatJavaScriptHtmlHeadEntry(
+			'packages/pinhole/admin/javascript/pinhole-photo-upload-page.js',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}
@@ -36,6 +40,25 @@ class PinholePhotoUpload extends AdminPage
 
 	protected function processInternal()
 	{
+	}
+
+	// }}}
+
+	// build phase
+	// {{{ protected function display()
+
+	protected function display()
+	{
+		parent::display();
+		Swat::displayInlineJavaScript($this->getInlineJavaScript());
+	}
+
+	// }}}
+	// {{{ protected function getInlineJavaScript()
+
+	protected function getInlineJavaScript()
+	{
+		return "var page = new PinholePhotoUploadPage();";
 	}
 
 	// }}}

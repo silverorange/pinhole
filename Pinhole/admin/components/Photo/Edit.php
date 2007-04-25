@@ -5,6 +5,8 @@ require_once 'Admin/exceptions/AdminNoAccessException.php';
 require_once 'Admin/pages/AdminDBEdit.php';
 require_once 'Pinhole/dataobjects/PinholePhotographer.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
+require_once 'Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php';
 
 /**
  * Page for editing a photo
@@ -84,6 +86,22 @@ class PinholePhotoEdit extends AdminDBEdit
 	// }}}
 
 	// build phase
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
+	{
+		parent::buildInternal();
+
+		$sql = sprintf('select * from PinholeTag
+			where status = %s order by title',
+			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'));
+
+		$tags = SwatDB::query($this->app->db, $sql, 'PinholeTagWrapper');
+
+		$this->ui->getWidget('tags')->tags = $tags;
+	}
+
+	// }}}
 	// {{{ protected function loadDBData()
 
 	protected function loadDBData()

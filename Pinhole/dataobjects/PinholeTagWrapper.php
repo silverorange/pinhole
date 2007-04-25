@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Store/dataobjects/StoreRecordsetWrapper.php';
+require_once 'SwatDB/SwatDBRecordsetWrapper.php';
 require_once 'PinholeTag.php';
 
 /**
@@ -11,7 +11,7 @@ require_once 'PinholeTag.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @see       PinholeTag
  */
-class PinholeTagWrapper extends StoreRecordsetWrapper
+class PinholeTagWrapper extends SwatDBRecordsetWrapper
 {
 	// {{{ protected function init()
 

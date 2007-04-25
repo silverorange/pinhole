@@ -58,7 +58,9 @@ class PinholePhotoUpload extends AdminPage
 
 	protected function getInlineJavaScript()
 	{
-		return "var page = new PinholePhotoUploadPage();";
+		$uploader_object = 'file_obj';
+		return sprintf("var page = new PinholePhotoUploadPage(%s);",
+			$uploader_object);
 	}
 
 	// }}}

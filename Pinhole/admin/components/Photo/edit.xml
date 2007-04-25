@@ -18,7 +18,11 @@
 			</widget>
 			<widget class="SwatFormField">
 				<property name="title" translatable="yes">Description</property>
-				<widget class="SwatTextareaEditor" id="description" />
+				<widget class="SwatTextarea" id="description" />
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Add Tags</property>
+				<widget class="PinholePhotoTagEntry" id="tags" />
 			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button" />

@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatTileView" id="photo_view">
+		<object class="SwatTile">
+			<object class="SwatTextCellRenderer">
+				<property name="text" type="data">title</property>
+			</object>
+		</object>
+	</widget>
+</swatml>

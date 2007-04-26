@@ -4,33 +4,71 @@
 
 PinholePhotoUploadPage = function(uploader)
 {
+	this.photos = [
+		'http://gallery.whitelands.com/files/thumb/photo57142.jpg',
+		'http://gallery.silverorange.com/files/thumb/photo43982.jpg',
+		'http://gallery.whitelands.com/files/thumb/photo56909.jpg',
+		'http://gallery.whitelands.com/files/thumb/photo56250.jpg',
+		'http://gallery.whitelands.com/files/thumb/photo53999.jpg'
+	];
+	this.count = 0;
+
 	this.photo_container = document.getElementById('photo_container');
+	this.spacer_div = document.createElement('div');
+
 	this.uploader = uploader;
 
 	this.uploader.uploadCompleteEvent.subscribe(this.startDemo, this, true);
 }
 
-PinholePhotoUploadPage.fade_duration = 2;
+PinholePhotoUploadPage.fade_duration = 1;
 PinholePhotoUploadPage.processing_text = 'Processing photos … ';
 
 PinholePhotoUploadPage.prototype.addPhoto = function()
 {
+	this.spacer_div.style.width = '0';
+	this.spacer_div.style.height = '130px';
+	this.spacer_div.style.cssFloat = 'left';
+	this.spacer_div.style.margin = '0';
+	this.photo_container.insertBefore(this.spacer_div,
+		this.photo_container.firstChild);
+
+	var animation = new YAHOO.util.Anim(this.spacer_div, { width: { to: 130 }},
+		1, YAHOO.util.Easing.easeOutStrong);
+
+	animation.onComplete.subscribe(this.fadeInPhoto, this, true);
+	animation.animate();
+}
+
+PinholePhotoUploadPage.prototype.fadeInPhoto = function()
+{
+	var throbber_div = document.createElement('div');
+//	throbber_div.style.backgroundImage = 'url(http://www.webtwenny.com/images/Throbber.gif)';
+	throbber_div.style.backgroundPosition = 'center center';
+	throbber_div.style.backgroundRepeat = 'no-repeat';
+	throbber_div.style.width = '130px';
+	throbber_div.style.height = '130px';
+	throbber_div.style.margin = '0';
+	throbber_div.style.cssFloat = 'left';
+
 	var div = document.createElement('div');
 	div.style.opacity = '0';
-	div.style.cssFloat = 'left';
 	div.style.width = '100px';
 	div.style.height = '100px';
 	div.style.backgroundColor = '#ddd';
-	div.style.padding = '1em';
-	div.style.margin = '0.5em';
+	div.style.padding = '10px';
+	div.style.margin = '5px';
+	div.style.textAlign = 'center';
 
 	var image = document.createElement('img');
-	image.src = 'http://gallery.silverorange.com/files/thumb/photo43982.jpg';
+	image.src = this.photos[this.count % 5];
+	this.count++;
 
 	div.appendChild(image);
-	this.photo_container.insertBefore(div, this.photo_container.firstChild);
+	throbber_div.appendChild(div);
+	this.photo_container.replaceChild(throbber_div, this.spacer_div);
 	var animation = new YAHOO.util.Anim(div, {opacity: { to:  1} }, 
-		PinholePhotoUploadPage.fade_duration, YAHOO.util.Easing.easeIn);
+		PinholePhotoUploadPage.fade_duration, YAHOO.util.Easing.easeInStrong);
 
 	animation.animate();
 }

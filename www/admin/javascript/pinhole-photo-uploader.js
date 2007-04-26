@@ -214,12 +214,25 @@ PinholePhotoUploadClient.prototype.showProgressBar = function()
 
 PinholePhotoUploadClient.prototype.createIFrame = function()
 {
-	this.iframe = document.createElement('iframe');
-	this.iframe.name = this.id + '_iframe';
-	this.iframe.style.border = '0';
-	this.iframe.style.width = '1px';
-	this.iframe.style.height = '1px';
-	this.button.parentNode.insertBefore(this.iframe, this.button);
+	// TODO: better browser detection
+	if (navigator.userAgent.indexOf('MSIE') > 0) {
+		var div = document.createElement('div');
+		div.style.display = 'inline';
+		div.innerHTML = '<iframe name="' + this.id + '_iframe" ' +
+			'id="' + this.id + '_iframe" ' +
+			'src="about:blank" style="border: 0; width: 0; height: 0;">' +
+			'</iframe>';
+
+		this.button.parentNode.insertBefore(div, this.button);
+	} else {
+		var iframe = document.createElement('iframe');
+		iframe.name = this.id + '_iframe';
+		iframe.id = this.id + '_iframe';
+		iframe.style.border = '0';
+		iframe.style.width = '0';
+		iframe.style.height = '0';
+		this.button.parentNode.insertBefore(iframe, this.button);
+	}
 }
 
 PinholePhotoUploadClient.prototype.getUploadIdentifier = function()

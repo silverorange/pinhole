@@ -103,7 +103,9 @@ PinholePhotoUploadManager.statusCallback = function(response)
 					var percent = response.statuses[client_id].bytes_uploaded /
 						response.statuses[client_id].bytes_total;
 
-					client.setStatus(percent);
+					var time = response.statuses[client_id].est_sec;
+
+					client.setStatus(percent, time);
 				}
 			}
 		}
@@ -142,11 +144,20 @@ PinholePhotoUploadClient.prototype.progress = function()
 	this.progress_bar.setText(PinholePhotoUploadClient.progress_unknown_text);
 }
 
-PinholePhotoUploadClient.prototype.setStatus = function(percent)
+PinholePhotoUploadClient.prototype.setStatus = function(percent, time)
 {
-	var text = Math.round(percent * 100);
 	this.progress_bar.setValue(percent);
-	this.progress_bar.setText(text + PinholePhotoUploadClient.progress_text);
+
+	var hours = Math.floor(time / 360);
+	var minutes = Math.floor(time / 60) % 60;
+	var seconds = time % 60;
+
+	var text = '';
+	text += (hours > 0) ? hours + ' hours ' : '';
+	text += (minutes > 0) ? minutes + ' minutes ' : '';
+	text += seconds + ' seconds left';
+
+	this.progress_bar.setText(text);
 }
 
 PinholePhotoUploadClient.prototype.complete = function()

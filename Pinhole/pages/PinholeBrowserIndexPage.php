@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Swat/SwatString.php';
+require_once 'Swat/SwatTableStore.php';
+require_once 'Swat/SwatUI.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 
 /**
@@ -9,7 +11,21 @@ require_once 'Pinhole/pages/PinholeBrowserPage.php';
  */
 class PinholeBrowserIndexPage extends PinholeBrowserPage
 {
+	protected $photo_ui;
+	protected $photo_ui_xml = 'Pinhole/pages/browser-photo-view.xml';
+
 	// init phase
+	// {{{ public function init()
+
+	public function init()
+	{
+		parent::init();
+
+		$this->photo_ui = new SwatUI();
+		$this->photo_ui->loadFromXML($this->photo_ui_xml);
+	}
+
+	// }}}
 
 	// build phase
 	// {{{ public function build()
@@ -18,31 +34,26 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	{
 		parent::build();
 
+		$view = $this->photo_ui->getWidget('photo_view');
+		$view->model = $this->getPhotoTableStore();
+
 		$this->layout->startCapture('content');
-		$this->displayPhotos();
+		$this->photo_ui->display();
 		$this->layout->endCapture();
 	}
 
 	// }}}
-	// {{{ protected function displayPhotos()
+	// {{{ protected function getPhotoTableStore()
 
-	protected function displayPhotos()
+	protected function getPhotoTableStore()
 	{
+		$store = new SwatTableStore();
 		$photos = $this->tag_intersection->getPhotos();
 
-		if (count($photos) == 0)
-			return;
+		foreach ($photos as $photo)
+			$store->addRow($photo);
 
-		echo '<ul class="photos">';
-
-		foreach ($photos as $photo) {
-			echo '<li>';
-			//$link = $this->source.'/'.$category->shortname;
-			echo $photo->title;
-			echo '</li>';
-		}
-
-		echo '</ul>';
+		return $store;
 	}
 
 	// }}}

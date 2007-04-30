@@ -5,7 +5,7 @@
 		<property name="classes[]">pinhole-tile-view</property>
 		<object class="SwatTile">
 			<object class="SwatImageCellRenderer">
-				<property name="image">http://www.actsofvolition.com/images/screenshots/tango/16x16/face-plain.png</property>
+				<property name="image" type="data">image</property>
 				<property name="height" type="integer">100</property>
 				<property name="width" type="integer">100</property>
 				<property name="alt" type="data">title</property>

@@ -2,6 +2,7 @@
 
 require_once 'Swat/SwatString.php';
 require_once 'Swat/SwatTableStore.php';
+require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatUI.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 
@@ -50,10 +51,23 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$store = new SwatTableStore();
 		$photos = $this->tag_intersection->getPhotos();
 
-		foreach ($photos as $photo)
-			$store->addRow($photo);
+		foreach ($photos as $photo) {
+			$ds = $this->getPhotoDetailsStore($photo);
+			$store->addRow($ds);
+		}
 
 		return $store;
+	}
+
+	// }}}
+	// {{{ protected function getPhotoDetailsStore()
+
+	protected function getPhotoDetailsStore($photo)
+	{
+		$ds = new SwatDetailsStore($photo);
+		$ds->image = $photo->getURI();
+
+		return $ds;
 	}
 
 	// }}}

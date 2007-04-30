@@ -51,7 +51,7 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->displayIntersectingTags();
 		$this->layout->endCapture();
 
-		$this->layout->startCapture('tag_navigation_content');
+		$this->layout->startCapture('sidebar_content');
 		$this->displayNavigationTags();
 		$this->layout->endCapture();
 	}
@@ -93,6 +93,7 @@ abstract class PinholeBrowserPage extends SitePage
 		if (count($tags) == 0)
 			return;
 
+		echo '<h3 class="tag-list-title">Related Tags:</h3>';
 		echo '<ul class="tag-list">';
 
 		foreach ($tags as $tag) {

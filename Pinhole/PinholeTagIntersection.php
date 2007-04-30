@@ -15,7 +15,7 @@ class PinholeTagIntersection
 	private $tags = array();
 
 	// }}}
-	// {{{ protected function __construct()
+	// {{{ public function __construct()
 
 	public function __construct($db)
 	{
@@ -23,7 +23,7 @@ class PinholeTagIntersection
 	}
 
 	// }}}
-	// {{{ protected function addTag()
+	// {{{ public function addTag()
 
 	public function addTag($tag)
 	{
@@ -31,7 +31,7 @@ class PinholeTagIntersection
 	}
 
 	// }}}
-	// {{{ protected function addTagById()
+	// {{{ public function addTagById()
 
 	public function addTagById($id)
 	{
@@ -47,7 +47,7 @@ class PinholeTagIntersection
 	}
 
 	// }}}
-	// {{{ protected function addTagByShortname()
+	// {{{ public function addTagByShortname()
 
 	public function addTagByShortname($shortname)
 	{
@@ -63,7 +63,7 @@ class PinholeTagIntersection
 	}
 
 	// }}}
-	// {{{ protected function getIntersectingTags()
+	// {{{ public function getIntersectingTags()
 
 	public function getIntersectingTags()
 	{
@@ -71,7 +71,7 @@ class PinholeTagIntersection
 	}
 
 	// }}}
-	// {{{ protected function getIntersectingTagPath()
+	// {{{ public function getIntersectingTagPath()
 
 	public function getIntersectingTagPath()
 	{
@@ -89,7 +89,7 @@ class PinholeTagIntersection
 	}
 
 	// }}}
-	// {{{ protected function getPhotos()
+	// {{{ public function getPhotos()
 
 	public function getPhotos()
 	{

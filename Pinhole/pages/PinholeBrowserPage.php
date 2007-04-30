@@ -47,7 +47,7 @@ abstract class PinholeBrowserPage extends SitePage
 	{
 		parent::build();
 
-		$this->layout->startCapture('intersecting_tags');
+		$this->layout->startCapture('header_content');
 		$this->displayIntersectingTags();
 		$this->layout->endCapture();
 	}

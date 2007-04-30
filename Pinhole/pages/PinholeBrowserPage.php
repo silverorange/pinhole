@@ -70,8 +70,10 @@ abstract class PinholeBrowserPage extends SitePage
 			if ($count > 0)
 				echo ' <span class="plus">+</span> ';
 
-			//$link = $this->source.'/'.$category->shortname;
-			echo $tag->title;
+			$tag_link = new SwatHtmlTag('a');
+			$tag_link->href = $tag->shortname;
+			$tag_link->setContent($tag->title);
+			$tag_link->display();
 			$count++;
 		}
 

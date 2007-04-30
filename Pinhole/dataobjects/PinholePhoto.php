@@ -18,6 +18,11 @@ class PinholePhoto extends SwatDBDataObject
 	const STATUS_PUBLISHED = 1;
 	const STATUS_UNPUBLISHED = 2;
 
+	const DATE_PART_YEAR = 1;
+	const DATE_PART_MONTH = 2;
+	const DATE_PART_DAY = 4;
+	const DATE_PART_TIME = 8;
+
 	// }}}
 	// {{{ public properties
 

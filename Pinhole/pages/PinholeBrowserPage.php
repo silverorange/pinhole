@@ -47,7 +47,7 @@ abstract class PinholeBrowserPage extends SitePage
 	{
 		parent::build();
 
-		$this->layout->startCapture('content');
+		$this->layout->startCapture('intersecting_tags');
 		$this->displayIntersectingTags();
 		$this->layout->endCapture();
 	}
@@ -62,16 +62,20 @@ abstract class PinholeBrowserPage extends SitePage
 		if (count($tags) == 0)
 			return;
 
-		echo '<ul class="intersecting-tag-list">';
+		echo '<div class="intersecting-tag-list">';
 
+		$count = 0;
+		
 		foreach ($tags as $tag) {
-			echo '<li>';
+			if ($count > 0)
+				echo ' <span class="plus">+</span> ';
+
 			//$link = $this->source.'/'.$category->shortname;
 			echo $tag->title;
-			echo '</li>';
+			$count++;
 		}
 
-		echo '</ul>';
+		echo '</div>';
 	}
 
 	// }}}

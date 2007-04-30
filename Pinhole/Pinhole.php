@@ -2,6 +2,7 @@
 
 require_once 'Swat/Swat.php';
 require_once 'Site/Site.php';
+require_once 'XML/RPCAjax.php';
 
 /**
  * Container for package wide static methods
@@ -109,7 +110,8 @@ class Pinhole
 	 */
 	public static function getDependencies()
 	{
-		return array(Swat::PACKAGE_ID, Site::PACKAGE_ID);
+		return array(Swat::PACKAGE_ID, Site::PACKAGE_ID,
+			XML_RPCAjax::PACKAGE_ID);
 	}
 
 	// }}}

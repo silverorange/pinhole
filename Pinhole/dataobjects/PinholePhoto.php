@@ -2,6 +2,7 @@
 
 require_once 'Swat/SwatDate.php';
 require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Image/Transform.php';
 
 /**
  * A dataobject class for photos
@@ -109,20 +110,29 @@ class PinholePhoto extends SwatDBDataObject
 	public $status;
 
 	// }}}
+	// {{{ public function getCompressionQuality()
+
+	// TODO: move this to Dimension object
+	public function getCompressionQuality()
+	{
+		return 85;
+	}
+
+	// }}}
+	// {{{ public function getURI()
+
+	// TOOD: use dimension bindings here
+	public function getURI($set = 'thumb') {
+		return 'images/photos/'.$set.'/'.$this->id.'.jpg';
+	}
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()
 	{
 		$this->table = 'PinholePhoto';
 		$this->id_field = 'integer:id';
-	}
-
-	// }}}
-	// {{{ protected function getCompressionQuality()
-
-	protected function getCompressionQuality()
-	{
-		return 85;
 	}
 
 	// }}}

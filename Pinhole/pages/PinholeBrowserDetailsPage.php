@@ -30,6 +30,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	public function init()
 	{
 		parent::init();
+
+		$this->layout->addHtmlHeadEntry(
+			new SwatStyleSheetHtmlHeadEntry(
+				'packages/pinhole/styles/pinhole-browser-details-page.css',
+				Pinhole::PACKAGE_ID));
 	}
 
 	// }}}
@@ -57,6 +62,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$img_tag = new SwatHtmlTag('img');
 		// TODO: use dimension objects
 		$img_tag->src = $this->photo->getUri('large');
+		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
 	}
 

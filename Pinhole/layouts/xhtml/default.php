@@ -18,13 +18,17 @@
 	<div id="bd">
 
 		<div id="yui-main">
-		<div class="yui-b" id="content">
+		<div class="yui-b">
+			<div id="content">
 			<h2 id="page_title"><?= $this->title ?></h2>
 			<?= $this->content ?>
+			</div>
 		</div>
 		</div>
 
-		<div class="yui-b" id="sidebar"><?= $this->sidebar_content ?></div>
+		<div class="yui-b">
+			<div id="sidebar"><?= $this->sidebar_content ?></div>
+		</div>
 
 	</div><!-- close #bd -->
 

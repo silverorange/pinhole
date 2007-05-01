@@ -31,21 +31,6 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	// }}}
 
-	// init phase
-	// {{{ public function init()
-
-	public function init()
-	{
-		parent::init();
-
-		$this->layout->addHtmlHeadEntry(
-			new SwatStyleSheetHtmlHeadEntry(
-				'packages/pinhole/styles/pinhole-browser-page.css',
-				Pinhole::PACKAGE_ID));
-	}
-
-	// }}}
-
 	// build phase
 	// {{{ public function build()
 
@@ -116,6 +101,19 @@ abstract class PinholeBrowserPage extends PinholePage
 		}
 
 		echo '</ul>';
+	}
+
+	// }}}
+
+	// finalize phase
+	// {{{ public function finalize()
+
+	public function finalize()
+	{
+		parent::finalize();
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/styles/pinhole-browser-page.css',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

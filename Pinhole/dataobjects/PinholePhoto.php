@@ -109,6 +109,11 @@ class PinholePhoto extends SwatDBDataObject
 	 */
 	public $status;
 
+	public $width;
+	public $height;
+	public $max_width;
+	public $max_height;
+
 	// }}}
 	// {{{ public function getCompressionQuality()
 

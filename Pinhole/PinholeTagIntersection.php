@@ -91,21 +91,19 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getPhotos()
 
-	public function getPhotos($offset = null, $limit = null)
+	public function getPhotos($limit = null, $offset = null)
 	{
-		$sql = 'select * from PinholePhoto where 1 = 1';
+		$where_clause = '1 = 1';
 
-		foreach ($this->tags as $tag) {
-			$sql.= sprintf(' and id in (select photo from '.
-				'PinholePhotoTagBinding where tag = %s)',
+		foreach ($this->tags as $tag)
+			$where_clause.= sprintf(' and PinholePhoto.id in
+				(select PinholePhotoTagBinding.photo
+				from PinholePhotoTagBinding
+				where PinholePhotoTagBinding.tag = %s)',
 				$this->db->quote($tag->id, 'integer'));
-		}
 
-		// TODO: use $limit and $offset
-		$sql.= ' order by publish_date desc limit 20';
-
-		// TODO: use classmap
-		$photos = SwatDB::query($this->db, $sql, 'PinholePhotoWrapper');
+		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
+			$this->db, 'thumb', $where_clause, 20, $offset);
 
 		return $photos;
 	}

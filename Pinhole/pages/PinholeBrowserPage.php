@@ -1,6 +1,7 @@
 <?php
 
 require_once 'SwatDB/SwatDB.php';
+require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagIntersection.php';
 require_once 'Pinhole/pages/PinholePage.php';
 
@@ -37,6 +38,10 @@ abstract class PinholeBrowserPage extends PinholePage
 	{
 		parent::init();
 
+		$this->layout->addHtmlHeadEntry(
+			new SwatStyleSheetHtmlHeadEntry(
+				'packages/pinhole/styles/pinhole-browser-page.css',
+				Pinhole::PACKAGE_ID));
 	}
 
 	// }}}
@@ -77,6 +82,7 @@ abstract class PinholeBrowserPage extends PinholePage
 
 			$tag_link = new SwatHtmlTag('a');
 			$tag_link->href = 'tag/'.$tag->shortname;
+			$tag_link->title = 'view all photos with this tag';
 			$tag_link->setContent($tag->title);
 			$tag_link->display();
 			$count++;

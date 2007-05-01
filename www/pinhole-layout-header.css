@@ -1,0 +1,12 @@
+#hd {
+	background-color: #414544;
+}
+
+#hd h1 {
+	margin: 0;
+	font-weight: bold;
+	font-size: 182%;
+	background-color: #555753;
+	border-bottom: 1px solid #666;
+	padding: 10px 20px;
+}

@@ -11,6 +11,7 @@ PinholePhotoUploadPage = function(uploader)
 		'http://gallery.whitelands.com/files/thumb/photo56250.jpg',
 		'http://gallery.whitelands.com/files/thumb/photo53999.jpg'
 	];
+
 	this.count = 0;
 
 	this.photo_container = document.getElementById('photo_container');
@@ -21,19 +22,32 @@ PinholePhotoUploadPage = function(uploader)
 	this.uploader.uploadCompleteEvent.subscribe(this.startDemo, this, true);
 }
 
+PinholePhotoUploadPage.slide_duration = 1;
 PinholePhotoUploadPage.fade_duration = 1;
+PinholePhotoUploadPage.thumbnail_width = 100;
+PinholePhotoUploadPage.thumbnail_height = 100;
+PinholePhotoUploadPage.thumbnail_margin = 5;
+PinholePhotoUploadPage.thumbnail_padding = 10;
 PinholePhotoUploadPage.processing_text = 'Processing photos … ';
 
 PinholePhotoUploadPage.prototype.addPhoto = function()
 {
 	this.spacer_div.style.width = '0';
-	this.spacer_div.style.height = '130px';
+	this.spacer_div.style.height =
+		(PinholePhotoUploadPage.thumbnail_height +
+		PinholePhotoUploadPage.thumbnail_margin * 2 +
+		PinholePhotoUploadPage.thumbnail_padding * 2) + 'px';
+
 	this.spacer_div.style.cssFloat = 'left';
 	this.spacer_div.style.margin = '0';
 	this.photo_container.insertBefore(this.spacer_div,
 		this.photo_container.firstChild);
 
-	var animation = new YAHOO.util.Anim(this.spacer_div, { width: { to: 130 }},
+	var animation = new YAHOO.util.Anim(this.spacer_div,
+		{ width: { to:
+			PinholePhotoUploadPage.thumbnail_width + 
+			PinholePhotoUploadPage.thumbnail_margin * 2 +
+			PinholePhotoUploadPage.thumbnail_padding * 2 } },
 		1, YAHOO.util.Easing.easeOutStrong);
 
 	animation.onComplete.subscribe(this.fadeInPhoto, this, true);
@@ -46,18 +60,26 @@ PinholePhotoUploadPage.prototype.fadeInPhoto = function()
 //	throbber_div.style.backgroundImage = 'url(http://www.webtwenny.com/images/Throbber.gif)';
 	throbber_div.style.backgroundPosition = 'center center';
 	throbber_div.style.backgroundRepeat = 'no-repeat';
-	throbber_div.style.width = '130px';
-	throbber_div.style.height = '130px';
+	throbber_div.style.width =
+		(PinholePhotoUploadPage.thumbnail_width +
+		PinholePhotoUploadPage.thumbnail_margin * 2 +
+		PinholePhotoUploadPage.thumbnail_padding * 2) + 'px';
+
+	throbber_div.style.height =
+		(PinholePhotoUploadPage.thumbnail_height +
+		PinholePhotoUploadPage.thumbnail_margin * 2 +
+		PinholePhotoUploadPage.thumbnail_padding * 2) + 'px';
+
 	throbber_div.style.margin = '0';
 	throbber_div.style.cssFloat = 'left';
 
 	var div = document.createElement('div');
 	div.style.opacity = '0';
-	div.style.width = '100px';
-	div.style.height = '100px';
+	div.style.width = PinholePhotoUploadPage.thumbnail_width + 'px';
+	div.style.height = PinholePhotoUploadPage.thumbnail_height + 'px';
 	div.style.backgroundColor = '#ddd';
-	div.style.padding = '10px';
-	div.style.margin = '5px';
+	div.style.padding = PinholePhotoUploadPage.thumbnail_padding + 'px';
+	div.style.margin = PinholePhotoUploadPage.thumbnail_margin + 'px';
 	div.style.textAlign = 'center';
 
 	var image = document.createElement('img');

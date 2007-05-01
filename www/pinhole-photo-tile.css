@@ -1,0 +1,26 @@
+.pinhole-tile-view .swat-tile {
+	width: 106px;
+	padding: 10px;
+	margin: 10px;
+	float: left;
+	text-align: center;
+	border: 1px solid transparent;
+}
+
+.pinhole-tile-view .swat-tile:hover {
+	border: 1px solid #888a85;
+}
+
+.pinhole-tile-view .swat-tile span.photo-title {
+	display: block;
+	height: 3em;
+	padding: 0.5em 0;
+}
+
+.pinhole-tile-view img {
+	display: block;
+	margin: 0 auto;
+	padding: 2px;
+	border: 1px solid #888a85;
+	background: #555753;
+}

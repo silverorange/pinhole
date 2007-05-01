@@ -1,8 +1,8 @@
-@import url("header.css");
-@import url("footer.css");
-@import url("sidebar.css");
-@import url("photo-tile.css");
-@import url("intersecting-tag-list.css");
+@import url("pinhole-layout-header.css");
+@import url("pinhole-layout-footer.css");
+@import url("pinhole-layout-sidebar.css");
+@import url("pinhole-photo-tile.css");
+@import url("pinhole-intersecting-tag-list.css");
 
 #doc3 { margin: auto; } /* override 10px left/right margin from YUI grid */
 

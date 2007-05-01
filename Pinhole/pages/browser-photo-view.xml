@@ -6,8 +6,10 @@
 		<object class="PinholePhotoTile">
 			<object class="SwatImageCellRenderer">
 				<property name="image" type="data">image</property>
-				<property name="height" type="integer">100</property>
-				<property name="width" type="integer">100</property>
+				<!-- TODO: load dimensions from PhotoDimensionBinding object -->
+				<!--property name="height" type="integer">100</property-->
+				<!--property name="width" type="integer">100</property-->
+				<!-- TODO: add "occupy_width" and "occupy_height" properties to image cell renderer -->
 				<property name="alt" type="data">title</property>
 			</object>
 			<object class="SwatTextCellRenderer">

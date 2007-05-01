@@ -1,15 +1,17 @@
 <?php
 
+require_once 'Pinhole/Pinhole.php';
 require_once 'Swat/SwatNavBar.php';
 require_once 'Site/layouts/SiteLayout.php';
 
 /**
- * Layout for Gallery pages
+ * Layout for pages in the Pinhole photo gallery package
  *
- * @package   Gallery 
+ * @package   Pinhole
  * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class GalleryLayout extends SiteLayout
+class PinholeLayout extends SiteLayout
 {
 	// init phase
 	// {{{ public function init()
@@ -31,9 +33,9 @@ class GalleryLayout extends SiteLayout
 	{
 		parent::build();
 
-		$this->addHtmlHeadEntry(
-			new SwatStyleSheetHtmlHeadEntry('styles/gallery-layout.css'));
-
+		$this->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/styles/pinhole-layout.css',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

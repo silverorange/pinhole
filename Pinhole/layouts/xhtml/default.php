@@ -18,7 +18,7 @@
 	<div id="bd">
 
 		<div id="yui-main">
-		<div class="yui-b">
+		<div class="yui-b" id="content">
 			<h2 id="page_title"><?= $this->title ?></h2>
 			<?= $this->content ?>
 		</div>

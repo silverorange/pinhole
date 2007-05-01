@@ -225,7 +225,8 @@ class PinholePhoto extends SwatDBDataObject
 			$transformer->fitX($dimension->max_width);
 
 		if ($dimension->max_height !== null)
-			$transformer->fitY($dimension->max_height);
+			if ($transformer->new_y > $dimension->max_height)
+				$transformer->fitY($dimension->max_height);
 	}
 
 	// }}}

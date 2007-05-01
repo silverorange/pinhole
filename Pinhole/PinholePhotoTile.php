@@ -22,6 +22,11 @@ class PinholePhotoTile extends SwatTile
 		if (!$this->visible)
 			return;
 
+		/* TODO: This is bad since it puts the link outside the tile div.
+		 *       Perhaps we should add a swat tile option to output a link...
+		 *       Or require overide more here...
+		 *       Or do it with cell-renderers somehow...
+		 */
 		$anchor = new SwatHtmlTag('a');
 		$anchor->href = $data->link;
 		$anchor->open();

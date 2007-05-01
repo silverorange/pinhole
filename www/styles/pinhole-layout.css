@@ -11,6 +11,11 @@ body {
 	color: #eeeeec;
 }
 
+#content {
+	margin-top: 20px;
+}
+
+
 /* Links */
 
 a:link    { color: #b0c9e4; } 

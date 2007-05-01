@@ -50,6 +50,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	protected function getPhotoTableStore()
 	{
 		$store = new SwatTableStore();
+		// TODO: add pagination to UI and pass limit and offest to the
+		//       getPhotos() method below:
 		$photos = $this->tag_intersection->getPhotos();
 
 		foreach ($photos as $photo) {

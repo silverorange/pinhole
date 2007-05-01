@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 
@@ -40,21 +41,17 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	{
 		parent::build();
 
+		$this->layout->addHtmlHeadEntry(
+			new SwatStyleSheetHtmlHeadEntry(
+				'packages/pinhole/styles/pinhole-browser-details-page.css',
+				Pinhole::PACKAGE_ID));
+
+		$this->layout->data->title =
+			SwatString::minimizeEntities($this->photo->title);
+
 		$this->layout->startCapture('content');
-		$this->displayTitle();
 		$this->displayPhoto();
 		$this->layout->endCapture();
-	}
-
-	// }}}
-	// {{{ protected function displayTitle()
-
-	protected function displayTitle()
-	{
-		$title_tag = new SwatHtmlTag('h2');
-		$title_tag->class = 'photo-title';
-		$title_tag->setContent($this->photo->title);
-		$title_tag->display();
 	}
 
 	// }}}

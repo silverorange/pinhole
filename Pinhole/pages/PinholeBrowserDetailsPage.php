@@ -41,11 +41,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	{
 		parent::build();
 
-		$this->layout->addHtmlHeadEntry(
-			new SwatStyleSheetHtmlHeadEntry(
-				'packages/pinhole/styles/pinhole-browser-details-page.css',
-				Pinhole::PACKAGE_ID));
-
 		$this->layout->data->title =
 			SwatString::minimizeEntities($this->photo->title);
 
@@ -63,6 +58,19 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		// TODO: use dimension objects
 		$img_tag->src = $this->photo->getUri('large');
 		$img_tag->display();
+	}
+
+	// }}}
+
+	// finalize phase
+	// {{{ public function finalize()
+
+	public function finalize()
+	{
+		parent::finalize();
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/styles/pinhole-browser-details-page.css',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

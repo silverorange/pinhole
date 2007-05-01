@@ -2,13 +2,13 @@
 
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/PinholeTagIntersection.php';
-require_once 'Site/pages/SitePage.php';
+require_once 'Pinhole/pages/PinholePage.php';
 
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
  */
-abstract class PinholeBrowserPage extends SitePage
+abstract class PinholeBrowserPage extends PinholePage
 {
 	// {{{ protected properties
 
@@ -23,8 +23,9 @@ abstract class PinholeBrowserPage extends SitePage
 
 		$this->tag_intersection = new PinholeTagIntersection($app->db);
 
-		foreach (explode('/', $tags) as $tag)
-			$this->tag_intersection->addTagByShortname($tag);
+		if ($tags !== null)
+			foreach (explode('/', $tags) as $tag)
+				$this->tag_intersection->addTagByShortname($tag);
 	}
 
 	// }}}
@@ -99,9 +100,8 @@ abstract class PinholeBrowserPage extends SitePage
 		foreach ($tags as $tag) {
 			$anchor_tag = new SwatHtmlTag('a');
 			$anchor_tag->setContent($tag->title);
-			$anchor_tag->href = 'tag/'.
-				$this->tag_intersection->getIntersectingTagPath().'/'.
-				$tag->shortname;
+			$path = $this->tag_intersection->getIntersectingTagPath();
+			$anchor_tag->href = 'tag/'.((strlen($path) > 0) ? $path.'/' : '').$tag->shortname;
 
 			$li_tag = new SwatHtmlTag('li');
 			$li_tag->open();

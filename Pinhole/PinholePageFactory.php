@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Site/SitePageFactory.php';
+require_once 'Pinhole/pages/PinholePage.php';
 
 /**
  * Resolves and creates pages
@@ -47,7 +48,7 @@ abstract class PinholePageFactory extends SitePageFactory
 		if ($page === null) {
 			// not found in page map so instantiate default page
 			$params = array($app, $layout);
-			$page = $this->instantiatePage('SitePage', $params);
+			$page = $this->instantiatePage('PinholePage', $params);
 		}
 
 		return $page;

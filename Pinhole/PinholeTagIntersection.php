@@ -91,7 +91,7 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getPhotos()
 
-	public function getPhotos()
+	public function getPhotos($offset = null, $limit = null)
 	{
 		$sql = 'select * from PinholePhoto where 1 = 1';
 
@@ -101,7 +101,8 @@ class PinholeTagIntersection
 				$this->db->quote($tag->id, 'integer'));
 		}
 
-		$sql.= ' order by publish_date desc';
+		// TODO: use $limit and $offset
+		$sql.= ' order by publish_date desc limit 20';
 
 		// TODO: use classmap
 		$photos = SwatDB::query($this->db, $sql, 'PinholePhotoWrapper');
@@ -130,8 +131,12 @@ class PinholeTagIntersection
 		$sql.= '))';
 
 
-		$sql = sprintf($sql,
-			$this->db->implodeArray($tag_ids, 'integer'));
+		if (count($tag_ids))
+			$sql = sprintf($sql,
+				$this->db->implodeArray($tag_ids, 'integer'));
+		else
+			// hack to experiment with showing all tags on top level
+			$sql = sprintf($sql, '0');
 
 		// TODO: use classmap
 		$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');

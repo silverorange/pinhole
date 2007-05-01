@@ -41,8 +41,20 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		parent::build();
 
 		$this->layout->startCapture('content');
+		$this->displayTitle();
 		$this->displayPhoto();
 		$this->layout->endCapture();
+	}
+
+	// }}}
+	// {{{ protected function displayTitle()
+
+	protected function displayTitle()
+	{
+		$title_tag = new SwatHtmlTag('h2');
+		$title_tag->class = 'photo-title';
+		$title_tag->setContent($this->photo->title);
+		$title_tag->display();
 	}
 
 	// }}}

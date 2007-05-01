@@ -23,6 +23,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		parent::init();
 
 		$this->photo_ui = new SwatUI();
+		$this->photo_ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
 		$this->photo_ui->loadFromXML($this->photo_ui_xml);
 	}
 
@@ -66,6 +67,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	{
 		$ds = new SwatDetailsStore($photo);
 		$ds->image = $photo->getURI();
+
+		$path = $this->tag_intersection->getIntersectingTagPath();
+		$ds->link = 'photo/'.((strlen($path) > 0) ? $path.'/' : '').$photo->id;
 
 		return $ds;
 	}

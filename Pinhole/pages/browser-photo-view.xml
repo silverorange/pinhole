@@ -3,7 +3,7 @@
 <swatml>
 	<widget class="SwatTileView" id="photo_view">
 		<property name="classes[]">pinhole-tile-view</property>
-		<object class="SwatTile">
+		<object class="PinholePhotoTile">
 			<object class="SwatImageCellRenderer">
 				<property name="image" type="data">image</property>
 				<property name="height" type="integer">100</property>

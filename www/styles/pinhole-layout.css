@@ -1,0 +1,19 @@
+@import url("header.css");
+@import url("footer.css");
+@import url("sidebar.css");
+@import url("photo-tile.css");
+@import url("intersecting-tag-list.css");
+
+#doc3 { margin: auto; } /* override 10px left/right margin from YUI grid */
+
+body {
+	background-color: #2e3436;
+	color: #eeeeec;
+}
+
+/* Links */
+
+a:link    { color: #b0c9e4; } 
+a:visited { color: #b0c9e4; } 
+a:hover   { color: #729fcf; }
+a:active  { color: #729fcf; }

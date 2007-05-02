@@ -51,6 +51,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$this->layout->startCapture('content');
 		$this->displayPhoto();
+		$this->displayPhotoDetails();
 		$this->layout->endCapture();
 	}
 
@@ -64,6 +65,21 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$img_tag->src = $this->photo->getUri('large');
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
+	}
+
+	// }}}
+	// {{{ protected function displayPhotoDetails()
+
+	protected function displayPhotoDetails()
+	{
+		echo '<div class="pinhole-photo-details">';
+			if (strlen($this->photo->description)) {
+				$description_tag = new SwatHtmlTag('p');
+				$description_tag->class = 'photo-description';
+				$description_tag->setContent($this->photo->description);
+				$description_tag->display();
+			}
+		echo '</div>';
 	}
 
 	// }}}

@@ -1,7 +1,7 @@
 .pinhole-tile-view .swat-tile {
 	width: 106px;
 	padding: 10px;
-	margin: 10px;
+	margin: 5px 10px;
 	float: left;
 	text-align: center;
 	border: 1px solid transparent;
@@ -14,7 +14,7 @@
 .pinhole-tile-view .swat-tile span.photo-title {
 	display: block;
 	height: 2em;
-	padding: 0.5em 0;
+	padding: 0.3em 0;
 }
 
 .pinhole-tile-view img {

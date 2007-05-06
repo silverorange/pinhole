@@ -43,7 +43,7 @@ abstract class PinholeBrowserPage extends PinholePage
 		parent::build();
 
 		$this->layout->startCapture('header_content');
-		$this->displayIntersectingTags();
+		$this->displayTagList();
 		$this->layout->endCapture();
 
 		$this->layout->startCapture('sidebar_content');
@@ -52,32 +52,30 @@ abstract class PinholeBrowserPage extends PinholePage
 	}
 
 	// }}}
-	// {{{ protected function displayIntersectingTags()
+	// {{{ protected function displayTagList()
 
-	protected function displayIntersectingTags()
+	protected function displayTagList()
 	{
-		$tags = $this->tag_intersection->getIntersectingTags();
+		$tags = $this->getTagListTags();
+		if (count($tags) > 0) {
+			echo '<div class="intersecting-tag-list">';
 
-		if (count($tags) == 0)
-			return;
+			$count = 0;
+			
+			foreach ($tags as $tag) {
+				if ($count > 0)
+					echo ' <span class="plus">+</span> ';
 
-		echo '<div class="intersecting-tag-list">';
+				$tag_link = new SwatHtmlTag('a');
+				$tag_link->href = 'tag/'.$tag->shortname;
+				$tag_link->title = 'view all photos with this tag';
+				$tag_link->setContent($tag->title);
+				$tag_link->display();
+				$count++;
+			}
 
-		$count = 0;
-		
-		foreach ($tags as $tag) {
-			if ($count > 0)
-				echo ' <span class="plus">+</span> ';
-
-			$tag_link = new SwatHtmlTag('a');
-			$tag_link->href = 'tag/'.$tag->shortname;
-			$tag_link->title = 'view all photos with this tag';
-			$tag_link->setContent($tag->title);
-			$tag_link->display();
-			$count++;
+			echo '</div>';
 		}
-
-		echo '</div>';
 	}
 
 	// }}}
@@ -110,6 +108,14 @@ abstract class PinholeBrowserPage extends PinholePage
 		}
 
 		echo '</ul>';
+	}
+
+	// }}}
+	// {{{ protected function getTagListTags()
+
+	protected function getTagListTags()
+	{
+		return $this->tag_intersection->getIntersectingTags();
 	}
 
 	// }}}

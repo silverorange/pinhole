@@ -71,6 +71,21 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
+	// {{{ protected function getTagListTags()
+
+	protected function getTagListTags()
+	{
+		$tags = new PinholeTagWrapper();
+		$intersection_tags = parent::getTagListTags();
+		$photo_tags = $this->photo->tags;
+		foreach ($intersection_tags as $tag)
+			if ($photo_tags->getByIndex($tag->id) !== null)
+				$tags->add($tag);
+
+		return $tags;
+	}
+
+	// }}}
 
 	// finalize phase
 	// {{{ public function finalize()

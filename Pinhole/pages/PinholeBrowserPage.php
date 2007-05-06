@@ -84,30 +84,29 @@ abstract class PinholeBrowserPage extends PinholePage
 	protected function displayTagList()
 	{
 		$tags = $this->getTagListTags();
-		if (count($tags) == 0)
-			return;
+		if (count($tags) > 0) {
+			echo '<h3 class="tag-list-title">Related Tags:</h3>';
+			echo '<ul class="tag-list">';
 
-		echo '<h3 class="tag-list-title">Related Tags:</h3>';
-		echo '<ul class="tag-list">';
+			$root = 'tag';
+			$path = $this->tag_intersection->getIntersectingTagPath();
+			if (strlen($path) > 0)
+				$root.= '/'.$path;
 
-		$root = 'tag';
-		$path = $this->tag_intersection->getIntersectingTagPath();
-		if (strlen($path) > 0)
-			$root.= '/'.$path;
+			foreach ($tags as $tag) {
+				$li_tag = new SwatHtmlTag('li');
+				$li_tag->open();
 
-		foreach ($tags as $tag) {
-			$li_tag = new SwatHtmlTag('li');
-			$li_tag->open();
+				$anchor_tag = new SwatHtmlTag('a');
+				$anchor_tag->setContent($tag->title);
+				$anchor_tag->href = $root.'/'.$tag->shortname;
+				$anchor_tag->display();
 
-			$anchor_tag = new SwatHtmlTag('a');
-			$anchor_tag->setContent($tag->title);
-			$anchor_tag->href = $root.'/'.$tag->shortname;
-			$anchor_tag->display();
+				$li_tag->close();
+			}
 
-			$li_tag->close();
+			echo '</ul>';
 		}
-
-		echo '</ul>';
 	}
 
 	// }}}

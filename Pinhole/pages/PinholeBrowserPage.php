@@ -43,20 +43,20 @@ abstract class PinholeBrowserPage extends PinholePage
 		parent::build();
 
 		$this->layout->startCapture('header_content');
-		$this->displayTagList();
+		$this->displayIntersectingTags();
 		$this->layout->endCapture();
 
 		$this->layout->startCapture('sidebar_content');
-		$this->displayNavigationTags();
+		$this->displayTagList();
 		$this->layout->endCapture();
 	}
 
 	// }}}
-	// {{{ protected function displayTagList()
+	// {{{ protected function displayIntersectingTags()
 
-	protected function displayTagList()
+	protected function displayIntersectingTags()
 	{
-		$tags = $this->getTagListTags();
+		$tags = $this->tag_intersection->getIntersectingTags();
 		if (count($tags) > 0) {
 			echo '<div class="intersecting-tag-list">';
 
@@ -79,11 +79,11 @@ abstract class PinholeBrowserPage extends PinholePage
 	}
 
 	// }}}
-	// {{{ protected function displayNavigationTags()
+	// {{{ protected function displayTagList()
 
-	protected function displayNavigationTags()
+	protected function displayTagList()
 	{
-		$tags = $this->tag_intersection->getTags();
+		$tags = $this->getTagListTags();
 		if (count($tags) == 0)
 			return;
 
@@ -115,7 +115,7 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	protected function getTagListTags()
 	{
-		return $this->tag_intersection->getIntersectingTags();
+		return $this->tag_intersection->getTags();
 	}
 
 	// }}}

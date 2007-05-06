@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Swat/SwatDate.php';
 require_once 'SwatDB/SwatDBDataObject.php';
 require_once 'Image/Transform.php';
@@ -266,6 +267,20 @@ class PinholePhoto extends SwatDBDataObject
 
 			$transformer->crop($max_x, $max_y, $offset_x, $offset_y);
 		}
+	}
+
+	// }}}
+
+	// loader methods
+	// {{{ protected function loadTags()
+
+	protected function loadTags()
+	{
+		$sql = sprintf('select * from PinholeTag where id in (
+			select tag from PinholePhotoTagBinding where photo = %s)',
+			$this->db->quote($this->id, 'integer'));
+
+		return SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
 	}
 
 	// }}}

@@ -24,20 +24,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
-	// init phase
-	// {{{ public function init()
-
-	public function init()
-	{
-		parent::init();
-
-		$this->layout->addHtmlHeadEntry(
-			new SwatStyleSheetHtmlHeadEntry(
-				'packages/pinhole/styles/pinhole-browser-details-page.css',
-				Pinhole::PACKAGE_ID));
-	}
-
-	// }}}
 
 	// build phase
 	// {{{ public function build()

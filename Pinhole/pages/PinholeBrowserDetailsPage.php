@@ -59,12 +59,14 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function displayPhotoDetails()
 	{
 		echo '<div class="pinhole-photo-details">';
-			if (strlen($this->photo->description)) {
-				$description_tag = new SwatHtmlTag('p');
-				$description_tag->class = 'photo-description';
-				$description_tag->setContent($this->photo->description);
-				$description_tag->display();
-			}
+
+		if (strlen($this->photo->description) > 0) {
+			$description_tag = new SwatHtmlTag('p');
+			$description_tag->class = 'photo-description';
+			$description_tag->setContent($this->photo->description);
+			$description_tag->display();
+		}
+
 		echo '</div>';
 	}
 

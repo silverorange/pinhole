@@ -13,12 +13,16 @@ abstract class PinholeBrowserPage extends PinholePage
 {
 	// {{{ protected properties
 
+	/**
+	 * @var PinholeTagIntersection
+	 */
 	protected $tag_intersection;
 
 	// }}}
 	// {{{ public function __construct()
 
-	public function __construct(SiteApplication $app, SiteLayout $layout, $tags = null)
+	public function __construct(SiteApplication $app, SiteLayout $layout,
+		$tags = null)
 	{
 		parent::__construct($app, $layout);
 
@@ -88,15 +92,20 @@ abstract class PinholeBrowserPage extends PinholePage
 		echo '<h3 class="tag-list-title">Related Tags:</h3>';
 		echo '<ul class="tag-list">';
 
-		foreach ($tags as $tag) {
-			$anchor_tag = new SwatHtmlTag('a');
-			$anchor_tag->setContent($tag->title);
-			$path = $this->tag_intersection->getIntersectingTagPath();
-			$anchor_tag->href = 'tag/'.((strlen($path) > 0) ? $path.'/' : '').$tag->shortname;
+		$root = 'tag';
+		$path = $this->tag_intersection->getIntersectingTagPath();
+		if (strlen($path) > 0)
+			$root.= '/'.$path;
 
+		foreach ($tags as $tag) {
 			$li_tag = new SwatHtmlTag('li');
 			$li_tag->open();
+
+			$anchor_tag = new SwatHtmlTag('a');
+			$anchor_tag->setContent($tag->title);
+			$anchor_tag->href = $root.'/'.$tag->shortname;
 			$anchor_tag->display();
+
 			$li_tag->close();
 		}
 

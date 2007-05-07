@@ -128,7 +128,7 @@ class PinholePhoto extends SwatDBDataObject
 	// }}}
 	// {{{ public function getURI()
 
-	// TOOD: use dimension bindings here
+	// TODO: use dimension bindings here
 	public function getURI($set = 'thumb') {
 		return 'images/photos/'.$set.'/'.$this->id.'.jpg';
 	}

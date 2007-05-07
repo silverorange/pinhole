@@ -9,7 +9,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PineholePhotoDimensionBinding extends SwatDBDataObject
+class PinholePhotoDimensionBinding extends SwatDBDataObject
 {
 	// {{{ public properties
 

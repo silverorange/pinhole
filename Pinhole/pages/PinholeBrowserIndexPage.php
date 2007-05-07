@@ -39,6 +39,12 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$view = $this->photo_ui->getWidget('photo_view');
 		$view->model = $this->getPhotoTableStore();
 
+		$pagination = $this->photo_ui->getWidget('pagination');
+		$pagination->total_records = $this->tag_intersection->getPhotoCount();
+		$pagination->page_size = 20;
+		$path = $this->tag_intersection->getIntersectingTagPath();
+		$pagination->link = 'photo/'.((strlen($path) > 0) ? $path.'/' : '').'%s';
+
 		$this->layout->startCapture('content');
 		$this->photo_ui->display();
 		$this->layout->endCapture();
@@ -52,7 +58,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$store = new SwatTableStore();
 		// TODO: add pagination to UI and pass limit and offest to the
 		//       getPhotos() method below:
-		$photos = $this->tag_intersection->getPhotos();
+		$photos = $this->tag_intersection->getPhotos(20);
 
 		foreach ($photos as $photo) {
 			$ds = $this->getPhotoDetailsStore($photo);
@@ -69,6 +75,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	{
 		$ds = new SwatDetailsStore($photo);
 		$ds->image = $photo->loadDimension('thumb')->getURI();
+		$ds->title = SwatString::condense($photo->title, 30);
 
 		$path = $this->tag_intersection->getIntersectingTagPath();
 		$ds->link = 'photo/'.((strlen($path) > 0) ? $path.'/' : '').$photo->id;
@@ -79,6 +86,18 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$ds->max_height = $photo->loadDimension('thumb')->dimension->max_height;
 
 		return $ds;
+	}
+
+	// }}}
+
+	// finalize phase
+	// {{{ public function finalize()
+
+	public function finalize()
+	{
+		parent::finalize();
+		$this->layout->addHtmlHeadEntrySet(
+			$this->photo_ui->getRoot()->getHtmlHeadEntrySet());
 	}
 
 	// }}}

@@ -2,3 +2,8 @@ h2#page_title {
 	font-size: 136%;
 	margin-bottom: 0.2em;
 }
+
+/* SwatPagination */
+.swat-pagination {
+	clear: left;
+}

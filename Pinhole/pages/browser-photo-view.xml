@@ -18,4 +18,7 @@
 			</object>
 		</object>
 	</widget>
+	<widget class="SwatPagination" id="pagination">
+		<property name="display_parts" type="constant">NEXT|PREV|PAGES</property>
+	</widget>
 </swatml>

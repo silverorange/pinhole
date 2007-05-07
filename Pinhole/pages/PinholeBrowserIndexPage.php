@@ -73,6 +73,11 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$path = $this->tag_intersection->getIntersectingTagPath();
 		$ds->link = 'photo/'.((strlen($path) > 0) ? $path.'/' : '').$photo->id;
 
+		$ds->width = $photo->loadDimension('thumb')->width;
+		$ds->max_width = $photo->loadDimension('thumb')->dimension->max_width;
+		$ds->height = $photo->loadDimension('thumb')->height;
+		$ds->max_height = $photo->loadDimension('thumb')->dimension->max_height;
+
 		return $ds;
 	}
 

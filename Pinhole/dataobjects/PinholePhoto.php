@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
+require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Swat/SwatDate.php';
 require_once 'SwatDB/SwatDBDataObject.php';
 require_once 'Image/Transform.php';
@@ -110,10 +111,10 @@ class PinholePhoto extends SwatDBDataObject
 	 */
 	public $status;
 
-	public $width;
-	public $height;
-	public $max_width;
-	public $max_height;
+	// }}}
+	// {{{ private properties
+
+	private $dimensions = array();
 
 	// }}}
 	// {{{ public function getCompressionQuality()
@@ -130,6 +131,15 @@ class PinholePhoto extends SwatDBDataObject
 	// TOOD: use dimension bindings here
 	public function getURI($set = 'thumb') {
 		return 'images/photos/'.$set.'/'.$this->id.'.jpg';
+	}
+
+	// }}}
+	// {{{ public function addDimension()
+
+	public function addDimension($shortname,
+		PinholePhotoDimensionBinding $dimension)
+	{
+		$this->dimensions[$shortname] = $dimension;
 	}
 
 	// }}}
@@ -208,7 +218,7 @@ class PinholePhoto extends SwatDBDataObject
 	// }}}
 	// {{{ public function getTitle()
 
-	/**
+	/*
 	 * Get a readable title for a photo
 	 *
 	 * @return string a readable title for a photo 
@@ -281,6 +291,30 @@ class PinholePhoto extends SwatDBDataObject
 			$this->db->quote($this->id, 'integer'));
 
 		return SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
+	}
+
+	// }}}
+	// {{{ public function loadDimension()
+
+	public function loadDimension($shortname)
+	{
+		if (isset($this->dimensions[$shortname]))
+			return $this->dimensions[$shortname];
+
+		$sql = sprintf('select PinholePhotoDimensionBinding.*
+			from PinholePhotoDimensionBinding
+			inner join PinholeDimension on
+				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
+			where PinholePhotoDimensionBinding.photo = %s
+				and PinholeDimension.shortname = %s',
+			$this->db->quote($this->id, 'integer'),
+			$this->db->quote($shortname, 'text'));
+
+		$dimension = SwatDB::query($this->db, $sql,
+			'PinholePhotoDimensionBindingWrapper');
+
+		if ($dimension !== null)
+			$this->addDimension($shortname, $dimension->getFirst());
 	}
 
 	// }}}

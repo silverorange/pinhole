@@ -68,7 +68,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	protected function getPhotoDetailsStore($photo)
 	{
 		$ds = new SwatDetailsStore($photo);
-		$ds->image = $photo->getURI();
+		$ds->image = $photo->loadDimension('thumb')->getURI();
 
 		$path = $this->tag_intersection->getIntersectingTagPath();
 		$ds->link = 'photo/'.((strlen($path) > 0) ? $path.'/' : '').$photo->id;

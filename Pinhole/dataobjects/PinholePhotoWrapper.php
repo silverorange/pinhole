@@ -79,6 +79,8 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 
 		return $photos;
 	}
+
+	// }}}
 }
 
 ?>

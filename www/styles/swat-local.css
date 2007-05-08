@@ -1,0 +1,17 @@
+/* SwatPagination */
+
+.swat-pagination a,
+.swat-pagination span {
+	border-color: #555753;
+	padding-top: 0.4emv
+}
+
+.swat-pagination span.swat-pagination-current {
+	border-color: #888a85;
+	background-color: #555753;
+}
+
+.swat-pagination a:hover {
+	background-color: #555753;
+	border-color: #888a85;
+}

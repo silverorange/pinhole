@@ -3,6 +3,7 @@
 @import url("pinhole-layout-sidebar.css");
 @import url("pinhole-photo-tile.css");
 @import url("pinhole-intersecting-tag-list.css");
+@import url("swat-local.css");
 
 #doc3 { margin: auto; } /* override 10px left/right margin from YUI grid */
 

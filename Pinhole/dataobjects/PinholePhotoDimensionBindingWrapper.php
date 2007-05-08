@@ -18,6 +18,7 @@ class PinholePhotoDimensionBindingWrapper extends SwatDBRecordsetWrapper
 	protected function init()
 	{
 		parent::init();
+
 		$this->row_wrapper_class = 'PinholePhotoDimensionBinding';
 	}
 

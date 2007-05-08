@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Swat/SwatHtmlTag.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
@@ -47,8 +48,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function displayPhoto()
 	{
 		$img_tag = new SwatHtmlTag('img');
-		// TODO: use dimension objects
-		$img_tag->src = $this->photo->getUri('large');
+		$img_tag->src = $this->photo->getDimension('large')->getUri();
+		$img_tag->width = $this->photo->getDimension('large')->width;
+		$img_tag->height = $this->photo->getDimension('large')->height;
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
 	}

@@ -14,20 +14,6 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 	// {{{ public properties
 
 	/**
-	 * not null references PinholePhoto(id) on delete cascade,
-	 *
-	 * @var integer
-	 */
-	public $photo;
-
-	/**
-	 * not null references PinholeDimension(id) on delete cascade,
-	 *
-	 * @var integer
-	 */
-	public $dimension;
-
-	/**
 	 * not null,
 	 *
 	 * @var integer
@@ -44,10 +30,22 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 	// }}}
 	// {{{ public function getURI()
 
-	public function getURI() {
+	public function getURI()
+	{
 		return sprintf('images/photos/%s/%s.jpg',
 			$this->dimension->shortname,
 			$this->photo->id);
+	}
+
+	// }}}
+	// {{{ protected function init()
+
+	protected function init()
+	{
+		parent::init();
+
+		$this->registerInternalProperty('dimension', 'PinholeDimension');
+		$this->registerInternalProperty('photo', 'PinholePhoto');
 	}
 
 	// }}}

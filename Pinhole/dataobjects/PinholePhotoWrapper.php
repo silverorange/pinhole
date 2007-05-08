@@ -84,7 +84,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 			$dimension_binding = new PinholePhotoDimensionBinding($row);
 			$dimension_binding->dimension = $dimension;
 
-			$photo->addDimension($dimension_shortname, $dimension_binding);
+			$photo->setDimension($dimension_shortname, $dimension_binding);
 
 			$store->add($photo);
 		}

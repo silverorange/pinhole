@@ -126,13 +126,40 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
-	// {{{ public function addDimension()
+	// {{{ public function setDimension()
 
-	public function addDimension($shortname,
+	public function setDimension($shortname,
 		PinholePhotoDimensionBinding $dimension)
 	{
 		$dimension->photo = $this;
 		$this->dimensions[$shortname] = $dimension;
+	}
+
+	// }}}
+	// {{{ public function getDimension()
+
+	public function getDimension($shortname)
+	{
+		if (isset($this->dimensions[$shortname]))
+			return $this->dimensions[$shortname];
+
+		$sql = sprintf('select PinholePhotoDimensionBinding.*
+			from PinholePhotoDimensionBinding
+			inner join PinholeDimension on
+				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
+			where PinholePhotoDimensionBinding.photo = %s
+				and PinholeDimension.shortname = %s',
+			$this->db->quote($this->id, 'integer'),
+			$this->db->quote($shortname, 'text'));
+
+		$dimension = SwatDB::query($this->db, $sql,
+			'PinholePhotoDimensionBindingWrapper');
+
+		if ($dimension->getCount() > 0) {
+			$this->setDimension($shortname, $dimension->getFirst());
+			return $dimension->getFirst();
+		}
+
 	}
 
 	// }}}
@@ -284,30 +311,6 @@ class PinholePhoto extends SwatDBDataObject
 			$this->db->quote($this->id, 'integer'));
 
 		return SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
-	}
-
-	// }}}
-	// {{{ public function loadDimension()
-
-	public function loadDimension($shortname)
-	{
-		if (isset($this->dimensions[$shortname]))
-			return $this->dimensions[$shortname];
-
-		$sql = sprintf('select PinholePhotoDimensionBinding.*
-			from PinholePhotoDimensionBinding
-			inner join PinholeDimension on
-				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
-			where PinholePhotoDimensionBinding.photo = %s
-				and PinholeDimension.shortname = %s',
-			$this->db->quote($this->id, 'integer'),
-			$this->db->quote($shortname, 'text'));
-
-		$dimension = SwatDB::query($this->db, $sql,
-			'PinholePhotoDimensionBindingWrapper');
-
-		if ($dimension !== null)
-			$this->addDimension($shortname, $dimension->getFirst());
 	}
 
 	// }}}

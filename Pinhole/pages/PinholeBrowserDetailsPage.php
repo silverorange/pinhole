@@ -33,6 +33,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	{
 		parent::build();
 
+		/* Set YUI Grid CSS class for one full-width column on details page */
+		$this->layout->data->yui_grid_class = 'yui-t7';
+
 		$this->layout->data->title =
 			SwatString::minimizeEntities($this->photo->title);
 

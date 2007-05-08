@@ -22,6 +22,13 @@ class PinholeLayout extends SiteLayout
 		$this->data->header_content = '';
 		$this->data->sidebar_content = '';
 		$this->data->content = '';
+
+		/* Default YUI Grid CSS to:
+		   Two columns, narrow on left 180px (yui-t2)
+		   100% fluid page width (doc3)
+		*/
+		$this->data->yui_grid_id = 'doc3';
+		$this->data->yui_grid_class = 'yui-t2';
 	}
 
 	// }}}

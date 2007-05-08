@@ -5,7 +5,7 @@
 
 <body>
 
-<div id="doc3" class="yui-t2">
+<div id="<?=$this->yui_grid_id?>" class="<?=$this->yui_grid_class?>">
 
 	<div id="hd">
 		<h1>

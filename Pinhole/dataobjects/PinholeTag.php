@@ -81,7 +81,6 @@ class PinholeTag extends SwatDBDataObject
 
 	protected function init()
 	{
-
 		$this->registerInternalProperty('parent', 'PinholeTag');
 
 		$this->table = 'PinholeTag';

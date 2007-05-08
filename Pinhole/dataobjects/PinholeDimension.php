@@ -63,6 +63,15 @@ class PinholeDimension extends SwatDBDataObject
 	public $strip;
 
 	// }}}
+	// {{{ protected function init()
+
+	protected function init()
+	{
+		$this->table = 'PinholeDimension';
+		$this->id_field = 'integer:id';
+	}
+
+	// }}}
 }
 
 ?>

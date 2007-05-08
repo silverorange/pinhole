@@ -74,16 +74,16 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	protected function getPhotoDetailsStore($photo)
 	{
 		$ds = new SwatDetailsStore($photo);
-		$ds->image = $photo->loadDimension('thumb')->getURI();
+		$ds->image = $photo->getDimension('thumb')->getURI();
 		$ds->title = SwatString::condense($photo->title, 30);
 
 		$path = $this->tag_intersection->getIntersectingTagPath();
 		$ds->link = 'photo/'.((strlen($path) > 0) ? $path.'/' : '').$photo->id;
 
-		$ds->width = $photo->loadDimension('thumb')->width;
-		$ds->max_width = $photo->loadDimension('thumb')->dimension->max_width;
-		$ds->height = $photo->loadDimension('thumb')->height;
-		$ds->max_height = $photo->loadDimension('thumb')->dimension->max_height;
+		$ds->width = $photo->getDimension('thumb')->width;
+		$ds->max_width = $photo->getDimension('thumb')->dimension->max_width;
+		$ds->height = $photo->getDimension('thumb')->height;
+		$ds->max_height = $photo->getDimension('thumb')->dimension->max_height;
 
 		return $ds;
 	}

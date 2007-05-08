@@ -27,6 +27,7 @@ class PinholeLayout extends SiteLayout
 		 * Default YUI Grid CSS to:
 		 *  - Two columns, narrow on left 180px (yui-t2)
 		 *  - 100% fluid page width (doc3)
+		 * For more options, see: http://developer.yahoo.com/yui/grids/
 		 */
 		$this->data->yui_grid_id = 'doc3';
 		$this->data->yui_grid_class = 'yui-t2';

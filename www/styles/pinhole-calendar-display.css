@@ -12,9 +12,9 @@ table.pinhole-calendar caption a {
 	color: #eeeeec;
 }
 
-
 table.pinhole-calendar thead th {
 	font-size: 85%;
+	color: #babdb6;
 }
 
 table.pinhole-calendar th,
@@ -28,8 +28,17 @@ table.pinhole-calendar td {
 	width: 1.3em;
 }
 
+table.pinhole-calendar tbody a {
+	display: block;
+	text-decoration: none;
+}
+
+table.pinhole-calendar tbody a:hover {
+	background: #555753;
+}
+
 table.pinhole-calendar td.today {
-	background: #333;
+	background: #555753;
 }
 
 table.pinhole-calendar td.highlight {

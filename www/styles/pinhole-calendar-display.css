@@ -1,33 +1,38 @@
-.pinhole-calendar {
+table.pinhole-calendar {
 	float: left;
-	padding: 1em 0.5em;
+	margin: 0 0.5em 1em 0.5em;
 }
 
-.pinhole-calendar h2 {
+table.pinhole-calendar caption {
 	padding-bottom: 0.2em;
+	margin: 0 0.5em;
 }
 
-.pinhole-calendar h2 a {
-	color: #fff;
+table.pinhole-calendar caption a {
+	color: #eeeeec;
 }
 
-.pinhole-calendar-weeks {
-	font-size: 80%;
+
+table.pinhole-calendar thead th {
+	font-size: 85%;
 }
 
-.pinhole-calendar td {
+table.pinhole-calendar th,
+table.pinhole-calendar td {
 	text-align: center;
 	padding: 1px;
 	min-width: 1.3em;
-} * .html .pinhole-calendar td {
+}
+* .html table.pinhole-calendar th,
+* .html table.pinhole-calendar td {
 	width: 1.3em;
 }
 
-.pinhole-calendar td.today {
+table.pinhole-calendar td.today {
 	background: #333;
 }
 
-.pinhole-calendar td.highlight {
+table.pinhole-calendar td.highlight {
 	background: #555;
-	border: 1px #fff solid;
+	border: 1px #eeeeec solid;
 }

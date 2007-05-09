@@ -21,7 +21,8 @@ table.pinhole-calendar thead th {
 table.pinhole-calendar th,
 table.pinhole-calendar td {
 	text-align: center;
-	padding: 0 1px 1px 0;
+	padding: 0 0 0 1px;
+	border-bottom: 1px solid #555753;
 }
 
 table.pinhole-calendar tbody a {

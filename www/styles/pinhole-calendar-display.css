@@ -15,33 +15,30 @@ table.pinhole-calendar caption a {
 table.pinhole-calendar thead th {
 	font-size: 85%;
 	color: #babdb6;
+	padding: 0 1px;
 }
 
 table.pinhole-calendar th,
 table.pinhole-calendar td {
 	text-align: center;
-	padding: 1px;
-	min-width: 1.3em;
-}
-* .html table.pinhole-calendar th,
-* .html table.pinhole-calendar td {
-	width: 1.3em;
+	padding: 0 1px 1px 0;
 }
 
 table.pinhole-calendar tbody a {
 	display: block;
 	text-decoration: none;
+	padding: 1px;
+	border: 1px transparent;
 }
 
 table.pinhole-calendar tbody a:hover {
 	background: #555753;
 }
 
-table.pinhole-calendar td.today {
+table.pinhole-calendar td.today a {
 	background: #555753;
 }
 
-table.pinhole-calendar td.highlight {
-	background: #555;
-	border: 1px #eeeeec solid;
+table.pinhole-calendar td.highlight a {
+	border: 1px #888a85 solid;
 }

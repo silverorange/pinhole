@@ -115,6 +115,7 @@ class PinholeCalendarIndexPage extends PinholePage
 	protected function displayCalendars()
 	{
 		$date = new SwatDate();
+		$today = new SwatDate();
 
 		for ($i = 1; $i <= 12; $i++) {
 			$month = $date->getMonth();
@@ -122,6 +123,12 @@ class PinholeCalendarIndexPage extends PinholePage
 
 			$cal = new PinholeCalendarDisplay('cal'.$i);
 			$cal->display_month = $date;
+
+			if ($date->getYear() == $today->getYear())
+				$cal->addClassName('today', array($today->getDay()));
+
+			$cal->addClassName('highlight', array(1, 15, 16, 25));
+
 			$cal->display();
 
 			$date->setYear(($month == 1) ? $year - 1 : $year);

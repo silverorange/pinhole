@@ -93,7 +93,9 @@ class PinholeCalendarDisplay extends SwatControl
 		$th->display();
 
 		for ($i = 1; $i < 8; $i++) {
-			$th->setContent($date->format('%a'));
+			/* TODO: do this better (display first letter only of weekday */
+			$date_string = $date->format('%a');
+			$th->setContent($date_string{0});
 			$th->display();
 			$date->setDay($i + 1);
 		}

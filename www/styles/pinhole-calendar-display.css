@@ -7,13 +7,27 @@
 	padding-bottom: 0.2em;
 }
 
+.pinhole-calendar h2 a {
+	color: #fff;
+}
+
 .pinhole-calendar-weeks {
 	font-size: 80%;
 }
 
 .pinhole-calendar td {
+	text-align: center;
 	padding: 1px;
-	min-width: 1em;
+	min-width: 1.3em;
 } * .html .pinhole-calendar td {
-	width: 1em;
+	width: 1.3em;
+}
+
+.pinhole-calendar td.today {
+	background: #333;
+}
+
+.pinhole-calendar td.highlight {
+	background: #555;
+	border: 1px #fff solid;
 }

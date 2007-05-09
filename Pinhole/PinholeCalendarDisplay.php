@@ -56,15 +56,15 @@ class PinholeCalendarDisplay extends SwatControl
 		if (!$this->visible)
 			return;
 
-		$h2 = new SwatHtmlTag('h2');
 		$table = new SwatHtmlTag('table');
+		$table->class = 'pinhole-calendar';
+		$caption = new SwatHtmlTag('caption');
+		$thead = new SwatHtmlTag('thead');
+		$tbody = new SwatHtmlTag('thead');
 		$tr = new SwatHtmlTag('tr');
+		$th = new SwatHtmlTag('th');
 		$td = new SwatHtmlTag('td');
 		$a = new SwatHtmlTag('a');
-
-		$div = new SwatHtmlTag('div');
-		$div->class = 'pinhole-calendar';
-		$div->open();
 
 		$base_link = sprintf('%s/%s',
 			$this->display_month->format('%Y'),
@@ -74,10 +74,10 @@ class PinholeCalendarDisplay extends SwatControl
 		$a->setContent($this->display_month->format('%B %Y'));
 		ob_start();
 		$a->display();
-		$h2->setContent(ob_get_clean(), 'text/xml');
-		$h2->display();
+		$caption->setContent(ob_get_clean(), 'text/xml');
 
 		$table->open();
+		$caption->display();
 
 		/*
 		 * This date is arbitrary and is just used for getting week names.
@@ -87,19 +87,20 @@ class PinholeCalendarDisplay extends SwatControl
 		$date->setMonth(1);
 		$date->setYear(1995);
 
-		$weeks_tr = new SwatHtmlTag('tr');
-		$weeks_tr->class = 'pinhole-calendar-weeks';
-		$weeks_tr->open();
+		$thead->open();
+		$tr->open();
 
-		$td->display();
+		$th->display();
 
 		for ($i = 1; $i < 8; $i++) {
-			$td->setContent($date->format('%a'));
-			$td->display();
+			$th->setContent($date->format('%a'));
+			$th->display();
 			$date->setDay($i + 1);
 		}
 
-		$weeks_tr->close();
+		$tr->close();
+		$thead->close();
+		$tbody->open();
 
 		$end_day = $this->display_month->getDaysInMonth();
 		$start_day = $this->display_month->getDayOfWeek();
@@ -144,8 +145,8 @@ class PinholeCalendarDisplay extends SwatControl
 			$tr->close();
 		}
 
+		$tbody->close();
 		$table->close();
-		$div->close();
 	}
 
 	// }}}

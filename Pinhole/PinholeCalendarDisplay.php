@@ -60,7 +60,7 @@ class PinholeCalendarDisplay extends SwatControl
 		$table->class = 'pinhole-calendar';
 		$caption = new SwatHtmlTag('caption');
 		$thead = new SwatHtmlTag('thead');
-		$tbody = new SwatHtmlTag('thead');
+		$tbody = new SwatHtmlTag('tbody');
 		$tr = new SwatHtmlTag('tr');
 		$th = new SwatHtmlTag('th');
 		$td = new SwatHtmlTag('td');

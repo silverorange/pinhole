@@ -14,17 +14,29 @@ require_once 'Date.php';
  */
 class PinholeCalendarDisplay extends SwatControl
 {
+	// {{{ constants
+
+	const RANGE_MONTH = 1;
+	const RANGE_WEEK = 2;
+	const RANGE_DAY = 3;
+
+	// }}}
 	// {{{ public properties
+
+	public $selected_range_class = 'selected';
+
+	// }}}
+	// {{{ private properties
 
 	/**
 	 * Date of the month to display (day is ignored)
 	 *
 	 * @var Date
 	 */
-	public $display_month;
-
-	// }}}
-	// {{{ private properties
+	private $date;
+	private $selected_range;
+	private $selected_range_start;
+	private $selected_range_end;
 
 	private $date_classes = array();
 
@@ -67,15 +79,17 @@ class PinholeCalendarDisplay extends SwatControl
 		$a = new SwatHtmlTag('a');
 
 		$base_link = sprintf('%s/%s',
-			$this->display_month->format('%Y'),
-			intval($this->display_month->format('%m')));
+			$this->date->format('%Y'),
+			intval($this->date->format('%m')));
 
 		$a->href = $base_link;
-		$a->setContent($this->display_month->format('%B %Y'));
+		$a->setContent($this->date->format('%B %Y'));
 		ob_start();
 		$a->display();
 		$caption->setContent(ob_get_clean(), 'text/xml');
 
+		$table->class.= ($this->selected_range == self::RANGE_MONTH) ?
+			' '.$this->selected_range_class : '';
 		$table->open();
 		$caption->display();
 
@@ -104,14 +118,18 @@ class PinholeCalendarDisplay extends SwatControl
 		$thead->close();
 		$tbody->open();
 
-		$end_day = $this->display_month->getDaysInMonth();
-		$start_day = $this->display_month->getDayOfWeek();
+		$end_day = $this->date->getDaysInMonth();
+		$start_day = $this->date->getDayOfWeek();
 
 		$count = 1;
 
 		$total_rows = ceil(($start_day + $end_day - 1) / 7);
 
 		for ($row = 0; $row < $total_rows; $row++) {
+			$tr->class = ($this->selected_range == self::RANGE_WEEK &&
+				$count - $start_day + 1 == $this->selected_range_start->getDay()) ?
+				$this->selected_range_class : null;
+
 			$tr->open();
 
 			$td->open();
@@ -152,6 +170,18 @@ class PinholeCalendarDisplay extends SwatControl
 	}
 
 	// }}}
+	// {{{ public function setMonth()
+
+	public function setMonth(Date $date)
+	{
+		$this->date = $date;
+		$this->date->setDay(1);
+		$this->date->setHour(0);
+		$this->date->setMinute(0);
+		$this->date->setSecond(0);
+	}
+
+	// }}}
 	// {{{ public function addClassName()
 
 	/**
@@ -163,6 +193,58 @@ class PinholeCalendarDisplay extends SwatControl
 	public function addClassName($class_name, $days)
 	{
 		$this->date_classes[$class_name] = $days;
+	}
+
+	// }}}
+	// {{{ public function setSelectedDateRange()
+
+	/**
+	 * Set the selected date range
+	 *
+	 * @param Date $range_start
+	 * @param Date $range_end
+	 */
+	public function setSelectedDateRange($range_start, $range_end)
+	{
+		$this->selected_range_start = $range_start;
+		$this->selected_range_end = $range_end;
+
+		$end_date = clone $this->date;
+		$end_date->setMonth($this->date->getMonth() == 12 ? 1 :
+			$this->date->getMonth() + 1);
+
+		if (Date::compare($range_start, $this->date) <= 0 &&
+			Date::compare($range_end, $end_date) >= 0) {
+			$this->selected_range = self::RANGE_MONTH;
+		} elseif (Date::compare($range_start, $this->date) >= 0 &&
+			Date::compare($range_end, $end_date) <= 0) {
+
+			$next_week = clone $range_start;
+			$next_week->addSeconds(7 * 86400);
+
+			if ($range_start->getDayOfWeek() == 1 &&
+				$range_end->equals($next_week)) {
+				$this->selected_range = self::RANGE_WEEK;
+			} else {
+
+				if (Date::compare($range_start, $this->date) < 0)
+					$start_day = 1;
+				else
+					$start_day = $range_start->getDay();
+
+				if (Date::compare($range_end, $end_date) > 0)
+					$end_day = $this->date->getDaysInMonth();
+				else
+					$end_day = $range_end->getDay();
+
+				$days = array();
+				for ($i = $start_day; $i < $end_day; $i++)
+					$days[] = $i;
+
+				$this->addClassName($this->selected_range_class, $days);
+				$this->selected_range = self::RANGE_DAY;
+			}
+		}
 	}
 
 	// }}}

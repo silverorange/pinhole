@@ -14,10 +14,28 @@ require_once 'Pinhole/PinholeCalendarDisplay.php';
  */
 class PinholeCalendarIndexPage extends PinholePage
 {
+	// {{{ protected properties
+
 	protected $photo_ui;
 	protected $photo_ui_xml = 'Pinhole/pages/browser-photo-view.xml';
+	protected $date_start;
+	protected $date_end;
+
+	// }}}
 
 	// init phase
+	// {{{ public function __construct()
+
+	public function __construct(SiteApplication $app, SiteLayout $layout,
+		$date_parts = null)
+	{
+		parent::__construct($app, $layout);
+
+		if ($date_parts !== null)
+			$this->setDateRange($date_parts);
+	}
+
+	// }}}
 	// {{{ public function init()
 
 	public function init()
@@ -30,6 +48,34 @@ class PinholeCalendarIndexPage extends PinholePage
 
 		/* Set YUI Grid CSS class for one full-width column on details page */
 		$this->layout->data->yui_grid_class = 'yui-t3';
+	}
+
+	// }}}
+	// {{{ protected function setDateRange()
+
+	protected function setDateRange($date_parts)
+	{
+		$date_array = explode('/', $date_parts);
+
+		$this->start_date = new SwatDate();
+		$this->start_date->setYear($date_array[0]);
+		$this->start_date->setMonth(isset($date_array[1]) ? $date_array[1] : 1);
+		$this->start_date->setDay(isset($date_array[2]) ? $date_array[2] : 1);
+		$this->start_date->setHour(0);
+		$this->start_date->setMinute(0);
+		$this->start_date->setSecond(0);
+
+		$this->end_date = clone $this->start_date;
+
+		if (isset($date_array[3]) && $date_array[3] == 'week')
+			$this->end_date->addSeconds(7 * 86400);
+		elseif (isset($date_array[2]))
+			$this->end_date->addSeconds(86400);
+		elseif (isset($date_array[1]))
+			$this->end_date->setMonth($this->start_date->getMonth() == 12
+				? 1 : $this->start_date->getMonth() + 1);
+		else
+			$this->end_date->setYear($this->start_date->getYear() + 1);
 	}
 
 	// }}}
@@ -115,19 +161,15 @@ class PinholeCalendarIndexPage extends PinholePage
 	protected function displayCalendars()
 	{
 		$date = new SwatDate();
-		$today = new SwatDate();
 
 		for ($i = 1; $i <= 12; $i++) {
 			$month = $date->getMonth();
 			$year = $date->getYear();
 
 			$cal = new PinholeCalendarDisplay('cal'.$i);
-			$cal->display_month = $date;
+			$cal->setMonth($date);
 
-			if ($date->getYear() == $today->getYear() &&
-				$date->getMonth() == $today->getMonth())
-				$cal->addClassName('today', array($today->getDay()));
-
+			$cal->setSelectedDateRange($this->start_date, $this->end_date);
 			$cal->addClassName('highlight', array(1, 15, 16, 25));
 
 			$cal->display();

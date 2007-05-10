@@ -124,7 +124,8 @@ class PinholeCalendarIndexPage extends PinholePage
 			$cal = new PinholeCalendarDisplay('cal'.$i);
 			$cal->display_month = $date;
 
-			if ($date->getYear() == $today->getYear())
+			if ($date->getYear() == $today->getYear() &&
+				$date->getMonth() == $today->getMonth())
 				$cal->addClassName('today', array($today->getDay()));
 
 			$cal->addClassName('highlight', array(1, 15, 16, 25));

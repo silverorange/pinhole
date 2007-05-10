@@ -36,7 +36,17 @@ table.pinhole-calendar tbody a:hover {
 	background: #555753;
 }
 
-table.pinhole-calendar td.today a {
+table.pinhole-calendar tr.selected {
+	background: #555753;
+	border: 1px solid #fff;
+}
+
+table.pinhole-calendar.selected {
+	background: #555753;
+	border: 1px solid #fff;
+}
+
+table.pinhole-calendar td.selected a {
 	background: #555753;
 }
 

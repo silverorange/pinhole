@@ -78,44 +78,17 @@ class PinholeCalendarDisplay extends SwatControl
 		$td = new SwatHtmlTag('td');
 		$a = new SwatHtmlTag('a');
 
-		$base_link = sprintf('%s/%s',
-			$this->date->format('%Y'),
-			intval($this->date->format('%m')));
-
-		$a->href = $base_link;
-		$a->setContent($this->date->format('%B %Y'));
-		ob_start();
-		$a->display();
-		$caption->setContent(ob_get_clean(), 'text/xml');
-
 		$table->class.= ($this->selected_range == self::RANGE_MONTH) ?
 			' '.$this->selected_range_class : '';
 		$table->open();
-		$caption->display();
-
-		/*
-		 * This date is arbitrary and is just used for getting week names.
-		 */
-		$date = new Date();
-		$date->setDay(1);
-		$date->setMonth(1);
-		$date->setYear(1995);
+		$caption->open();
+			$this->displayMonthTitle();
+		$caption->close();
 
 		$thead->open();
-		$tr->open();
-
-		$th->display();
-
-		for ($i = 1; $i < 8; $i++) {
-			/* TODO: do this better (display first letter only of weekday */
-			$date_string = $date->format('%a');
-			$th->setContent($date_string{0});
-			$th->display();
-			$date->setDay($i + 1);
-		}
-
-		$tr->close();
+			$this->displayWeekdayHeader();
 		$thead->close();
+
 		$tbody->open();
 
 		$end_day = $this->date->getDaysInMonth();
@@ -133,8 +106,9 @@ class PinholeCalendarDisplay extends SwatControl
 			$tr->open();
 
 			$td->open();
-			$a->href = sprintf('%s/%s/week',
-				$base_link,
+			$a->href = sprintf('%s/%s/%s/week',
+				$this->date->format('%Y'),
+				intval($this->date->format('%m')),
 				max($count - $start_day + 1, 1));
 			$a->setContent('»');
 			$a->display();
@@ -144,13 +118,15 @@ class PinholeCalendarDisplay extends SwatControl
 				if ($count >= $start_day && $count < ($start_day + $end_day)) {
 					$day = $count - $start_day + 1;
 
-					$a->href = sprintf('%s/%s',
-						$base_link,
+					$a->href = sprintf('%s/%s/%s',
+						$this->date->format('%Y'),
+						intval($this->date->format('%m')),
 						$day);
 					$a->setContent($day);
 
 					$td->class = $this->getClassName($day);
 					$td->open();
+					$td->title = 'test';
 					$a->display();
 					$td->close();
 					$td->class = null;
@@ -245,6 +221,51 @@ class PinholeCalendarDisplay extends SwatControl
 				$this->selected_range = self::RANGE_DAY;
 			}
 		}
+	}
+
+	// }}}
+	// {{{ protected function displayMonthTitle()
+
+	protected function displayMonthTitle()
+	{
+		$a_tag = new SwatHtmlTag('a');
+
+		$a_tag->href = sprintf('%s/%s',
+			$this->date->format('%Y'),
+			intval($this->date->format('%m')));
+
+		$a_tag->setContent($this->date->format('%B %Y'));
+		$a_tag->display();
+	}
+
+	// }}}
+	// {{{ protected function displayWeekdayHeader()
+
+	protected function displayWeekdayHeader()
+	{
+		$tr_tag = new SwatHtmlTag('tr');
+		$th_tag = new SwatHtmlTag('th');
+
+		/*
+		 * This date is arbitrary and is just used for getting week names.
+		 */
+		$date = new Date();
+		$date->setDay(1);
+		$date->setMonth(1);
+		$date->setYear(1995);
+
+		$tr_tag->open();
+
+		$th_tag->display();
+
+		for ($i = 1; $i < 8; $i++) {
+			$date_string = $date->format('%a');
+			$th_tag->setContent(substr($date_string, 0, 1));
+			$th_tag->display();
+			$date->setDay($i + 1);
+		}
+
+		$tr_tag->close();
 	}
 
 	// }}}

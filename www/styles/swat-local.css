@@ -1,5 +1,9 @@
 /* SwatPagination */
 
+.swat-pagination {
+	clear: left;
+}
+
 .swat-pagination a,
 .swat-pagination span {
 	border-color: #555753;

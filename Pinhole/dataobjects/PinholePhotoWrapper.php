@@ -54,8 +54,10 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 			order by PinholePhoto.publish_date desc, PinholePhoto.title
 			%s';
 
-		$where_clause.= sprintf(' and PinholeDimension.shortname = %s',
-			$db->quote($dimension_shortname, 'text'));
+		$where_clause.= sprintf(' and PinholeDimension.shortname = %s
+				and PinholePhoto.status = %s',
+			$db->quote($dimension_shortname, 'text'),
+			$db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		$set = '';
 

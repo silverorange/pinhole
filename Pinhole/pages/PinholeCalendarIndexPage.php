@@ -86,8 +86,7 @@ class PinholeCalendarIndexPage extends PinholePage
 			$this->layout->data->title =
 				$this->start_date->format(SwatDate::DF_DATE_LONG);
 		} elseif (isset($this->date_parts[1])) {
-			$this->end_date->setMonth($this->start_date->getMonth() == 12
-				? 1 : $this->start_date->getMonth() + 1);
+			$this->end_date->addSeconds($this->start_date->getDaysInMonth() * 86400);
 			$this->layout->data->title =
 				$this->start_date->format(SwatDate::DF_MY);
 		} else {

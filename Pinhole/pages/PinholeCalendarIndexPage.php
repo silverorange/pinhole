@@ -56,9 +56,6 @@ class PinholeCalendarIndexPage extends PinholePage
 		$this->photo_ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
 		$this->photo_ui->loadFromXML($this->photo_ui_xml);
 
-		/* Set YUI Grid CSS class for a 300px wide left column */
-		$this->layout->data->yui_grid_class = 'yui-t3';
-
 		$this->setDateRange();
 	}
 

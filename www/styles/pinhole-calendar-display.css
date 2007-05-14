@@ -46,10 +46,16 @@ table.pinhole-calendar.selected {
 	border: 1px solid #fff;
 }
 
+table.pinhole-calendar td a {
+	color: #666;
+}
+
 table.pinhole-calendar td.selected a {
+	color: #fff;
 	background: #555753;
 }
 
 table.pinhole-calendar td.highlight a {
 	border: 1px #888a85 solid;
+	color: #fff;
 }

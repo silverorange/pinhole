@@ -4,8 +4,9 @@ require_once 'Admin/pages/AdminSearch.php';
 require_once 'Admin/AdminTableStore.php';
 require_once 'Admin/AdminSearchClause.php';
 require_once 'SwatDB/SwatDB.php';
-require_once 'NateGoSearch/NateGoSearchQuery.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Swat/SwatDetailsStore.php';
+//require_once 'NateGoSearch/NateGoSearchQuery.php';
+require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**
  * Index page for photographs
@@ -111,28 +112,53 @@ class PinholePhotoIndex extends AdminSearch
 		$pager = $this->ui->getWidget('pager');
 		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
 
-		$sql = 'select PinholePhoto.id,
-					PinholePhoto.title
-				from PinholePhoto
-				%s
-				where %s
-				order by %s';
+		$sql = 'select PinholePhoto.*,
+				PinholePhotoDimensionBinding.width,
+				PinholePhotoDimensionBinding.height,
+				PinholeDimension.max_width,
+				PinholeDimension.max_height,
+				PinholeDimension.shortname
+			from PinholePhoto
+			%s
+			inner join PinholePhotoDimensionBinding on
+				PinholePhotoDimensionBinding.photo = PinholePhoto.id
+			inner join PinholeDimension on
+				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
+			where PinholeDimension.shortname = %s and PinholePhoto.status != %s
+				and %s
+			order by %s';
 
 		$sql = sprintf($sql,
 			$this->join_clause,
+			$this->app->db->quote('thumb', 'text'),
+			$this->app->db->quote(PinholePhoto::STATUS_UNPUBLISHED, 'integer'),
 			$this->getWhereClause(),
 			$this->getOrderByClause($view, $this->order_by_clause));
 
 		$this->app->db->setLimit($pager->page_size, $pager->current_record);
-		$store = SwatDB::query($this->app->db, $sql, 'AdminTableStore');
+		$photos = SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
 
 		$this->ui->getWidget('results_frame')->visible = true;
-		$view = $this->ui->getWidget('index_view');
 
-		if ($store->getRowCount() != 0)
+		$store = new SwatTableStore();
+
+		if (count($photos) != 0) {
 			$this->ui->getWidget('results_message')->content =
 				$pager->getResultsMessage(Pinhole::_('result'), 
 					Pinhole::_('results'));
+
+			foreach ($photos as $photo) {
+				$ds = new SwatDetailsStore($photo);
+				$ds->image = '../'.$photo->getDimension('thumb')->getURI();
+				$ds->title = SwatString::condense($photo->title, 30);
+				$ds->link = 'Photo/Details?id='.$photo->id;
+				$ds->width = $photo->getDimension('thumb')->width;
+				$ds->max_width = $photo->getDimension('thumb')->dimension->max_width;
+				$ds->height = $photo->getDimension('thumb')->height;
+				$ds->max_height = $photo->getDimension('thumb')->dimension->max_height;
+				$store->addRow($ds);
+			}
+		}
 
 		return $store;
 	}

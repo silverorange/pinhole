@@ -94,7 +94,7 @@ class PinholeCalendarDisplay extends SwatControl
 		$tbody->open();
 
 		$end_day = $this->date->getDaysInMonth();
-		$start_day = $this->date->getDayOfWeek();
+		$start_day = $this->date->getDayOfWeek() + 1;
 
 		$count = 1;
 

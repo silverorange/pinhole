@@ -65,7 +65,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 			$set.= sprintf(' limit %d', $db->quote($limit), 'integer');
 
 		if ($offset !== null)
-			$set.= sprintf(' offset %d', $db-quote($offset, 'integer'));
+			$set.= sprintf(' offset %d', $db->quote($offset, 'integer'));
 
 		$sql = sprintf($sql,
 			$where_clause,

@@ -23,7 +23,7 @@ class PinholeCalendarDisplay extends SwatControl
 	// }}}
 	// {{{ public properties
 
-	public $selected_range_class = 'selected';
+	public $link = '%s';
 
 	// }}}
 	// {{{ private properties
@@ -37,7 +37,9 @@ class PinholeCalendarDisplay extends SwatControl
 	private $selected_range;
 	private $selected_range_start;
 	private $selected_range_end;
+	private $selected_range_class;
 
+	private $date_titles = array();
 	private $date_classes = array();
 
 	// }}}
@@ -106,10 +108,10 @@ class PinholeCalendarDisplay extends SwatControl
 			$tr->open();
 
 			$td->open();
-			$a->href = sprintf('%s/%s/%s/week',
+			$a->href = sprintf($this->link, sprintf('%s/%s/%s/week',
 				$this->date->format('%Y'),
 				intval($this->date->format('%m')),
-				max($count - $start_day + 1, 1));
+				max($count - $start_day + 1, 1)));
 			$a->setContent('»');
 			$a->display();
 			$td->close();
@@ -118,18 +120,21 @@ class PinholeCalendarDisplay extends SwatControl
 				if ($count >= $start_day && $count < ($start_day + $end_day)) {
 					$day = $count - $start_day + 1;
 
-					$a->href = sprintf('%s/%s/%s',
-						$this->date->format('%Y'),
-						intval($this->date->format('%m')),
-						$day);
+					$a->title = isset($this->date_titles[$day]) ?
+						$this->date_titles[$day] : null;
+					$a->href = sprintf($this->link,
+						sprintf('%s/%s/%s',
+							$this->date->format('%Y'),
+							intval($this->date->format('%m')),
+							$day));
 					$a->setContent($day);
 
 					$td->class = $this->getClassName($day);
 					$td->open();
-					$td->title = 'test';
 					$a->display();
 					$td->close();
 					$td->class = null;
+					$a->title = null;
 				} else {
 					$td->setContent('&nbsp;', 'text/xml');
 					$td->display();
@@ -172,6 +177,22 @@ class PinholeCalendarDisplay extends SwatControl
 	}
 
 	// }}}
+	// {{{ public function setHighlightedDays()
+
+	/**
+	 * Set the specified days as highlighted
+	 *
+	 * @param array $days An associative array of days and optional titles
+	 * 	for the highlighted days.
+	 * @param string $class_name The name of the css class.
+	 */
+	public function setHighlightedDays($days, $class_name = 'highlight')
+	{
+		$this->date_titles = $days;
+		$this->addClassName($class_name, array_keys($days));
+	}
+
+	// }}}
 	// {{{ public function setSelectedDateRange()
 
 	/**
@@ -180,14 +201,15 @@ class PinholeCalendarDisplay extends SwatControl
 	 * @param Date $range_start
 	 * @param Date $range_end
 	 */
-	public function setSelectedDateRange($range_start, $range_end)
+	public function setSelectedDateRange($range_start, $range_end,
+		$class_name = 'selected')
 	{
 		$this->selected_range_start = $range_start;
 		$this->selected_range_end = $range_end;
+		$this->selected_range_class = $class_name;
 
 		$end_date = clone $this->date;
-		$end_date->setMonth($this->date->getMonth() == 12 ? 1 :
-			$this->date->getMonth() + 1);
+		$end_date->addSeconds($this->date->getDaysInMonth() * 86400);
 
 		if (Date::compare($range_start, $this->date) <= 0 &&
 			Date::compare($range_end, $end_date) >= 0) {
@@ -230,9 +252,9 @@ class PinholeCalendarDisplay extends SwatControl
 	{
 		$a_tag = new SwatHtmlTag('a');
 
-		$a_tag->href = sprintf('%s/%s',
+		$a_tag->href = sprintf($this->link, sprintf('%s/%s',
 			$this->date->format('%Y'),
-			intval($this->date->format('%m')));
+			intval($this->date->format('%m'))));
 
 		$a_tag->setContent($this->date->format('%B %Y'));
 		$a_tag->display();

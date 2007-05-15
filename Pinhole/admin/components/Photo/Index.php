@@ -7,6 +7,7 @@ require_once 'SwatDB/SwatDB.php';
 require_once 'Swat/SwatDetailsStore.php';
 //require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'include/PinholePhotoCheckboxCellRenderer.php';
 
 /**
  * Index page for photographs
@@ -210,6 +211,19 @@ class PinholePhotoIndex extends AdminSearch
 	protected function getPhotoSearchType()
 	{
 		return null;
+	}
+
+	// }}}
+
+	// finalize phase
+	// {{{ public function finalize()
+
+	public function finalize()
+	{
+		parent::finalize();
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/admin/styles/pinhole-photo-tile.css',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

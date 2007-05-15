@@ -1,0 +1,31 @@
+.swat-tile label {
+	display: block;
+	font-weight: normal;
+	padding: 3px;
+	background: #eee;
+	border: 1px solid #ccc;
+	font-size: 85%;
+}
+`
+.swat-tile label input {
+	margin-right: 4px;
+}
+
+.swat-tile span {
+	display: block;
+	height: 3em;
+	padding: 4px;
+}
+
+.swat-tile {
+	height: auto;
+	border: 1px solid #ccc;
+}
+
+.swat-pagination {
+	clear: left;
+}
+
+.swat-tile:hover {
+	border: 1px solid #555753;
+}

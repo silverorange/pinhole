@@ -24,9 +24,6 @@
 		<widget class="SwatForm" id="index_form">
 			<widget class="SwatTileView" id="index_view">
 				<object class="SwatTile">
-					<object class="SwatCheckboxCellRenderer" id="items">
-						<property name="value" type="data">id</property>
-					</object>
 					<object class="SwatImageCellRenderer">
 						<property name="image" type="data">image</property>
 						<property name="height" type="data">height</property>
@@ -39,6 +36,13 @@
 						<property name="text" type="data">title</property>
 						<property name="link">Photo/Details?id=%s</property>
 						<property name="link_value" type="data">id</property>
+					</object>
+					<object class="SwatDateCellRenderer">
+						<property name="date" type="data">photo_date</property>
+						<property name="format" type="constant">SwatDate::DF_DATE_SHORT</property>
+					</object>
+					<object class="PinholePhotoCheckboxCellRenderer" id="items">
+						<property name="value" type="data">id</property>
 					</object>
 				</object>
 			</widget>

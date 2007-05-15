@@ -1,5 +1,6 @@
 .pinhole-tile-view .swat-tile {
 	width: 106px;
+	height: auto;
 	padding: 10px;
 	margin: 5px 10px;
 	float: left;

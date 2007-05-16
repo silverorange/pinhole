@@ -93,6 +93,18 @@ class PinholePhotoIndex extends AdminSearch
 						$keyword_where);
 			}
 
+			$clause = new AdminSearchClause('date:photo_date');
+			$clause->table = 'PinholePhoto';
+			$clause->value = $this->ui->getWidget('search_start_date')->value;
+			$clause->operator = AdminSearchClause::OP_GTE;
+			$where.= $clause->getClause($this->app->db, 'and');
+
+			$clause = new AdminSearchClause('date:photo_date');
+			$clause->table = 'PinholePhoto';
+			$clause->value = $this->ui->getWidget('search_end_date')->value;
+			$clause->operator = AdminSearchClause::OP_LT;
+			$where.= $clause->getClause($this->app->db, 'and');
+
 			$this->where = $where;
 		}
 
@@ -126,14 +138,13 @@ class PinholePhotoIndex extends AdminSearch
 				PinholePhotoDimensionBinding.photo = PinholePhoto.id
 			inner join PinholeDimension on
 				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
-			where PinholeDimension.shortname = %s and PinholePhoto.status != %s
+			where PinholeDimension.shortname = %s
 				and %s
 			order by %s';
 
 		$sql = sprintf($sql,
 			$this->join_clause,
 			$this->app->db->quote('thumb', 'text'),
-			$this->app->db->quote(PinholePhoto::STATUS_UNPUBLISHED, 'integer'),
 			$this->getWhereClause(),
 			$this->getOrderByClause($view, $this->order_by_clause));
 

@@ -37,10 +37,10 @@
 						<property name="link">Photo/Details?id=%s</property>
 						<property name="link_value" type="data">id</property>
 					</object>
-					<object class="SwatDateCellRenderer">
+					<!--object class="SwatDateCellRenderer">
 						<property name="date" type="data">photo_date</property>
 						<property name="format" type="constant">SwatDate::DF_DATE_SHORT</property>
-					</object>
+					</object-->
 					<object class="PinholePhotoCheckboxCellRenderer" id="items">
 						<property name="value" type="data">id</property>
 					</object>

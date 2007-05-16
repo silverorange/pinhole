@@ -3,7 +3,7 @@
 	border: 1px solid #ccc;
 	padding: 0;
 	font-size: 85%;
-	width: auto;
+	width: 108px;
 }
 
 .swat-tile label {
@@ -12,6 +12,10 @@
 	padding: 3px;
 	background: #eeeeec;
 	color: #888a85;
+}
+
+.swat-tile div, .swat-tile img {
+	padding: 4px;
 }
 
 .swat-tile label:hover {

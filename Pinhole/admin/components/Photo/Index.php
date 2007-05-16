@@ -82,7 +82,7 @@ class PinholePhotoIndex extends AdminSearch
 				$clause->operator = AdminSearchClause::OP_CONTAINS;
 				$keyword_where.= $clause->getClause($this->app->db, '');
 
-				$clause = new AdminSearchClause('bodytext');
+				$clause = new AdminSearchClause('description');
 				$clause->table = 'PinholePhoto';
 				$clause->value = $this->ui->getWidget('search_keywords')->value;
 				$clause->operator = AdminSearchClause::OP_CONTAINS;
@@ -111,6 +111,7 @@ class PinholePhotoIndex extends AdminSearch
 			$this->getWhereClause());
 
 		$pager = $this->ui->getWidget('pager');
+		$pager->page_size = 100;
 		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
 
 		$sql = 'select PinholePhoto.*,

@@ -64,10 +64,20 @@ class PinholeCalendarIndexPage extends PinholePage
 
 	protected function setDateRange()
 	{
-		$this->start_date = new SwatDate();
-		$this->start_date->setYear($this->date_parts[0]);
-		$this->start_date->setMonth(isset($this->date_parts[1]) ? $this->date_parts[1] : 1);
-		$this->start_date->setDay(isset($this->date_parts[2]) ? $this->date_parts[2] : 1);
+		if (isset($this->date_parts[0])) {
+			$this->start_date = new SwatDate();
+			$this->start_date->setYear($this->date_parts[0]);
+			$this->start_date->setMonth(isset($this->date_parts[1]) ? $this->date_parts[1] : 1);
+			$this->start_date->setDay(isset($this->date_parts[2]) ? $this->date_parts[2] : 1);
+		} else {
+			$sql = sprintf('select max(photo_date) from PinholePhoto
+				where status = %s',
+				$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
+
+			$this->start_date = new SwatDate(
+				SwatDB::queryOne($this->app->db, $sql));
+		}
+
 		$this->start_date->setHour(0);
 		$this->start_date->setMinute(0);
 		$this->start_date->setSecond(0);
@@ -78,7 +88,7 @@ class PinholeCalendarIndexPage extends PinholePage
 			$this->end_date->addSeconds(7 * 86400);
 			$this->layout->data->title = sprintf('Week of %s',
 				$this->start_date->format(SwatDate::DF_DATE_LONG));
-		} elseif (isset($this->date_parts[2])) {
+		} elseif (!isset($this->date_parts[0]) || isset($this->date_parts[2])) {
 			$this->end_date->addSeconds(86400);
 			$this->layout->data->title =
 				$this->start_date->format(SwatDate::DF_DATE_LONG);

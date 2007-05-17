@@ -56,8 +56,8 @@ class PinholePhotoIndex extends AdminSearch
 
 	protected function processActions(SwatView $view, SwatActions $actions)
 	{
-		$processor = new StorePhotoActionsProcessor($this);
-		$processor->process($view, $actions);
+		//$processor = new PhotoActionsProcessor($this);
+		//$processor->process($view, $actions);
 	}
 
 	// }}}

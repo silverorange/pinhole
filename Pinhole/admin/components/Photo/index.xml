@@ -36,7 +36,7 @@
 		<widget class="SwatForm" id="index_form">
 			<widget class="SwatTileView" id="index_view">
 				<object class="SwatTile">
-					<object class="PinholePhotoCellRenderer">
+					<object class="PinholeAdminPhotoCellRenderer">
 						<property name="photo" type="data">photo</property>
 						<property name="link">Photo/Details?id=%s</property>
 						<property name="link_value" type="data">id</property>

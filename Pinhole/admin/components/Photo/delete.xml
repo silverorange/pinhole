@@ -7,7 +7,7 @@
 				<widget class="SwatContentBlock" id="confirmation_message" />
 				<widget class="SwatTileView" id="delete_view">
 					<object class="SwatTile">
-						<object class="PinholePhotoCellRenderer">
+						<object class="PinholeAdminPhotoCellRenderer">
 							<property name="photo" type="data">photo</property>
 						</object>
 					</object>

@@ -6,6 +6,7 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatUI.php';
 require_once 'Swat/SwatDate.php';
 
+require_once 'Pinhole/PinholePhotoCellRenderer.php';
 require_once 'Pinhole/PinholeCalendarDisplay.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
@@ -166,28 +167,12 @@ class PinholeCalendarIndexPage extends PinholePage
 		$store = new SwatTableStore();
 
 		foreach ($photos as $photo) {
-			$ds = $this->getPhotoDetailsStore($photo);
+			$ds = new SwatDetailsStore();
+			$ds->photo = $photo;
 			$store->addRow($ds);
 		}
 
 		return $store;
-	}
-
-	// }}}
-	// {{{ protected function getPhotoDetailsStore()
-
-	protected function getPhotoDetailsStore($photo)
-	{
-		$ds = new SwatDetailsStore($photo);
-		$ds->image = $photo->getDimension('thumb')->getURI();
-		$ds->title = SwatString::condense($photo->title, 30);
-		$ds->link = 'photo/'.$photo->id;
-		$ds->width = $photo->getDimension('thumb')->width;
-		$ds->max_width = $photo->getDimension('thumb')->dimension->max_width;
-		$ds->height = $photo->getDimension('thumb')->height;
-		$ds->max_height = $photo->getDimension('thumb')->dimension->max_height;
-
-		return $ds;
 	}
 
 	// }}}

@@ -8,7 +8,7 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'include/PinholePhotoCheckboxCellRenderer.php';
-require_once 'include/PinholePhotoCellRenderer.php';
+require_once 'include/PinholeAdminPhotoCellRenderer.php';
 
 /**
  * Index page for photographs

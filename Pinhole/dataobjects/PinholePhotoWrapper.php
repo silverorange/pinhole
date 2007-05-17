@@ -37,7 +37,8 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 	 * @param integer $offset
 	 */
 	public static function loadSetFromDBWithDimension($db, $dimension_shortname,
-		$where_clause = '1 = 1', $limit = null, $offset = null)
+		$where_clause = '1 = 1', $join_clause = '',
+		$limit = null, $offset = 0)
 	{
 		$sql = 'select PinholePhoto.*,
 				PinholePhotoDimensionBinding.width,
@@ -46,33 +47,21 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 				PinholeDimension.max_height,
 				PinholeDimension.shortname
 			from PinholePhoto
+			%s
 			inner join PinholePhotoDimensionBinding on
 				PinholePhotoDimensionBinding.photo = PinholePhoto.id
 			inner join PinholeDimension on
 				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
 			where %s
-			order by PinholePhoto.publish_date desc, PinholePhoto.title
-			%s';
+			order by PinholePhoto.publish_date desc, PinholePhoto.title';
 
-		$where_clause.= sprintf(' and PinholeDimension.shortname = %s
-				and PinholePhoto.status = %s',
-			$db->quote($dimension_shortname, 'text'),
-			$db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
-
-		$set = '';
+		$where_clause.= sprintf(' and PinholeDimension.shortname = %s',
+			$db->quote($dimension_shortname, 'text'));
 
 		if ($limit !== null)
-			$set.= sprintf(' limit %d', $db->quote($limit), 'integer');
+			$db->setLimit($limit, $offset);
 
-		if ($offset !== null)
-			$set.= sprintf(' offset %d', $db->quote($offset, 'integer'));
-
-		$sql = sprintf($sql,
-			$where_clause,
-			$set);
-
-
-		$rs = SwatDB::query($db, $sql);
+		$rs = SwatDB::query($db, sprintf($sql, $join_clause, $where_clause));
 
 		$store = new SwatDBDefaultRecordsetWrapper(null);
 

@@ -42,7 +42,6 @@ table.pinhole-calendar tr.selected {
 }
 
 table.pinhole-calendar.selected {
-	background: #555753;
 	border: 1px solid #fff;
 }
 

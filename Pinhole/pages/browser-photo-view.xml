@@ -3,17 +3,11 @@
 <swatml>
 	<widget class="SwatTileView" id="photo_view">
 		<property name="classes[]">pinhole-tile-view</property>
-		<object class="PinholePhotoTile">
-			<object class="SwatImageCellRenderer">
-				<property name="image" type="data">image</property>
-				<property name="height" type="data">height</property>
-				<property name="width" type="data">width</property>
-				<property name="occupy_height" type="data">max_height</property>
-				<property name="occupy_width" type="data">max_width</property>
-				<property name="alt" type="data">title</property>
-			</object>
-			<object class="SwatTextCellRenderer">
-				<property name="text" type="data">title</property>
+		<object class="SwatTile">
+			<object class="PinholePhotoCellRenderer">
+				<property name="photo" type="data">photo</property>
+				<property name="link">photo/details/%s</property>
+				<property name="link_value" type="data">photo.id</property>
 				<property name="classes[]">photo-title</property>
 			</object>
 		</object>

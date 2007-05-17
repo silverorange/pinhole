@@ -4,7 +4,7 @@ require_once 'Admin/pages/AdminDBDelete.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Admin/AdminListDependency.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'include/PinholePhotoCellRenderer.php';
+require_once 'include/PinholeAdminPhotoCellRenderer.php';
 
 /**
  * Delete confirmation page for Photos

@@ -2,8 +2,11 @@
 
 require_once 'Admin/pages/AdminIndex.php';
 require_once 'Admin/AdminTableStore.php';
+require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'include/PinholePhotoCheckboxCellRenderer.php';
+require_once 'include/PinholeAdminPhotoCellRenderer.php';
 
 /**
  * Pending photos page
@@ -42,7 +45,7 @@ class PinholePhotoPending extends AdminIndex
 	 *                             from.
 	 * @param SwatActions $actions the actions list widget.
 	 */
-	protected function processActions(SwatTableView $view, SwatActions $actions)
+	protected function processActions(SwatView $view, SwatActions $actions)
 	{
 		switch ($actions->selected->id) {
 		case 'delete':
@@ -54,11 +57,13 @@ class PinholePhotoPending extends AdminIndex
 			foreach ($items as &$item)
 				$item = $this->app->db->quote($item, 'integer');
 
-			$sql = sprintf('select * from PinholePhoto where id in (%s) and status = %s',
+			$sql = sprintf('select * from PinholePhoto
+				where id in (%s) and %s',
 				implode(',', $items),
-				PinholePhoto::STATUS_PENDING);
+				$this->getWhereClause());
 
-			$photos = SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
+			$photos = SwatDB::query($this->app->db, $sql,
+				'PinholePhotoWrapper');
 
 			$count = 0;
 
@@ -83,22 +88,52 @@ class PinholePhotoPending extends AdminIndex
 	// }}}
 	// {{{ protected function getTableStore()
 
-	/**
-	 * Gets photo data
-	 *
-	 * @return AdminTableStore photo information.
-	 */
 	protected function getTableStore($view)
 	{
-		$sql = 'select * from PinholePhoto
-			where PinholePhoto.status = %s
-			order by %s';
+		$sql = sprintf('select count(id) from PinholePhoto where %s',
+			$this->getWhereClause());
 
-		$sql = sprintf($sql,
-			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
-			$this->getOrderByClause($view, 'id'));
-		
-		return SwatDB::query($this->app->db, $sql, 'AdminTableStore');
+		$pager = $this->ui->getWidget('pager');
+		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
+
+		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
+			$this->app->db, 'thumb', $this->getWhereClause(),
+			'', $pager->page_size, $pager->current_record);
+
+		$store = new SwatTableStore();
+
+		if (count($photos) != 0) {
+			foreach ($photos as $photo) {
+				$ds = new SwatDetailsStore($photo);
+				$ds->photo = $photo;
+				$store->addRow($ds);
+			}
+		}
+
+		return $store;
+	}
+
+	// }}}
+	// {{{ protected function getWhereClause()
+
+	protected function getWhereClause()
+	{
+		return sprintf('PinholePhoto.status = %s',
+			$this->app->db->quote(PinholePhoto::STATUS_PENDING,
+			'integer'));
+	}
+
+	// }}}
+
+	// finalize phase
+	// {{{ public function finalize()
+
+	public function finalize()
+	{
+		parent::finalize();
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/admin/styles/pinhole-photo-tile.css',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

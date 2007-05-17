@@ -35,7 +35,6 @@ class PinholePhotoCellRenderer extends SwatImageCellRenderer
 		}
 
 		$this->image = '../'.$this->photo->getDimension('thumb')->getURI();
-		$this->link = 'Photo/Details?id='.$this->photo->id;
 		$this->width = $this->photo->getDimension('thumb')->width;
 		$this->height = $this->photo->getDimension('thumb')->height;
 		$this->occupy_width = $this->photo->getDimension('thumb')->dimension->max_width;

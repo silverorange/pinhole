@@ -54,10 +54,39 @@ class PinholePhotoIndex extends AdminSearch
 	// }}}
 	// {{{ protected function processActions()
 
+	/**
+	 * Processes photo actions
+	 *
+	 * @param SwatView $view the table-view to get selected tags
+	 *                 from.
+	 * @param SwatActions $actions the actions list widget.
+	 */
 	protected function processActions(SwatView $view, SwatActions $actions)
 	{
-		//$processor = new PhotoActionsProcessor($this);
-		//$processor->process($view, $actions);
+		switch ($actions->selected->id) {
+		case 'delete':
+			$this->app->replacePage('Photo/Delete');
+			$this->app->getPage()->setItems($view->checked_items);
+			break;
+		case 'status_action':
+			//TODO this is just copied from Tags, but it should
+			//basically work
+			$num = count($view->checked_items);
+
+			$status = $this->ui->getWidget('status_flydown')->value;
+
+			SwatDB::updateColumn($this->app->db, 'PinholePhoto',
+				'integer:status', $status,
+				'id', $view->checked_items);
+
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
+				'The status of one photo has been changed.',
+				'The status of %s photos has been changed.', $num),
+				SwatString::numberFormat($num)));
+
+			$this->app->messages->add($message);
+			break;
+		}
 	}
 
 	// }}}
@@ -126,31 +155,9 @@ class PinholePhotoIndex extends AdminSearch
 		$pager = $this->ui->getWidget('pager');
 		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
 
-		$sql = 'select PinholePhoto.*,
-				PinholePhotoDimensionBinding.width,
-				PinholePhotoDimensionBinding.height,
-				PinholeDimension.max_width,
-				PinholeDimension.max_height,
-				PinholeDimension.shortname
-			from PinholePhoto
-			%s
-			inner join PinholePhotoDimensionBinding on
-				PinholePhotoDimensionBinding.photo = PinholePhoto.id
-			inner join PinholeDimension on
-				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
-			where PinholeDimension.shortname = %s
-				and %s
-			order by %s';
-
-		$sql = sprintf($sql,
-			$this->join_clause,
-			$this->app->db->quote('thumb', 'text'),
-			$this->getWhereClause(),
-			$this->getOrderByClause($view, $this->order_by_clause));
-
-		$this->app->db->setLimit($pager->page_size, $pager->current_record);
-
-		$photos = SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
+		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
+			$this->app->db, 'thumb', $this->getWhereClause(),
+			$this->join_clause, $pager->page_size, $pager->current_record);
 
 		$this->ui->getWidget('results_frame')->visible = true;
 

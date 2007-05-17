@@ -8,6 +8,7 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'include/PinholePhotoCheckboxCellRenderer.php';
+require_once 'include/PinholePhotoCellRenderer.php';
 
 /**
  * Index page for photographs
@@ -162,13 +163,9 @@ class PinholePhotoIndex extends AdminSearch
 
 			foreach ($photos as $photo) {
 				$ds = new SwatDetailsStore($photo);
-				$ds->image = '../'.$photo->getDimension('thumb')->getURI();
-				$ds->title = SwatString::condense($photo->title, 30);
-				$ds->link = 'Photo/Details?id='.$photo->id;
-				$ds->width = $photo->getDimension('thumb')->width;
-				$ds->max_width = $photo->getDimension('thumb')->dimension->max_width;
-				$ds->height = $photo->getDimension('thumb')->height;
-				$ds->max_height = $photo->getDimension('thumb')->dimension->max_height;
+				$ds->photo = $photo;
+				/*
+				*/
 				$store->addRow($ds);
 			}
 		}

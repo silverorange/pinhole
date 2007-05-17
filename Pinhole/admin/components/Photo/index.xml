@@ -9,6 +9,18 @@
 				<property name="title" translatable="yes">Keywords</property>
 				<widget class="SwatEntry" id="search_keywords" />
 			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Taken On or After</property>
+				<widget class="SwatDateEntry" id="search_start_date">
+					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Taken Before</property>
+				<widget class="SwatDateEntry" id="search_end_date">
+					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+				</widget>
+			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
 					<property name="title" translatable="yes">Search</property>
@@ -24,25 +36,13 @@
 		<widget class="SwatForm" id="index_form">
 			<widget class="SwatTileView" id="index_view">
 				<object class="SwatTile">
-					<object class="SwatImageCellRenderer">
-						<property name="image" type="data">image</property>
-						<property name="height" type="data">height</property>
-						<property name="width" type="data">width</property>
-						<property name="occupy_height" type="data">max_height</property>
-						<property name="occupy_width" type="data">max_width</property>
-						<property name="alt" type="data">title</property>
-					</object>
-					<object class="AdminTitleLinkCellRenderer">
-						<property name="text" type="data">title</property>
+					<object class="PinholePhotoCellRenderer">
+						<property name="photo" type="data">photo</property>
 						<property name="link">Photo/Details?id=%s</property>
 						<property name="link_value" type="data">id</property>
 					</object>
-					<!--object class="SwatDateCellRenderer">
-						<property name="date" type="data">photo_date</property>
-						<property name="format" type="constant">SwatDate::DF_DATE_SHORT</property>
-					</object-->
 					<object class="PinholePhotoCheckboxCellRenderer" id="items">
-						<property name="value" type="data">id</property>
+						<property name="value" type="data">photo.id</property>
 					</object>
 				</object>
 			</widget>

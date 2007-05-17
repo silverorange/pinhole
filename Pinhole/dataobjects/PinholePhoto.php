@@ -201,6 +201,8 @@ class PinholePhoto extends SwatDBDataObject
 		if ($transformer->image === null)
 			throw new SwatException('No image loaded.');
 
+		// TODO: I don't this handles panoramas corrently right now
+
 		if ($dimension->max_height !== null &&
 			$dimension->max_width !== null &&
 			$dimension->crop_to_max)

@@ -116,7 +116,6 @@ class PinholeCalendarIndexPage extends PinholePage
 		else
 			$this->calendar_end_date->setYear($this->start_date->getYear());
 
-
 		$this->calendar_start_date = clone $this->calendar_end_date;
 		$this->calendar_start_date->setYear($this->calendar_start_date->getYear() - 1);
 	}

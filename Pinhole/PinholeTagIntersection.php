@@ -91,11 +91,11 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getPhotos()
 
-	public function getPhotos($limit = null, $offset = null)
+	public function getPhotos($limit = null, $offset = 0)
 	{
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->db, 'thumb', $this->getTagWhereClause(),
-			$limit, $offset);
+			'', $limit, $offset);
 
 		return $photos;
 	}
@@ -150,7 +150,8 @@ class PinholeTagIntersection
 
 	protected function getTagWhereClause()
 	{
-		$where_clause = '1 = 1';
+		$where_clause = sprintf('PinholePhoto.status = %s',
+			$this->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		foreach ($this->tags as $tag)
 			$where_clause.= sprintf(' and PinholePhoto.id in

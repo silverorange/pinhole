@@ -157,11 +157,11 @@ class PinholeCalendarIndexPage extends PinholePage
 	// }}}
 	// {{{ protected function getPhotoTableStore()
 
-	protected function getPhotoTableStore($limit = null, $offset = null)
+	protected function getPhotoTableStore($limit = null, $offset = 0)
 	{
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
-			$this->app->db, 'thumb', $this->getDateWhereClause(),
-			$limit, $offset);
+			$this->app->db, 'thumb', $this->getWhereClause(),
+			'', $limit, $offset);
 
 		$store = new SwatTableStore();
 
@@ -196,20 +196,21 @@ class PinholeCalendarIndexPage extends PinholePage
 	protected function getPhotoCount()
 	{
 		$sql = sprintf('select count(id) from PinholePhoto
-			where PinholePhoto.status = %s and %s',
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
-			$this->getDateWhereClause());
+			where %s',
+			$this->getWhereClause());
 
 		return SwatDB::queryOne($this->app->db, $sql);
 	}
 
 	// }}}
-	// {{{ protected function getDateWhereClause()
+	// {{{ protected function getWhereClause()
 
-	protected function getDateWhereClause()
+	protected function getWhereClause()
 	{
-		return sprintf(' PinholePhoto.photo_date >= %s
+		return sprintf('PinholePhoto.status = %s and
+			 PinholePhoto.photo_date >= %s
 			and PinholePhoto.photo_date < %s',
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
 			$this->app->db->quote($this->start_date->getDate(), 'date'),
 			$this->app->db->quote($this->end_date->getDate(), 'date'));
 	}

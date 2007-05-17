@@ -124,7 +124,6 @@ class PinholePhotoIndex extends AdminSearch
 			$this->getWhereClause());
 
 		$pager = $this->ui->getWidget('pager');
-		$pager->page_size = 100;
 		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
 
 		$sql = 'select PinholePhoto.*,
@@ -150,6 +149,7 @@ class PinholePhotoIndex extends AdminSearch
 			$this->getOrderByClause($view, $this->order_by_clause));
 
 		$this->app->db->setLimit($pager->page_size, $pager->current_record);
+
 		$photos = SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
 
 		$this->ui->getWidget('results_frame')->visible = true;

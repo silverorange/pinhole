@@ -164,8 +164,6 @@ class PinholePhotoIndex extends AdminSearch
 			foreach ($photos as $photo) {
 				$ds = new SwatDetailsStore($photo);
 				$ds->photo = $photo;
-				/*
-				*/
 				$store->addRow($ds);
 			}
 		}

@@ -62,6 +62,13 @@ class PinholeDimension extends SwatDBDataObject
 	 */
 	public $strip;
 
+	/**
+	 * default false,
+	 *
+	 * @var boolean
+	 */
+	public $publicly_accessible;
+
 	// }}}
 	// {{{ protected function init()
 

@@ -45,7 +45,8 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 				PinholePhotoDimensionBinding.height,
 				PinholeDimension.max_width,
 				PinholeDimension.max_height,
-				PinholeDimension.shortname
+				PinholeDimension.shortname,
+				PinholeDimension.publicly_accessible
 			from PinholePhoto
 			%s
 			inner join PinholePhotoDimensionBinding on

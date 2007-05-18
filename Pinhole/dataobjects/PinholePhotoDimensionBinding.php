@@ -32,9 +32,14 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 
 	public function getURI()
 	{
-		return sprintf('images/photos/%s/%s.jpg',
-			$this->dimension->shortname,
-			$this->photo->id);
+		if ($this->dimension->publicly_accessible)
+			return sprintf('images/photos/%s/%s.jpg',
+				$this->dimension->shortname,
+				$this->photo->id);
+		else
+			return sprintf('loadphoto/%s/%s.jpg',
+				$this->dimension->shortname,
+				$this->photo->id);
 	}
 
 	// }}}

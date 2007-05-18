@@ -35,11 +35,11 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 		if ($this->dimension->publicly_accessible)
 			return sprintf('images/photos/%s/%s.jpg',
 				$this->dimension->shortname,
-				$this->photo->id);
+				$this->photo->filename);
 		else
 			return sprintf('loadphoto/%s/%s.jpg',
 				$this->dimension->shortname,
-				$this->photo->id);
+				$this->photo->filename);
 	}
 
 	// }}}

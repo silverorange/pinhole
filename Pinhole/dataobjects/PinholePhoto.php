@@ -62,6 +62,13 @@ class PinholePhoto extends SwatDBDataObject
 	 *
 	 * @var string
 	 */
+	public $filename;
+
+	/**
+	 * 
+	 *
+	 * @var string
+	 */
 	public $original_filename;
 
 	/**
@@ -177,6 +184,18 @@ class PinholePhoto extends SwatDBDataObject
 	protected function getDpi()
 	{
 		return 72;
+	}
+
+	// }}}
+	// {{{ protected function getFilename()
+
+	protected function getFilename()
+	{
+		if ($this->id === null && $this->filename === null)
+			$this->filename = sha1(uniqid(rand(), true));
+		else
+			throw new SwatException('Filename must be set
+				on the dataobject');
 	}
 
 	// }}}

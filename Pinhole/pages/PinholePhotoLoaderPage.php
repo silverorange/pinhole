@@ -42,7 +42,7 @@ class PinholePhotoLoaderPage extends PinholePage
 		$mime_type = 'image/jpeg';
 
 		header('Content-Type: '.$mime_type);
-		readfile('images/photos/'.$this->dimension_shortname.'/'.$this->photoid.'.jpg');	
+		readfile('../private-photos/'.$this->dimension_shortname.'/'.$this->photoid.'.jpg');	
 
 		exit();
 	}

@@ -6,5 +6,6 @@ create table PinholeDimension (
 	max_height int,
 	crop_to_max boolean default false,
 	strip boolean default false,
+	publicly_accessible boolean default false,
 	primary key (id)
 );

@@ -2,6 +2,7 @@
 
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'Pinhole/PinholeDateTag.php';
 
 /**
  * @package   Pinhole
@@ -51,12 +52,31 @@ class PinholeTagIntersection
 
 	public function addTagByShortname($shortname)
 	{
-		$sql = sprintf('select * from PinholeTag where shortname = %s',
-			$this->db->quote($shortname, 'text'));
+		$tag = null;
 
-		// TODO: use classmap
-		$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
-		$tag = $tags->getFirst();
+		if (strpos($shortname, '.') === false) {
+			$sql = sprintf('select * from PinholeTag where shortname = %s',
+				$this->db->quote($shortname, 'text'));
+
+			// TODO: use classmap
+			$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
+			$tag = $tags->getFirst();
+		} else {
+			ereg('([A-z0-9]+).([A-z0-9]+)=(.+)', $shortname, $tag_parts);
+
+			switch ($tag_parts[1]) {
+			case 'date' :
+				$tag = new PinholeDateTag($this->db, $tag_parts[2], $tag_parts[3]);
+				break;
+			case 'exif' :
+				// TODO: no working example yet
+				$tag = new PinholeExifTag($this->db, $tag_parts[2], $tag_parts[3]);
+				break;
+			}
+
+			if (!$tag->isValid())
+				$tag = null;
+		}
 
 		if ($tag !== null)
 			$this->addTag($tag);
@@ -81,7 +101,7 @@ class PinholeTagIntersection
 			if ($count > 0)
 				$path.= '/';
 
-			$path.= $tag->shortname;
+			$path.= $tag->getPath();
 			$count++;
 		}
 
@@ -122,11 +142,10 @@ class PinholeTagIntersection
 
 		$tag_ids = array();
 		foreach ($this->tags as $tag) {
-			$sql.= sprintf(' and id in (select photo from '.
-				'PinholePhotoTagBinding where tag = %s)',
-				$this->db->quote($tag->id, 'integer'));
+			$sql.= ' and '.$tag->getWhereClause();
 
-			$tag_ids[] = $tag->id;
+			if ($tag instanceof PinholeTag)
+				$tag_ids[] = $tag->id;
 		}
 
 		$sql.= '))';
@@ -154,11 +173,7 @@ class PinholeTagIntersection
 			$this->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		foreach ($this->tags as $tag)
-			$where_clause.= sprintf(' and PinholePhoto.id in
-				(select PinholePhotoTagBinding.photo
-				from PinholePhotoTagBinding
-				where PinholePhotoTagBinding.tag = %s)',
-				$this->db->quote($tag->id, 'integer'));
+			$where_clause.= ' and '.$tag->getWhereClause();
 
 		return $where_clause;
 	}

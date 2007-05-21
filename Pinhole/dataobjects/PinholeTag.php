@@ -77,6 +77,34 @@ class PinholeTag extends SwatDBDataObject
 	}
 
 	// }}}
+	// {{{ public function getWhereClause()
+
+	public function getWhereClause()
+	{
+		return sprintf('PinholePhoto.id in
+			(select PinholePhotoTagBinding.photo
+			from PinholePhotoTagBinding
+			where PinholePhotoTagBinding.tag = %s)',
+			$this->db->quote($this->id, 'integer'));
+	}
+
+	// }}}
+	// {{{ public function getPath()
+
+	public function getPath()
+	{
+		return $this->shortname;
+	}
+
+	// }}}
+	// {{{ public function getTitle()
+
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()

@@ -17,3 +17,7 @@ create table PinholePhoto (
 	
 	primary key (id)
 );
+
+CREATE INDEX PinholePhoto_title_index ON PinholePhoto(title);
+CREATE INDEX PinholePhoto_photo_date_index ON PinholePhoto(photo_date);
+CREATE INDEX PinholePhoto_status_index ON PinholePhoto(status);

@@ -42,7 +42,7 @@ abstract class PinholeMachineTag
 
 	public function getPath()
 	{
-		return sprintf('%s.%s=%d',
+		return sprintf('%s.%s=%s',
 			$this->name_space,
 			$this->name,
 			$this->value);

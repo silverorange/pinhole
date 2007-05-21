@@ -60,6 +60,16 @@ class PinholeCalendarDisplay extends SwatControl
 	}
 
 	// }}}
+	// {{{ public function setMonth()
+
+	public function setMonth(Date $date)
+	{
+		$this->date = $date;
+		$this->date->setDay(1);
+		$this->date->clearTime();
+	}
+
+	// }}}
 	// {{{ public function display()
 
 	/**
@@ -94,9 +104,11 @@ class PinholeCalendarDisplay extends SwatControl
 		$tbody->open();
 
 		$end_day = $this->date->getDaysInMonth();
-		$start_day = $this->date->getDayOfWeek() + 1;
+		$start_day = $this->date->getDayOfWeek();
+		$day = clone $this->date;
+		$day->subtractSeconds(86400 * ($start_day));
 
-		$count = 1;
+		$count = 0;
 
 		$total_rows = ceil(($start_day + $end_day - 1) / 7);
 
@@ -108,26 +120,18 @@ class PinholeCalendarDisplay extends SwatControl
 			$tr->open();
 
 			$td->open();
-			$a->href = sprintf($this->link, sprintf('%s/%s/%s/week',
-				$this->date->format('%Y'),
-				intval($this->date->format('%m')),
-				max($count - $start_day + 1, 1)));
+			$a->href = $this->getLink($day, 'week'); 
+			$a->title = sprintf(Pinhole::_('Week of %s'),
+				$day->format(SwatDate::DF_DATE));
 			$a->setContent('»');
 			$a->display();
 			$td->close();
 
 			for ($col = 0; $col < 7; $col++) {
 				if ($count >= $start_day && $count < ($start_day + $end_day)) {
-					$day = $count - $start_day + 1;
-
-					$a->title = isset($this->date_titles[$day]) ?
-						$this->date_titles[$day] : null;
-					$a->href = sprintf($this->link,
-						sprintf('%s/%s/%s',
-							$this->date->format('%Y'),
-							intval($this->date->format('%m')),
-							$day));
-					$a->setContent($day);
+					$a->title = $this->getTitle($day);
+					$a->href = $this->getLink($day, 'day'); 
+					$a->setContent($day->getDay());
 
 					$td->class = $this->getClassName($day);
 					$td->open();
@@ -140,6 +144,7 @@ class PinholeCalendarDisplay extends SwatControl
 					$td->display();
 				}
 
+				$day->addSeconds(86400);
 				$count++;
 			}
 
@@ -148,18 +153,6 @@ class PinholeCalendarDisplay extends SwatControl
 
 		$tbody->close();
 		$table->close();
-	}
-
-	// }}}
-	// {{{ public function setMonth()
-
-	public function setMonth(Date $date)
-	{
-		$this->date = $date;
-		$this->date->setDay(1);
-		$this->date->setHour(0);
-		$this->date->setMinute(0);
-		$this->date->setSecond(0);
 	}
 
 	// }}}
@@ -252,10 +245,7 @@ class PinholeCalendarDisplay extends SwatControl
 	{
 		$a_tag = new SwatHtmlTag('a');
 
-		$a_tag->href = sprintf($this->link, sprintf('%s/%s',
-			$this->date->format('%Y'),
-			intval($this->date->format('%m'))));
-
+		$a_tag->href = $this->getLink($this->date, 'month'); 
 		$a_tag->setContent($this->date->format('%B %Y'));
 		$a_tag->display();
 	}
@@ -295,15 +285,64 @@ class PinholeCalendarDisplay extends SwatControl
 
 	/**
 	 */
-	private function getClassName($day)
+	private function getClassName($date)
 	{
 		$classes = array();
+		$key = $date->format('%Y-%m-%d');
 
 		foreach ($this->date_classes as $class => $days)
-			if (in_array($day, $days))
+			if (in_array($key, $days))
 				$classes[] = $class;
 
 		return (count($classes) > 0) ? implode(' ', $classes) : null;
+	}
+
+	// }}}
+	// {{{ private function getLink()
+
+	/**
+	 */
+	private function getLink($date, $type = 'day')
+	{
+		$link = null;
+
+		switch ($type) {
+		case 'day' :
+		case 'week' :
+			$link = sprintf('date.%s=%s',
+				$type,
+				$date->format('%Y-%m-%d'));
+			break;
+		case 'month' :
+			$link = sprintf('date.month=%s/date.year=%s',
+				intval($date->format('%m')),
+				$date->format('%Y'));
+			break;
+		case 'year' :
+			$link = sprintf('date.year=%s',
+				$date->format('%Y'));
+			break;
+		}
+
+		return ($link === null) ? null : sprintf($this->link, $link);
+	}
+
+	// }}}
+	// {{{ private function getTitle()
+
+	/**
+	 */
+	private function getTitle($date)
+	{
+		$key = $date->format('%Y-%m-%d');
+
+		if (isset($this->date_titles[$key]))
+			return sprintf('%d %s',
+				$this->date_titles[$key],
+				Pinhole::ngettext('Photo', 'Photos',
+					$this->date_titles[$key]));
+		else
+			return null;
 	}
 
 	// }}}

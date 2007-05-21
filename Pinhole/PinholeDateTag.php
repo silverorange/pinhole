@@ -60,21 +60,36 @@ class PinholeDateTag extends PinholeMachineTag
 	// }}}
 	// {{{ public function getWhereClause()
 
-	public function getWhereClause()
+	public function getWhereClause($table_name = 'PinholePhoto')
 	{
 		if ($this->name == 'week' || $this->name == 'day') {
 			$start_date = $this->getDateFromString($this->value);
 			$end_date = clone $start_date;
 			$end_date->addSeconds(86400 * (($this->name == 'day') ? 1 : 7));
 
-			return sprintf(" photo_date >= %s and photo_date < %s",
+			return sprintf(' %1$s.photo_date >= %2$s and %1$s.photo_date < %3$s',
+				$table_name,
 				$this->db->quote($start_date, 'date'),
 				$this->db->quote($end_date, 'date'));
 		} else {
-			return sprintf(' date_part(%s, photo_date) = %s',
+			return sprintf(' date_part(%s, %s.photo_date) = %s',
 				$this->db->quote($this->name, 'text'),
+				$table_name,
 				$this->db->quote($this->value, 'date'));
 		}
+	}
+
+	// }}}
+	// {{{ public function getYear()
+
+	public function getYear()
+	{
+		if ($this->name == 'week' || $this->name == 'day')
+			return $this->getDateFromString($this->value)->getYear();
+		elseif ($this->name == 'year')
+			return $this->value;
+		else
+			return false;
 	}
 
 	// }}}
@@ -85,18 +100,18 @@ class PinholeDateTag extends PinholeMachineTag
 		// date.weekof=06-06-2005
 		// also allow 6-6-2005
 
-		ereg('([0-9]{1,2})-([0-9]{1,2})-([0-9]{4})',
+		ereg('([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})',
 			$string, $date_parts);
 
 		if ($date_parts === null || count($date_parts) != 4 ||
-			!checkdate($date_parts[1], $date_parts[2], $date_parts[3]))
+			!checkdate($date_parts[2], $date_parts[3], $date_parts[1]))
 			return null;
 
 		$date = new SwatDate();
 		$date->clearTime();
-		$date->setDay($date_parts[2]);
-		$date->setMonth($date_parts[1]);
-		$date->setYear($date_parts[3]);
+		$date->setDay($date_parts[3]);
+		$date->setMonth($date_parts[2]);
+		$date->setYear($date_parts[1]);
 
 		return $date;
 	}

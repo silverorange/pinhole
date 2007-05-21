@@ -85,9 +85,18 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getIntersectingTags()
 
-	public function getIntersectingTags()
+	public function getIntersectingTags($class_name = null)
 	{
-		return $this->tags;
+		if ($class_name === null)
+			return $this->tags;
+	
+		$tags = array();
+
+		foreach ($this->tags as $tag)
+			if ($tag instanceof $class_name)
+				$tags[] = $tag;
+
+		return $tags;
 	}
 
 	// }}}
@@ -132,6 +141,16 @@ class PinholeTagIntersection
 	}
 
 	// }}}
+	// {{{ public function getPhotoCountByDate()
+
+	public function getPhotoCountByDate()
+	{
+		return SwatDB::getOptionArray($this->db, 'PinholePhotoCountByDateView',
+			'photo_count', 'photo_date', null,
+			$this->getTagWhereClause('PinholePhotoCountByDateView'));
+	}
+
+	// }}}
 	// {{{ public function getTags()
 
 	public function getTags()
@@ -167,13 +186,14 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ protected function getTagWhereClause()
 
-	protected function getTagWhereClause()
+	protected function getTagWhereClause($table_name = 'PinholePhoto')
 	{
-		$where_clause = sprintf('PinholePhoto.status = %s',
+		$where_clause = sprintf('%s.status = %s',
+			$table_name,
 			$this->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		foreach ($this->tags as $tag)
-			$where_clause.= ' and '.$tag->getWhereClause();
+			$where_clause.= ' and '.$tag->getWhereClause($table_name);
 
 		return $where_clause;
 	}

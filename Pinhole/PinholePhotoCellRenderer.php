@@ -42,9 +42,9 @@ class PinholePhotoCellRenderer extends SwatImageCellRenderer
 		parent::render();
 
 		if ($this->photo->title !== null) {
-			$div_tag = new SwatHtmlTag('div');
-			$div_tag->setContent(SwatString::condense($this->photo->title, 30));
-			$div_tag->display();
+			$title_tag = new SwatHtmlTag('span');
+			$title_tag->setContent(SwatString::condense($this->photo->title, 30));
+			$title_tag->display();
 		}
 
 		if ($this->link !== null)

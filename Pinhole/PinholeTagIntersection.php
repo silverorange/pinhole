@@ -3,6 +3,7 @@
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/PinholeDateTag.php';
+require_once 'Pinhole/PinholeSearchTag.php';
 
 /**
  * @package   Pinhole
@@ -68,6 +69,9 @@ class PinholeTagIntersection
 			case 'date' :
 				$tag = new PinholeDateTag($this->db, $tag_parts[2], $tag_parts[3]);
 				break;
+			case 'search' :
+				$tag = new PinholeSearchTag($this->db, $tag_parts[2], $tag_parts[3]);
+				break;
 			case 'exif' :
 				// TODO: no working example yet
 				$tag = new PinholeExifTag($this->db, $tag_parts[2], $tag_parts[3]);
@@ -124,7 +128,7 @@ class PinholeTagIntersection
 	{
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->db, 'thumb', $this->getTagWhereClause(),
-			'', $limit, $offset);
+			$this->getTagJoinClause(), $limit, $offset);
 
 		return $photos;
 	}
@@ -134,7 +138,8 @@ class PinholeTagIntersection
 
 	public function getPhotoCount()
 	{
-		$sql = sprintf('select count(id) from PinholePhoto where %s',
+		$sql = sprintf('select count(id) from PinholePhoto %s where %s',
+			$this->getTagJoinClause(),
 			$this->getTagWhereClause());
 
 		return SwatDB::queryOne($this->db, $sql);
@@ -157,25 +162,23 @@ class PinholeTagIntersection
 	{
 		$sql = 'select * from PinholeTag where id not in (%s) and id in (
 			select tag from PinholePhotoTagBinding where photo in (
-				select id from PinholePhoto where 1 = 1';
+				select id from PinholePhoto %s where %s))';
 
 		$tag_ids = array();
-		foreach ($this->tags as $tag) {
-			$sql.= ' and '.$tag->getWhereClause();
-
+		foreach ($this->tags as $tag)
 			if ($tag instanceof PinholeTag)
 				$tag_ids[] = $tag->id;
-		}
-
-		$sql.= '))';
-
 
 		if (count($tag_ids))
 			$sql = sprintf($sql,
-				$this->db->implodeArray($tag_ids, 'integer'));
+				$this->db->implodeArray($tag_ids, 'integer'),
+				$this->getTagJoinClause(),
+				$this->getTagWhereClause());
 		else
 			// hack to experiment with showing all tags on top level
-			$sql = sprintf($sql, '0');
+			$sql = sprintf($sql, '0',
+				$this->getTagJoinClause(),
+				$this->getTagWhereClause());
 
 		// TODO: use classmap
 		$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
@@ -196,6 +199,19 @@ class PinholeTagIntersection
 			$where_clause.= ' and '.$tag->getWhereClause($table_name);
 
 		return $where_clause;
+	}
+
+	// }}}
+	// {{{ protected function getTagJoinClause()
+
+	protected function getTagJoinClause($table_name = 'PinholePhoto')
+	{
+		$join_clause = '';
+
+		foreach ($this->tags as $tag)
+			$join_clause.= ' '.$tag->getJoinClause($table_name);
+
+		return $join_clause;
 	}
 
 	// }}}

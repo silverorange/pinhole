@@ -79,7 +79,7 @@ class PinholeTag extends SwatDBDataObject
 	// }}}
 	// {{{ public function getWhereClause()
 
-	public function getWhereClause($table_name = 'Pinhole')
+	public function getWhereClause($table_name = 'PinholePhoto')
 	{
 		return sprintf('%s.id in
 			(select PinholePhotoTagBinding.photo
@@ -87,6 +87,14 @@ class PinholeTag extends SwatDBDataObject
 			where PinholePhotoTagBinding.tag = %s)',
 			$table_name,
 			$this->db->quote($this->id, 'integer'));
+	}
+
+	// }}}
+	// {{{ public function getJoinClause()
+
+	public function getJoinClause($table_name = 'PinholePhoto')
+	{
+		return '';
 	}
 
 	// }}}

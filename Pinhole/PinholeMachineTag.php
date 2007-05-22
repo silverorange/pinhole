@@ -45,7 +45,14 @@ abstract class PinholeMachineTag
 		return sprintf('%s.%s=%s',
 			$this->name_space,
 			$this->name,
-			$this->value);
+			urlencode($this->value));
+	}
+
+	// }}}
+	// {{{ public function getJoinClause()
+
+	public function getJoinClause() {
+		return '';
 	}
 
 	// }}}

@@ -63,15 +63,18 @@ abstract class PinholeBrowserPage extends PinholePage
 			$count = 0;
 			
 			foreach ($tags as $tag) {
-				if ($count > 0)
-					echo ' <span class="plus">+</span> ';
+				$title = $tag->getTitle();
+				if ($title !== null) {
+					if ($count > 0)
+						echo ' <span class="plus">+</span> ';
 
-				$tag_link = new SwatHtmlTag('a');
-				$tag_link->href = 'tag/'.$tag->getPath();
-				$tag_link->title = 'view all photos with this tag';
-				$tag_link->setContent($tag->getTitle());
-				$tag_link->display();
-				$count++;
+					$tag_link = new SwatHtmlTag('a');
+					$tag_link->href = 'tag/'.$tag->getPath();
+					$tag_link->title = 'view all photos with this tag';
+					$tag_link->setContent($tag->getTitle());
+					$tag_link->display();
+					$count++;
+				}
 			}
 
 			echo '</div>';

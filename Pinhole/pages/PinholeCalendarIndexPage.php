@@ -43,6 +43,14 @@ class PinholeCalendarIndexPage extends PinholeBrowserIndexPage
 		$this->photo_ui = new SwatUI();
 		$this->photo_ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
 		$this->photo_ui->loadFromXML($this->photo_ui_xml);
+
+		if ($this->getDisplayYear() === null) {
+			$date = new SwatDate();
+			$path = $this->tag_intersection->getIntersectingTagPath();
+			$this->app->relocate(sprintf('calendar%s/date.year=%s',
+				($path == '') ? '' : '/'.$path,
+				$date->getYear()));
+		}
 	}
 
 	// }}}

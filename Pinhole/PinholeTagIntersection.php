@@ -4,6 +4,7 @@ require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/PinholeDateTag.php';
 require_once 'Pinhole/PinholeSearchTag.php';
+require_once 'Pinhole/PinholeSiteTag.php';
 
 /**
  * @package   Pinhole
@@ -72,6 +73,9 @@ class PinholeTagIntersection
 			case 'search' :
 				$tag = new PinholeSearchTag($this->db, $tag_parts[2], $tag_parts[3]);
 				break;
+			case 'site' :
+				$tag = new PinholeSiteTag($this->db, $tag_parts[2], $tag_parts[3]);
+				break;
 			case 'exif' :
 				// TODO: no working example yet
 				$tag = new PinholeExifTag($this->db, $tag_parts[2], $tag_parts[3]);
@@ -111,11 +115,15 @@ class PinholeTagIntersection
 		$path = '';
 		$count = 0;
 		foreach ($this->tags as $tag) {
-			if ($count > 0)
-				$path.= '/';
+			$tag_path = $tag->getPath();
 
-			$path.= $tag->getPath();
-			$count++;
+			if ($tag_path !== null) {
+				if ($count > 0)
+					$path.= '/';
+
+				$path.= $tag->getPath();
+				$count++;
+			}
 		}
 
 		return $path;
@@ -124,11 +132,12 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getPhotos()
 
-	public function getPhotos($limit = null, $offset = 0)
+	public function getPhotos($page_size)
 	{
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->db, 'thumb', $this->getTagWhereClause(),
-			$this->getTagJoinClause(), $limit, $offset);
+			$this->getTagJoinClause(), $page_size,
+			$page_size * $this->getCurrentPage());
 
 		return $photos;
 	}
@@ -150,6 +159,8 @@ class PinholeTagIntersection
 
 	public function getPhotoCountByDate()
 	{
+		//TODO: this count won't be accurate with keyword searches.
+
 		return SwatDB::getOptionArray($this->db, 'PinholePhotoCountByDateView',
 			'photo_count', 'photo_date', null,
 			$this->getTagWhereClause('PinholePhotoCountByDateView'));
@@ -187,6 +198,20 @@ class PinholeTagIntersection
 	}
 
 	// }}}
+	// {{{ public function getCurrentPage()
+
+	public function getCurrentPage()
+	{
+		foreach ($this->getIntersectingTags('PinholeSiteTag') as $tag) {
+			$page = $tag->getPage();
+			if ($page !== null)
+				return $page;
+		}
+
+		return 0;
+	}
+
+	// }}}
 	// {{{ protected function getTagWhereClause()
 
 	protected function getTagWhereClause($table_name = 'PinholePhoto')
@@ -195,8 +220,11 @@ class PinholeTagIntersection
 			$table_name,
 			$this->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
-		foreach ($this->tags as $tag)
-			$where_clause.= ' and '.$tag->getWhereClause($table_name);
+		foreach ($this->tags as $tag) {
+			$tag_where_clause = $tag->getWhereClause($table_name);
+			if ($tag_where_clause !== null)
+				$where_clause.= ' and '.$tag->getWhereClause($table_name);
+		}
 
 		return $where_clause;
 	}
@@ -208,8 +236,11 @@ class PinholeTagIntersection
 	{
 		$join_clause = '';
 
-		foreach ($this->tags as $tag)
-			$join_clause.= ' '.$tag->getJoinClause($table_name);
+		foreach ($this->tags as $tag) {
+			$tag_join_clause = $tag->getJoinClause($table_name);
+			if ($tag_join_clause !== null)	
+				$join_clause.= ' '.$tag->getJoinClause($table_name);
+		}
 
 		return $join_clause;
 	}

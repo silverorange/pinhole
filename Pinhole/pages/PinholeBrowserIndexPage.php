@@ -41,9 +41,11 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$pagination = $this->photo_ui->getWidget('pagination');
 		$pagination->total_records = $this->tag_intersection->getPhotoCount();
-		$pagination->page_size = 20;
+		$pagination->page_size = 100;
+		$pagination->setCurrentPage($this->tag_intersection->getCurrentPage());
 		$path = $this->tag_intersection->getIntersectingTagPath();
-		$pagination->link = 'photo/'.((strlen($path) > 0) ? $path.'/' : '').'%s';
+		$pagination->link = 'tag/'.((strlen($path) > 0) ? $path.'/' : '').
+			'site.page=%d';
 
 		$this->layout->startCapture('content');
 		$this->photo_ui->display();
@@ -58,7 +60,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$store = new SwatTableStore();
 		// TODO: add pagination to UI and pass limit and offest to the
 		//       getPhotos() method below:
-		$photos = $this->tag_intersection->getPhotos(20);
+		$photos = $this->tag_intersection->getPhotos(100);
 
 		foreach ($photos as $photo) {
 			$ds = new SwatDetailsStore();

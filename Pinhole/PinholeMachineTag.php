@@ -6,7 +6,7 @@ require_once 'Pinhole/exceptions/PinholeException.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  */
-abstract class PinholeMachineTag
+class PinholeMachineTag
 {
 	// {{{ protected properties
 
@@ -56,14 +56,20 @@ abstract class PinholeMachineTag
 	}
 
 	// }}}
-	// {{{ abstract public function getTitle()
+	// {{{ public function getWhereClause()
 
-	abstract public function getTitle();
+	public function getWhereClause($table_name = 'PinholePhoto')
+	{
+		return null;
+	}
 
 	// }}}
-	// {{{ abstract public function getWhereClause()
+	// {{{ public function getTitle()
 
-	abstract public function getWhereClause();
+	public function getTitle()
+	{
+		return null;
+	}
 
 	// }}}
 }

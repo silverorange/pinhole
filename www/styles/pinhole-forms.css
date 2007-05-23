@@ -1,0 +1,75 @@
+/* Kudos to Garrett LeSage and the Hula project for these great form styles */
+
+/** Restore padding for dropdowns on Mozilla **/
+html:not([dummy]) option {
+	padding: 0 24px 0 4px;
+}
+
+input:not([type]),
+input[type="text"],
+input[type="password"],
+input[type="checkbox"],
+select,
+textarea {
+	border: 2px inset textFace;
+	-moz-border-top-colors: #676c5f #555753;
+	-moz-border-left-colors: #676c5f #555753;
+	-moz-border-bottom-colors: #888a85 #676c5f; 
+	-moz-border-right-colors: #888a85 #676c5f;
+	-moz-border-radius: 1px;
+	padding: 2pt 2pt;
+	background-color: #eeeeec;
+}
+textarea, select {
+	padding: 0;
+}
+
+input:not([type]):focus,
+input:not([type]):hover,
+input[type="text"]:focus,
+input[type="text"]:hover,
+input[type="password"]:focus,
+input[type="password"]:hover,
+input[type="checkbox"]:focus,
+input[type="checkbox"]:hover,
+select:focus,
+select:hover,
+textarea:focus,
+textarea:hover {
+	background-color: #fff;
+}
+
+button,
+input[type="button"],
+input[type="submit"] {
+	border: 3px outset ButtonFace;
+	background-color: #eeeeec;
+	-moz-border-top-colors: #babdb6 #eeeeec #fff;
+	-moz-border-left-colors: #babdb6 #eeeeec #fff;
+	-moz-border-bottom-colors: #babdb6 #eeeeec #eeeeec;
+	-moz-border-right-colors: #babdb6 #eeeeec #eeeeec;
+	-moz-border-radius: 1px;
+	margin: 0;
+	padding: 0pt 1pt;
+}
+*+html button,
+*+html input[type="button"],
+*+html input[type="submit"] {
+	/* IE 7 hack */
+	border-width: 2px;
+}
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+	background-color: #fff;
+	color: #000;
+}
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active {
+	background-color: #eeeeec;
+	-moz-border-top-colors: #aaa #eeeeec;
+	-moz-border-left-colors: #aaa #eeeeec;
+	-moz-border-bottom-colors: #bbb #fff;
+	-moz-border-right-colors: #bbb #fff;
+}

@@ -10,3 +10,21 @@
 	border-bottom: 1px solid #666;
 	padding: 0.4em 20px;
 }
+
+#hd form#search {
+	position: absolute;
+	top: 1em;
+	right: 20px;
+}
+
+#hd form#search label {
+	margin-right: 0.5em;
+}
+
+#hd form#search label:hover {
+	color: #fff;
+}
+
+#hd form#search input {
+	vertical-align: middle;
+} 

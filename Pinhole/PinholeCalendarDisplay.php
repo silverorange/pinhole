@@ -130,7 +130,7 @@ class PinholeCalendarDisplay extends SwatControl
 			for ($col = 0; $col < 7; $col++) {
 				if ($count >= $start_day && $count < ($start_day + $end_day)) {
 					$a->title = $this->getTitle($day);
-					$a->href = $this->getLink($day, 'day'); 
+					$a->href = $this->getLink($day, 'date'); 
 					$a->setContent($day->getDay());
 
 					$td->class = $this->getClassName($day);
@@ -302,12 +302,12 @@ class PinholeCalendarDisplay extends SwatControl
 
 	/**
 	 */
-	private function getLink($date, $type = 'day')
+	private function getLink($date, $type = 'date')
 	{
 		$link = null;
 
 		switch ($type) {
-		case 'day' :
+		case 'date' :
 		case 'week' :
 			$link = sprintf('date.%s=%s',
 				$type,

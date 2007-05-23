@@ -170,6 +170,26 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
+	// {{{ static public function getDateRange()
+
+	static public function getDateRange($db, $where = null)
+	{
+		$date_range = SwatDB::queryRow($db,
+			sprintf('select max(photo_date) as last_photo_date,
+				min(photo_date) as first_photo_date
+			from PinholePhoto where status = %s and %s',
+			$db->quote(
+				self::STATUS_PUBLISHED, 'integer'),
+				($where === null) ? '1 = 1' : $where));
+
+		if ($date_range === null)
+			return null;
+		else
+			return array(new SwatDate($date_range->first_photo_date),
+				new SwatDate($date_range->last_photo_date));
+	}
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()

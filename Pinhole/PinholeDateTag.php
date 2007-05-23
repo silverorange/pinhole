@@ -66,21 +66,20 @@ class PinholeDateTag extends PinholeMachineTag
 	// }}}
 	// {{{ public function getWhereClause()
 
-	public function getWhereClause($table_name = 'PinholePhoto')
+	public function getWhereClause()
 	{
 		if ($this->name == 'week' || $this->name == 'date') {
 			$start_date = $this->getDateFromString($this->value);
 			$end_date = clone $start_date;
 			$end_date->addSeconds(86400 * (($this->name == 'date') ? 1 : 7));
 
-			return sprintf(' %1$s.photo_date >= %2$s and %1$s.photo_date < %3$s',
-				$table_name,
+			return sprintf(' PinholePhoto.photo_date >= %s
+				and PinholePhoto.photo_date < %s',
 				$this->db->quote($start_date, 'date'),
 				$this->db->quote($end_date, 'date'));
 		} else {
-			return sprintf(' date_part(%s, %s.photo_date) = %s',
+			return sprintf(' date_part(%s, PinholePhoto.photo_date) = %s',
 				$this->db->quote($this->name, 'text'),
-				$table_name,
 				$this->db->quote($this->value, 'date'));
 		}
 	}

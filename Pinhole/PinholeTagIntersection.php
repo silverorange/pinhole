@@ -101,7 +101,8 @@ class PinholeTagIntersection
 		$tags = array();
 
 		foreach ($this->tags as $tag)
-			if ($tag instanceof $class_name)
+			if ($class_name === null ||
+				$tag instanceof $class_name)
 				$tags[] = $tag;
 
 		return $tags;
@@ -110,18 +111,25 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getIntersectingTagPath()
 
-	public function getIntersectingTagPath()
+	public function getIntersectingTagPath($class_name = null,
+		$remove_machine_tags = array())
 	{
 		$path = '';
 		$count = 0;
-		foreach ($this->tags as $tag) {
+		foreach ($this->getIntersectingTags($class_name) as $tag) {
 			$tag_path = $tag->getPath();
+
+			if ($tag instanceof PinholeMachineTag) {
+				$p = substr($tag_path, 0, strpos($tag_path, '='));
+				if (in_array($p, $remove_machine_tags))
+					continue;
+			}
 
 			if ($tag_path !== null) {
 				if ($count > 0)
 					$path.= '/';
 
-				$path.= $tag->getPath();
+				$path.= $tag_path;
 				$count++;
 			}
 		}
@@ -157,13 +165,83 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getPhotoCountByDate()
 
-	public function getPhotoCountByDate()
+	public function getPhotoCountByDate($date_part = 'day')
 	{
-		//TODO: this count won't be accurate with keyword searches.
+		$group_by_parts = array();
 
-		return SwatDB::getOptionArray($this->db, 'PinholePhotoCountByDateView',
-			'photo_count', 'photo_date', null,
-			$this->getTagWhereClause('PinholePhotoCountByDateView'));
+		switch ($date_part) {
+			case 'day' :
+				$group_by_parts[] = 'day';
+				$group_by_parts[] = 'month';
+				$group_by_parts[] = 'year';
+				$date_format = '%Y-%m-%d';
+				break;
+			case 'month' :
+				$group_by_parts[] = 'month';
+				$group_by_parts[] = 'year';
+				$date_format = '%Y-%m';
+				break;
+			case 'year' :
+				$group_by_parts[] = 'year';
+				$date_format = '%Y';
+				break;
+		}
+
+		$group_by = '';
+
+		$count = 0;
+		foreach ($group_by_parts as $part) {
+			if ($count > 0)
+				$group_by.= ', ';
+
+			$group_by.= sprintf('date_part(%s, PinholePhoto.photo_date)',
+				$this->db->quote($part, 'text'));
+
+			$count++;
+		}
+
+		$sql = sprintf('select count(PinholePhoto.id) as photo_count,
+				max(PinholePhoto.photo_date) as photo_date
+			from PinholePhoto
+			%s
+			where %s
+			group by %s',
+			$this->getTagJoinClause('PinholeTag'),
+			$this->getTagWhereClause('PinholeTag'),
+			$group_by);
+
+		$rows = SwatDB::query($this->db, $sql);
+
+		$dates = array();
+
+		foreach ($rows as $row) {
+			$date = new SwatDate($row->photo_date);
+			$dates[$date->format($date_format)] = $row->photo_count;
+		}
+
+		return $dates;
+	}
+
+	// }}}
+	// {{{ public function getDateRange()
+
+	public function getDateRange()
+	{
+		$sql = sprintf('select max(photo_date) as last_photo_date,
+				min(photo_date) as first_photo_date
+			from PinholePhoto
+			%s
+			where %s',
+			$this->getTagJoinClause(),
+			$this->getTagWhereClause());
+
+		$date_range = SwatDB::queryRow($this->db, $sql);
+
+		if ($date_range === null)
+			return null;
+		else
+			return array(new SwatDate($date_range->first_photo_date),
+				new SwatDate($date_range->last_photo_date));
 	}
 
 	// }}}
@@ -176,20 +254,17 @@ class PinholeTagIntersection
 				select id from PinholePhoto %s where %s))';
 
 		$tag_ids = array();
-		foreach ($this->tags as $tag)
-			if ($tag instanceof PinholeTag)
-				$tag_ids[] = $tag->id;
+		foreach ($this->getIntersectingTags('PinholeTag') as $tag)
+			$tag_ids[] = $tag->id;
 
-		if (count($tag_ids))
-			$sql = sprintf($sql,
-				$this->db->implodeArray($tag_ids, 'integer'),
-				$this->getTagJoinClause(),
-				$this->getTagWhereClause());
-		else
-			// hack to experiment with showing all tags on top level
-			$sql = sprintf($sql, '0',
-				$this->getTagJoinClause(),
-				$this->getTagWhereClause());
+
+		// this '0' is a hack to get all tags to show up on the base
+		// level
+		$sql = sprintf($sql,
+			(count($tag_ids) > 0) ?
+				$this->db->implodeArray($tag_ids, 'integer') : '0',
+			$this->getTagJoinClause(),
+			$this->getTagWhereClause());
 
 		// TODO: use classmap
 		$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
@@ -214,16 +289,15 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ protected function getTagWhereClause()
 
-	protected function getTagWhereClause($table_name = 'PinholePhoto')
+	protected function getTagWhereClause($class_name = null)
 	{
-		$where_clause = sprintf('%s.status = %s',
-			$table_name,
+		$where_clause = sprintf('PinholePhoto.status = %s',
 			$this->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
-		foreach ($this->tags as $tag) {
-			$tag_where_clause = $tag->getWhereClause($table_name);
+		foreach ($this->getIntersectingTags($class_name) as $tag) {
+			$tag_where_clause = $tag->getWhereClause();
 			if ($tag_where_clause !== null)
-				$where_clause.= ' and '.$tag->getWhereClause($table_name);
+				$where_clause.= ' and '.$tag_where_clause;
 		}
 
 		return $where_clause;
@@ -232,14 +306,14 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ protected function getTagJoinClause()
 
-	protected function getTagJoinClause($table_name = 'PinholePhoto')
+	protected function getTagJoinClause($class_name = null)
 	{
 		$join_clause = '';
 
-		foreach ($this->tags as $tag) {
-			$tag_join_clause = $tag->getJoinClause($table_name);
+		foreach ($this->getIntersectingTags($class_name) as $tag) {
+			$tag_join_clause = $tag->getJoinClause();
 			if ($tag_join_clause !== null)	
-				$join_clause.= ' '.$tag->getJoinClause($table_name);
+				$join_clause.= ' '.$tag->getJoinClause();
 		}
 
 		return $join_clause;

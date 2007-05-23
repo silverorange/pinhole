@@ -18,9 +18,12 @@ class PinholeDateTag extends PinholeMachineTag
 	public function isValid()
 	{
 		switch ($this->name) {
-		case 'day' :
+		case 'date' :
 		case 'week' :
 			return ($this->getDateFromString($this->value) !== null);
+		case 'day' :
+			$day = intval($this->value);
+			return ($day > 0 && $day < 32);
 		case 'month' :
 			$month = intval($this->value);
 			return ($month > 0 && $month < 13);
@@ -41,7 +44,7 @@ class PinholeDateTag extends PinholeMachineTag
 		$date = new SwatDate();
 
 		switch ($this->name) {
-		case 'day' :
+		case 'date' :
 			$date = $this->getDateFromString($this->value);
 			return $date->format(SwatDate::DF_DATE);
 		case 'month' :
@@ -50,6 +53,9 @@ class PinholeDateTag extends PinholeMachineTag
 		case 'year' :
 			$date->setYear($this->value);
 			return $date->format('%Y');
+		case 'day' :
+			$date->setDay($this->value);
+			return $date->format('%d');
 		case 'week' :
 			$date = $this->getDateFromString($this->value);
 			return sprintf('Week of %s',
@@ -62,10 +68,10 @@ class PinholeDateTag extends PinholeMachineTag
 
 	public function getWhereClause($table_name = 'PinholePhoto')
 	{
-		if ($this->name == 'week' || $this->name == 'day') {
+		if ($this->name == 'week' || $this->name == 'date') {
 			$start_date = $this->getDateFromString($this->value);
 			$end_date = clone $start_date;
-			$end_date->addSeconds(86400 * (($this->name == 'day') ? 1 : 7));
+			$end_date->addSeconds(86400 * (($this->name == 'date') ? 1 : 7));
 
 			return sprintf(' %1$s.photo_date >= %2$s and %1$s.photo_date < %3$s',
 				$table_name,
@@ -84,7 +90,7 @@ class PinholeDateTag extends PinholeMachineTag
 
 	public function getYear()
 	{
-		if ($this->name == 'week' || $this->name == 'day')
+		if ($this->name == 'week' || $this->name == 'date')
 			return $this->getDateFromString($this->value)->getYear();
 		elseif ($this->name == 'year')
 			return $this->value;

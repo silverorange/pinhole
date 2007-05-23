@@ -21,6 +21,7 @@ class PinholeLayout extends SiteLayout
 		parent::init();
 		$this->data->header_content = '';
 		$this->data->sidebar_content = '';
+		$this->data->dates = '';
 		$this->data->content = '';
 
 		/*

@@ -27,6 +27,7 @@
 
 	<div id="bd">
 
+		<div id="dates"><?= $this->dates ?></div>
 		<div id="yui-main">
 		<div class="yui-b">
 			<div id="content">

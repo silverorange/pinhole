@@ -58,7 +58,7 @@ class PinholeMachineTag
 	// }}}
 	// {{{ public function getWhereClause()
 
-	public function getWhereClause($table_name = 'PinholePhoto')
+	public function getWhereClause()
 	{
 		return null;
 	}

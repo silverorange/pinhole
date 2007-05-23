@@ -33,14 +33,13 @@ class PinholeSearchTag extends PinholeMachineTag
 	// }}}
 	// {{{ public function getWhereClause()
 
-	public function getWhereClause($table_name = 'PinholePhoto')
+	public function getWhereClause()
 	{
 		// keywords are included in the where clause if fulltext searching
 		// is turned off
 		if ($this->getPhotoSearchType() === null)
-			return sprintf('(%1$s.title like %2$s
-				or %1$s.description like %2$s)',
-				$table_name,
+			return sprintf('(PinholePhoto.title like %1$s
+				or PinholePhoto.description like %1$s)',
 				$this->db->quote('%'.$this->title.'%', 'text'));
 		else
 			return ' 1 = 1';
@@ -49,7 +48,7 @@ class PinholeSearchTag extends PinholeMachineTag
 	// }}}
 	// {{{ public function getJoinClause()
 
-	public function getJoinClause($table_name = 'PinholePhoto')
+	public function getJoinClause()
 	{
 		static $count = 0;
 

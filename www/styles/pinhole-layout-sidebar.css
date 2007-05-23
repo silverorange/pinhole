@@ -3,11 +3,6 @@
 	margin-left: 20px;
 }
 
-body #sidebar ul.tag-list li,
-body #sidebar ul.tag-list li a {
-	line-height: 1;
-}
-
 #sidebar ul.tag-list li {
 	margin: 0.4em 0;
 }

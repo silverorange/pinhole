@@ -122,8 +122,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 			if (isset($photos[$i])) {
 				$a_tag->title = sprintf('%d %s',
-					$photos[$key],
-					Pinhole::ngettext('photo', 'photos', $photos[$key]));
+					$photos[$i],
+					Pinhole::ngettext('photo', 'photos', $photos[$i]));
 				$a_tag->class = ($date_range[0]->getYear() == $date_range[1]->getYear() &&
 					$date_range[0]->getYear() == $i) ? 'selected' : null;
 				$a_tag->href = sprintf('tag/%sdate.year=%s',

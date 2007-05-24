@@ -2,19 +2,3 @@ h2#page_title {
 	font-size: 136%;
 	margin-bottom: 0.2em;
 }
-
-#dates {
-	padding-left: 20px;
-}
-
-#dates div {
-	margin-top: 3px;
-}
-
-#dates .selected {
-	background: red;
-}
-
-#dates a, #dates span {
-	padding: 2px;
-}

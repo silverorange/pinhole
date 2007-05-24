@@ -108,7 +108,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$span_tag = new SwatHtmlTag('span');
 		$a_tag = new SwatHtmlTag('a');
 		$div_tag = new SwatHtmlTag('div');
-		$div_tag->class = 'years';
+		$div_tag->class = 'years clearfix';
 		$div_tag->open();
 
 		// TODO: this should really just exclude Date tags, not only
@@ -153,7 +153,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$a_tag = new SwatHtmlTag('a');
 		$span_tag = new SwatHtmlTag('span');
 		$div_tag = new SwatHtmlTag('div');
-		$div_tag->class = 'months';
+		$div_tag->class = 'months clearfix';
 		$div_tag->open();
 
 		// TODO: this should really just exclude Date tags, not only
@@ -199,7 +199,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$a_tag = new SwatHtmlTag('a');
 		$span_tag = new SwatHtmlTag('span');
 		$div_tag = new SwatHtmlTag('div');
-		$div_tag->class = 'days';
+		$div_tag->class = 'days clearfix';
 		$div_tag->open();
 
 		$current_intersection =

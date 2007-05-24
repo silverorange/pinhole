@@ -1,0 +1,39 @@
+#dates {
+	padding: 0.3em 20px;
+	color: #888a85;
+}
+
+#dates .years,
+#dates .months,
+#dates .days {
+	margin-top: 0.5em;
+} 
+
+#dates a,
+#dates span {
+	padding: 0.2em 0.5em;
+	float: left;
+	display: block;
+	border: 1px solid transparent;
+	border-bottom: 1px solid #555;
+}
+
+#dates .selected {
+	border-top: 1px solid #555;
+	border-right: 1px solid #555;
+	border-left: 1px solid #555;
+	border-bottom: 0;
+	background: #2E3436;
+	font-weight: bold;
+}
+
+#dates a {
+	text-decoration: none;
+}
+
+#dates a:hover {
+	background-color: #414544;
+	border-top: 1px solid #555;
+	border-right: 1px solid #555;
+	border-left: 1px solid #555;
+}

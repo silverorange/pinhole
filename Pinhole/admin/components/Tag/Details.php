@@ -139,6 +139,7 @@ class PinholeTagDetails extends AdminIndex
 		$sql = 'select id, title, shortname
 			from PinholeTag
 			where parent = %s
+				and name_space is null
 			order by title';
 
 		$sql = sprintf($sql,

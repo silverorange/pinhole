@@ -30,6 +30,7 @@
 	display: block;
 	border: 1px solid transparent;
 	border-bottom: 1px solid #555;
+	text-decoration: none;
 }
 
 #dates .selected {
@@ -39,15 +40,17 @@
 	border-bottom: 0;
 	background: #2E3436;
 	font-weight: bold;
-}
-
-#dates a {
-	text-decoration: none;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-topleft: 4px;
 }
 
 #dates a:hover {
 	background-color: #414544;
+	border-bottom: 0;
 	border-top: 1px solid #555;
 	border-right: 1px solid #555;
 	border-left: 1px solid #555;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-topleft: 4px;
+	text-decoration: underline;
 }

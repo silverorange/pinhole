@@ -1,13 +1,27 @@
 #dates {
-	padding: 0.3em 20px;
 	color: #888a85;
 }
 
 #dates .years,
 #dates .months,
 #dates .days {
-	margin-top: 0.3em;
-} 
+	padding: 0.3em 20px 0 20px;
+	background: url(../images/date-browser-background.png) bottom repeat-x;
+}
+
+#dates .years {
+	background-color: #434745;
+	border-bottom: 1px solid #4f4f4c;
+}
+
+#dates .months {
+	background-color: #3b4040;
+	border-bottom: 1px solid #454846;
+}
+#dates .days {
+	background-color: #353b3b;
+	border-bottom: 1px solid #3b403f;
+}
 
 #dates .years a,
 #dates .years span {
@@ -29,28 +43,44 @@
 	float: left;
 	display: block;
 	border: 1px solid transparent;
-	border-bottom: 1px solid #555;
+	border-bottom: 0;
 	text-decoration: none;
 }
 
+#dates a:hover,
 #dates .selected {
-	border-top: 1px solid #555;
-	border-right: 1px solid #555;
-	border-left: 1px solid #555;
+	border-width: 1px;
+	border-style: solid;
 	border-bottom: 0;
 	background: #2E3436;
-	font-weight: bold;
 	-moz-border-radius-topright: 4px;
 	-moz-border-radius-topleft: 4px;
 }
 
 #dates a:hover {
-	background-color: #414544;
-	border-bottom: 0;
-	border-top: 1px solid #555;
-	border-right: 1px solid #555;
-	border-left: 1px solid #555;
-	-moz-border-radius-topright: 4px;
-	-moz-border-radius-topleft: 4px;
 	text-decoration: underline;
+}
+
+#dates .selected {
+	font-weight: bold;
+	position: relative;
+	top: 1px;
+}
+
+#dates .years .selected,
+#dates .years a:hover {
+	background-color: #3b4040;
+	border-color: #4f4f4c;
+}
+
+#dates .months .selected,
+#dates .months a:hover {
+	background-color: #353b3b;
+	border-color: #454846;
+}
+
+#dates .days .selected,
+#dates .days a:hover {
+	background-color: #2E3436;
+	border-color: #3b403f;
 }

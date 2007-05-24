@@ -109,7 +109,7 @@ class PinholeTagIndex extends AdminSearch
 	protected function getWhereClause()
 	{
 		if ($this->where_clause === null) {
-			$where = '1 = 1';
+			$where = 'PinholeTag.name_space is null';
 
 			$clause = new AdminSearchClause('title');
 			$clause->table = 'PinholeTag';
@@ -123,7 +123,7 @@ class PinholeTagIndex extends AdminSearch
 			$clause->operator = AdminSearchClause::OP_EQUALS;
 			$where.= $clause->getClause($this->app->db);
 
-			$this->where_clause = sprintf('1 = 1 and (%s)', $where);
+			$this->where_clause = $where;
 		}
 
 		return $this->where_clause;

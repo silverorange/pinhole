@@ -18,7 +18,9 @@ class PinholePhotographerWrapper extends SwatDBRecordsetWrapper
 	protected function init()
 	{
 		parent::init();
-		$this->row_wrapper_class = 'PinholePhotographer';
+
+		$this->row_wrapper_class =
+			$this->class_map->resolveClass('PinholePhotographer');
 	}
 
 	// }}}

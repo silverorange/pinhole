@@ -3,6 +3,7 @@
 @import url("pinhole-layout-sidebar.css");
 @import url("pinhole-photo-tile.css");
 @import url("pinhole-intersecting-tag-list.css");
+@import url("pinhole-date-browser.css");
 @import url("swat-local.css");
 @import url("pinhole-forms.css");
 
@@ -25,3 +26,18 @@ a:link    { color: #b0c9e4; }
 a:visited { color: #b0c9e4; } 
 a:hover   { color: #729fcf; }
 a:active  { color: #729fcf; }
+
+
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+.clearfix {display:inline-block;}
+/* Hide from IE Mac \*/
+.clearfix {display:block;}
+/* End hide from IE Mac */
+
+

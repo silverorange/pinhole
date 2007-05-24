@@ -121,10 +121,11 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$date->setYear($i);
 
 			if (isset($photos[$i])) {
+				$a_tag->title = sprintf('%d %s',
+					$photos[$key],
+					Pinhole::ngettext('photo', 'photos', $photos[$key]));
 				$a_tag->class = ($date_range[0]->getYear() == $date_range[1]->getYear() &&
 					$date_range[0]->getYear() == $i) ? 'selected' : null;
-
-				$a_tag->title = $photos[$i];
 				$a_tag->href = sprintf('tag/%sdate.year=%s',
 					($current_intersection == '') ? '' : $current_intersection.'/',
 					$i);
@@ -167,7 +168,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$key = $date->format('%Y-%m');
 
 			if (isset($photos[$key])) {
-				$a_tag->title = $photos[$key];
+				$a_tag->title = sprintf('%d %s',
+					$photos[$key],
+					Pinhole::ngettext('photo', 'photos', $photos[$key]));
 				$a_tag->class = ($date_range[0]->getMonth() == $date_range[1]->getMonth() &&
 					$date_range[0]->getMonth() == $i) ? 'selected' : null;
 				$a_tag->href = sprintf('tag/%sdate.month=%s/date.year=%s',
@@ -211,7 +214,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$key = $date->format('%Y-%m-%d');
 
 			if (isset($photos[$key])) {
-				$a_tag->title = $photos[$key];
+				$a_tag->title = sprintf('%d %s',
+					$photos[$key],
+					Pinhole::ngettext('photo', 'photos', $photos[$key]));
 				$a_tag->class = ($date_range[0]->getDay() == $date_range[1]->getDay() &&
 					$date_range[0]->getDay() == $i) ? 'selected' : null;
 				$a_tag->href = sprintf('tag/%sdate.date=%s',

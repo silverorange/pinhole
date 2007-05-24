@@ -18,7 +18,9 @@ class PinholeDimensionWrapper extends SwatDBRecordsetWrapper
 	protected function init()
 	{
 		parent::init();
-		$this->row_wrapper_class = 'PinholeDimension';
+
+		$this->row_wrapper_class =
+			$this->class_map->resolveClass('PinholeDimension');
 	}
 
 	// }}}

@@ -117,9 +117,10 @@ class PinholeTag extends SwatDBDataObject
 
 	protected function init()
 	{
-		$this->registerInternalProperty('parent', 'PinholeTag');
+		$this->registerInternalProperty('parent',
+			$this->class_map->resolveClass('PinholeTag'));
 
-		$this->table = 'PinholeTag';
+		$this->table = $this->class_map->resolveClass('PinholeTag');
 		$this->id_field = 'integer:id';
 	}
 

@@ -1,5 +1,6 @@
 <?php
 
+require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBRecordsetWrapper.php';
 require_once 'PinholePhoto.php';
 require_once 'PinholePhotoDimensionBinding.php';
@@ -15,15 +16,6 @@ require_once 'PinholeDimension.php';
  */
 class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 {
-	// {{{ protected function init()
-
-	protected function init()
-	{
-		parent::init();
-		$this->row_wrapper_class = 'PinholePhoto';
-	}
-
-	// }}}
 	// {{{ public static function loadSetFromDBWithDimension()
 
 	/**
@@ -66,14 +58,20 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 
 		$store = new SwatDBDefaultRecordsetWrapper(null);
 
-		// TODO: use classmaps for these class names
+		$class_map = SwatDBClassMap::instance();
+		$photo_class =
+			$class_map->resolveClass('PinholePhoto');
+		$dimension_class =
+			$class_map->resolveClass('PinholeDimension');
+		$dimension_binding_class =
+			$class_map->resolveClass('PinholePhotoDimensionBinding');
 
 		foreach ($rs as $row) {
-			$photo = new PinholePhoto($row);
+			$photo = new $photo_class($row);
 			$photo->setDataBase($db);
 
-			$dimension = new PinholeDimension($row);
-			$dimension_binding = new PinholePhotoDimensionBinding($row);
+			$dimension = new $dimension_class($row);
+			$dimension_binding = new $dimension_binding_class($row);
 			$dimension_binding->dimension = $dimension;
 
 			$photo->setDimension($dimension_shortname, $dimension_binding);
@@ -82,6 +80,17 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 		}
 
 		return $store;
+	}
+
+	// }}}
+	// {{{ protected function init()
+
+	protected function init()
+	{
+		parent::init();
+
+		$this->row_wrapper_class =
+			$this->class_map->resolveClass('PinholePhoto');
 	}
 
 	// }}}

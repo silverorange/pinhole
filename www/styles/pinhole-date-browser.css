@@ -9,9 +9,23 @@
 	margin-top: 0.3em;
 } 
 
+#dates .years a,
+#dates .years span {
+	padding: 0.2em 0.5em;
+}
+
+#dates .months a,
+#dates .months span {
+	padding: 0.2em 0.3em;
+}
+
+#dates .days a,
+#dates .days span {
+	padding: 0.2em 0.3em;
+}
+
 #dates a,
 #dates span {
-	padding: 0.2em 0.5em;
 	float: left;
 	display: block;
 	border: 1px solid transparent;

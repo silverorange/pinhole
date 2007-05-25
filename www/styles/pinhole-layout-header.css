@@ -15,6 +15,7 @@
 	position: absolute;
 	top: 1em;
 	right: 20px;
+	font-size: 85%;
 }
 
 #hd form#search label {

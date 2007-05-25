@@ -38,6 +38,11 @@
 	padding: 0.2em 0.2em;
 }
 
+#dates .days a.selected,
+#dates .days span.selected {
+	padding: 0.2em 0.5em;
+}
+
 #dates a,
 #dates span {
 	float: left;

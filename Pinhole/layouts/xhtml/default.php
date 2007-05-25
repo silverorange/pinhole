@@ -12,7 +12,7 @@
 			<a href="." title="Home Page" accesskey="1">Gallery</a>
 			<? /* TODO: make this gallery name dynamic  */ ?>
 		</h1>
-		<form id="search"><? /* TODO: Make this search actually work */ ?>
+		<form id="search" action="#"><? /* TODO: Make this search actually work */ ?>
 			<div>
 				<input type="radio" name="search_scope" id="all_photos" />
 				<label for="all_photos">All Photos</label>

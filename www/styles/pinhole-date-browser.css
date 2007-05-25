@@ -30,12 +30,12 @@
 
 #dates .months a,
 #dates .months span {
-	padding: 0.2em 0.3em;
+	padding: 0.2em 0.4em;
 }
 
 #dates .days a,
 #dates .days span {
-	padding: 0.2em 0.3em;
+	padding: 0.2em 0.2em;
 }
 
 #dates a,

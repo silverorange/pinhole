@@ -249,9 +249,18 @@ class PinholeTagIntersection
 
 	public function getTags()
 	{
-		$sql = 'select * from PinholeTag where id not in (%s) and id in (
-			select tag from PinholePhotoTagBinding where photo in (
-				select id from PinholePhoto %s where %s))';
+		$sql = 'select PinholeTag.id, PinholeTag.title, PinholeTag.shortname,
+				max(publish_date) as last_updated,
+				count(PinholePhoto.id) as photo_count
+			from PinholeTag 
+			inner join PinholePhotoTagBinding on PinholeTag.id = PinholePhotoTagBinding.tag
+			inner join PinholePhoto on PinholePhoto.id = PinholePhotoTagBinding.photo
+			%2$s
+			where PinholeTag.id not in (%1$s) and %3$s
+			group by PinholeTag.id, PinholeTag.title, PinholeTag.shortname
+			order by max(publish_date) desc';
+
+		// TODO: allow for different ordering
 
 		$tag_ids = array();
 		foreach ($this->getIntersectingTags('PinholeTag') as $tag)
@@ -266,8 +275,8 @@ class PinholeTagIntersection
 			$this->getTagJoinClause(),
 			$this->getTagWhereClause());
 
-		// TODO: use classmap
-		$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
+		//$this->db->setLimit(30);
+		$tags = SwatDB::query($this->db, $sql);
 
 		return $tags;
 	}

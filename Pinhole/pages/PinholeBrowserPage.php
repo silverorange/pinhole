@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Swat/SwatYUI.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagIntersection.php';
@@ -90,7 +91,8 @@ abstract class PinholeBrowserPage extends PinholePage
 		$tags = $this->getTagListTags();
 		if (count($tags) > 0) {
 			echo '<h3 class="tag-list-title">Related Tags:</h3>';
-			echo '<ul class="tag-list">';
+			echo '<div id="pinhole_tag_sort"></div>';
+			echo '<ul class="tag-list" id="pinhole_tag_list">';
 
 			$root = 'tag';
 			$path = $this->tag_intersection->getIntersectingTagPath();
@@ -98,19 +100,31 @@ abstract class PinholeBrowserPage extends PinholePage
 				$root.= '/'.$path;
 
 			foreach ($tags as $tag) {
+				$last_updated = new SwatDate($tag->last_updated);
+
 				$li_tag = new SwatHtmlTag('li');
+				$li_tag->id = sprintf('%s/%s/%s',
+					$tag->shortname,
+					$last_updated->getTime(),
+					$tag->photo_count);
 				$li_tag->open();
 
 				$anchor_tag = new SwatHtmlTag('a');
 				$anchor_tag->setContent($tag->title);
 				$anchor_tag->href = $root.'/'.$tag->shortname;
+				$anchor_tag->title = sprintf('%d %s',
+					$tag->photo_count,
+					Pinhole::ngettext('photo', 'photos', $tag->photo_count));
 				$anchor_tag->rel = 'tag';
 				$anchor_tag->display();
 
 				$li_tag->close();
+
 			}
 
 			echo '</ul>';
+
+			Swat::displayInlineJavaScript($this->getInlineJavascript());
 		}
 	}
 
@@ -123,6 +137,16 @@ abstract class PinholeBrowserPage extends PinholePage
 	}
 
 	// }}}
+	// {{{ protected function getInlineJavaScript()
+
+	protected function getInlineJavaScript()
+	{
+		return sprintf("var %s_obj =
+			new PinholeSortableTagList('%s', '%s');",
+			'tag_list', 'pinhole_tag_list', 'pinhole_tag_sort');
+	}
+
+	// }}}
 
 	// finalize phase
 	// {{{ public function finalize()
@@ -130,9 +154,16 @@ abstract class PinholeBrowserPage extends PinholePage
 	public function finalize()
 	{
 		parent::finalize();
+
+		$yui = new SwatYUI(array('dom', 'animation'));
+		$this->layout->addHtmlHeadEntrySet($yui->getHtmlHeadEntrySet());
+
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/styles/pinhole-browser-page.css',
 			Pinhole::PACKAGE_ID));
+
+		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
+			'packages/pinhole/javascript/pinhole-sortable-tag-list.js', Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

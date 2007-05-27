@@ -260,12 +260,9 @@ class PinholeTagIntersection
 			group by PinholeTag.id, PinholeTag.title, PinholeTag.shortname
 			order by max(publish_date) desc';
 
-		// TODO: allow for different ordering
-
 		$tag_ids = array();
 		foreach ($this->getIntersectingTags('PinholeTag') as $tag)
 			$tag_ids[] = $tag->id;
-
 
 		// this '0' is a hack to get all tags to show up on the base
 		// level
@@ -276,9 +273,18 @@ class PinholeTagIntersection
 			$this->getTagWhereClause());
 
 		//$this->db->setLimit(30);
-		$tags = SwatDB::query($this->db, $sql);
 
-		return $tags;
+		$rows = SwatDB::query($this->db, $sql);
+		$tag_wrapper = new PinholeTagWrapper();
+
+		foreach ($rows as $row) {
+			$tag = new PinholeTag($row);
+			$tag->setLastUpdated(new SwatDate($row->last_updated));
+			$tag->setPhotoCount($row->photo_count);
+			$tag_wrapper->add($tag);
+		}
+
+		return $tag_wrapper;
 	}
 
 	// }}}

@@ -100,21 +100,19 @@ abstract class PinholeBrowserPage extends PinholePage
 				$root.= '/'.$path;
 
 			foreach ($tags as $tag) {
-				$last_updated = new SwatDate($tag->last_updated);
-
 				$li_tag = new SwatHtmlTag('li');
 				$li_tag->id = sprintf('%s/%s/%s',
 					$tag->shortname,
-					$last_updated->getTime(),
-					$tag->photo_count);
+					$tag->getLastUpdated()->getTime(),
+					$tag->getPhotoCount());
 				$li_tag->open();
 
 				$anchor_tag = new SwatHtmlTag('a');
 				$anchor_tag->setContent($tag->title);
 				$anchor_tag->href = $root.'/'.$tag->shortname;
 				$anchor_tag->title = sprintf('%d %s',
-					$tag->photo_count,
-					Pinhole::ngettext('photo', 'photos', $tag->photo_count));
+					$tag->getPhotoCount(),
+					Pinhole::ngettext('photo', 'photos', $tag->getPhotoCount()));
 				$anchor_tag->rel = 'tag';
 				$anchor_tag->display();
 

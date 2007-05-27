@@ -1,6 +1,7 @@
 <?php
 
 require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Swat/SwatDate.php';
 
 /**
  * A dataobject class for tags
@@ -54,6 +55,23 @@ class PinholeTag extends SwatDBDataObject
 	 * @var integer
 	 */
 	public $status;
+
+	// }}}
+	// {{{ private properties
+
+	/**
+	 * Photo count
+	 *
+	 * @var integer
+	 */
+	private $photo_count;
+
+	/**
+	 * Last updated
+	 *
+	 * @var Date
+	 */
+	private $last_updated;
 
 	// }}}
 	// {{{ public static function getStatuses()
@@ -110,6 +128,64 @@ class PinholeTag extends SwatDBDataObject
 	public function getTitle()
 	{
 		return $this->title;
+	}
+
+	// }}}
+	// {{{ public function setLastUpdated()
+
+	public function setLastUpdated(SwatDate $date)
+	{
+		$this->last_updated = $date;
+	}
+
+	// }}}
+	// {{{ public function getLastUpdated()
+
+	public function getLastUpdated()
+	{
+		if ($this->last_updated === null) {
+			$sql = sprintf('select max(PinholePhoto.photo_date)
+				from PinholePhoto
+				inner join PinholePhotoTagBinding on
+					PinholePhotoTagBinding.photo =
+					PinholePhoto.id
+				where PinholePhotoTagBinding.tag = %s',
+				$this->db->quote($this->id, 'integer'));
+
+			$date = SwatDB::queryOne($this->db, $sql);
+
+			return ($date === null) ? null : new SwatDate($date);
+		} else {
+			return $this->last_updated;
+		}
+	}
+
+	// }}}
+	// {{{ public function setPhotoCount()
+
+	public function setPhotoCount($photo_count)
+	{
+		$this->photo_count = $photo_count;
+	}
+
+	// }}}
+	// {{{ public function getPhotoCount()
+
+	public function getPhotoCount()
+	{
+		if ($this->photo_count === null) {
+			$sql = sprintf('select count(PinholePhoto.id)
+				from PinholePhoto
+				inner join PinholePhotoTagBinding on
+					PinholePhotoTagBinding.photo =
+					PinholePhoto.id
+				where PinholePhotoTagBinding.tag = %s',
+				$this->db->quote($this->id, 'integer'));
+
+			return SwatDB::queryOne($this->db, $sql);
+		} else {
+			return $this->photo_count;
+		}
 	}
 
 	// }}}

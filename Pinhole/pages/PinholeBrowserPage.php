@@ -1,7 +1,9 @@
 <?php
 
 require_once 'Swat/SwatYUI.php';
+require_once 'Swat/SwatUI.php';
 require_once 'SwatDB/SwatDB.php';
+require_once 'Site/SiteSearchForm.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagIntersection.php';
 require_once 'Pinhole/pages/PinholePage.php';
@@ -19,6 +21,8 @@ abstract class PinholeBrowserPage extends PinholePage
 	 */
 	protected $tag_intersection;
 
+	protected $search_ui;
+
 	// }}}
 	// {{{ public function __construct()
 
@@ -32,6 +36,10 @@ abstract class PinholeBrowserPage extends PinholePage
 		if ($tags !== null)
 			foreach (explode('/', $tags) as $tag)
 				$this->tag_intersection->addTagByShortname($tag);
+
+		$this->search_ui = new SwatUI();
+		$this->search_ui->loadFromXML(
+			dirname(__FILE__).'/browser-search.xml');
 	}
 
 	// }}}
@@ -49,6 +57,10 @@ abstract class PinholeBrowserPage extends PinholePage
 
 		$this->layout->startCapture('sidebar_content');
 		$this->displayTagList();
+		$this->layout->endCapture();
+
+		$this->layout->startCapture('search_content');
+		$this->displaySearchForm();
 		$this->layout->endCapture();
 	}
 
@@ -126,6 +138,21 @@ abstract class PinholeBrowserPage extends PinholePage
 	}
 
 	// }}}
+	// {{{ protected function displaySearchForm()
+
+	protected function displaySearchForm()
+	{
+		$radio_options = array(
+			'all' => Pinhole::_('All Photos'),
+			'set' => Pinhole::_('This Set'));
+
+		$radio_widget = $this->search_ui->getWidget('search_options');
+		$radio_widget->addOptionsByArray($radio_options);
+
+		$this->search_ui->display();
+	}
+
+	// }}}
 	// {{{ protected function getTagListTags()
 
 	protected function getTagListTags()
@@ -155,12 +182,17 @@ abstract class PinholeBrowserPage extends PinholePage
 		$yui = new SwatYUI(array('dom', 'animation'));
 		$this->layout->addHtmlHeadEntrySet($yui->getHtmlHeadEntrySet());
 
+		$this->layout->addHtmlHeadEntrySet(
+			$this->search_ui->getRoot()->getHtmlHeadEntrySet(),
+			Pinhole::PACKAGE_ID);
+
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/styles/pinhole-browser-page.css',
 			Pinhole::PACKAGE_ID));
 
 		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
-			'packages/pinhole/javascript/pinhole-sortable-tag-list.js', Pinhole::PACKAGE_ID));
+			'packages/pinhole/javascript/pinhole-sortable-tag-list.js',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

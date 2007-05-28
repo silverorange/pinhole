@@ -145,7 +145,7 @@ class PinholeTagIntersection
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->db, 'thumb', $this->getTagWhereClause(),
 			$this->getTagJoinClause(), $page_size,
-			$page_size * $this->getCurrentPage());
+			$page_size * ($this->getCurrentPage() - 1));
 
 		return $photos;
 	}

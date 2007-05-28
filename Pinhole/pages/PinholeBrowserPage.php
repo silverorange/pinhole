@@ -3,7 +3,6 @@
 require_once 'Swat/SwatYUI.php';
 require_once 'Swat/SwatUI.php';
 require_once 'SwatDB/SwatDB.php';
-require_once 'Site/SiteSearchForm.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagIntersection.php';
 require_once 'Pinhole/pages/PinholePage.php';

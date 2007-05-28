@@ -206,8 +206,8 @@ class PinholeTagIntersection
 			%s
 			where %s
 			group by %s',
-			$this->getTagJoinClause('PinholeTag'),
-			$this->getTagWhereClause('PinholeTag'),
+			$this->getTagJoinClause(),
+			$this->getTagWhereClause(),
 			$group_by);
 
 		$rows = SwatDB::query($this->db, $sql);
@@ -304,12 +304,12 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ protected function getTagWhereClause()
 
-	protected function getTagWhereClause($class_name = null)
+	protected function getTagWhereClause()
 	{
 		$where_clause = sprintf('PinholePhoto.status = %s',
 			$this->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
-		foreach ($this->getIntersectingTags($class_name) as $tag) {
+		foreach ($this->getIntersectingTags() as $tag) {
 			$tag_where_clause = $tag->getWhereClause();
 			if ($tag_where_clause !== null)
 				$where_clause.= ' and '.$tag_where_clause;
@@ -321,11 +321,11 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ protected function getTagJoinClause()
 
-	protected function getTagJoinClause($class_name = null)
+	protected function getTagJoinClause()
 	{
 		$join_clause = '';
 
-		foreach ($this->getIntersectingTags($class_name) as $tag) {
+		foreach ($this->getIntersectingTags() as $tag) {
 			$tag_join_clause = $tag->getJoinClause();
 			if ($tag_join_clause !== null)	
 				$join_clause.= ' '.$tag->getJoinClause();

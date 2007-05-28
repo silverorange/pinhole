@@ -126,7 +126,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$a_tag->title = null;
 		$a_tag->setContent('View All');
-		$a_tag->href = 'tags'.$tag_path;
+		$a_tag->href = 'tag'.$tag_path;
 		$a_tag->display();
 
 		if ($next === null) {

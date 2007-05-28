@@ -11,21 +11,29 @@
 	padding: 0.4em 20px;
 }
 
-#hd form#search {
+#hd form#search_form {
 	position: absolute;
 	top: 1em;
 	right: 20px;
 	font-size: 85%;
 }
 
-#hd form#search label {
+#hd form#search_form.swat-form label {
 	margin-right: 0.5em;
+	color: #eeeeec;
 }
 
-#hd form#search label:hover {
+#hd form#search_form.swat-form label:hover {
 	color: #fff;
 }
 
-#hd form#search input {
+#hd form#search_form.swat-form input {
 	vertical-align: middle;
 } 
+
+#hd form#search_form ul#search_options,
+#hd form#search_form ul#search_options li,
+#hd form#search_form .swat-form-field,
+#hd form#search_form .swat-form-field-contents {
+	display: inline;
+}

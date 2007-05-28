@@ -20,6 +20,7 @@
 
 #hd form#search_form.swat-form label {
 	margin-right: 0.5em;
+	margin-left: 0.2em;
 	color: #eeeeec;
 }
 
@@ -30,6 +31,10 @@
 #hd form#search_form.swat-form input {
 	vertical-align: middle;
 } 
+
+#hd form#search_form.swat-form input.swat-button {
+	margin-left: 0.3em;
+}
 
 #hd form#search_form ul#search_options,
 #hd form#search_form ul#search_options li,

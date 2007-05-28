@@ -18,3 +18,28 @@
 	background-color: #555753;
 	border-color: #888a85;
 }
+
+
+/* SwatDetailsView */
+table.swat-details-view td,
+table.swat-details-view th {
+	padding: 0.2em;
+	width: auto;
+}
+
+table.swat-details-view th {
+	text-align: right;
+	color: #babdb6;
+}
+
+
+/* SwatDisclosure */
+
+.swat-disclosure a.swat-disclosure-anchor {
+	background: #2e3436;
+}
+
+.swat-disclosure .swat-disclosure-container {
+	border-color: #555753;
+}
+

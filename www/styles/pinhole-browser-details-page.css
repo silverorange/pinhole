@@ -3,13 +3,3 @@ img.pinhole-photo {
 	border: 1px solid #888a85;
 	background: #eeeeec;
 }
-
-table#photo_details_view td,
-table#photo_details_view th {
-	padding: 0.2em;
-}
-
-table#photo_details_view th {
-	text-align: right;
-	color: #babdb6;
-}

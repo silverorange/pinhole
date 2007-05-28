@@ -48,13 +48,19 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	public function init()
 	{
-		$radio_options = array(
-			'all' => Pinhole::_('All Photos'),
-			'set' => Pinhole::_('This Set'));
-
 		$radio_widget = $this->search_ui->getWidget('search_options');
-		$radio_widget->addOptionsByArray($radio_options);
-		$radio_widget->value = 'all';
+		$tags = $this->tag_intersection->getIntersectingTags();
+
+		if (count($tags) > 0) {
+			$radio_options = array(
+				'all' => Pinhole::_('All Photos'),
+				'set' => Pinhole::_('This Set'));
+
+			$radio_widget->addOptionsByArray($radio_options);
+			$radio_widget->value = 'all';
+		} else {
+			$radio_widget->visible = false;
+		}
 
 		$this->search_ui->getWidget('search_form')->action =
 			'tag/'.$this->tag_intersection->getIntersectingTagPath();

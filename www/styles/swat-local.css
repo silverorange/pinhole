@@ -35,6 +35,7 @@ table.swat-details-view th {
 
 /* SwatDisclosure */
 
+.swat-disclosure span.swat-disclosure-span,
 .swat-disclosure a.swat-disclosure-anchor {
 	background: #2e3436;
 }

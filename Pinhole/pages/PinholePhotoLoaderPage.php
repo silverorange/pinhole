@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Pinhole/pages/PinholePage.php';
+require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Swat/exceptions/SwatException.php';
 
 /**
  * @package   Pinhole
@@ -10,8 +12,8 @@ class PinholePhotoLoaderPage extends PinholePage
 {
 	// {{{ protected properties
 
+	protected $photo;
 	protected $dimension_shortname;
-	protected $photoid;
 
 	// }}}
 
@@ -19,12 +21,29 @@ class PinholePhotoLoaderPage extends PinholePage
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$dimension_shortname, $photoid)
+		$dimension_shortname, $photo_id)
 	{
 		parent::__construct($app, $layout);
 
+		$this->photo = $this->getPhoto($photo_id, $dimension_shortname);
 		$this->dimension_shortname = $dimension_shortname;
-		$this->photoid = $photoid;
+	}
+
+	// }}}
+	// {{{ protected function getPhoto()
+
+	protected function getPhoto($filename, $dimension)
+	{
+		$photo = new PinholePhoto();
+		$photo->setDatabase($this->app->db);
+		$found = $photo->loadFromFilename($filename, $dimension);
+
+		if ($found === false)
+			throw SiteNotFoundException(sprintf('Photo with
+				filename %s does not exist',
+				$filename));
+
+		return $photo;
 	}
 
 	// }}}
@@ -36,13 +55,16 @@ class PinholePhotoLoaderPage extends PinholePage
 	{
 		parent::build();
 
-		// TODO: add security, make sure photo exists, obviously don't build the
-		// path like this
-
 		$mime_type = 'image/jpeg';
 
+		if (!ctype_alnum($this->dimension_shortname))
+			throw new SwatException(sprintf('Dimension "%s"
+				must be alpha-numeric.'),
+				$this->dimension_shortname);
+
 		header('Content-Type: '.$mime_type);
-		readfile('../private-photos/'.$this->dimension_shortname.'/'.$this->photoid.'.jpg');	
+		readfile('../private-photos/'.$this->dimension_shortname.
+				'/'.$this->photo->filename.'.jpg');	
 
 		exit();
 	}

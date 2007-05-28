@@ -110,6 +110,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$a_tag = new SwatHtmlTag('a');
 		$span_tag = new SwatHtmlTag('span');
+		$div_tag = new SwatHtmlTag('div');
+		$div_tag->id = 'photo_next_prev';
+
+		$div_tag->open();
 
 		if ($prev === null) {
 			$span_tag->setContent('Prev');
@@ -140,6 +144,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$a_tag->setContent('Next');
 			$a_tag->display();
 		}
+
+		$div_tag->close();
 	}
 
 	// }}}

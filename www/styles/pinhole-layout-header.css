@@ -11,6 +11,9 @@
 	padding: 0.4em 20px;
 }
 
+
+/* Header Search */
+
 #hd form#search_form {
 	position: absolute;
 	top: 1em;
@@ -41,4 +44,33 @@
 #hd form#search_form .swat-form-field,
 #hd form#search_form .swat-form-field-contents {
 	display: inline;
+}
+
+
+/* Sub-Header (tag intersection and next/prev links) */
+
+#hd #sub_hd {
+	position: relative;
+	border-bottom: 1px solid #555;
+	margin: 0;
+	padding: 0.4em 20px;
+}
+
+/* Tag Intersection */
+
+.intersecting-tag-list {
+	font-size: 136%;
+}
+
+.intersecting-tag-list span.plus {
+	font-weight: bold;
+}
+
+
+/* Next/Prev Photo links */
+
+#photo_next_prev {
+	position: absolute;
+	top: 0;
+	right: 0;
 }

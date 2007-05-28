@@ -13,8 +13,10 @@
 			<? /* TODO: make this gallery name dynamic  */ ?>
 		</h1>
 		<?= $this->search_content ?>
-		<?= $this->header_content ?>
-		<?= $this->navigation_links ?>
+		<div id="sub_hd">
+			<?= $this->header_content ?>
+			<?= $this->navigation_links ?>
+		</div><!-- close #sub_hd -->
 	</div><!-- close #hd -->
 
 	<div id="bd">

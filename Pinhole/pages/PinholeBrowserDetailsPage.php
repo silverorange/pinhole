@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Swat/SwatHtmlTag.php';
+require_once 'Swat/SwatUI.php';
+require_once 'Swat/SwatDetailsStore.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
@@ -11,6 +13,12 @@ require_once 'Pinhole/dataobjects/PinholePhoto.php';
  */
 class PinholeBrowserDetailsPage extends PinholeBrowserPage
 {
+
+	protected $photo;
+	protected $details_ui;
+	protected $details_ui_xml = 'Pinhole/pages/photo-details-view.xml';
+
+	// init phase
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
@@ -25,6 +33,18 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
+	// {{{ public function init()
+
+	public function init()
+	{
+		parent::init();
+
+		$this->details_ui = new SwatUI();
+		$this->details_ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
+		$this->details_ui->loadFromXML($this->details_ui_xml);
+	}
+
+	// }}}
 
 	// build phase
 	// {{{ public function build()
@@ -32,6 +52,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	public function build()
 	{
 		parent::build();
+
+		$view = $this->details_ui->getWidget('photo_details_view');
+		$view->data = $this->getPhotoDetailsStore();
 
 		/* Set YUI Grid CSS class for one full-width column on details page */
 		$this->layout->data->yui_grid_class = 'yui-t7';
@@ -42,7 +65,18 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->layout->startCapture('content');
 		$this->displayPhoto();
 		$this->displayPhotoDetails();
+		$this->details_ui->display();
 		$this->layout->endCapture();
+	}
+
+	// }}}
+	// {{{ protected function getPhotoDetailsStore()
+
+	protected function getPhotoDetailsStore()
+	{
+		$store = new SwatDetailsStore($this->photo);
+
+		return $store;
 	}
 
 	// }}}
@@ -57,23 +91,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$img_tag->alt = $this->photo->title;
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
-	}
-
-	// }}}
-	// {{{ protected function displayPhotoDetails()
-
-	protected function displayPhotoDetails()
-	{
-		echo '<div class="pinhole-photo-details">';
-
-		if (strlen($this->photo->description) > 0) {
-			$description_tag = new SwatHtmlTag('p');
-			$description_tag->class = 'photo-description';
-			$description_tag->setContent($this->photo->description);
-			$description_tag->display();
-		}
-
-		echo '</div>';
 	}
 
 	// }}}

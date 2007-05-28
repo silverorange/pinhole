@@ -157,7 +157,8 @@ class PinholePhotoIndex extends AdminSearch
 
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, 'thumb', $this->getWhereClause(),
-			$this->join_clause, $pager->page_size, $pager->current_record);
+			$this->join_clause, null,
+			$pager->page_size, $pager->current_record);
 
 		$this->ui->getWidget('results_frame')->visible = true;
 

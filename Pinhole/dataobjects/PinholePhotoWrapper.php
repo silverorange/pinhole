@@ -29,9 +29,13 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 	 * @param integer $offset
 	 */
 	public static function loadSetFromDBWithDimension($db, $dimension_shortname,
-		$where_clause = '1 = 1', $join_clause = '',
+		$where_clause = '1 = 1', $join_clause = '', $order_by_clause = null,
 		$limit = null, $offset = 0)
 	{
+		if ($order_by_clause === null)
+			$order_by_clause = 'PinholePhoto.publish_date desc,
+				PinholePhoto.title';
+
 		$sql = 'select PinholePhoto.*,
 				PinholePhotoDimensionBinding.width,
 				PinholePhotoDimensionBinding.height,
@@ -46,7 +50,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 			inner join PinholeDimension on
 				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
 			where %s
-			order by PinholePhoto.publish_date desc, PinholePhoto.title';
+			order by %s';
 
 		$where_clause.= sprintf(' and PinholeDimension.shortname = %s',
 			$db->quote($dimension_shortname, 'text'));
@@ -54,7 +58,8 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 		if ($limit !== null)
 			$db->setLimit($limit, $offset);
 
-		$rs = SwatDB::query($db, sprintf($sql, $join_clause, $where_clause));
+		$rs = SwatDB::query($db, sprintf($sql, $join_clause,
+			$where_clause, $order_by_clause));
 
 		$store = new SwatDBDefaultRecordsetWrapper(null);
 

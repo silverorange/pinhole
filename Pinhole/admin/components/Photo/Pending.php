@@ -98,7 +98,8 @@ class PinholePhotoPending extends AdminIndex
 
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, 'thumb', $this->getWhereClause(),
-			'', $pager->page_size, $pager->current_record);
+			'', null,
+			$pager->page_size, $pager->current_record);
 
 		$store = new SwatTableStore();
 

@@ -78,7 +78,7 @@ PinholeSortableTagList.prototype.initList = function ()
 	
 	for (var i = 0; i < list_elements.length; i++) {
 		var node = list_elements[i];
-		var tag_info = node.id.split('/');
+		var tag_info = node.id.split('_');
 		
 		this.tags[i] = new PinholeSortableTagElement(
 			node.innerHTML,

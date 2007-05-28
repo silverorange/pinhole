@@ -3,6 +3,7 @@
 <swatml>
     <widget class="SwatDisclosure" id="photo_details">
 		<property name="title">Photo Details</property>
+		<property name="open" type="boolean">false</property>
 		<widget class="SwatDetailsView" id="photo_details_view">
 			<object class="SwatDetailsViewField" id="photo_description">
 				<property name="title">Description</property>

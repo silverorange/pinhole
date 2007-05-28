@@ -60,6 +60,7 @@
 
 .intersecting-tag-list {
 	font-size: 136%;
+	float: left;
 }
 
 .intersecting-tag-list span.plus {
@@ -70,7 +71,10 @@
 /* Next/Prev Photo links */
 
 #photo_next_prev {
-	position: absolute;
-	top: 0;
-	right: 0;
+	float: right;
+	padding-top: 0.3em;
+}
+
+#photo_next_prev a {
+	margin: 0 0.5em;
 }

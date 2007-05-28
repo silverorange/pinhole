@@ -14,7 +14,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$tags = null, $photo_id = null)
+		$photo_id = null, $tags = null)
 	{
 		parent::__construct($app, $layout, $tags);
 

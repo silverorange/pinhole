@@ -167,6 +167,7 @@ abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 	protected function indexPhotos()
 	{
+		define('SWATDB_DEBUG', true);
 		$photo_indexer = new NateGoSearchIndexer(
 			$this->getDocumentType(PinholeSearchPage::TYPE_PHOTOS),
 				$this->db);
@@ -182,13 +183,14 @@ abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 			$this->getDocumentType(PinholeSearchPage::TYPE_PHOTOS),
 				$this->db, false, true);
 
-		$tag_indexer->addTerm(new NateGoSearchTerm('title', 3));
+		$tag_indexer->addTerm(new NateGoSearchTerm('tag_title', 3));
 		$tag_indexer->addTerm(new NateGoSearchTerm('shortname'));
 		$tag_indexer->addUnindexedWords(
 			NateGoSearchIndexer::getDefaultUnindexedWords());
 
 		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title,
-				PinholePhoto.description, PinholeTag.title,
+				PinholePhoto.description,
+				PinholeTag.title as tag_title,
 				PinholeTag.shortname
 			from PinholePhoto
 				left outer join PinholePhotoTagBinding on

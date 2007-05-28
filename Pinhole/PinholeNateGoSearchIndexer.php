@@ -167,7 +167,6 @@ abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 	protected function indexPhotos()
 	{
-		define('SWATDB_DEBUG', true);
 		$photo_indexer = new NateGoSearchIndexer(
 			$this->getDocumentType(PinholeSearchPage::TYPE_PHOTOS),
 				$this->db);

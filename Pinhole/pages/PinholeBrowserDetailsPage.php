@@ -66,6 +66,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->displayPhoto();
 		$this->details_ui->display();
 		$this->layout->endCapture();
+
+		$this->layout->startCapture('navigation_links');
+		$this->displayNavigationLinks();
+		$this->layout->endCapture();
+
 	}
 
 	// }}}
@@ -90,6 +95,51 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$img_tag->alt = $this->photo->title;
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
+	}
+
+	// }}}
+	// {{{ protected function displayNavigationLinks()
+
+	protected function displayNavigationLinks()
+	{
+		$next = $this->tag_intersection->getNextPhoto($this->photo->id);
+		$prev = $this->tag_intersection->getPrevPhoto($this->photo->id);
+
+		$tag_path = $this->tag_intersection->getIntersectingTagPath();
+		$tag_path = ($tag_path === null) ? '' : '/'.$tag_path;
+
+		$a_tag = new SwatHtmlTag('a');
+		$span_tag = new SwatHtmlTag('span');
+
+		if ($prev === null) {
+			$span_tag->setContent('Prev');
+			$span_tag->display();
+		} else {
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->href = sprintf('photo/%s%s',
+				$prev->id,
+				$tag_path);
+			$a_tag->title = $prev->title;
+			$a_tag->setContent('Prev');
+			$a_tag->display();
+		}
+
+		$a_tag->title = null;
+		$a_tag->setContent('View All');
+		$a_tag->href = 'tags'.$tag_path;
+		$a_tag->display();
+
+		if ($next === null) {
+			$span_tag->setContent('Next');
+			$span_tag->display();
+		} else {
+			$a_tag->href = sprintf('photo/%s%s',
+				$next->id,
+				$tag_path);
+			$a_tag->title = $next->title;
+			$a_tag->setContent('Next');
+			$a_tag->display();
+		}
 	}
 
 	// }}}

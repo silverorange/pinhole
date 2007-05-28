@@ -151,6 +151,68 @@ class PinholeTagIntersection
 	}
 
 	// }}}
+	// {{{ public function getNextPhoto()
+
+	public function getNextPhoto($photo_id)
+	{
+		$sql = 'select PinholePhoto.*
+			from PinholePhoto
+			%s
+			where PinholePhoto.id < %s and %s
+			order by PinholePhoto.id desc';
+
+		$sql = sprintf($sql,
+			$this->getTagJoinClause(),
+			$this->db->quote($photo_id, 'integer'),
+			$this->getTagWhereClause());
+
+		$this->db->setLimit(1);
+
+		$class_map = SwatDBClassMap::instance();
+			
+		$photo_class =
+			$class_map->resolveClass('PinholePhotoWrapper');
+
+		$photos = SwatDB::query($this->db, $sql, $photo_class);
+
+		if ($photos === null)
+			return null;
+		else
+			return $photos->getFirst();
+	}
+
+	// }}}
+	// {{{ public function getPrevPhoto()
+
+	public function getPrevPhoto($photo_id)
+	{
+		$sql = 'select PinholePhoto.*
+			from PinholePhoto
+			%s
+			where PinholePhoto.id > %s and %s
+			order by PinholePhoto.id';
+
+		$sql = sprintf($sql,
+			$this->getTagJoinClause(),
+			$this->db->quote($photo_id, 'integer'),
+			$this->getTagWhereClause());
+
+		$this->db->setLimit(1);
+
+		$class_map = SwatDBClassMap::instance();
+			
+		$photo_class =
+			$class_map->resolveClass('PinholePhotoWrapper');
+
+		$photos = SwatDB::query($this->db, $sql, $photo_class);
+
+		if ($photos === null)
+			return null;
+		else
+			return $photos->getFirst();
+	}
+
+	// }}}
 	// {{{ public function getPhotoCount()
 
 	public function getPhotoCount()

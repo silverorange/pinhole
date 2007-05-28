@@ -14,6 +14,7 @@
 		</h1>
 		<?= $this->search_content ?>
 		<?= $this->header_content ?>
+		<?= $this->navigation_links ?>
 	</div><!-- close #hd -->
 
 	<div id="bd">

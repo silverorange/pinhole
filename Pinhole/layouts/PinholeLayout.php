@@ -22,6 +22,7 @@ class PinholeLayout extends SiteLayout
 		$this->data->header_content = '';
 		$this->data->sidebar_content = '';
 		$this->data->search_content = '';
+		$this->data->navigation_links = '';
 		$this->data->dates = '';
 		$this->data->content = '';
 

@@ -12,16 +12,7 @@
 			<a href="." title="Home Page" accesskey="1">Gallery</a>
 			<? /* TODO: make this gallery name dynamic  */ ?>
 		</h1>
-		<form id="search" action="#"><? /* TODO: Make this search actually work */ ?>
-			<div>
-				<input type="radio" name="search_scope" id="all_photos" />
-				<label for="all_photos">All Photos</label>
-				<input type="radio" name="search_scope" id="filtered_photos" />
-				<label for="filtered_photos">This Set</label>
-				<input type="text" />
-				<input type="submit" value="Search" />
-			</div>
-		</form>
+		<?= $this->search_content ?>
 		<?= $this->header_content ?>
 	</div><!-- close #hd -->
 

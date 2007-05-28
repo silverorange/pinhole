@@ -4,7 +4,7 @@
 	<widget class="SwatDetailsView" id="photo_details_view">
 		<object class="SwatDetailsViewField" id="photo_description">
 			<property name="title">Description</property>
-			<object class="SwatTextCellRenderer">
+			<object class="SwatNullTextCellRenderer">
 				<property name="text" type="data">description</property>
 			</object>
 		</object>

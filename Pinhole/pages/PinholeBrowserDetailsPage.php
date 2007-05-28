@@ -115,6 +115,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	public function finalize()
 	{
 		parent::finalize();
+		$this->layout->addHtmlHeadEntrySet(
+			$this->details_ui->getRoot()->getHtmlHeadEntrySet());
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/styles/pinhole-browser-details-page.css',
 			Pinhole::PACKAGE_ID));

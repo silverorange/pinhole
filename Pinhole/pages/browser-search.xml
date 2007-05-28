@@ -7,10 +7,9 @@
 		<widget class="SwatFormField">
 			<property name="access_key" type="string">4</property>
 			<widget class="SwatEntry" id="keywords">
+				<property name="size" type="integer">30</property>
 				<property name="maxlength" type="integer">255</property>
 			</widget>
-		</widget>
-		<widget class="SwatFormField">
 			<widget class="SwatButton">
 				<property name="title">Search</property>
 				<property name="classes[]">compact-button</property>

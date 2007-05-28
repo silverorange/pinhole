@@ -6,7 +6,7 @@
 		<object class="SwatTile">
 			<object class="PinholePhotoCellRenderer">
 				<property name="photo" type="data">photo</property>
-				<property name="link">photo/details/%s</property>
+				<property name="link">photo/%s/tags/go/here</property>
 				<property name="link_value" type="data">photo.id</property>
 				<property name="classes[]">photo-title</property>
 			</object>

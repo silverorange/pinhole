@@ -53,7 +53,7 @@ class PinholePhotoLoaderPage extends PinholePage
 	protected function createLayout()
 	{
 		return new SiteLayout($this->app,
-			'../layouts/xhtml/photo-loader.php');
+			'../layouts/xhtml/blank.php');
 	}
 
 	// }}}

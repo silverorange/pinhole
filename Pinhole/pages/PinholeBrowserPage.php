@@ -63,7 +63,8 @@ abstract class PinholeBrowserPage extends PinholePage
 		}
 
 		$this->search_ui->getWidget('search_form')->action =
-			'tag/'.$this->tag_intersection->getIntersectingTagPath();
+			'tag/'.$this->tag_intersection->getIntersectingTagPath(
+				null, array('site.page'));
 	}
 
 	// }}}

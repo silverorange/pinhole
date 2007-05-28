@@ -90,7 +90,6 @@ abstract class PinholeBrowserPage extends PinholePage
 	{
 		$tags = $this->getTagListTags();
 		if (count($tags) > 0) {
-			echo '<h3 class="tag-list-title">Related Tags:</h3>';
 			echo '<div id="pinhole_tag_sort"></div>';
 			echo '<ul class="tag-list" id="pinhole_tag_list">';
 

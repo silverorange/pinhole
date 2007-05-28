@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
-	<widget class="SiteSearchForm" id="search_form">
+	<widget class="SwatForm" id="search_form">
 		<property name="action">search</property>
 		<widget class="SwatRadioList" id="search_options" />
 		<widget class="SwatFormField">

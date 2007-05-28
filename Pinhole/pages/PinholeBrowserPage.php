@@ -44,6 +44,53 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	// }}}
 
+	// init phase
+	// {{{ public function init()
+
+	public function init()
+	{
+		$radio_options = array(
+			'all' => Pinhole::_('All Photos'),
+			'set' => Pinhole::_('This Set'));
+
+		$radio_widget = $this->search_ui->getWidget('search_options');
+		$radio_widget->addOptionsByArray($radio_options);
+		$radio_widget->value = 'all';
+
+		$this->search_ui->getWidget('search_form')->action =
+			'tag/'.$this->tag_intersection->getIntersectingTagPath();
+	}
+
+	// }}}
+
+	// process phase
+	// {{{ public function process()
+
+	public function process()
+	{
+		$this->search_ui->process();
+
+		$form = $this->search_ui->getWidget('search_form');
+
+		if ($form->isSubmitted()) {
+			$keywords= $this->search_ui->getWidget('keywords')->value;
+
+			$keyword_tag = ($keywords === null) ? '' : sprintf(
+					'/search.keywords=%s', urlencode($keywords));
+
+			$options = $this->search_ui->getWidget('search_options')->value;
+
+			if ($options == 'all') {
+				$this->app->relocate('tag'.$keyword_tag);
+			} else {
+				$path = $this->tag_intersection->getIntersectingTagPath(); 
+				$this->app->relocate('tag/'.$path.$keyword_tag);
+			}
+		}
+	}
+
+	// }}}
+
 	// build phase
 	// {{{ public function build()
 
@@ -142,13 +189,6 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	protected function displaySearchForm()
 	{
-		$radio_options = array(
-			'all' => Pinhole::_('All Photos'),
-			'set' => Pinhole::_('This Set'));
-
-		$radio_widget = $this->search_ui->getWidget('search_options');
-		$radio_widget->addOptionsByArray($radio_options);
-
 		$this->search_ui->display();
 	}
 

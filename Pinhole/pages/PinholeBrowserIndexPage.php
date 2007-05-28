@@ -48,8 +48,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$pagination->page_size = 100;
 		$pagination->setCurrentPage($this->tag_intersection->getCurrentPage());
 		$path = $this->tag_intersection->getIntersectingTagPath();
-		$pagination->link = 'tag/'.((strlen($path) > 0) ? $path.'/' : '').
-			'site.page=%d';
+		$pagination->link = 'tag/';
+		$pagination->link.= ($path === null) ? '' : $path.'/';
+		$pagination->link.= 'site.page=%d';
 
 		$this->layout->startCapture('content');
 		$this->photo_ui->display();
@@ -64,8 +65,12 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$store = new SwatTableStore();
 		$photos = $this->tag_intersection->getPhotos(100);
 
+		$tag_path = $this->tag_intersection->getIntersectingTagPath();
+		$tag_path = ($tag_path === null) ? '' : '/'.$tag_path;
+
 		foreach ($photos as $photo) {
 			$ds = new SwatDetailsStore();
+			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
 			$store->addRow($ds);
 		}

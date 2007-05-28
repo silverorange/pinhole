@@ -134,7 +134,7 @@ class PinholeTagIntersection
 			}
 		}
 
-		return $path;
+		return ($path == '') ? null : $path;
 	}
 
 	// }}}

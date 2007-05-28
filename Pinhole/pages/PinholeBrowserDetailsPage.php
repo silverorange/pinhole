@@ -64,7 +64,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$this->layout->startCapture('content');
 		$this->displayPhoto();
-		$this->displayPhotoDetails();
 		$this->details_ui->display();
 		$this->layout->endCapture();
 	}

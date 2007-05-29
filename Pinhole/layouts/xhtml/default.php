@@ -15,7 +15,6 @@
 		<?= $this->search_content ?>
 		<div id="sub_hd" class="clearfix">
 			<?= $this->header_content ?>
-			<?= $this->navigation_links ?>
 		</div><!-- close #sub_hd -->
 	</div><!-- close #hd -->
 

@@ -102,8 +102,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function displayNavigationLinks()
 	{
-		$next = $this->tag_intersection->getNextPhoto($this->photo->id);
-		$prev = $this->tag_intersection->getPrevPhoto($this->photo->id);
+		$next = $this->tag_intersection->getNextPhoto($this->photo);
+		$prev = $this->tag_intersection->getPrevPhoto($this->photo);
 
 		$tag_path = $this->tag_intersection->getIntersectingTagPath();
 		$tag_path = ($tag_path === null) ? '' : '/'.$tag_path;

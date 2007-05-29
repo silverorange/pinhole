@@ -142,9 +142,16 @@ class PinholeTagIntersection
 
 	public function getPhotos($page_size)
 	{
+		if (count($this->getIntersectingTags()) > 0)
+			$order_by_clause = 'PinholePhoto.photo_date desc,
+				PinholePhoto.title desc';
+		else
+			$order_by_clause = 'PinholePhoto.publish_date desc,
+				PinholePhoto.title desc';
+
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->db, 'thumb', $this->getTagWhereClause(),
-			$this->getTagJoinClause(), null,
+			$this->getTagJoinClause(), $order_by_clause,
 			$page_size,
 			$page_size * ($this->getCurrentPage() - 1));
 
@@ -154,18 +161,32 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getNextPhoto()
 
-	public function getNextPhoto($photo_id)
+	public function getNextPhoto(PinholePhoto $photo)
 	{
 		$sql = 'select PinholePhoto.*
 			from PinholePhoto
 			%s
-			where PinholePhoto.id < %s and %s
-			order by PinholePhoto.id desc';
+			where PinholePhoto.%s < %s and %s
+			order by %s';
+
+		if (count($this->getIntersectingTags()) > 0) {
+			$order_by_clause = 'PinholePhoto.photo_date desc,
+				PinholePhoto.title desc';
+			$date_field = 'photo_date';
+			$date_value = $photo->photo_date;
+		} else {
+			$order_by_clause = 'PinholePhoto.publish_date desc,
+				PinholePhoto.title desc';
+			$date_field = 'publish_date';
+			$date_value = $photo->publish_date;
+		}
 
 		$sql = sprintf($sql,
 			$this->getTagJoinClause(),
-			$this->db->quote($photo_id, 'integer'),
-			$this->getTagWhereClause());
+			$date_field,
+			$this->db->quote($date_value, 'date'),
+			$this->getTagWhereClause(),
+			$order_by_clause);
 
 		$this->db->setLimit(1);
 
@@ -185,18 +206,32 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getPrevPhoto()
 
-	public function getPrevPhoto($photo_id)
+	public function getPrevPhoto(PinholePhoto $photo)
 	{
 		$sql = 'select PinholePhoto.*
 			from PinholePhoto
 			%s
-			where PinholePhoto.id > %s and %s
-			order by PinholePhoto.id';
+			where PinholePhoto.%s > %s and %s
+			order by %s';
+
+		if (count($this->getIntersectingTags()) > 0) {
+			$order_by_clause = 'PinholePhoto.photo_date,
+				PinholePhoto.title';
+			$date_field = 'photo_date';
+			$date_value = $photo->photo_date;
+		} else {
+			$order_by_clause = 'PinholePhoto.publish_date,
+				PinholePhoto.title';
+			$date_field = 'publish_date';
+			$date_value = $photo->publish_date;
+		}
 
 		$sql = sprintf($sql,
 			$this->getTagJoinClause(),
-			$this->db->quote($photo_id, 'integer'),
-			$this->getTagWhereClause());
+			$date_field,
+			$this->db->quote($date_value, 'date'),
+			$this->getTagWhereClause(),
+			$order_by_clause);
 
 		$this->db->setLimit(1);
 

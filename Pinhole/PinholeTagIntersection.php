@@ -196,9 +196,8 @@ class PinholeTagIntersection
 		foreach ($photos as $photo) {
 			if ($photo->id === $current_photo->id) {
 				$photos->next();
-				$next = $photos->current();
 				$return['next'] =
-					($next === false) ? null : $next;
+					($photos->valid()) ? $photos->current() : null;
 				$return['prev'] = $prev_photo;
 				return $return;
 			}

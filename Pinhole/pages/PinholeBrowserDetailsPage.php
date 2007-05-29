@@ -66,11 +66,15 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->displayPhoto();
 		$this->details_ui->display();
 		$this->layout->endCapture();
+	}
 
-		$this->layout->startCapture('navigation_links');
+	// }}}
+	// {{{ protected function displayHeaderContent()
+
+	protected function displayHeaderContent()
+	{
+		$this->displayIntersectingTags();
 		$this->displayNavigationLinks();
-		$this->layout->endCapture();
-
 	}
 
 	// }}}

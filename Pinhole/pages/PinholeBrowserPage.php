@@ -105,7 +105,7 @@ abstract class PinholeBrowserPage extends PinholePage
 		parent::build();
 
 		$this->layout->startCapture('header_content');
-		$this->displayIntersectingTags();
+		$this->displayHeaderContent();
 		$this->layout->endCapture();
 
 		$this->layout->startCapture('sidebar_content');
@@ -115,6 +115,14 @@ abstract class PinholeBrowserPage extends PinholePage
 		$this->layout->startCapture('search_content');
 		$this->displaySearchForm();
 		$this->layout->endCapture();
+	}
+
+	// }}}
+	// {{{ protected function displayHeaderContent()
+
+	protected function displayHeaderContent()
+	{
+		$this->displayIntersectingTags();
 	}
 
 	// }}}

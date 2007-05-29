@@ -10,7 +10,7 @@
 		<widget class="SwatDetailsView" id="photo_details_view">
 			<object class="SwatDetailsViewField" id="photo_date">
 				<property name="title">Taken</property>
-				<object class="SwatDateCellRenderer">
+				<object class="PinholeDateTagCellRenderer">
 					<property name="date" type="data">photo_date</property>
 				</object>
 			</object>

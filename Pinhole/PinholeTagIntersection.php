@@ -1,5 +1,6 @@
 <?php
 
+require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/PinholeDateTag.php';
@@ -41,8 +42,10 @@ class PinholeTagIntersection
 		$sql = sprintf('select * from PinholeTag where id = %s',
 			$this->db->quote($id, 'integer'));
 
-		// TODO: use classmap
-		$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
+		$class_map = SwatDBClassMap::instance();
+		$wrapper = $map->resolveClass('PinholeTagWrapper');
+
+		$tags = SwatDB::query($this->db, $sql, $wrapper);
 		$tag = $tags->getFirst();
 
 		if ($tag !== null)
@@ -60,8 +63,10 @@ class PinholeTagIntersection
 			$sql = sprintf('select * from PinholeTag where shortname = %s',
 				$this->db->quote($shortname, 'text'));
 
-			// TODO: use classmap
-			$tags = SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
+			$class_map = SwatDBClassMap::instance();
+			$wrapper = $map->resolveClass('PinholeTagWrapper');
+
+			$tags = SwatDB::query($this->db, $sql, $wrapper);
 			$tag = $tags->getFirst();
 		} else {
 			ereg('([A-z0-9]+).([A-z0-9]+)=(.+)', $shortname, $tag_parts);
@@ -93,17 +98,27 @@ class PinholeTagIntersection
 	// }}}
 	// {{{ public function getIntersectingTags()
 
-	public function getIntersectingTags($class_name = null)
+	public function getIntersectingTags($class_name = null,
+		$remove_machine_tags = array())
 	{
 		if ($class_name === null)
 			return $this->tags;
 	
 		$tags = array();
 
-		foreach ($this->tags as $tag)
+		foreach ($this->tags as $tag) {
+			$tag_path = $tag->getPath();
+
+			if ($tag instanceof PinholeMachineTag) {
+				$p = substr($tag_path, 0, strpos($tag_path, '='));
+				if (in_array($p, $remove_machine_tags))
+					continue;
+			}
+
 			if ($class_name === null ||
 				$tag instanceof $class_name)
 				$tags[] = $tag;
+		}
 
 		return $tags;
 	}
@@ -348,10 +363,8 @@ class PinholeTagIntersection
 
 	protected function getOrderByClause()
 	{
-		// TODO: this just needs to exclude Page tag not only return
-		// PinholeTags
-
-		if (count($this->getIntersectingTags('PinholeTag')) > 0)
+		if (count($this->getIntersectingTags(null,
+			array('site.page'))) > 0)
 			return 'PinholePhoto.photo_date desc,
 				PinholePhoto.title desc';
 		else

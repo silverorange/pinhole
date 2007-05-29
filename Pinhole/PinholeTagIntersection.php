@@ -172,7 +172,7 @@ class PinholeTagIntersection
 
 	public function getNextPrevPhoto(PinholePhoto $current_photo)
 	{
-		$sql = 'select PinholePhoto.*
+		$sql = 'select PinholePhoto.id, PinholePhoto.title
 			from PinholePhoto
 			%s
 			where %s

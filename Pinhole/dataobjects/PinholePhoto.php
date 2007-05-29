@@ -237,6 +237,10 @@ class PinholePhoto extends SwatDBDataObject
 	{
 		$this->table = 'PinholePhoto';
 		$this->id_field = 'integer:id';
+
+		$this->registerDateProperty('upload_date');
+		$this->registerDateProperty('publish_date');
+		$this->registerDateProperty('photo_date');
 	}
 
 	// }}}

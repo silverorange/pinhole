@@ -4,6 +4,7 @@ require_once 'Swat/SwatHtmlTag.php';
 require_once 'Swat/SwatUI.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'Pinhole/Pinhole.php';
+require_once 'Pinhole/PinholeDateTagCellRenderer.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 

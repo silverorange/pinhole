@@ -3,6 +3,7 @@
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeTag.php';
 require_once 'Pinhole/PinholeDateTag.php';
 require_once 'Pinhole/PinholeSearchTag.php';
 require_once 'Pinhole/PinholeSiteTag.php';
@@ -60,14 +61,9 @@ class PinholeTagIntersection
 		$tag = null;
 
 		if (strpos($shortname, '.') === false) {
-			$sql = sprintf('select * from PinholeTag where shortname = %s',
-				$this->db->quote($shortname, 'text'));
-
-			$class_map = SwatDBClassMap::instance();
-			$wrapper = $class_map->resolveClass('PinholeTagWrapper');
-
-			$tags = SwatDB::query($this->db, $sql, $wrapper);
-			$tag = $tags->getFirst();
+			$tag = new PinholeTag();
+			$tag->setDatabase($this->db);
+			$tag->loadFromShortname($shortname);
 		} else {
 			ereg('([A-z0-9]+).([A-z0-9]+)=(.+)', $shortname, $tag_parts);
 

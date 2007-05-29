@@ -1,16 +1,13 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
-    <widget class="SwatDisclosure" id="photo_details">
+	<widget class="SwatDisplayableContainer" id="description_container">
+		<widget class="SwatContentBlock" id="description" />
+	</widget>
+	<widget class="SwatDisclosure" id="photo_details">
 		<property name="title">Photo Details</property>
 		<property name="open" type="boolean">false</property>
 		<widget class="SwatDetailsView" id="photo_details_view">
-			<object class="SwatDetailsViewField" id="photo_description">
-				<property name="title">Description</property>
-				<object class="SwatNullTextCellRenderer">
-					<property name="text" type="data">description</property>
-				</object>
-			</object>
 			<object class="SwatDetailsViewField" id="photo_date">
 				<property name="title">Taken</property>
 				<object class="SwatDateCellRenderer">

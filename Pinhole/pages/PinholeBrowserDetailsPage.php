@@ -56,6 +56,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$view = $this->details_ui->getWidget('photo_details_view');
 		$view->data = $this->getPhotoDetailsStore();
 
+		$description = $this->details_ui->getWidget('description');
+		$description->content = $this->photo->description;
+
 		/* Set YUI Grid CSS class for one full-width column on details page */
 		$this->layout->data->yui_grid_class = 'yui-t7';
 

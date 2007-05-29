@@ -348,7 +348,10 @@ class PinholeTagIntersection
 
 	protected function getOrderByClause()
 	{
-		if (count($this->getIntersectingTags()) > 0)
+		// TODO: this just needs to exclude Page tag not only return
+		// PinholeTags
+
+		if (count($this->getIntersectingTags('PinholeTag')) > 0)
 			return 'PinholePhoto.photo_date desc,
 				PinholePhoto.title desc';
 		else

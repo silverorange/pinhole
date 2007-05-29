@@ -142,16 +142,10 @@ class PinholeTagIntersection
 
 	public function getPhotos($page_size)
 	{
-		if (count($this->getIntersectingTags()) > 0)
-			$order_by_clause = 'PinholePhoto.photo_date desc,
-				PinholePhoto.title desc';
-		else
-			$order_by_clause = 'PinholePhoto.publish_date desc,
-				PinholePhoto.title desc';
-
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->db, 'thumb', $this->getTagWhereClause(),
-			$this->getTagJoinClause(), $order_by_clause,
+			$this->getTagJoinClause(),
+			$this->getOrderByClause(),
 			$page_size,
 			$page_size * ($this->getCurrentPage() - 1));
 
@@ -159,36 +153,20 @@ class PinholeTagIntersection
 	}
 
 	// }}}
-	// {{{ public function getNextPhoto()
+	// {{{ public function getNextPrevPhoto()
 
-	public function getNextPhoto(PinholePhoto $photo)
+	public function getNextPrevPhoto(PinholePhoto $current_photo)
 	{
 		$sql = 'select PinholePhoto.*
 			from PinholePhoto
 			%s
-			where PinholePhoto.%s < %s and %s
+			where %s
 			order by %s';
-
-		if (count($this->getIntersectingTags()) > 0) {
-			$order_by_clause = 'PinholePhoto.photo_date desc,
-				PinholePhoto.title desc';
-			$date_field = 'photo_date';
-			$date_value = $photo->photo_date;
-		} else {
-			$order_by_clause = 'PinholePhoto.publish_date desc,
-				PinholePhoto.title desc';
-			$date_field = 'publish_date';
-			$date_value = $photo->publish_date;
-		}
 
 		$sql = sprintf($sql,
 			$this->getTagJoinClause(),
-			$date_field,
-			$this->db->quote($date_value, 'date'),
 			$this->getTagWhereClause(),
-			$order_by_clause);
-
-		$this->db->setLimit(1);
+			$this->getOrderByClause());
 
 		$class_map = SwatDBClassMap::instance();
 			
@@ -197,55 +175,21 @@ class PinholeTagIntersection
 
 		$photos = SwatDB::query($this->db, $sql, $photo_class);
 
-		if ($photos === null)
-			return null;
-		else
-			return $photos->getFirst();
-	}
+		$prev_photo = null;
+		$return = array();
 
-	// }}}
-	// {{{ public function getPrevPhoto()
+		foreach ($photos as $photo) {
+			if ($photo->id === $current_photo->id) {
+				$photos->next();
+				$next = $photos->current();
+				$return['next'] =
+					($next === false) ? null : $next;
+				$return['prev'] = $prev_photo;
+				return $return;
+			}
 
-	public function getPrevPhoto(PinholePhoto $photo)
-	{
-		$sql = 'select PinholePhoto.*
-			from PinholePhoto
-			%s
-			where PinholePhoto.%s > %s and %s
-			order by %s';
-
-		if (count($this->getIntersectingTags()) > 0) {
-			$order_by_clause = 'PinholePhoto.photo_date,
-				PinholePhoto.title';
-			$date_field = 'photo_date';
-			$date_value = $photo->photo_date;
-		} else {
-			$order_by_clause = 'PinholePhoto.publish_date,
-				PinholePhoto.title';
-			$date_field = 'publish_date';
-			$date_value = $photo->publish_date;
+			$prev_photo = $photo;
 		}
-
-		$sql = sprintf($sql,
-			$this->getTagJoinClause(),
-			$date_field,
-			$this->db->quote($date_value, 'date'),
-			$this->getTagWhereClause(),
-			$order_by_clause);
-
-		$this->db->setLimit(1);
-
-		$class_map = SwatDBClassMap::instance();
-			
-		$photo_class =
-			$class_map->resolveClass('PinholePhotoWrapper');
-
-		$photos = SwatDB::query($this->db, $sql, $photo_class);
-
-		if ($photos === null)
-			return null;
-		else
-			return $photos->getFirst();
 	}
 
 	// }}}
@@ -397,6 +341,19 @@ class PinholeTagIntersection
 		}
 
 		return 0;
+	}
+
+	// }}}
+	// {{{ protected function getOrderByClause()
+
+	protected function getOrderByClause()
+	{
+		if (count($this->getIntersectingTags()) > 0)
+			return 'PinholePhoto.photo_date desc,
+				PinholePhoto.title desc';
+		else
+			return 'PinholePhoto.publish_date desc,
+				PinholePhoto.title desc';
 	}
 
 	// }}}

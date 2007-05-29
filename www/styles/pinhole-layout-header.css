@@ -75,6 +75,16 @@
 	padding-top: 0.3em;
 }
 
-#photo_next_prev a {
-	margin: 0 0.5em;
+#photo_next_prev a,
+#photo_next_prev span {
+	color: #babdb6;
+	margin-left: 0.1em;
+	padding: 0.2em 0.5em;
+	border: 1px solid #555753;
+	text-decoration: none;
 }
+
+#photo_next_prev a:link    { color: #babdb6; }
+#photo_next_prev a:visited { color: #babdb6; }
+#photo_next_prev a:hover   { color: #eeeeec; background-color: #555753; }
+#photo_next_prev a:active  { color: #eeeeec; }

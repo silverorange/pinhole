@@ -124,13 +124,16 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$prev->id,
 				$tag_path);
 			$a_tag->title = $prev->title;
-			$a_tag->setContent('Prev');
+			$a_tag->class = 'prev';
+			$a_tag->setContent('« Prev');
+			// this is a non-breaking space
 			$a_tag->display();
 		}
 
 		$a_tag->title = null;
 		$a_tag->setContent('View All');
 		$a_tag->href = 'tag'.$tag_path;
+		$a_tag->class = 'view-all';
 		echo ' ';
 		$a_tag->display();
 		echo ' ';
@@ -143,7 +146,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$next->id,
 				$tag_path);
 			$a_tag->title = $next->title;
-			$a_tag->setContent('Next');
+			$a_tag->class = 'next';
+			$a_tag->setContent('Next »');
+			// this is a non-breaking space
 			$a_tag->display();
 		}
 

@@ -6,6 +6,16 @@
 	width: 108px;
 }
 
+.swat-tile a {
+	text-decoration: none;
+}
+
+.swat-tile a span {
+	display: block;
+	height: 3em;
+	padding: 0 0.2em;
+}
+
 .swat-tile label {
 	display: block;
 	font-weight: normal;

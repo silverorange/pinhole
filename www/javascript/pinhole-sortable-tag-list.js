@@ -74,11 +74,13 @@ PinholeSortableTagList.prototype.drawSortLinks = function ()
 
 PinholeSortableTagList.prototype.initList = function ()
 {
+	// each li element has the format:
+	// shortname.modified_date.photo_count
 	var list_elements = this.list.getElementsByTagName('li');
 	
 	for (var i = 0; i < list_elements.length; i++) {
 		var node = list_elements[i];
-		var tag_info = node.id.split('_');
+		var tag_info = node.id.split('.');
 		
 		this.tags[i] = new PinholeSortableTagElement(
 			node.innerHTML,
@@ -128,7 +130,7 @@ PinholeSortableTagList.prototype.sortByPhotoCount = function(a, b)
 		y = b.shortname.toLowerCase();
 	}
 
-	return ((x < y) ? -1 : 1);
+	return ((x < y) ? 1 : -1);
 }
 
 PinholeSortableTagList.prototype.sortByModifiedDate = function(a, b)

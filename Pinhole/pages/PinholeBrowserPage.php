@@ -173,7 +173,7 @@ abstract class PinholeBrowserPage extends PinholePage
 
 			foreach ($tags as $tag) {
 				$li_tag = new SwatHtmlTag('li');
-				$li_tag->id = sprintf('%s_%s_%s',
+				$li_tag->id = sprintf('%s.%s.%s',
 					$tag->shortname,
 					$tag->getLastUpdated()->getTime(),
 					$tag->getPhotoCount());

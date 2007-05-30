@@ -121,7 +121,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 
 		$data = &$this->getForm()->getFormData();
 
-		if (!isset($data[$this->id]))
+		if (!isset($data[$this->id]) || !is_array($data[$this->id]))
 			return;
 
 		$tag_shortnames = $data[$this->id];

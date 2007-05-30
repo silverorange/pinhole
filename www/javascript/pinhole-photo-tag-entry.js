@@ -37,6 +37,7 @@ PinholePhotoTagEntry.prototype.handleOnAvailable = function()
 	// Instantiate AutoComplete 
 	autocomplete = new YAHOO.widget.AutoComplete(this.id, this.id + '_container', this.oACDS);
 	autocomplete.queryDelay = 0; 
+	autocomplete.minQueryLength = 0; 
 	autocomplete.highlightClassName = 'pinhole-photo-tag-highlight';
 	autocomplete.prehighlightClassName = "pinhole-photo-tag-prehighlight"; 
 	//autocomplete.useShadow = true; 

@@ -89,6 +89,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 		$container_tag->class = 'pinhole-photo-tag-container';
 		$container_tag->id = $this->id.'_container';
 		$container_tag->open();
+		$container_tag->close();
 
 		$div_tag->close();
 

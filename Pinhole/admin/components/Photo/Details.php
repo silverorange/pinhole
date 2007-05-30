@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Swat/SwatString.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Admin/exceptions/AdminNoAccessException.php';
 require_once 'Admin/pages/AdminDBEdit.php';
@@ -9,17 +10,17 @@ require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php';
 
 /**
- * Page for editing a photo
+ * Page for viewing photo details and editing
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoEdit extends AdminDBEdit
+class PinholePhotoDetails extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Photo/details.xml';
 
 	/**
 	 * @var PinholePhoto
@@ -65,8 +66,6 @@ class PinholePhotoEdit extends AdminDBEdit
 					sprintf(Pinhole::_('Photo with id “%s” not found.'),
 					$this->id));
 		}
-
-		$this->ui->getWidget('tags')->values = $this->photo->tags;
 	}
 
 	// }}}
@@ -133,6 +132,7 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected function loadDBData()
 	{
 		$this->ui->setValues(get_object_vars($this->photo));
+		$this->ui->getWidget('tags')->values = $this->photo->tags;
 	}
 
 	// }}}

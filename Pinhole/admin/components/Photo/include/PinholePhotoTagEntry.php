@@ -203,9 +203,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 
 		$value_array = array();
 		foreach ($this->values as $tag)
-			$value_array[] = sprintf("[%s, %s]\n",
-				SwatString::quoteJavaScriptString($tag->title),
-				SwatString::quoteJavaScriptString($tag->shortname));
+			$value_array[] = SwatString::quoteJavaScriptString($tag->shortname);
 
 		return sprintf("var %1\$s_obj = new PinholePhotoTagEntry('%1\$s');
 			%1\$s_obj.tag_array = [%2\$s];

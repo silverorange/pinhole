@@ -52,8 +52,7 @@ PinholePhotoTagEntry.prototype.handleOnAvailable = function()
 	// init values passed in
 	if (this.value_array.length > 0)
 		for (var i = 0; i < this.value_array.length; i++)
-			this.addTag(this.value_array[i][1],
-				this.value_array[i][0]);
+			this.addTag(this.value_array[i]);
 }
 
 // }}}
@@ -62,16 +61,27 @@ PinholePhotoTagEntry.prototype.handleOnAvailable = function()
 PinholePhotoTagEntry.prototype.addTagFromAutoComplete = function(oSelf , elItem , oData)
 {
 	var shortname = elItem[2][1];
-	var title = elItem[2][0];
-
-	this.addTag(shortname, title);
+	this.addTag(shortname);
 }
 
 // }}}
 // {{{ addTag()
 
-PinholePhotoTagEntry.prototype.addTag = function(shortname, title)
+PinholePhotoTagEntry.prototype.addTag = function(shortname)
 {
+	var title = null;
+
+	for (i = 0; i < this.oACDS.data.length; i++) {
+		if (this.oACDS.data[i][1] == shortname) {
+			title = this.oACDS.data[i][0];
+			var element = this.oACDS.data.splice(i, 1);
+			this.selected_tag_array.push(element[0]);
+		}
+	}
+
+	if (title == null)
+		return;
+
 	var li_tag = document.createElement('li');
 	li_tag.id = this.id + '_tag_' + shortname;
 	li_tag.innerHTML = title + " (<a href=\"javascript: " + this.id  + "_obj.removeTag('" + shortname + "')\">remove</a>)";
@@ -86,13 +96,6 @@ PinholePhotoTagEntry.prototype.addTag = function(shortname, title)
 
 	// clear input value once a value is chosen
 	document.getElementById(this.id).value = '';
-
-	for (i = 0; i < this.oACDS.data.length; i++) {
-		if (this.oACDS.data[i][1] == shortname) {
-			var element = this.oACDS.data.splice(i, 1);
-			this.selected_tag_array.push(element[0]);
-		}
-	}
 }
 
 // }}}

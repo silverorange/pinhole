@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeDimension.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Swat/SwatDate.php';
 require_once 'SwatDB/SwatDBDataObject.php';

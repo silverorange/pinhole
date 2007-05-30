@@ -14,15 +14,14 @@
 } 
 
 .pinhole-photo-tag-entry input { /* abs for ie quirks */
-	_position: absolute;
+	position: absolute;
 	width: 100%;
-	height: 1.4em;
 	z-index: 0;
 } 
 
 .pinhole-photo-tag-container {
 	position: absolute;
-	top: 1.1em;
+	top: 1.3em;
 	width: 100%
 }
 
@@ -69,7 +68,7 @@ li.pinhole-photo-tag-prehighlight {
 }
 
 .pinhole-photo-tag-list ul {
-	margin: 0;
+	margin: 1.8em 0 0 0;
 }
 
 .pinhole-photo-tag-list li {

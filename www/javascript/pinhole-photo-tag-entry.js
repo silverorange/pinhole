@@ -46,23 +46,45 @@ PinholePhotoTagEntry.prototype.handleOnAvailable = function()
 		return (sMarkup);
 	}
 
-	autocomplete.itemSelectEvent.subscribe(this.addTag, this, true);
+	autocomplete.itemSelectEvent.subscribe(
+		this.addTagFromAutoComplete, this, true);
+
+	// init values passed in
+	if (this.value_array.length > 0)
+		for (var i = 0; i < this.value_array.length; i++)
+			this.addTag(this.value_array[i][1],
+				this.value_array[i][0]);
+}
+
+// }}}
+// {{{ addTagFromAutoComplete()
+
+PinholePhotoTagEntry.prototype.addTagFromAutoComplete = function(oSelf , elItem , oData)
+{
+	var shortname = elItem[2][1];
+	var title = elItem[2][0];
+
+	this.addTag(shortname, title);
 }
 
 // }}}
 // {{{ addTag()
 
-PinholePhotoTagEntry.prototype.addTag = function(oSelf , elItem , oData)
+PinholePhotoTagEntry.prototype.addTag = function(shortname, title)
 {
-	var shortname = elItem[2][1];
-	var title = elItem[2][0];
-
 	var li_tag = document.createElement('li');
 	li_tag.id = this.id + '_tag_' + shortname;
 	li_tag.innerHTML = title + " (<a href=\"javascript: " + this.id  + "_obj.removeTag('" + shortname + "')\">remove</a>)";
 
+	var hidden_tag = document.createElement('input');
+	hidden_tag.type = 'hidden';
+	hidden_tag.name = this.id + '[]';
+	hidden_tag.value = shortname;
+
+	li_tag.appendChild(hidden_tag);
 	document.getElementById(this.id + '_list').appendChild(li_tag);
 
+	// clear input value once a value is chosen
 	document.getElementById(this.id).value = '';
 
 	for (i = 0; i < this.oACDS.data.length; i++) {
@@ -85,6 +107,8 @@ PinholePhotoTagEntry.prototype.removeTag = function(shortname)
 		if (this.selected_tag_array[i][1] == shortname) {
 			var element = this.selected_tag_array.splice(i, 1);
 			this.oACDS.data.push(element[0]);
+			this.oACDS.data.sort();
+			break;
 		}
 	}
 }
@@ -100,6 +124,15 @@ PinholePhotoTagEntry.prototype.removeTag = function(shortname)
  * @var array
  */
 PinholePhotoTagEntry.tag_array;
+
+/**
+ * Values
+ *
+ * An array of tags that are added at startup 
+ *
+ * @var array
+ */
+PinholePhotoTagEntry.value_array;
 
 /**
  * Selected Tags

@@ -36,6 +36,14 @@ class PinholePhotoEdit extends AdminDBEdit
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
 		$this->initPhoto();
+
+		$sql = sprintf('select * from PinholeTag
+			where status = %s order by title',
+			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'));
+
+		$tags = SwatDB::query($this->app->db, $sql, 'PinholeTagWrapper');
+
+		$this->ui->getWidget('tags')->tags = $tags;
 	}
 
 	// }}}
@@ -56,6 +64,8 @@ class PinholePhotoEdit extends AdminDBEdit
 					sprintf(Pinhole::_('Photo with id “%s” not found.'),
 					$this->id));
 		}
+
+		$this->ui->getWidget('tags')->values = $this->photo->tags;
 	}
 
 	// }}}
@@ -76,6 +86,15 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->photo_date = $values['photo_date'];
 		$this->photo->save();
 
+		$tags = $this->ui->getWidget('tags')->values;
+		$tag_ids = array();
+		foreach ($tags as $tag)
+			$tag_ids[] = $tag->id;
+
+		SwatDB::updateBinding($this->app->db, 'PinholePhotoTagBinding',
+			'photo', $this->id, 'tag', $tag_ids,
+			'PinholeTag', 'id');
+
 		$message = new SwatMessage(sprintf(
 			Pinhole::_('“%s” has been saved.'),
 			$this->photo->getTitle()));
@@ -86,22 +105,6 @@ class PinholePhotoEdit extends AdminDBEdit
 	// }}}
 
 	// build phase
-	// {{{ protected function buildInternal()
-
-	protected function buildInternal()
-	{
-		parent::buildInternal();
-
-		$sql = sprintf('select * from PinholeTag
-			where status = %s order by title',
-			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'));
-
-		$tags = SwatDB::query($this->app->db, $sql, 'PinholeTagWrapper');
-
-		$this->ui->getWidget('tags')->tags = $tags;
-	}
-
-	// }}}
 	// {{{ protected function loadDBData()
 
 	protected function loadDBData()

@@ -34,6 +34,7 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected function initInternal()
 	{
 		parent::initInternal();
+
 		$this->ui->loadFromXML($this->ui_xml);
 		$this->initPhoto();
 
@@ -105,11 +106,48 @@ class PinholePhotoEdit extends AdminDBEdit
 	// }}}
 
 	// build phase
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
+	{
+		parent::buildInternal();
+
+		$image = $this->ui->getWidget('image');
+		$dimension = $this->photo->getDimension('large');
+		$image->image = '../'.$dimension->getUri();
+		$image->width = $dimension->width;
+		$image->height = $dimension->height;
+
+		$this->ui->getWidget('details_page')->title = 
+			($this->photo->title === null) ?
+			Pinhole::_('Photo Details') :
+			SwatString::condense($this->photo->title, 60);
+
+		if ($this->ui->getWidget('edit_form')->hasMessage())
+			$this->ui->getWidget('notebook')->selected_page = 'edit_frame';
+	}
+
+	// }}}
 	// {{{ protected function loadDBData()
 
 	protected function loadDBData()
 	{
 		$this->ui->setValues(get_object_vars($this->photo));
+	}
+
+	// }}}
+	// {{{ protected function buildFrame()
+
+	protected function buildFrame()
+	{
+	}
+
+	// }}}
+	// {{{ protected function buildNavBar()
+
+	protected function buildNavBar()
+	{
+		$this->navbar->createEntry(Pinhole::_('Details'));
 	}
 
 	// }}}

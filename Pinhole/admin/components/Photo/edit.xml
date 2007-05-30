@@ -1,31 +1,38 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
-	<widget class="SwatMessageDisplay" id="message_display" />
-	<widget class="SwatFrame" id="edit_frame">
-		<property name="title" translatable="yes">Photo</property>
-		<widget class="SwatForm" id="edit_form">
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Title</property>
-				<widget class="SwatEntry" id="title" />
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Date Taken</property>
-				<widget class="SwatDateEntry" id="photo_date">
-					<property name="required_parts" type="constant">YEAR</property>
-					<property name="display_parts" type="constant">YEAR|MONTH|DAY|TIME|CALENDAR</property>
+	<widget class="SwatNoteBook" id="notebook">
+		<widget class="SwatNoteBookPage" id="details_page">
+			<widget class="SwatImageDisplay" id="image" />
+		</widget>
+		<widget class="SwatNoteBookPage" id="edit_frame">
+			<property name="title" translatable="yes">Edit</property>
+			<widget class="SwatMessageDisplay" id="message_display" />
+			<widget class="SwatForm" id="edit_form">
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Title</property>
+					<widget class="SwatEntry" id="title">
+						<property name="required" type="boolean">true</property>
+					</widget>
 				</widget>
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Description</property>
-				<widget class="SwatTextarea" id="description" />
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Add Tags</property>
-				<widget class="PinholePhotoTagEntry" id="tags" />
-			</widget>
-			<widget class="SwatFooterFormField">
-				<widget class="SwatButton" id="submit_button" />
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Date Taken</property>
+					<widget class="SwatDateEntry" id="photo_date">
+						<property name="required_parts" type="constant">YEAR</property>
+						<property name="display_parts" type="constant">YEAR|MONTH|DAY|TIME|CALENDAR</property>
+					</widget>
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Description</property>
+					<widget class="SwatTextarea" id="description" />
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Add Tags</property>
+					<widget class="PinholePhotoTagEntry" id="tags" />
+				</widget>
+				<widget class="SwatFooterFormField">
+					<widget class="SwatButton" id="submit_button" />
+				</widget>
 			</widget>
 		</widget>
 	</widget>

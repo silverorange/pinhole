@@ -6,6 +6,7 @@ require_once 'Swat/SwatInputControl.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'Swat/SwatState.php';
 require_once 'Swat/SwatString.php';
+require_once 'Pinhole/dataobjects/PinholeTag.php';
 
 /**
  * A tag entry widget for photos 
@@ -122,7 +123,13 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 		if (!isset($data[$this->id]))
 			return;
 
-		$this->values= explode(',', $data[$this->id]);
+		$tag_shortnames = $data[$this->id];
+
+		$this->values = array();
+
+		foreach ($this->tags as $tag)
+			if (in_array($tag->shortname, $tag_shortnames))
+				$this->values[] = $tag;
 
 		if ($this->required && count($this->values) == 0) {
 			$message = Swat::_('The %s field is required.');
@@ -142,7 +149,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	 */
 	public function getState()
 	{
-		return $this->value;
+		return $this->values;
 	}
 
 	// }}}
@@ -157,7 +164,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	 */
 	public function setState($state)
 	{
-		$this->value = $state;
+		$this->values = $state;
 	}
 
 	// }}}
@@ -194,9 +201,17 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 				SwatString::quoteJavaScriptString($tag->title),
 				SwatString::quoteJavaScriptString($tag->shortname));
 
+		$value_array = array();
+		foreach ($this->values as $tag)
+			$value_array[] = sprintf("[%s, %s]\n",
+				SwatString::quoteJavaScriptString($tag->title),
+				SwatString::quoteJavaScriptString($tag->shortname));
+
 		return sprintf("var %1\$s_obj = new PinholePhotoTagEntry('%1\$s');
-			%1\$s_obj.tag_array = [%2\$s];",
-			$this->id, implode(',', $tag_array));
+			%1\$s_obj.tag_array = [%2\$s];
+			%1\$s_obj.value_array = [%3\$s];",
+			$this->id, implode(',', $tag_array),
+			implode(',', $value_array));
 	}
 
 	// }}}

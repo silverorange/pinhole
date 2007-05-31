@@ -232,6 +232,21 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
+	// {{{ static public function getStatusTitle()
+
+	static public function getStatusTitle($status)
+	{
+		switch ($status) {
+		case self::STATUS_PUBLISHED :
+			return Pinhole::_('Published');
+		case self::STATUS_UNPUBLISHED :
+			return Pinhole::_('Hidden');
+		case self::STATUS_PENDING :
+			return Pinhole::_('Pending');
+		}
+	}
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()

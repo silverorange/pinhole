@@ -168,7 +168,7 @@ class PinholeTagIntersection
 
 	public function getNextPrevPhoto(PinholePhoto $current_photo)
 	{
-		$sql = 'select PinholePhoto.id, PinholePhoto.title
+		$sql = 'select PinholePhoto.id
 			from PinholePhoto
 			%s
 			where %s
@@ -184,21 +184,35 @@ class PinholeTagIntersection
 		$photo_class =
 			$class_map->resolveClass('PinholePhotoWrapper');
 
-		$photos = SwatDB::query($this->db, $sql, $photo_class);
+		$rs = SwatDB::query($this->db, $sql, null);
 
-		$prev_photo = null;
+		$prev_id = null;
 		$return = array();
 
-		foreach ($photos as $photo) {
-			if ($photo->id === $current_photo->id) {
-				$photos->next();
-				$return['next'] =
-					($photos->valid()) ? $photos->current() : null;
-				$return['prev'] = $prev_photo;
-				return $return;
+		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+			if ($row->id === $current_photo->id) {
+				$next_id = $rs->fetchOne();
+
+				if ($next_id === null) {
+					$next_photo = null;
+				} else {
+					$next_photo = new PinholePhoto();
+					$next_photo->setDatabase($this->db);
+					$next_photo->load($next_id);
+				}
+
+				if ($prev_id === null) {
+					$prev_photo = null;
+				} else {
+					$prev_photo = new PinholePhoto();
+					$prev_photo->setDatabase($this->db);
+					$prev_photo->load($prev_id);
+				}
+
+				return array('next' => $next_photo, 'prev' => $prev_photo);
 			}
 
-			$prev_photo = $photo;
+			$prev_id = $row->id;
 		}
 	}
 

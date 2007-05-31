@@ -59,7 +59,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 			$db->setLimit($limit, $offset);
 
 		$rs = SwatDB::query($db, sprintf($sql, $join_clause,
-			$where_clause, $order_by_clause));
+			$where_clause, $order_by_clause), null);
 
 		$store = new SwatDBDefaultRecordsetWrapper(null);
 
@@ -71,12 +71,12 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 		$dimension_binding_class =
 			$class_map->resolveClass('PinholePhotoDimensionBinding');
 
-		foreach ($rs as $row) {
-			$photo = new $photo_class($row);
+		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+			$photo = new $photo_class($row, true);
 			$photo->setDataBase($db);
 
-			$dimension = new $dimension_class($row);
-			$dimension_binding = new $dimension_binding_class($row);
+			$dimension = new $dimension_class($row, true);
+			$dimension_binding = new $dimension_binding_class($row, true);
 			$dimension_binding->dimension = $dimension;
 
 			$photo->setDimension($dimension_shortname, $dimension_binding);

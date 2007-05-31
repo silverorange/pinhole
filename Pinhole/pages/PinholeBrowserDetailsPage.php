@@ -14,10 +14,13 @@ require_once 'Pinhole/dataobjects/PinholePhoto.php';
  */
 class PinholeBrowserDetailsPage extends PinholeBrowserPage
 {
+	// {{{ protected properties
 
 	protected $photo;
 	protected $details_ui;
 	protected $details_ui_xml = 'Pinhole/pages/browser-details-view.xml';
+
+	// }}}
 
 	// init phase
 	// {{{ public function __construct()

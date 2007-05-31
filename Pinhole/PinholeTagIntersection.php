@@ -340,11 +340,11 @@ class PinholeTagIntersection
 
 		//$this->db->setLimit(30);
 
-		$rows = SwatDB::query($this->db, $sql);
+		$rs = SwatDB::query($this->db, $sql, null);
 		$tag_wrapper = new PinholeTagWrapper();
 
-		foreach ($rows as $row) {
-			$tag = new PinholeTag($row);
+		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+			$tag = new PinholeTag($row, true);
 			$tag->setLastUpdated(new SwatDate($row->last_updated));
 			$tag->setPhotoCount($row->photo_count);
 			$tag_wrapper->add($tag);

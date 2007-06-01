@@ -12,8 +12,13 @@ require_once 'Pinhole/pages/PinholeBrowserPage.php';
  */
 class PinholeBrowserIndexPage extends PinholeBrowserPage
 {
+	// {{{ protected properties
+
 	protected $photo_ui;
 	protected $photo_ui_xml = 'Pinhole/pages/browser-photo-view.xml';
+	protected $page_size = 50;
+
+	// }}}
 
 	// init phase
 	// {{{ public function init()
@@ -45,7 +50,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$pagination = $this->photo_ui->getWidget('pagination');
 		$pagination->total_records = $this->tag_intersection->getPhotoCount();
-		$pagination->page_size = 100;
+		$pagination->page_size = $this->page_size;
 		$pagination->setCurrentPage($this->tag_intersection->getCurrentPage());
 		$path = $this->tag_intersection->getIntersectingTagPath();
 		$pagination->link = 'tag/';
@@ -63,7 +68,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	protected function getPhotoTableStore()
 	{
 		$store = new SwatTableStore();
-		$photos = $this->tag_intersection->getPhotos(100);
+		$photos = $this->tag_intersection->getPhotos($this->page_size);
 
 		$tag_path = $this->tag_intersection->getIntersectingTagPath();
 		$tag_path = ($tag_path === null) ? '' : '/'.$tag_path;

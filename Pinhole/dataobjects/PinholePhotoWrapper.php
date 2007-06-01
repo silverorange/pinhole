@@ -36,7 +36,10 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 			$order_by_clause = 'PinholePhoto.publish_date desc,
 				PinholePhoto.title';
 
-		$sql = 'select PinholePhoto.*,
+		$sql = 'select PinholePhoto.id,
+				PinholePhoto.filename,
+				PinholePhoto.title,
+				PinholePhoto.photo_date,
 				PinholePhotoDimensionBinding.width,
 				PinholePhotoDimensionBinding.height,
 				PinholeDimension.max_width,

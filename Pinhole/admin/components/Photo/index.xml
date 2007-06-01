@@ -41,8 +41,9 @@
 						<property name="link">Photo/Details?id=%s</property>
 						<property name="link_value" type="data">id</property>
 					</object>
-					<object class="PinholePhotoCheckboxCellRenderer" id="items">
+					<object class="SwatCheckboxCellRenderer" id="items">
 						<property name="value" type="data">photo.id</property>
+						<property name="title" translatable="yes">select photo</property>
 					</object>
 				</object>
 			</widget>

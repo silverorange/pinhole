@@ -5,7 +5,6 @@ require_once 'Admin/AdminTableStore.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'include/PinholePhotoCheckboxCellRenderer.php';
 require_once 'include/PinholeAdminPhotoCellRenderer.php';
 
 /**
@@ -98,7 +97,7 @@ class PinholePhotoPending extends AdminIndex
 
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, 'thumb', $this->getWhereClause(),
-			'', null,
+			'', 'PinholePhoto.upload_date, PinholePhoto.id',
 			$pager->page_size, $pager->current_record);
 
 		$store = new SwatTableStore();

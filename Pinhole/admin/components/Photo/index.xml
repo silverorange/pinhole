@@ -56,11 +56,12 @@
 					<property name="title" translatable="yes">delete…</property>
 				</widget>
 				<widget class="SwatActionItem" id="tags_action">
-					<property name="title" translatable="yes">add tag…</property>
+					<property name="title" translatable="yes">add tags…</property>
+					<widget class="PinholePhotoTagEntry" id="tags" />
 				</widget>
-				<widget class="SwatActionItem" id="unpublish_action">
-					<property name="title" translatable="yes">unpublish photo</property>
-					<widget class="SwatCheckbox" id="unpublish_reset_date" />
+				<widget class="SwatActionItem" id="status_action">
+					<property name="title" translatable="yes">change status…</property>
+					<widget class="SwatFlydown" id="status" />
 				</widget>
 			</widget>
 		</widget>

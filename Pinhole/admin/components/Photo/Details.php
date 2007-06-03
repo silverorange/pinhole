@@ -8,7 +8,7 @@ require_once 'Pinhole/dataobjects/PinholePhotographer.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
-require_once 'Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php';
+require_once 'include/PinholePhotoTagEntry.php';
 
 /**
  * Page for viewing photo details and editing

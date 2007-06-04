@@ -74,13 +74,10 @@ class PinholePhotoIndex extends AdminSearch
 		switch ($actions->selected->id) {
 		case 'delete':
 			$this->app->replacePage('Photo/Delete');
-			$this->app->getPage()->setItems($view->getSelection()->getValues());
+			$this->app->getPage()->setItems($view->getSelection());
 			break;
 		case 'status_action':
-			//TODO this is just copied from Tags, but it should
-			//basically work
 			$num = count($view->getSelection());
-
 			$status = $this->ui->getWidget('status_flydown')->value;
 
 			SwatDB::updateColumn($this->app->db, 'PinholePhoto',

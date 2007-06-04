@@ -74,20 +74,23 @@ class PinholePhotoIndex extends AdminSearch
 		switch ($actions->selected->id) {
 		case 'delete':
 			$this->app->replacePage('Photo/Delete');
-			$this->app->getPage()->setItems($view->getSelection());
+			$this->app->getPage()->setSelection($view->getSelection());
 			break;
 		case 'status_action':
 			$num = count($view->getSelection());
 			$status = $this->ui->getWidget('status_flydown')->value;
+
+			$status = 1;
 
 			SwatDB::updateColumn($this->app->db, 'PinholePhoto',
 				'integer:status', $status,
 				'id', $view->getSelection());
 
 			$message = new SwatMessage(sprintf(Pinhole::ngettext(
-				'The status of one photo has been changed.',
-				'The status of %s photos has been changed.', $num),
-				SwatString::numberFormat($num)));
+				'One photo has been updated to “%2$s”.',
+				'%1$s photos have been updated to “%2$s”.', $num),
+				SwatString::numberFormat($num),
+				PinholePhoto::getStatusTitle($status)));
 
 			$this->app->messages->add($message);
 			break;

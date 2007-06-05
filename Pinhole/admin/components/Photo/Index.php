@@ -45,6 +45,9 @@ class PinholePhotoIndex extends AdminSearch
 		$tags = SwatDB::query($this->app->db, $sql, 'PinholeTagWrapper');
 
 		$this->ui->getWidget('tags')->tags = $tags;
+
+		$status_flydown = $this->ui->getWidget('status_flydown');
+		$status_flydown->addOptionsByArray(PinholePhoto::getStatuses());
 	}
 
 	// }}}

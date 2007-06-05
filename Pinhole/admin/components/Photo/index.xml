@@ -61,7 +61,9 @@
 				</widget>
 				<widget class="SwatActionItem" id="status_action">
 					<property name="title" translatable="yes">change status…</property>
-					<widget class="SwatFlydown" id="status_flydown" />
+					<widget class="SwatFlydown" id="status_flydown">
+						<property name="show_blank" type="boolean">false</property>
+					</widget>
 				</widget>
 			</widget>
 		</widget>

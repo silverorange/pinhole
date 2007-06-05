@@ -74,7 +74,7 @@ class PinholePhotoIndex extends AdminSearch
 		switch ($actions->selected->id) {
 		case 'delete':
 			$this->app->replacePage('Photo/Delete');
-			$this->app->getPage()->setSelection($view->getSelection());
+			$this->app->getPage()->setItems($view->getSelection());
 			break;
 		case 'status_action':
 			$num = count($view->getSelection());

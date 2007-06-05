@@ -6,6 +6,7 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'include/PinholeAdminPhotoCellRenderer.php';
+require_once 'include/PinholePhotoActionsProcessor.php';
 
 /**
  * Pending photos page
@@ -40,48 +41,14 @@ class PinholePhotoPending extends AdminIndex
 	/**
 	 * Processes photo actions
 	 *
-	 * @param SwatTableView $view the table-view to get selected photographers
-	 *                             from.
+	 * @param SwatView $view the table-view to get selected photos
+	 *                 from.
 	 * @param SwatActions $actions the actions list widget.
 	 */
 	protected function processActions(SwatView $view, SwatActions $actions)
 	{
-		switch ($actions->selected->id) {
-		case 'delete':
-			$this->app->replacePage('Photo/Delete');
-			$this->app->getPage()->setItems($view->checked_items);
-			break;
-		case 'publish':
-			$items = $view->checked_items;
-			foreach ($items as &$item)
-				$item = $this->app->db->quote($item, 'integer');
-
-			$sql = sprintf('select * from PinholePhoto
-				where id in (%s) and %s',
-				implode(',', $items),
-				$this->getWhereClause());
-
-			$photos = SwatDB::query($this->app->db, $sql,
-				'PinholePhotoWrapper');
-
-			$count = 0;
-
-			foreach ($photos as $photo) {
-				$photo->publish(true);
-				$count++;
-			}
-
-			if ($count > 0) {
-				$message = new SwatMessage(sprintf(Pinhole::ngettext(
-					'One photo has been published.',
-					'%d photos have been published.', $count),
-					SwatString::numberFormat($count)));
-
-				$this->app->messages->add($message);
-			}
-
-			break;
-		}
+		$processor = new PinholePhotoActionsProcessor($this);
+		$processor->process($view, $actions, $this->ui);
 	}
 
 	// }}}

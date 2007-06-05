@@ -9,6 +9,7 @@ require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'include/PinholePhotoTagEntry.php';
 require_once 'include/PinholeAdminPhotoCellRenderer.php';
+require_once 'include/PinholePhotoActionsProcessor.php';
 
 /**
  * Index page for photographs
@@ -65,68 +66,14 @@ class PinholePhotoIndex extends AdminSearch
 	/**
 	 * Processes photo actions
 	 *
-	 * @param SwatView $view the table-view to get selected tags
+	 * @param SwatView $view the table-view to get selected photos
 	 *                 from.
 	 * @param SwatActions $actions the actions list widget.
 	 */
 	protected function processActions(SwatView $view, SwatActions $actions)
 	{
-		switch ($actions->selected->id) {
-		case 'delete':
-			$this->app->replacePage('Photo/Delete');
-			$this->app->getPage()->setItems($view->getSelection());
-			break;
-		case 'status_action':
-			$num = count($view->getSelection());
-			$status = $this->ui->getWidget('status_flydown')->value;
-
-			$status = 1;
-
-			SwatDB::updateColumn($this->app->db, 'PinholePhoto',
-				'integer:status', $status,
-				'id', $view->getSelection());
-
-			$message = new SwatMessage(sprintf(Pinhole::ngettext(
-				'One photo has been updated to “%2$s”.',
-				'%1$s photos have been updated to “%2$s”.', $num),
-				SwatString::numberFormat($num),
-				PinholePhoto::getStatusTitle($status)));
-
-			$this->app->messages->add($message);
-			break;
-		case 'tags_action':
-			$tags = $this->ui->getWidget('tags')->values;
-			$tag_ids = array();
-			foreach ($tags as $tag)
-				$tag_ids[] = $this->app->db->quote($tag->id, 'integer');
-
-			$sql = sprintf('insert into PinholePhotoTagBinding
-				(photo, tag) select %%1$s, id from PinholeTag
-				where id in (%s) and id not in (select tag
-				from PinholePhotoTagBinding where photo = %%1$s)',
-				implode(',', $tag_ids));
-
-			foreach ($view->getSelection() as $id)
-				SwatDB::query($this->app->db, sprintf($sql,
-					$this->app->db->quote($id, 'integer')));
-
-			$num = count($view->getSelection());
-
-			if (count($tags) > 1) {
-				$message = new SwatMessage(sprintf(Pinhole::ngettext(
-					'Tags have been added to one photo.',
-					'Tags have been added to %s photos.', $num),
-					SwatString::numberFormat($num)));
-			} else {
-				$message = new SwatMessage(sprintf(Pinhole::ngettext(
-					'A tag has been added to one photo.',
-					'A tag has been added to %s photos.', $num),
-					SwatString::numberFormat($num)));
-			}
-
-			$this->app->messages->add($message);
-			break;
-		}
+		$processor = new PinholePhotoActionsProcessor($this);
+		$processor->process($view, $actions, $this->ui);
 	}
 
 	// }}}

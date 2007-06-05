@@ -125,47 +125,6 @@ class PinholePhoto extends SwatDBDataObject
 	private $dimensions = array();
 
 	// }}}
-	// {{{ public function loadByFilename()
-
-	/**
-	 * Loads this photos properties from the database given a filename
-	 *
-	 * @param string $filename the filename of the photo
-	 *
-	 * @return boolean whether data was sucessfully loaded.
-	 */
-	public function loadFromFilename($filename, $dimension)
-	{
-		$this->checkDB();
-
-		$row = null;
-
-		$sql = sprintf('select PinholePhoto.*
-			from PinholePhoto
-			inner join PinholePhotoDimensionBinding on
-				PinholePhotoDimensionBinding.photo =
-					PinholePhoto.id
-			inner join PinholeDimension on
-				PinholePhotoDimensionBinding.dimension =
-					PinholeDimension.id
-			where PinholePhoto.filename = %s
-				and PinholeDimension.shortname = %s',
-			$this->db->quote($filename, 'text'),
-			$this->db->quote($dimension, 'text'));
-
-		$rs = SwatDB::query($this->db, $sql, null);
-		$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);
-
-		if ($row === null)
-			return false;
-
-		$this->initFromRow($row);
-		$this->generatePropertyHashes();
-
-		return true;
-	}
-
-	// }}}
 	// {{{ public function getCompressionQuality()
 
 	// TODO: move this to Dimension object

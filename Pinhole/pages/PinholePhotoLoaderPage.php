@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Pinhole/pages/PinholePage.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Swat/exceptions/SwatException.php';
 
 /**
@@ -34,16 +34,18 @@ class PinholePhotoLoaderPage extends PinholePage
 
 	protected function getPhoto($filename, $dimension)
 	{
-		$photo = new PinholePhoto();
-		$photo->setDatabase($this->app->db);
-		$found = $photo->loadFromFilename($filename, $dimension);
+		$where_clause = sprintf('PinholePhoto.filename = %s',
+			$this->app->db->quote($filename, 'text'));
 
-		if ($found === false)
+		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
+			$this->app->db, $dimension, $where_clause);
+
+		if ($photos === null)
 			throw SiteNotFoundException(sprintf('Photo with
 				filename %s does not exist',
 				$filename));
 
-		return $photo;
+		return $photos->getFirst();
 	}
 
 	// }}}
@@ -57,14 +59,8 @@ class PinholePhotoLoaderPage extends PinholePage
 
 		$mime_type = 'image/jpeg';
 
-		if (!ctype_alnum($this->dimension_shortname))
-			throw new SwatException(sprintf('Dimension "%s"
-				must be alpha-numeric.'),
-				$this->dimension_shortname);
-
 		header('Content-Type: '.$mime_type);
-		readfile('../private-photos/'.$this->dimension_shortname.
-				'/'.$this->photo->filename.'.jpg');	
+		readfile($this->photo->getDimension($this->dimension_shortname)->getPath());	
 
 		exit();
 	}

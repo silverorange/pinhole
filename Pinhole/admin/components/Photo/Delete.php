@@ -48,13 +48,11 @@ class PinholePhotoDelete extends AdminDBDelete
 	{
 		parent::processDBData();
 
-		// TODO - actually delete the files
+		$photos = $this->getPhotos();
+		$num = count($photos);
 
-		$sql = 'delete from PinholePhoto where id in (%s)';
-		$item_list = $this->getItemList('integer');
-		$sql = sprintf($sql, $item_list);
-
-		$num = SwatDB::exec($this->app->db, $sql);
+		foreach ($photos as $photo)
+			$photo->delete();
 
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
 			'One photo has been deleted.', '%d photos have been deleted.',

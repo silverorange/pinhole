@@ -49,7 +49,7 @@
 			</widget>
 			<widget class="AdminPagination" id="pager">
 				<property name="link">Photo</property>
-				<property name="page_size" type="integer">100</property>
+				<property name="page_size" type="integer">50</property>
 			</widget>
 			<widget class="SwatActions" id="index_actions">
 				<widget class="SwatActionItem" id="delete">
@@ -61,7 +61,7 @@
 				</widget>
 				<widget class="SwatActionItem" id="status_action">
 					<property name="title" translatable="yes">change status…</property>
-					<widget class="SwatFlydown" id="status" />
+					<widget class="SwatFlydown" id="status_flydown" />
 				</widget>
 			</widget>
 		</widget>

@@ -416,6 +416,41 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
+	// {{{ protected function loadDimensions()
+
+	protected function loadDimensions()
+	{
+		$sql = sprintf('select PinholePhotoDimensionBinding.*,
+				PinholeDimension.width, PinholeDimension.height,
+				PinholeDimension.publicly_accessible
+				from PinholePhotoDimensionBinding
+				inner join PinholeDimension on
+					PinholeDimension.id = PinholePhotoDimensionBinding.dimension
+				where PinholePhotoDimensionBinding.photo = %s)',
+			$this->db->quote($this->id, 'integer'));
+
+		return SwatDB::query($this->db, $sql,
+			'PinholeDimensionBindingWrapper');
+	}
+
+	// }}}
+
+	// database loading and saving
+	// {{{ protected function deleteInternal()
+
+	/**
+	 * Deletes this object from the database
+	 */
+	protected function deleteInternal()
+	{
+		foreach ($this->dimensions as $dimension)
+			if (file_exists($dimension->getPath()))
+				unlink($dimension->getPath());
+
+		parent::deleteInternal();
+	}
+
+	// }}}
 }
 
 ?>

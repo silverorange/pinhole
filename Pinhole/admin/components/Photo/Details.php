@@ -223,7 +223,8 @@ class PinholePhotoDetails extends AdminDBEdit
 			Pinhole::_('Photo Details') :
 			SwatString::condense($this->photo->title, 60);
 
-		if ($this->ui->getWidget('edit_form')->hasMessage())
+		if ($this->ui->getWidget('edit_form')->hasMessage() ||
+			$this->photo->status === PinholePhoto::STATUS_PENDING)
 			$this->ui->getWidget('notebook')->selected_page = 'edit_frame';
 	}
 

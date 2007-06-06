@@ -4,6 +4,7 @@ require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeDimension.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Swat/SwatDate.php';
+require_once 'Swat/exceptions/SwatException.php';
 require_once 'SwatDB/SwatDBDataObject.php';
 require_once 'Image/Transform.php';
 
@@ -171,6 +172,21 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
+	// {{{ static public function setStatus()
+
+	public function setStatus($status)
+	{
+		if (!array_key_exists($status, self::getStatuses()))
+			throw new SwatException('Invalid Status');	
+
+		if ($status == self::STATUS_PUBLISHED &&
+			$this->status != self::STATUS_PUBLISHED)
+			$this->publish_date = new SwatDate();
+
+		$this->status = $status;
+	}
+
+	// }}}
 	// {{{ static public function getDateRange()
 
 	static public function getDateRange($db, $where = null)
@@ -203,6 +219,21 @@ class PinholePhoto extends SwatDBDataObject
 		case self::STATUS_PENDING :
 			return Pinhole::_('Pending');
 		}
+	}
+
+	// }}}
+	// {{{ static public function getStatuses()
+
+	static public function getStatuses()
+	{
+		return array(
+			self::STATUS_PUBLISHED =>
+			self::getStatusTitle(self::STATUS_PUBLISHED),
+			self::STATUS_UNPUBLISHED =>
+			self::getStatusTitle(self::STATUS_UNPUBLISHED),
+			self::STATUS_PENDING =>
+			self::getStatusTitle(self::STATUS_PENDING),
+			);
 	}
 
 	// }}}

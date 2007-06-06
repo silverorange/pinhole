@@ -157,7 +157,7 @@ class PinholePhotoDetails extends AdminDBEdit
 		$this->photo->title     = $values['title'];
 		$this->photo->description  = $values['description'];
 		$this->photo->photo_date = $values['photo_date'];
-		$this->photo->status = $values['status'];
+		$this->photo->setStatus($values['status']);
 		$this->photo->save();
 
 		$tags = $this->ui->getWidget('tags')->values;

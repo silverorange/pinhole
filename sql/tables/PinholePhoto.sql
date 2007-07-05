@@ -6,7 +6,7 @@ create table PinholePhoto (
 	upload_date timestamp,
 	filename varchar(50),
 	original_filename varchar(255),
-	exif text,
+	serialized_exif text,
 	photographer integer references PinholePhotographer(id),
 
 	photo_date timestamp,

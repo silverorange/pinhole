@@ -1,7 +1,8 @@
 <?php
 
 require_once 'SwatDB/SwatDBRecordsetWrapper.php';
-require_once 'PinholeTag.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
+require_once 'Pinhole/tags/PinholeTag.php';
 
 /**
  * A recordset wrapper class for PinholeTag objects
@@ -10,6 +11,7 @@ require_once 'PinholeTag.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @see       PinholeTag
+ * @see       PinholeTagDataObject
  */
 class PinholeTagWrapper extends SwatDBRecordsetWrapper
 {
@@ -18,10 +20,16 @@ class PinholeTagWrapper extends SwatDBRecordsetWrapper
 	protected function init()
 	{
 		parent::init();
+		$this->index_field = 'name';
+	}
 
-		$this->index_field = 'id';
-		$this->row_wrapper_class =
-			$this->class_map->resolveClass('PinholeTag');
+	// }}}
+	// {{{ protected function instantiateRowWrapperObject()
+
+	protected function instantiateRowWrapperObject($row)
+	{
+		$data_object = new PinholeTagDataObject($row);
+		return new PinholeTag($data_object);
 	}
 
 	// }}}

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
+//require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeDimension.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Swat/SwatDate.php';
@@ -396,14 +396,14 @@ class PinholePhoto extends SwatDBDataObject
 	// loader methods
 	// {{{ protected function loadTags()
 
-	protected function loadTags()
+/*	protected function loadTags()
 	{
 		$sql = sprintf('select * from PinholeTag where id in (
 			select tag from PinholePhotoTagBinding where photo = %s)',
 			$this->db->quote($this->id, 'integer'));
 
 		return SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
-	}
+	}*/
 
 	// }}}
 	// {{{ protected function loadDimensions()

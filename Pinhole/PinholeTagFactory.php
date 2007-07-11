@@ -23,6 +23,8 @@ require_once 'MDB2.php';
  */
 class PinholeTagFactory
 {
+	// {{{ private static properties
+
 	/**
 	 * Cache of known tag classes indexed by namespace
 	 *
@@ -38,6 +40,9 @@ class PinholeTagFactory
 	 * @see PinholeTagFactory::setDefaultDatabase()
 	 */
 	private static $default_database;
+
+	// }}}
+	// {{{ public static function get()
 
 	/**
 	 * Parses a tag from a tag string and returns an appropriate tag object
@@ -76,6 +81,9 @@ class PinholeTagFactory
 		return ($valid) ? $tag : null;
 	}
 
+	// }}}
+	// {{{ public static function setDefaultDatabase()
+
 	/**
 	 * Sets the default database used by the tag factory
 	 *
@@ -85,6 +93,9 @@ class PinholeTagFactory
 	{
 		self::$default_database = $db;
 	}
+
+	// }}}
+	// {{{ private static function getTagClass()
 
 	/**
 	 * Gets the tag class used by a particular tag namespace
@@ -167,6 +178,9 @@ class PinholeTagFactory
 		return $return;
 	}
 
+	// }}}
+	// {{{ private function __construct()
+
 	/**
 	 * Private constructor to prevent instantiation of tag factory
 	 *
@@ -175,6 +189,8 @@ class PinholeTagFactory
 	private function __construct()
 	{
 	}
+
+	// }}}
 }
 
 ?>

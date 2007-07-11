@@ -11,6 +11,10 @@ require_once 'Pinhole/PinholeTagFactory.php';
 /**
  * A list of tag objects
  *
+ * Tag lists are the main way to interact with tags in Pinhole. Tag lists can
+ * be used to easily select a set of photos and to quickly parse multiple
+ * tag strings into a collection of tag objects.
+ *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
@@ -18,14 +22,14 @@ require_once 'Pinhole/PinholeTagFactory.php';
 class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 {
 	/**
-	 * The tags of this list indexed by string representation of tag
+	 * The tags of this list indexed by tag string
 	 *
 	 * @var array
 	 */
 	private $tags = array();
 
 	/**
-	 * The string representations of the tags of this list indexed numerically
+	 * The tag strings of the tags of this list indexed numerically
 	 *
 	 * This array is maintained for the iterator interface.
 	 *
@@ -34,7 +38,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private $tag_keys = array();
 
 	/**
-	 * The current iterator index of the tag keys
+	 * The current iterator index of this list
 	 *
 	 * @var integer
 	 */
@@ -312,9 +316,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @param string $type the class name of the type of tags to get.
 	 *
-	 * @return TagList a list of tags of the specified type. If this list does
-	 *                  not contain any tags of the specified type, an empty
-	 *                  list is returned.
+	 * @return PinholeTagList a list of tags of the specified type. If this
+	 *                         list does not contain any tags of the specified
+	 *                         type, an empty tag list is returned.
 	 *
 	 * @throws SwatInvalidClassException if the specified <i>$type</i> is not a
 	 *                                    subclass of PinholeAbstractTag.
@@ -375,11 +379,27 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return SwatDB::queryOne($this->db, $sql);
 	}
 
+	/**
+	 * Gets a list of tags not in this list that also apply to the photos
+	 * of this list
+	 *
+	 * @return PinholeTagList a list of tags not in this list that also apply
+	 *                         to the photos of this list.
+	 *
+	 * @see PinholeTagList::getPhotos()
+	 *
+	 * @todo implement this method.
+	 */
 	public function getSubTags()
 	{
-		// TODO: implement me
 	}
 
+	/**
+	 * Sets the database connection used by this tag list
+	 *
+	 * @param MDB2_Driver_Common $db the database connection to use for this
+	 *                                tag list.
+	 */
 	public function setDatabase(MDB2_Driver_Common $db)
 	{
 		$this->db = $db;
@@ -387,23 +407,55 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$tag->setDatabase($db);
 	}
 
+	/**
+	 * Saves this tag list
+	 *
+	 * This saves all tags contained in this tag list.
+	 */
 	public function save()
 	{
 		foreach ($this as $tag)
 			$tag->save();
 	}
 
-	public function load($id)
+	/**
+	 * Loads this tag list
+	 *
+	 * @param string $string the string to load this tag list from.
+	 *
+	 * @return boolean true if this tag list was loaded successfully and false
+	 *                  if this tag list could not be loaded with the given
+	 *                  string.
+	 *
+	 * @todo what does loading a tag list mean?
+	 */
+	public function load($string)
 	{
-		// TODO: what to do here?
 	}
 
+	/**
+	 * Deletes this tag list
+	 *
+	 * This deletes all the tags contained in this tag list. After deleting,
+	 * the list still contains the deleted tags as PHP objects; however, the
+	 * deleted tags will no longer exist in the database.
+	 *
+	 * @see PinholeTagList::remove()
+	 */
 	public function delete()
 	{
 		foreach ($this as $tag)
 			$tag->delete();
 	}
 
+	/**
+	 * Whether or not this tag list is modified
+	 *
+	 * This tag list is modified if any of the contained tags are modified.
+	 *
+	 * @return boolean true if this tag list is modified and false if it is
+	 *                  not.
+	 */
 	public function isModified()
 	{
 		$modified = false;
@@ -416,36 +468,71 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $modified;
 	}
 
+	/**
+	 * Gets the current tag pointed to by this list's iterator interface
+	 *
+	 * @return PinholeAbstractTag the current tag pointed to by this list's
+	 *                             iterator interface.
+	 */
 	public function current()
 	{
 		return $this->tags[$this->tag_keys[$this->tag_index]];
 	}
 
+	/**
+	 * Gets whether or not the current location pointed to by this list's
+	 * iterator interface is a valid location
+	 *
+	 * @return boolean true if the location is valid and false if it is not.
+	 */
 	public function valid()
 	{
 		return array_key_exists($this->tag_index, $this->tag_keys);
 	}
 
+	/**
+	 * Advances the iterator interface to the next tag in this list
+	 */
 	public function next()
 	{
 		$this->tag_index++;
 	}
 
+	/**
+	 * Retreats the iterator interface to the previous tag in this list
+	 */
 	public function prev()
 	{
 		$this->tag_index--;
 	}
 
+	/**
+	 * Rewinds the iterator interface to the first tag in this list
+	 */
 	public function rewind()
 	{
 		$this->tag_index = 0;
 	}
 
+	/**
+	 * Gets the key (tag string) of the current tag pointed to by this list's
+	 * iterator interface
+	 *
+	 * @return string the key (tag string) of the current tag pointed to by
+	 *                 this list's iterator interface.
+	 */
 	public function key()
 	{
 		return $this->tag_keys[$this->tag_index];
 	}
 
+	/**
+	 * Gets the number of tags in this tag list
+	 *
+	 * This satisfies the Countable interface.
+	 *
+	 * @return integer the number of tags in this tag list.
+	 */
 	public function count()
 	{
 		return count($this->tags);

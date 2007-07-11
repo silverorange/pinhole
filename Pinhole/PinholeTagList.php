@@ -21,6 +21,8 @@ require_once 'Pinhole/PinholeTagFactory.php';
  */
 class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 {
+	// {{{ private properties
+
 	/**
 	 * The tags of this list indexed by tag string
 	 *
@@ -53,6 +55,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	private $db;
 
+	// }}}
+
 	/**
 	 * Creates a new tag list
 	 *
@@ -80,6 +84,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		}
 	}
 
+	// {{{ public function __tostring()
+
 	/**
 	 * Gets a string representation of this tag list
 	 *
@@ -99,6 +105,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return substr($string, 1);
 	}
 
+	// }}}
+	// {{{ public function getJoinClauses()
+
 	/**
 	 * Gets the join clauses used by the tags in this tag list
 	 *
@@ -112,6 +121,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		return $join_clauses;
 	}
+
+	// }}}
 
 	/**
 	 * Gets the where clause used by the tags in this tag list
@@ -131,6 +142,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		return $where_clause;
 	}
+
+	// {{{ public function getRange()
 
 	/**
 	 * Gets the database range of the tags in this tag list
@@ -160,6 +173,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		return $range;
 	}
+
+	// }}}
+	// {{{ public function get()
 
 	/**
 	 * Gets a tag in this tag list
@@ -195,6 +211,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $tag;
 	}
 
+	// }}}
+	// {{{ public function contains()
+
 	/**
 	 * Gets whether or not this list contains a particular tag
 	 *
@@ -222,6 +241,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		return array_key_exists($tag, $this->tags);
 	}
+
+	// }}}
+	// {{{ public function add()
 
 	/**
 	 * Adds a tag to this tag list
@@ -272,6 +294,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $added_tag;
 	}
 
+	// }}}
+	// {{{ public function remove()
+
 	/**
 	 * Removes a tag from this tag list
 	 *
@@ -311,6 +336,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $removed;
 	}
 
+	// }}}
+	// {{{ public function getByType()
+
 	/**
 	 * Gets the tags in this tag list that are of a specified type
 	 *
@@ -340,6 +368,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $tag_list;
 	}
 
+	// }}}
+	// {{{ public function getPhotos()
+
 	/**
 	 * Gets the photos of this tag list
 	 *
@@ -362,6 +393,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return SwatDB::query($this->db, $sql, $wrapper);
 	}
 
+	// }}}
+	// {{{ public function getPhotoCount()
+
 	/**
 	 * Gets the number of photos of this tag list
 	 *
@@ -379,6 +413,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return SwatDB::queryOne($this->db, $sql);
 	}
 
+	// }}}
+
 	/**
 	 * Gets a list of tags not in this list that also apply to the photos
 	 * of this list
@@ -394,6 +430,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 	}
 
+	// {{{ public function setDatabase()
+
 	/**
 	 * Sets the database connection used by this tag list
 	 *
@@ -407,6 +445,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$tag->setDatabase($db);
 	}
 
+	// }}}
+	// {{{ public function save()
+
 	/**
 	 * Saves this tag list
 	 *
@@ -417,6 +458,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		foreach ($this as $tag)
 			$tag->save();
 	}
+
+	// }}}
 
 	/**
 	 * Loads this tag list
@@ -433,6 +476,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 	}
 
+	// {{{ public function delete()
+
 	/**
 	 * Deletes this tag list
 	 *
@@ -447,6 +492,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		foreach ($this as $tag)
 			$tag->delete();
 	}
+
+	// }}}
+	// {{{ public function isModified()
 
 	/**
 	 * Whether or not this tag list is modified
@@ -468,6 +516,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $modified;
 	}
 
+	// }}}
+	// {{{ public function current()
+
 	/**
 	 * Gets the current tag pointed to by this list's iterator interface
 	 *
@@ -478,6 +529,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		return $this->tags[$this->tag_keys[$this->tag_index]];
 	}
+
+	// }}}
+	// {{{ public function valid()
 
 	/**
 	 * Gets whether or not the current location pointed to by this list's
@@ -490,6 +544,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return array_key_exists($this->tag_index, $this->tag_keys);
 	}
 
+	// }}}
+	// {{{ public function next()
+
 	/**
 	 * Advances the iterator interface to the next tag in this list
 	 */
@@ -497,6 +554,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$this->tag_index++;
 	}
+
+	// }}}
+	// {{{ public function prev()
 
 	/**
 	 * Retreats the iterator interface to the previous tag in this list
@@ -506,6 +566,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$this->tag_index--;
 	}
 
+	// }}}
+	// {{{ public function rewind()
+
 	/**
 	 * Rewinds the iterator interface to the first tag in this list
 	 */
@@ -513,6 +576,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$this->tag_index = 0;
 	}
+
+	// }}}
+	// {{{ public function key()
 
 	/**
 	 * Gets the key (tag string) of the current tag pointed to by this list's
@@ -526,6 +592,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $this->tag_keys[$this->tag_index];
 	}
 
+	// }}}
+	// {{{ public function count()
+
 	/**
 	 * Gets the number of tags in this tag list
 	 *
@@ -537,6 +606,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		return count($this->tags);
 	}
+
+	// }}}
 }
 
 ?>

@@ -18,6 +18,8 @@ require_once 'Pinhole/tags/PinholeAbstractTag.php';
  */
 abstract class PinholeAbstractMachineTag extends PinholeAbstractTag
 {
+	// {{{ class constants
+
 	/**
 	 * A regular expression for the syntax pattern used by all machine tags.
 	 *
@@ -25,6 +27,9 @@ abstract class PinholeAbstractMachineTag extends PinholeAbstractTag
 	 * expression. [1] is the namespace, [2] is the name and [3] is the value.
 	 */
 	const SYNTAX_PATTERN = '/^([a-z]+)\.([a-z]+)=([a-zA-Z0-9-\+]*)$/';
+
+	// }}}
+	// {{{ public function __toString()
 
 	/**
 	 * Gets a string representation of this machine tag
@@ -39,12 +44,18 @@ abstract class PinholeAbstractMachineTag extends PinholeAbstractTag
 			$this->getNamespace(), $this->getName(), $this->getValue());
 	}
 
+	// }}}
+	// {{{ abstract protected function getNamespace()
+
 	/**
 	 * Gets the namespace of this machine tag
 	 *
 	 * @return string the namespace of this machine tag.
 	 */
 	abstract protected function getNamespace();
+
+	// }}}
+	// {{{ abstract protected function getName()
 
 	/**
 	 * Gets the name of this machine tag
@@ -53,12 +64,18 @@ abstract class PinholeAbstractMachineTag extends PinholeAbstractTag
 	 */
 	abstract protected function getName();
 
+	// }}}
+	// {{{ abstract protected function getValue()
+
 	/**
 	 * Gets the value of this machine tag
 	 *
 	 * @return string the value of this machine tag.
 	 */
 	abstract protected function getValue();
+
+	// }}}
+	// {{{ protected final function getParts()
 
 	/**
 	 * Gets machine tag parts from a string
@@ -86,6 +103,8 @@ abstract class PinholeAbstractMachineTag extends PinholeAbstractTag
 
 		return $parts;
 	}
+
+	// }}}
 }
 
 ?>

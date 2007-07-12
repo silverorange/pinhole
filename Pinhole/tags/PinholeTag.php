@@ -105,18 +105,23 @@ class PinholeTag extends PinholeAbstractTag
 	 */
 	public function parse($string, MDB2_Driver_Common $db)
 	{
+		$valid = false;
+
 		$this->data_object = new PinholeTagDataObject();
 
 		$this->setDatabase($db);
 		$this->name = $string;
 
-		if ($this->data_object->loadFromName($this->name)) {
-			$this->id         = $this->data_object->id;
-			$this->title      = $this->data_object->title;
-			$this->createdate = $this->data_object->createdate;
+		if (preg_match('/^[a-z0-9]+$/i', $string) == 1) {
+			if ($this->data_object->loadFromName($this->name)) {
+				$this->id         = $this->data_object->id;
+				$this->title      = $this->data_object->title;
+				$this->createdate = $this->data_object->createdate;
+			}
+			$valid = true;
 		}
 
-		return true;
+		return $valid;
 	}
 
 	// }}}

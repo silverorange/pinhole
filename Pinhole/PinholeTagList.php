@@ -1,5 +1,6 @@
 <?php
 
+require_once 'MDB2.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBRange.php';

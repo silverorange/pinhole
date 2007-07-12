@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'SwatDB/SwatDBRecordable.php';
+require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**

@@ -6,30 +6,66 @@ require_once 'Swat/SwatDate.php';
 require_once 'SwatDB/SwatDB.php';
 
 /**
- * Tag
+ * Basic user-space tag
+ *
+ * This tag type is the default tag type used for simple (non-machine) tags.
+ * Tags of this type are represented as an alphanumeric string and are saved
+ * and loaded in the database. This tag type should be used to categorize
+ * photos with a name and title. For example, photos containing red things
+ * could be tagged with a tag having the name 'red' and the title 'Red'.
+ * Similarly, photos on Prince Edward Island could be tagged with a tag
+ * having the name 'pei' and the title 'Prince Edward Island'.
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ * @see       PinholeTagDataObject
  */
 class PinholeTag extends PinholeAbstractTag
 {
+	/**
+	 * Database identifier of this tag
+	 *
+	 * @var integer
+	 */
 	public $id;
 
+	/**
+	 * Name of this tag
+	 *
+	 * @var string
+	 */
 	public $name;
 
+	/**
+	 * Title of this tag
+	 *
+	 * @var string
+	 */
 	public $title;
 
 	/**
+	 * Creation date of this tag
+	 *
 	 * @var SwatDate
 	 */
 	public $createdate;
 
 	/**
+	 * Encapsulated data-object used to fulfill the SwatDBRecordable interface
+	 *
 	 * @var PinholeTagDataObject
 	 */
 	private $data_object;
 
+	/**
+	 * Creates a new tag
+	 *
+	 * @param PinholeTagDataObject $data_object optional. Data object to create
+	 *                                           this tag from. If not
+	 *                                           specified, an empty tag is
+	 *                                           created.
+	 */
 	public function __construct(PinholeTagDataObject $data_object = null)
 	{
 		if ($data_object === null) {
@@ -44,6 +80,18 @@ class PinholeTag extends PinholeAbstractTag
 		}
 	}
 
+	/**
+	 * Parses this tag from a tag string
+	 *
+	 * This tag parses with any alphanumeric string.
+	 *
+	 * @param string $string the tag string to parse. 
+	 * @param MDB2_Driver_Common the database connection used to parse the tag
+	 *                            string.
+	 *
+	 * @return boolean true if the tag string could be parsed and false if the
+	 *                  tag string could not be parsed.
+	 */
 	public function parse($string, MDB2_Driver_Common $db)
 	{
 		$this->data_object = new PinholeTagDataObject();
@@ -60,16 +108,33 @@ class PinholeTag extends PinholeAbstractTag
 		return true;
 	}
 
+	/**
+	 * Gets the title of this tag
+	 *
+	 * @return string the title of this tag. This returns this tag's title
+	 *                 property.
+	 */
 	public function getTitle()
 	{
 		return $this->title;
 	}
 
+	/**
+	 * Gets a string representation of this tag
+	 *
+	 * @return string a string representation of this tag (tag string). This
+	 *                  returns this tag's name property.
+	 */
 	public function __toString()
 	{
 		return $this->name;
 	}
 
+	/**
+	 * Gets the SQL where clause for this tag
+	 *
+	 * @return string the SQL where clause for this tag.
+	 */
 	public function getWhereClause()
 	{
 		return sprintf('PinholePhoto.id in
@@ -78,6 +143,9 @@ class PinholeTag extends PinholeAbstractTag
 			$this->db->quote($this->id, 'integer'));
 	}
 
+	/**
+	 * Saves this tag to the database
+	 */
 	public function save()
 	{
 		$this->data_object->id         = $this->id;
@@ -87,8 +155,19 @@ class PinholeTag extends PinholeAbstractTag
 		$this->data_object->save();
 	}
 
+	/**
+	 * Loads this tag from the database
+	 *
+	 * @param string $id the database identifier of this tag. This should be
+	 *                    a numeric string.
+	 *
+	 * @return boolean true if this tag was loaded and false if this tag was
+	 *                  not loaded.
+	 */
 	public function load($id)
 	{
+		$id = intval($id);
+
 		$loaded = false;
 
 		if ($this->data_object->load($id)) {
@@ -102,11 +181,23 @@ class PinholeTag extends PinholeAbstractTag
 		return $loaded;
 	}
 
+	/**
+	 * Deletes this tag from the database
+	 *
+	 * After this tag is deleted from the database it still exists as a PHP
+	 * object. 
+	 */
 	public function delete()
 	{
 		$this->data_object->delete();
 	}
 
+	/**
+	 * Gets whether or not this tag is modified
+	 *
+	 * @return boolean true if this tag has been modified and false if this
+	 *                  tag has not been modified.
+	 */
 	public function isModified()
 	{
 		$this->data_object->id         = $this->id;
@@ -116,12 +207,25 @@ class PinholeTag extends PinholeAbstractTag
 		return $this->data_object->isModified();
 	}
 
+	/**
+	 * Sets the database connection used by this tag
+	 *
+	 * @param MDB2_Driver_Common $db the database connection to use for this
+	 *                                tag.
+	 */
 	public function setDatabase(MDB2_Driver_Common $db)
 	{
 		parent::setDatabase($db);
 		$this->data_object->setDatabase($this->db);
 	}
 
+	/**
+	 * Applies this tag to a photo
+	 *
+	 * @param PinholePhoto $photo the photo this tag is to be applied to.
+	 *
+	 * @todo implement this method.
+	 */
 	public function applyToPhoto(PinholePhoto $photo)
 	{
 		// TODO
@@ -130,6 +234,16 @@ class PinholeTag extends PinholeAbstractTag
 		// 3. add photo to 'applies' cache
 	}
 
+	/**
+	 * Checks whether or not this tag applies to a given photo
+	 *
+	 * @param PinholePhoto the photo to check.
+	 *
+	 * @return boolean true if this tag applies to the given photo and false if
+	 *                  this tag does not apply to the given photo.
+	 *
+	 * @todo implement this method.
+	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
 		// TODO

@@ -1,9 +1,10 @@
 <?php
 
 //require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeDimension.php';
+require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Swat/SwatDate.php';
+require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'SwatDB/SwatDBDataObject.php';
 require_once 'Image/Transform.php';
@@ -74,11 +75,14 @@ class PinholePhoto extends SwatDBDataObject
 	public $original_filename;
 
 	/**
-	 * 
+	 * Raw exif data
+	 *
+	 * A serialized string containing the raw exif data stored with the
+	 * photo. The returned value of exif_read_data().
 	 *
 	 * @var string
 	 */
-	public $exif;
+	public $serialized_exif;
 
 	/**
 	 * references PinholePhotographer(id),
@@ -107,6 +111,15 @@ class PinholePhoto extends SwatDBDataObject
 	 * @var Date
 	 */
 	public $publish_date;
+
+	/**
+	 * Meta Data
+	 *
+	 * An array of PinholeMetaData dataobjects
+	 *
+	 * @array
+	 */
+	public $meta_data;
 
 	/**
 	 * Visibility status
@@ -250,6 +263,7 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
+
 	// {{{ protected function getDpi()
 
 	protected function getDpi()
@@ -264,14 +278,59 @@ class PinholePhoto extends SwatDBDataObject
 	{
 		if ($this->id === null && $this->filename === null)
 			$this->filename = sha1(uniqid(rand(), true));
-		else
+		elseif ($this->filename === null)
 			throw new SwatException('Filename must be set
 				on the dataobject');
+
+		return $this->filename;
 	}
 
 	// }}}
 
 	// processing methods
+	// {{{ public function createFromFile()
+
+	public function createFromFile($file, $original_filename)
+	{
+		static $dimensions;
+
+		if (!file_exists($file))
+			throw new SwatFileNotFoundException(null, 0, $file);
+
+		$filename = $this->getFilename();
+
+		$this->original_filename = $original_filename;
+		$this->upload_date = new SwatDate();
+		//$this->meta_data = $this->getMetaDataFromFile($file);
+		$this->serialized_exif = serialize(exif_read_data($file));
+
+		if ($dimensions === null)
+			$dimensions = SwatDB::query($this->db,
+				'select * from PinholeDimension',
+				'PinholeDimensionWrapper');
+
+		$transformer = Image_Transform::factory('Imagick2');
+		if (PEAR::isError($transformer))
+			throw new AdminException($transformer);
+
+		$transformer->load($file);
+
+		foreach ($dimensions as $dimension) {
+			$transformed = $this->processImage($transformer, $dimension);
+
+			$dimension_binding = new PinholeDimensionBinding();
+			$dimension_binding->photo = $this;
+			$dimension_binding->dimension = $dimension;
+			$dimension_binding->width = $transformed->new_x;
+			$dimension_binding->height = $transformed->new_y;
+			$dimension_binding->save();
+
+			$transformed->save($dimension_binding->getPath(),
+				false, $this->getCompressionQuality());
+		}
+	}
+
+	// }}}
 	// {{{ public function processImage()
 
 	/**
@@ -283,6 +342,9 @@ class PinholePhoto extends SwatDBDataObject
 	 *
 	 * @param PinholeDimension $dimension the dimension to create.
 	 *
+	 * @return Image_Transform $transformer the image transformer with the
+	 * 			 		processed image.
+	 *
 	 * @throws SwatException if no image is loaded in the transformer.
 	 */
 	public function processImage(Image_Transform $transformer,
@@ -291,7 +353,7 @@ class PinholePhoto extends SwatDBDataObject
 		if ($transformer->image === null)
 			throw new SwatException('No image loaded.');
 
-		// TODO: I don't this handles panoramas corrently right now
+		// TODO: This doesn't handle panoramas corrently right now
 
 		if ($dimension->max_height !== null &&
 			$dimension->max_width !== null &&
@@ -305,6 +367,8 @@ class PinholePhoto extends SwatDBDataObject
 
 		if ($dimension->strip)
 			$transformer->strip();
+
+		return $transformer;
 	}
 
 	// }}}
@@ -317,8 +381,6 @@ class PinholePhoto extends SwatDBDataObject
 	 */
 	public function publish($set_publish_date = true)
 	{
-		// TODO: make sure this works
-
 		if ($set_publish_date)
 			$this->publish_date = new SwatDate();
 
@@ -341,6 +403,52 @@ class PinholePhoto extends SwatDBDataObject
 			return $this->original_filename;
 		else
 			return $this->title;
+	}
+
+	// }}}
+	// {{{ protected function getMetaDataFromFile()
+
+	/**
+	 * Get the meta data from a photo
+	 *
+	 * @param string $filename 
+	 * @return array An array of PinholeMetaData dataobjects 
+	 */
+	protected function getMetaDataFromFile($filename)
+	{
+		exec("exiftool -t $filename", $tag_names);
+		exec("exiftool -t -s $filename", $values);
+
+		$meta_data = SwatDB::queryColumn($this->db,
+			'PinholeMetaData', 'shortname', 'id');
+
+		for ($i = 0; $i < count($tag_names); $i++) {
+			$ret = explode("\t", $values[$i]);
+			if (!isset($ret[1]))
+				continue;
+
+			$shortname = strtolower($ret[0]);
+			$value = $ret[1];
+
+			$ret = explode("\t", $tag_names[$i]);
+			$title = $ret[0];
+
+			if (!in_array($shortname, $meta_data)) {
+				$id = SwatDB::insertRow($this->db,
+					'PinholeMetaData',
+					array('text:shortname', 'text:title'),
+					array('shortname' => $shortname,
+						'title' => $title),
+					'id');
+			} else {
+				$id = array_search($meta_data, $shortname);
+			}
+
+			SwatDB::insertRow($this->db, 'PinholePhotoMetaData',
+				array('photo', 'meta_data', 'text:value'),
+				array('photo' => $this->id, 'meta_data' => $id,
+					'value' => $value));
+		}
 	}
 
 	// }}}

@@ -164,6 +164,54 @@ class PinholeTag extends PinholeAbstractTag
 	}
 
 	// }}}
+
+	/**
+	 * Applies this tag to a photo
+	 *
+	 * @param PinholePhoto $photo the photo this tag is to be applied to.
+	 *
+	 * @todo implement this method.
+	 */
+	public function applyToPhoto(PinholePhoto $photo)
+	{
+		// TODO
+		// 1. save this tag
+		// 2. update or insert photo tag binding
+		// 3. add photo to 'applies' cache
+	}
+
+	/**
+	 * Checks whether or not this tag applies to a given photo
+	 *
+	 * @param PinholePhoto the photo to check.
+	 *
+	 * @return boolean true if this tag applies to the given photo and false if
+	 *                  this tag does not apply to the given photo.
+	 *
+	 * @todo implement this method.
+	 */
+	public function appliesToPhoto(PinholePhoto $photo)
+	{
+		// TODO
+		// 1. check if photo tag binding exists
+		// 2. add photo to 'applies' cache if binding exists
+		// 3. return value
+	}
+	// {{{ public function setDatabase()
+
+	/**
+	 * Sets the database connection used by this tag
+	 *
+	 * @param MDB2_Driver_Common $db the database connection to use for this
+	 *                                tag.
+	 */
+	public function setDatabase(MDB2_Driver_Common $db)
+	{
+		parent::setDatabase($db);
+		$this->data_object->setDatabase($this->db);
+	}
+
+	// }}}
 	// {{{ public function save()
 
 	/**
@@ -240,54 +288,6 @@ class PinholeTag extends PinholeAbstractTag
 	}
 
 	// }}}
-	// {{{ public function setDatabase()
-
-	/**
-	 * Sets the database connection used by this tag
-	 *
-	 * @param MDB2_Driver_Common $db the database connection to use for this
-	 *                                tag.
-	 */
-	public function setDatabase(MDB2_Driver_Common $db)
-	{
-		parent::setDatabase($db);
-		$this->data_object->setDatabase($this->db);
-	}
-
-	// }}}
-
-	/**
-	 * Applies this tag to a photo
-	 *
-	 * @param PinholePhoto $photo the photo this tag is to be applied to.
-	 *
-	 * @todo implement this method.
-	 */
-	public function applyToPhoto(PinholePhoto $photo)
-	{
-		// TODO
-		// 1. save this tag
-		// 2. update or insert photo tag binding
-		// 3. add photo to 'applies' cache
-	}
-
-	/**
-	 * Checks whether or not this tag applies to a given photo
-	 *
-	 * @param PinholePhoto the photo to check.
-	 *
-	 * @return boolean true if this tag applies to the given photo and false if
-	 *                  this tag does not apply to the given photo.
-	 *
-	 * @todo implement this method.
-	 */
-	public function appliesToPhoto(PinholePhoto $photo)
-	{
-		// TODO
-		// 1. check if photo tag binding exists
-		// 2. add photo to 'applies' cache if binding exists
-		// 3. return value
-	}
 }
 
 ?>

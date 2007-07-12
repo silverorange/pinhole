@@ -22,6 +22,8 @@ require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
  */
 abstract class PinholeAbstractTag implements SwatDBRecordable
 {
+	// {{{ protected properties
+
 	/**
 	 * The database connection used by this tag
 	 *
@@ -35,6 +37,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 * @var PinholePhotoWrapper
 	 */
 	protected $photos_cache;
+
+	// }}}
+	// {{{ abstract public function parse()
 
 	/**
 	 * Parses this tag from a tag string
@@ -51,6 +56,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 */
 	abstract public function parse($string, MDB2_Driver_Common $db);
 
+	// }}}
+	// {{{ abstract public function getTitle()
+
 	/**
 	 * Gets the title of this tag
 	 *
@@ -58,12 +66,18 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 */
 	abstract public function getTitle();
 
+	// }}}
+	// {{{ abstract public function __toString()
+
 	/**
 	 * Gets a string representation of this tag
 	 *
 	 * @return string a string representation of this tag (tag string).
 	 */
 	abstract public function __toString();
+
+	// }}}
+	// {{{ public function getWhereClause()
 
 	/**
 	 * Gets the SQL where clause for this tag
@@ -82,6 +96,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 		return 'false';
 	}
 
+	// }}}
+	// {{{ public function getJoinClauses()
+
 	/**
 	 * Gets the SQL join clauses for this tag
 	 *
@@ -99,6 +116,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 		return array();
 	}
 
+	// }}}
+	// {{{ public function getRange()
+
 	/**
 	 * Gets the database range for this tag
 	 *
@@ -114,6 +134,8 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 		return null;
 	}
 
+	// }}}
+
 	/**
 	 * Applies this tag to a photo
 	 *
@@ -127,6 +149,8 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 */
 	abstract public function applyToPhoto(PinholePhoto $photo);
 
+	// {{{ abstract public function appliesToPhoto()
+
 	/**
 	 * Checks whether or not this tag applies to a given photo
 	 *
@@ -136,6 +160,8 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 *                  this tag does not apply to the given photo.
 	 */
 	abstract public function appliesToPhoto(PinholePhoto $photo);
+
+	// }}}
 
 	/**
 	 * Gets the photos this tag applies to
@@ -167,6 +193,8 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 		return $this->photos_cache;
 	}
 
+	// {{{ public function getPhotoCount()
+
 	/**
 	 * Gets the number of photos this tag applies to
 	 *
@@ -186,6 +214,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 		return SwatDB::queryOne($this->db, $sql);
 	}
 
+	// }}}
+	// {{{ public function setDatabase()
+
 	/**
 	 * Sets the database connection used by this tag
 	 *
@@ -197,6 +228,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 		$this->db = $db;
 	}
 
+	// }}}
+	// {{{ public function save()
+
 	/**
 	 * Saves this tag to the database
 	 *
@@ -206,6 +240,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	public function save()
 	{
 	}
+
+	// }}}
+	// {{{ public function load()
 
 	/**
 	 * Loads this tag from the database
@@ -223,6 +260,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	{
 	}
 
+	// }}}
+	// {{{ public function delete()
+
 	/**
 	 * Deletes this tag from the database
 	 *
@@ -235,6 +275,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	public function delete()
 	{
 	}
+
+	// }}}
+	// {{{ public function isModified()
 
 	/**
 	 * Gets whether or not this tag is modified
@@ -249,6 +292,8 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	{
 		return false;
 	}
+
+	// }}}
 }
 
 ?>

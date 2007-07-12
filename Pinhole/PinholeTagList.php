@@ -71,7 +71,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 * @todo Use a more efficient algorithm for loading multiple tags from the
 	 *       database.
 	 */
-	public function __construct($string = null)
+	public function __construct($tag_list_string = null)
 	{
 		if (is_string($tag_list_string)) {
 			$tag_strings = explode('/', $tag_list_string);

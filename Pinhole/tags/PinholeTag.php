@@ -23,6 +23,8 @@ require_once 'SwatDB/SwatDB.php';
  */
 class PinholeTag extends PinholeAbstractTag
 {
+	// {{{ public properties
+
 	/**
 	 * Database identifier of this tag
 	 *
@@ -51,12 +53,18 @@ class PinholeTag extends PinholeAbstractTag
 	 */
 	public $createdate;
 
+	// }}}
+	// {{{ private properties
+
 	/**
 	 * Encapsulated data-object used to fulfill the SwatDBRecordable interface
 	 *
 	 * @var PinholeTagDataObject
 	 */
 	private $data_object;
+
+	// }}}
+	// {{{ public function __construct()
 
 	/**
 	 * Creates a new tag
@@ -79,6 +87,9 @@ class PinholeTag extends PinholeAbstractTag
 			$this->createdate  = $this->data_object->createdate;
 		}
 	}
+
+	// }}}
+	// {{{ public function parse()
 
 	/**
 	 * Parses this tag from a tag string
@@ -108,6 +119,9 @@ class PinholeTag extends PinholeAbstractTag
 		return true;
 	}
 
+	// }}}
+	// {{{ public function getTitle()
+
 	/**
 	 * Gets the title of this tag
 	 *
@@ -119,6 +133,9 @@ class PinholeTag extends PinholeAbstractTag
 		return $this->title;
 	}
 
+	// }}}
+	// {{{ public function __toString()
+
 	/**
 	 * Gets a string representation of this tag
 	 *
@@ -129,6 +146,9 @@ class PinholeTag extends PinholeAbstractTag
 	{
 		return $this->name;
 	}
+
+	// }}}
+	// {{{ public function getWhereClause()
 
 	/**
 	 * Gets the SQL where clause for this tag
@@ -143,6 +163,9 @@ class PinholeTag extends PinholeAbstractTag
 			$this->db->quote($this->id, 'integer'));
 	}
 
+	// }}}
+	// {{{ public function save()
+
 	/**
 	 * Saves this tag to the database
 	 */
@@ -154,6 +177,9 @@ class PinholeTag extends PinholeAbstractTag
 		$this->data_object->createdate = $this->createdate;
 		$this->data_object->save();
 	}
+
+	// }}}
+	// {{{ public function load()
 
 	/**
 	 * Loads this tag from the database
@@ -181,6 +207,9 @@ class PinholeTag extends PinholeAbstractTag
 		return $loaded;
 	}
 
+	// }}}
+	// {{{ public function delete()
+
 	/**
 	 * Deletes this tag from the database
 	 *
@@ -191,6 +220,9 @@ class PinholeTag extends PinholeAbstractTag
 	{
 		$this->data_object->delete();
 	}
+
+	// }}}
+	// {{{ public function isModified()
 
 	/**
 	 * Gets whether or not this tag is modified
@@ -207,6 +239,9 @@ class PinholeTag extends PinholeAbstractTag
 		return $this->data_object->isModified();
 	}
 
+	// }}}
+	// {{{ public function setDatabase()
+
 	/**
 	 * Sets the database connection used by this tag
 	 *
@@ -218,6 +253,8 @@ class PinholeTag extends PinholeAbstractTag
 		parent::setDatabase($db);
 		$this->data_object->setDatabase($this->db);
 	}
+
+	// }}}
 
 	/**
 	 * Applies this tag to a photo

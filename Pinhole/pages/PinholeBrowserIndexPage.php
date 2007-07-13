@@ -77,7 +77,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$ds = new SwatDetailsStore();
 			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
-			$store->addRow($ds);
+			$store->add($ds);
 		}
 
 		return $store;

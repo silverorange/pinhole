@@ -129,9 +129,9 @@ class PinholeTagIndex extends AdminSearch
 	}
 
 	// }}}
-	// {{{ protected function getTableStore()
+	// {{{ protected function getTableModel()
 
-	protected function getTableStore($view)
+	protected function getTableModel(SwatTableView $view)
 	{
 		$sql = sprintf('select count(id) from PinholeTag where %s',
 			$this->getWhereClause());
@@ -152,19 +152,19 @@ class PinholeTagIndex extends AdminSearch
 			$this->getOrderByClause($view, 'PinholeTag.title'));
 
 		$this->app->db->setLimit($pager->page_size, $pager->current_record);
-		$store = SwatDB::query($this->app->db, $sql);
+		$rs = SwatDB::query($this->app->db, $sql);
 
 		$this->ui->getWidget('results_frame')->visible = true;
 
-		if (count($store) > 0)
+		if (count($rs) > 0)
 			$this->ui->getWidget('results_message')->content =
 				$pager->getResultsMessage(Pinhole::_('result'), 
 					Pinhole::_('results'));
 
-		foreach ($store as $row)
+		foreach ($rs as $row)
 			$row->status_title = PinholeTag::getStatusTitle($row->status);
 
-		return $store;
+		return $rs;
 	}
 
 	// }}}

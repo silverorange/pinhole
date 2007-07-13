@@ -81,14 +81,14 @@ class PinholePhotographerIndex extends AdminIndex
 	}
 
 	// }}}
-	// {{{ protected function getTableStore()
+	// {{{ protected function getTableModel()
 
 	/**
 	 * Gets photographer data
 	 *
 	 * @return SwatTableModel with photographer information.
 	 */
-	protected function getTableStore($view)
+	protected function getTableModel(SwatTableView $view)
 	{
 		$sql = 'select * from PinholePhotographer
 			order by %s';
@@ -96,12 +96,12 @@ class PinholePhotographerIndex extends AdminIndex
 		$sql = sprintf($sql,
 			$this->getOrderByClause($view, 'id'));
 		
-		$store = SwatDB::query($this->app->db, $sql);
+		$rs = SwatDB::query($this->app->db, $sql);
 
-		foreach ($store as $row)
+		foreach ($rs as $row)
 			$row->status_title = PinholePhotographer::getStatusTitle($row->status);
 
-		return $store;
+		return $rs;
 	}
 
 	// }}}

@@ -78,7 +78,7 @@ class PinholePhotoDelete extends AdminDBDelete
 		foreach ($this->getPhotos() as $photo) {
 			$ds = new SwatDetailsStore($photo);
 			$ds->photo = $photo;
-			$store->addRow($ds);
+			$store->add($ds);
 		}
 
 		$delete_view->model = $store;
@@ -86,7 +86,7 @@ class PinholePhotoDelete extends AdminDBDelete
 		$message = $this->ui->getWidget('confirmation_message');
 		$message->content = sprintf('<strong>Are you sure you want to delete
 			the following %s?</strong>',
-			Pinhole::ngettext('photo', 'photos', $store->getRowCount()));
+			Pinhole::ngettext('photo', 'photos', count($store)));
 		$message->content_type = 'text/xml';
 
 		$this->buildNavBar();

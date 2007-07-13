@@ -131,9 +131,9 @@ class PinholePhotoIndex extends AdminSearch
 	}
 
 	// }}}
-	// {{{ protected function getTableStore()
+	// {{{ protected function getTableModel()
 
-	protected function getTableStore($view)
+	protected function getTableModel(SwatTableView $view)
 	{
 		$this->searchPhotos();
 

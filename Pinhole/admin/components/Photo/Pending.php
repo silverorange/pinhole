@@ -51,9 +51,9 @@ class PinholePhotoPending extends AdminIndex
 	}
 
 	// }}}
-	// {{{ protected function getTableStore()
+	// {{{ protected function getTableModel()
 
-	protected function getTableStore($view)
+	protected function getTableModel(SwatTableView $view)
 	{
 		$sql = sprintf('select count(id) from PinholePhoto where %s',
 			$this->getWhereClause());

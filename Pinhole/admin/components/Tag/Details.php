@@ -48,13 +48,13 @@ class PinholeTagDetails extends AdminIndex
 	}
 
 	// }}}
-	// {{{ protected function getTableStore()
+	// {{{ protected function getTableModel()
 
-	protected function getTableStore($view)
+	protected function getTableModel(SwatTableView $view)
 	{
 		switch ($view->id) {
 			case 'children_view':
-				return $this->getChildrenTableStore($view);
+				return $this->getChildrenTableModel($view);
 		}
 	}
 
@@ -131,9 +131,9 @@ class PinholeTagDetails extends AdminIndex
 	}
 
 	// }}}
-	// {{{ private function getChildrenTableStore()
+	// {{{ private function getChildrenTableModel()
 
-	private function getChildrenTableStore($view)
+	private function getChildrenTableModel(SwatTableView $view)
 	{
 		$sql = 'select id, title, shortname
 			from PinholeTag
@@ -144,9 +144,9 @@ class PinholeTagDetails extends AdminIndex
 		$sql = sprintf($sql,
 			$this->app->db->quote($this->id, 'integer'));
 
-		$store = SwatDB::query($this->app->db, $sql);
+		$rs = SwatDB::query($this->app->db, $sql);
 
-		return $store;
+		return $rs;
 	}
 
 	// }}}

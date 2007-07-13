@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Admin/pages/AdminIndex.php';
-require_once 'Admin/AdminTableStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotographer.php';
 
@@ -87,7 +86,7 @@ class PinholePhotographerIndex extends AdminIndex
 	/**
 	 * Gets photographer data
 	 *
-	 * @return AdminTableStore photographer information.
+	 * @return SwatTableModel with photographer information.
 	 */
 	protected function getTableStore($view)
 	{
@@ -97,9 +96,9 @@ class PinholePhotographerIndex extends AdminIndex
 		$sql = sprintf($sql,
 			$this->getOrderByClause($view, 'id'));
 		
-		$store = SwatDB::query($this->app->db, $sql, 'AdminTableStore');
+		$store = SwatDB::query($this->app->db, $sql);
 
-		foreach ($store->getRows() as $row)
+		foreach ($store as $row)
 			$row->status_title = PinholePhotographer::getStatusTitle($row->status);
 
 		return $store;

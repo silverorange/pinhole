@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Admin/pages/AdminIndex.php';
-require_once 'Admin/AdminTableStore.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';

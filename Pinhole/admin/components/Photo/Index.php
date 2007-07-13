@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Admin/pages/AdminSearch.php';
-require_once 'Admin/AdminTableStore.php';
 require_once 'Admin/AdminSearchClause.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Swat/SwatDetailsStore.php';

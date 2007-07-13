@@ -5,7 +5,6 @@ require_once 'SwatDB/SwatDB.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatNavBar.php';
-require_once 'Admin/AdminTableStore.php';
 require_once 'Admin/pages/AdminIndex.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 
@@ -145,7 +144,7 @@ class PinholeTagDetails extends AdminIndex
 		$sql = sprintf($sql,
 			$this->app->db->quote($this->id, 'integer'));
 
-		$store = SwatDB::query($this->app->db, $sql, 'AdminTableStore');
+		$store = SwatDB::query($this->app->db, $sql);
 
 		return $store;
 	}

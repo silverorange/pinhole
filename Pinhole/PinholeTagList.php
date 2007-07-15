@@ -557,17 +557,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
-	// {{{ public function prev()
-
-	/**
-	 * Retreats the iterator interface to the previous tag in this list
-	 */
-	public function prev()
-	{
-		$this->tag_index--;
-	}
-
-	// }}}
 	// {{{ public function rewind()
 
 	/**

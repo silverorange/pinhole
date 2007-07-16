@@ -79,7 +79,7 @@ class PinholePhotographer extends SwatDBDataObject
 
 	protected function init()
 	{
-		$this->table =	$this->class_map->resolveClass('PinholePhotographer');
+		$this->table =	SwatDBClassMap::get('PinholePhotographer');
 		$this->id_field = 'integer:id';
 	}
 

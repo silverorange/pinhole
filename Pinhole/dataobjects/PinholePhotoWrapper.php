@@ -66,13 +66,12 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 
 		$store = new SwatDBDefaultRecordsetWrapper(null);
 
-		$class_map = SwatDBClassMap::instance();
 		$photo_class =
-			$class_map->resolveClass('PinholePhoto');
+			SwatDBClassMap::get('PinholePhoto');
 		$dimension_class =
-			$class_map->resolveClass('PinholeDimension');
+			SwatDBClassMap::get('PinholeDimension');
 		$dimension_binding_class =
-			$class_map->resolveClass('PinholePhotoDimensionBinding');
+			SwatDBClassMap::get('PinholePhotoDimensionBinding');
 
 		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
 			$photo = new $photo_class($row, true);
@@ -97,8 +96,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 	{
 		parent::init();
 
-		$this->row_wrapper_class =
-			$this->class_map->resolveClass('PinholePhoto');
+		$this->row_wrapper_class = SwatDBClassMap::get('PinholePhoto');
 	}
 
 	// }}}

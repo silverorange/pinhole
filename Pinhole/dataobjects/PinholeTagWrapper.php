@@ -20,8 +20,7 @@ class PinholeTagWrapper extends SwatDBRecordsetWrapper
 		parent::init();
 
 		$this->index_field = 'id';
-		$this->row_wrapper_class =
-			$this->class_map->resolveClass('PinholeTag');
+		$this->row_wrapper_class = SwatDBClassMap::get('PinholeTag');
 	}
 
 	// }}}

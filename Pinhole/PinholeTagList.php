@@ -120,6 +120,15 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		foreach ($this as $tag)
 			$join_clauses = array_merge($tag->getJoinClauses(), $join_clauses);
 
+		// normalize
+		foreach ($join_clauses as &$join_clause) {
+			$join_clause = strtolower($joinclause);
+			$join_clause = preg_replace('/\s+/', '', $joinclause);
+		}
+
+		// remove duplicates
+		$join_clauses = array_unique($join_clauses);
+
 		return $join_clauses;
 	}
 

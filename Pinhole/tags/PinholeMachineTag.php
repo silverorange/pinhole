@@ -12,6 +12,8 @@ require_once 'Pinhole/dataobjects/PinholeMachineTagDataObject.php';
  */
 class PinholeMachineTag extends PinholeAbstractMachineTag
 {
+	// {{{ public properties
+
 	/**
 	 * Database identifier of this machine tag
 	 *
@@ -47,12 +49,18 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	 */
 	public $createdate;
 
+	// }}}
+	// {{{ private properties
+
 	/**
 	 * Encapsulated data-object used to fulfill the SwatDBRecordable interface
 	 *
 	 * @var PinholeMachineTagDataObject
 	 */
 	private $data_object;
+
+	// }}}
+	// {{{ public function __construct()
 
 	/**
 	 * Creates a new machine tag
@@ -76,6 +84,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 			$this->createdate  = $this->data_object->createdate;
 		}
 	}
+
+	// }}}
+	// {{{ public function parse()
 
 	/**
 	 * Parses this tag from a tag string
@@ -114,6 +125,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return $valid;
 	}
 
+	// }}}
+	// {{{ public function getTitle()
+
 	/**
 	 * Gets the title of this tag
 	 *
@@ -125,6 +139,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return sprintf('%s: %s = %s',
 			$this->namespace, $this->name, $this->value);
 	}
+
+	// }}}
+	// {{{ public function getWhereClause()
 
 	/**
 	 * Gets the SQL where clause for this machine tag
@@ -140,6 +157,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 			$this->db->quote($this->id, 'integer'));
 	}
 
+	// }}}
+	// {{{ public function save()
+
 	/**
 	 * Saves this machine tag to the database
 	 */
@@ -152,6 +172,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		$this->data_object->createdate = $this->createdate;
 		$this->data_object->save();
 	}
+
+	// }}}
+	// {{{ public function load()
 
 	/**
 	 * Loads this machine tag from the database
@@ -178,6 +201,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return $loaded;
 	}
 
+	// }}}
+	// {{{ public function delete()
+
 	/**
 	 * Deletes this machine tag from the database
 	 *
@@ -188,6 +214,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	{
 		$this->data_object->delete();
 	}
+
+	// }}}
+	// {{{ public function isModified()
 
 	/**
 	 * Gets whether or not this machine tag is modified
@@ -205,6 +234,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return $this->data_object->isModified();
 	}
 
+	// }}}
+	// {{{ public function setDatabase()
+
 	/**
 	 * Sets the database connection used by this machine tag
 	 *
@@ -216,6 +248,8 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		parent::setDatabase($db);
 		$this->data_object->setDatabase($this->db);
 	}
+
+	// }}}
 
 	/**
 	 * Applies this machine tag to a photo
@@ -250,6 +284,8 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		// 3. return value
 	}
 
+	// {{{ protected function getNamespace()
+
 	/**
 	 * Gets the namespace of this machine tag
 	 *
@@ -260,6 +296,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	{
 		return $this->namespace;
 	}
+
+	// }}}
+	// {{{ protected function getName()
 
 	/**
 	 * Gets the name of this machine tag
@@ -272,6 +311,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return $this->name;
 	}
 
+	// }}}
+	// {{{ protected function getValue()
+
 	/**
 	 * Gets the value of this machine tag
 	 *
@@ -282,6 +324,8 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	{
 		return $this->value;
 	}
+
+	// }}}
 }
 
 ?>

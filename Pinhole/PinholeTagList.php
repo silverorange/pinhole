@@ -61,23 +61,25 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	/**
 	 * Creates a new tag list
 	 *
-	 * @param string $tag_list_string a list of tag strings separated by '/'
-	 *                                 characters that are added to the list
-	 *                                 when the list is created. Duplicate
+	 * @param MDB2_Driver_Common $db The database connection to use for this
+	 *                                tag list.
+	 * @param string $tag_list_string optional. A list of tag strings separated
+	 *                                 by '/' characters that are added to this
+	 *                                 list when the list is created. Duplicate
 	 *                                 tag strings are ignored.
 	 *
-	 * @todo Set the database connection in constructor somehow, maybe through
-	 *       the tag factory.
 	 * @todo Use a more efficient algorithm for loading multiple tags from the
 	 *       database.
 	 */
-	public function __construct($tag_list_string = null)
+	public function __construct(MDB2_Driver_Common $db, $tag_list_string = null)
 	{
+		$this->setDatabase($db);
+
 		if (is_string($tag_list_string)) {
 			$tag_strings = explode('/', $tag_list_string);
 			$tag_strings = array_unique($tag_strings);
 			foreach ($tag_strings as $tag_string) {
-				$tag = PinholeTagFactory::get($tag_string);
+				$tag = PinholeTagFactory::get($tag_string, $db);
 				if ($tag) {
 					$this->add($tag);
 				}

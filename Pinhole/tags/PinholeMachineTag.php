@@ -12,12 +12,56 @@ require_once 'Pinhole/dataobjects/PinholeMachineTagDataObject.php';
  */
 class PinholeMachineTag extends PinholeAbstractMachineTag
 {
+	/**
+	 * Database identifier of this machine tag
+	 *
+	 * @var integer
+	 */
 	public $id;
+
+	/**
+	 * Namespace of this machine tag
+	 *
+	 * @var string
+	 */
 	public $namespace;
+
+	/**
+	 * Name of this machine tag
+	 *
+	 * @var string
+	 */
 	public $name;
+
+	/**
+	 * Value of this machine tag
+	 *
+	 * @var string
+	 */
 	public $value;
+
+	/**
+	 * Creation date of this machine tag
+	 *
+	 * @var SwatDate
+	 */
 	public $createdate;
 
+	/**
+	 * Encapsulated data-object used to fulfill the SwatDBRecordable interface
+	 *
+	 * @var PinholeMachineTagDataObject
+	 */
+	private $data_object;
+
+	/**
+	 * Creates a new machine tag
+	 *
+	 * @param PinholeMachineTagDataObject $data_object optional. Data object to
+	 *                                                  create this tag from. If
+	 *                                                  not specified, an empty
+	 *                                                  tag is created.
+	 */
 	public function __construct(PinholeMachineTagDataObject $data_object = null)
 	{
 		if ($data_object === null) {
@@ -33,6 +77,19 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		}
 	}
 
+	/**
+	 * Parses this tag from a tag string
+	 *
+	 * The tag string must match the machine tag syntax defined in
+	 * {@link PinholeAbstractMachineTag::SYNTAX_PATTERN}.
+	 *
+	 * @param string $string the tag string to parse. 
+	 * @param MDB2_Driver_Common the database connection used to parse the tag
+	 *                            string.
+	 *
+	 * @return boolean true if the tag string could be parsed and false if the
+	 *                  tag string could not be parsed.
+	 */
 	public function parse($string, MDB2_Driver_Common $db)
 	{
 		$this->data_object = new PinholeMachineTagDataObject();
@@ -57,18 +114,23 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return $valid;
 	}
 
-	public function __toString()
-	{
-		return sprintf('%s.%s=%s',
-			$this->namespace, $this->name, $this->value);
-	}
-
+	/**
+	 * Gets the title of this tag
+	 *
+	 * @return string the title of this tag. Machine tag titles are
+	 *                 'namespace: name = value'.
+	 */
 	public function getTitle()
 	{
 		return sprintf('%s: %s = %s',
 			$this->namespace, $this->name, $this->value);
 	}
 
+	/**
+	 * Gets the SQL where clause for this machine tag
+	 *
+	 * @return string the SQL where clause for this machine tag.
+	 */
 	public function getWhereClause()
 	{
 		return sprintf('PinholePhoto.id in
@@ -78,6 +140,9 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 			$this->db->quote($this->id, 'integer'));
 	}
 
+	/**
+	 * Saves this machine tag to the database
+	 */
 	public function save()
 	{
 		$this->data_object->id = $this->id;
@@ -88,6 +153,15 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		$this->data_object->save();
 	}
 
+	/**
+	 * Loads this machine tag from the database
+	 *
+	 * @param string $id the database identifier of this machine tag. This
+	 *                    should be a numeric string.
+	 *
+	 * @return boolean true if this tag was loaded and false if this tag was
+	 *                  not loaded.
+	 */
 	public function load($name)
 	{
 		$loaded = false;
@@ -104,11 +178,23 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return $loaded;
 	}
 
+	/**
+	 * Deletes this machine tag from the database
+	 *
+	 * After this machine tag is deleted from the database it still exists as a
+	 * PHP object. 
+	 */
 	public function delete()
 	{
 		$this->data_object->delete();
 	}
 
+	/**
+	 * Gets whether or not this machine tag is modified
+	 *
+	 * @return boolean true if this tag has been modified and false if this
+	 *                  tag has not been modified.
+	 */
 	public function isModified()
 	{
 		$this->data_object->id         = $this->id;
@@ -119,12 +205,25 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		return $this->data_object->isModified();
 	}
 
+	/**
+	 * Sets the database connection used by this machine tag
+	 *
+	 * @param MDB2_Driver_Common $db the database connection to use for this
+	 *                                machine tag.
+	 */
 	public function setDatabase(MDB2_Driver_Common $db)
 	{
 		parent::setDatabase($db);
 		$this->data_object->setDatabase($this->db);
 	}
 
+	/**
+	 * Applies this machine tag to a photo
+	 *
+	 * @param PinholePhoto $photo the photo this tag is to be applied to.
+	 *
+	 * @todo implement this method.
+	 */
 	public function applyToPhoto(PinholePhoto $photo)
 	{
 		// TODO
@@ -133,6 +232,16 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		// 3. add photo to 'applies' cache
 	}
 
+	/**
+	 * Checks whether or not this machine tag applies to a given photo
+	 *
+	 * @param PinholePhoto the photo to check.
+	 *
+	 * @return boolean true if this tag applies to the given photo and false if
+	 *                  this tag does not apply to the given photo.
+	 *
+	 * @todo implement this method.
+	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
 		// TODO
@@ -141,16 +250,34 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 		// 3. return value
 	}
 
+	/**
+	 * Gets the namespace of this machine tag
+	 *
+	 * @return string the namespace of this machine tag. This returns this tag's
+	 *                 <i>$namespace</i> property.
+	 */
 	protected function getNamespace()
 	{
 		return $this->namespace;
 	}
 
+	/**
+	 * Gets the name of this machine tag
+	 *
+	 * @return string the name of this machine tag. This returns this tag's
+	 *                 <i>$name</i> property.
+	 */
 	protected function getName()
 	{
 		return $this->name;
 	}
 
+	/**
+	 * Gets the value of this machine tag
+	 *
+	 * @return string the value of this machine tag. This returns this tag's
+	 *                 <i>$value</i> property.
+	 */
 	protected function getValue()
 	{
 		return $this->value;

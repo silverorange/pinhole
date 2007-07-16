@@ -32,11 +32,30 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	protected $db;
 
 	/**
+	 * Whether or not photos have been loaded using the
+	 * {@link PinholeAbstractTag::getPhotos()} method
+	 *
+	 * @var boolean
+	 */
+	protected $photos_loaded = false;
+
+	/**
 	 * Cache of photos this tag applies to
 	 *
 	 * @var PinholePhotoWrapper
 	 */
-	protected $photos_cache;
+	protected $photos;
+
+	// }}}
+	// {{{ public function __construct()
+
+	/**
+	 * Creates a new tag
+	 */
+	public function __construct()
+	{
+		$this->photos = new PinholePhotoWrapper();
+	}
 
 	// }}}
 	// {{{ abstract public function parse()
@@ -135,6 +154,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ abstract public function applyToPhoto()
 
 	/**
 	 * Applies this tag to a photo
@@ -144,11 +164,10 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 * cannot be applied to a photo, this method does nothing.
 	 *
 	 * @param PinholePhoto $photo the photo this tag is to be applied to.
-	 *
-	 * @todo this method should somehow share a cache with getPhotos().
 	 */
 	abstract public function applyToPhoto(PinholePhoto $photo);
 
+	// }}}
 	// {{{ abstract public function appliesToPhoto()
 
 	/**
@@ -162,6 +181,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	abstract public function appliesToPhoto(PinholePhoto $photo);
 
 	// }}}
+	// {{{ public function getPhotos()
 
 	/**
 	 * Gets the photos this tag applies to
@@ -173,12 +193,10 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 *                              this tag applies to.
 	 *
 	 * @see PinholeAbstractTag::getPhotoCount()
-	 *
-	 * @todo this method should somehow share a cache with applyToPhoto().
 	 */
 	public function getPhotos(SwatDBRange $range = null)
 	{
-		if ($this->photos_cache === null) {
+		if (!$this->photos_loaded) {
 			$sql = sprintf('select * from PinholePhoto %s where %s',
 				implode("\n", $this->getJoinClauses()),
 				$this->getWhereClause());
@@ -187,12 +205,14 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 				$this->db->setRange($range->getLimit(), $range->getOffset());
 
 			$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
-			$this->photos_cache = SwatDB::query($this->db, $sql, $wrapper);
+			$this->photos = SwatDB::query($this->db, $sql, $wrapper);
+			$this->photos_loaded = true;
 		}
 
-		return $this->photos_cache;
+		return $this->photos;
 	}
 
+	// }}}
 	// {{{ public function getPhotoCount()
 
 	/**
@@ -226,6 +246,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	public function setDatabase(MDB2_Driver_Common $db)
 	{
 		$this->db = $db;
+		$this->photos->setDatabase($db);
 	}
 
 	// }}}

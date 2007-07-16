@@ -292,42 +292,24 @@ class PinholePhoto extends SwatDBDataObject
 
 	public function createFromFile($file, $original_filename)
 	{
-		static $dimensions;
+		//define('SWATDB_DEBUG', true);
 
 		if (!file_exists($file))
 			throw new SwatFileNotFoundException(null, 0, $file);
+
+		$this->db->beginTransaction();
 
 		$filename = $this->getFilename();
 
 		$this->original_filename = $original_filename;
 		$this->upload_date = new SwatDate();
-		//$this->meta_data = $this->getMetaDataFromFile($file);
 		$this->serialized_exif = serialize(exif_read_data($file));
+		$this->save();
 
-		if ($dimensions === null)
-			$dimensions = SwatDB::query($this->db,
-				'select * from PinholeDimension',
-				'PinholeDimensionWrapper');
+		$this->saveMetaDataFromFile($file);
+		$this->saveDimensionsFromFile($file);
 
-		$transformer = Image_Transform::factory('Imagick2');
-		if (PEAR::isError($transformer))
-			throw new AdminException($transformer);
-
-		$transformer->load($file);
-
-		foreach ($dimensions as $dimension) {
-			$transformed = $this->processImage($transformer, $dimension);
-
-			$dimension_binding = new PinholeDimensionBinding();
-			$dimension_binding->photo = $this;
-			$dimension_binding->dimension = $dimension;
-			$dimension_binding->width = $transformed->new_x;
-			$dimension_binding->height = $transformed->new_y;
-			$dimension_binding->save();
-
-			$transformed->save($dimension_binding->getPath(),
-				false, $this->getCompressionQuality());
-		}
+		$this->db->commit();
 	}
 
 	// }}}
@@ -406,7 +388,7 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
-	// {{{ protected function getMetaDataFromFile()
+	// {{{ protected function saveMetaDataFromFile()
 
 	/**
 	 * Get the meta data from a photo
@@ -414,12 +396,12 @@ class PinholePhoto extends SwatDBDataObject
 	 * @param string $filename 
 	 * @return array An array of PinholeMetaData dataobjects 
 	 */
-	protected function getMetaDataFromFile($filename)
+	protected function saveMetaDataFromFile($filename)
 	{
 		exec("exiftool -t $filename", $tag_names);
 		exec("exiftool -t -s $filename", $values);
 
-		$meta_data = SwatDB::queryColumn($this->db,
+		$meta_data = SwatDB::getOptionArray($this->db,
 			'PinholeMetaData', 'shortname', 'id');
 
 		for ($i = 0; $i < count($tag_names); $i++) {
@@ -441,13 +423,59 @@ class PinholePhoto extends SwatDBDataObject
 						'title' => $title),
 					'id');
 			} else {
-				$id = array_search($meta_data, $shortname);
+				$id = array_search($shortname, $meta_data);
 			}
 
-			SwatDB::insertRow($this->db, 'PinholePhotoMetaData',
-				array('photo', 'meta_data', 'text:value'),
-				array('photo' => $this->id, 'meta_data' => $id,
+			SwatDB::insertRow($this->db, 'PinholePhotoMetaDataBinding',
+				array('integer:photo',
+					'integer:meta_data',
+					'text:value'),
+				array('photo' => $this->id,
+					'meta_data' => $id,
 					'value' => $value));
+		}
+	}
+
+	// }}}
+	// {{{ protected function saveDimensionsFromFile()
+
+	protected function saveDimensionsFromFile($file)
+	{
+		static $dimensions;
+
+		if ($dimensions === null)
+			$dimensions = SwatDB::query($this->db,
+				'select * from PinholeDimension',
+				'PinholeDimensionWrapper');
+
+		$transformer = Image_Transform::factory('Imagick2');
+		if (PEAR::isError($transformer))
+			throw new AdminException($transformer);
+
+		foreach ($dimensions as $dimension) {
+			// TODO: I don't think we want to load the file for
+			// every dimension, but if I put it outside the loop,
+			// the variable looses its file resource after the
+			// first resize has taken place. (nick)
+			$transformer->load($file);
+			$transformed = $this->processImage($transformer, $dimension);
+
+			SwatDB::insertRow($this->db, 'PinholePhotoDimensionBinding',
+				array('integer:photo',
+					'integer:dimension',
+					'integer:width',
+					'integer:height'),
+				array('photo' => $this->id,
+					'dimension' => $dimension->id,
+					'width' => $transformed->new_x,
+					'height' => $transformed->new_y));
+
+			$dimension_binding = new PinholePhotoDimensionBinding();
+			$dimension_binding->photo = $this;
+			$dimension_binding->dimension = $dimension;
+
+			$transformed->save($dimension_binding->getPath(),
+				false, $this->getCompressionQuality());
 		}
 	}
 
@@ -504,14 +532,14 @@ class PinholePhoto extends SwatDBDataObject
 	// loader methods
 	// {{{ protected function loadTags()
 
-/*	protected function loadTags()
+	protected function loadTags()
 	{
 		$sql = sprintf('select * from PinholeTag where id in (
 			select tag from PinholePhotoTagBinding where photo = %s)',
 			$this->db->quote($this->id, 'integer'));
 
 		return SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
-	}*/
+	}
 
 	// }}}
 	// {{{ protected function loadDimensions()

@@ -254,6 +254,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 *
 	 * @param string $data the data used to load this tag from the database.
 	 *
+	 * @return boolean true if this tag was loaded and false if this tag was
+	 *                  not loaded.
+	 *
 	 * @see PinholeAbstractTag::parse()
 	 */
 	public function load($data)

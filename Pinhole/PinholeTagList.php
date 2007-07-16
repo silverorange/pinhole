@@ -7,6 +7,7 @@ require_once 'SwatDB/SwatDBRange.php';
 require_once 'SwatDB/SwatDBRecordable.php';
 require_once 'Swat/exceptions/SwatInvalidClassException.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/PinholeTagFactory.php';
 
 /**
@@ -57,6 +58,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private $db;
 
 	// }}}
+	// {{{ public function __construct()
 
 	/**
 	 * Creates a new tag list
@@ -67,9 +69,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *                                 by '/' characters that are added to this
 	 *                                 list when the list is created. Duplicate
 	 *                                 tag strings are ignored.
-	 *
-	 * @todo Use a more efficient algorithm for loading multiple tags from the
-	 *       database.
 	 */
 	public function __construct(MDB2_Driver_Common $db, $tag_list_string = null)
 	{
@@ -78,15 +77,36 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if (is_string($tag_list_string)) {
 			$tag_strings = explode('/', $tag_list_string);
 			$tag_strings = array_unique($tag_strings);
+
+			// get all simple tag strings
+			$simple_tag_strings = preg_grep('/^[A-Za-z0-9]+$/', $tag_strings);
+			$quoted_tag_strings =
+				$db->implodeArray($simple_tag_strings, 'text');
+
+			// load all simple tags in one query
+			$sql = sprintf('select * from PinholeTag where shortname in (%s)',
+				$quoted_tag_strings);
+
+			$tag_data_objects =
+				SwatDB::query($db, $sql, 'PinholeTagDataObjectWrapper');
+
 			foreach ($tag_strings as $tag_string) {
-				$tag = PinholeTagFactory::get($tag_string, $db);
-				if ($tag) {
+				// check if we've already loaded a simple tag for this string
+				$data_object = $tag_data_objects->getByIndex($tag_string);
+				if ($data_object === null) {
+					$tag = PinholeTagFactory::get($tag_string, $db);
+					if ($tag !== false) {
+						$this->add($tag);
+					}
+				} else {
+					$tag = new PinholeTag($data_object);
 					$this->add($tag);
 				}
 			}
 		}
 	}
 
+	// }}}
 	// {{{ public function __tostring()
 
 	/**

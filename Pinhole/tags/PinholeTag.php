@@ -130,8 +130,8 @@ class PinholeTag extends PinholeAbstractTag
 	/**
 	 * Gets the title of this tag
 	 *
-	 * @return string the title of this tag. This returns this tag's title
-	 *                 property.
+	 * @return string the title of this tag. This returns this tag's
+	 *                 <i>title</i> property.
 	 */
 	public function getTitle()
 	{
@@ -202,6 +202,7 @@ class PinholeTag extends PinholeAbstractTag
 		// 2. add photo to 'applies' cache if binding exists
 		// 3. return value
 	}
+
 	// {{{ public function setDatabase()
 
 	/**

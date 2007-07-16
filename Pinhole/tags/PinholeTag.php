@@ -217,28 +217,35 @@ class PinholeTag extends PinholeAbstractTag
 	 *
 	 * @return boolean true if this tag applies to the given photo and false if
 	 *                  this tag does not apply to the given photo. If the given
-	 *                  photo does not have a database id or this tag does not
-	 *                  have an id, false is returned.
+	 *                  photo does not have a database id, false is returned.
 	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
 		$applies = false;
 
-		if ($photo->id !== null && $this->id !== null) {
-			$sql = sprintf('select * from PinholePhoto
-				inner join PinholePhotoTagBinding on
-					PinholePhoto.id = PinholePhotoTagBinding.photo and
-					PinholePhotoTagBinding.tag = %s
-				where id = %s',
-				$this->db->quote($this->id, 'integer'),
-				$this->db->quote($photo->id, 'integer'));
+		// make sure photo has an id
+		if ($photo->id !== null) {
+			if ($this->photos->getByIndex($photo->id) === null &&
+				$this->id !== null) {
+				// not in photos cache, check in database binding
+				$sql = sprintf('select * from PinholePhoto
+					inner join PinholePhotoTagBinding on
+						PinholePhoto.id = PinholePhotoTagBinding.photo and
+						PinholePhotoTagBinding.tag = %s
+					where id = %s',
+					$this->db->quote($this->id, 'integer'),
+					$this->db->quote($photo->id, 'integer'));
 
-			$photo = SwatDB::query($this->db, $sql,
-				'PinholePhotoWrapper')->getFirst();
+				$photo = SwatDB::query($this->db, $sql,
+					'PinholePhotoWrapper')->getFirst();
 
-			if ($photo !== null) {
-				$applies = true;
-				$this->photos->add($photo);
+				if ($photo !== null) {
+					$applies = true;
+					$this->photos->add($photo);
+				}
+			} else {
+				// in photos cache so applies
+				$valid = true;
 			}
 		}
 

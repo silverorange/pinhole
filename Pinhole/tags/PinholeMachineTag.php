@@ -72,6 +72,8 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	 */
 	public function __construct(PinholeMachineTagDataObject $data_object = null)
 	{
+		parent::__construct();
+
 		if ($data_object === null) {
 			$this->data_object = new PinholeMachineTagDataObject();
 			$this->createdate  = new SwatDate();

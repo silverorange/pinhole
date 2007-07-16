@@ -4,6 +4,7 @@ require_once 'Pinhole/tags/PinholeAbstractTag.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
 require_once 'Swat/SwatDate.php';
 require_once 'SwatDB/SwatDB.php';
+require_once 'SwatDB/SwatDBTransaction.php';
 
 /**
  * Basic user-space tag
@@ -76,6 +77,8 @@ class PinholeTag extends PinholeAbstractTag
 	 */
 	public function __construct(PinholeTagDataObject $data_object = null)
 	{
+		parent::__construct();
+
 		if ($data_object === null) {
 			$this->data_object = new PinholeTagDataObject();
 			$this->createdate  = new SwatDate();
@@ -169,21 +172,42 @@ class PinholeTag extends PinholeAbstractTag
 	}
 
 	// }}}
+	// {{{ public function applyToPhoto()
 
 	/**
 	 * Applies this tag to a photo
 	 *
-	 * @param PinholePhoto $photo the photo this tag is to be applied to.
+	 * Any unsaved changes to the tag and photo are saved before this tag is
+	 * applied to the photo.
 	 *
-	 * @todo implement this method.
+	 * @param PinholePhoto $photo the photo this tag is to be applied to.
 	 */
 	public function applyToPhoto(PinholePhoto $photo)
 	{
-		// TODO
-		// 1. save this tag
-		// 2. update or insert photo tag binding
-		// 3. add photo to 'applies' cache
+		$transaction = new SwatDBTransaction($this->db);
+		try {
+			// save photo and tag
+			$photo->save();
+			$this->save();
+
+			// save binding
+			$sql = sprintf(
+				'insert into PhotoTagBinding (photo, tag) values (%s, %s)',
+				$this->db->quote($photo->id, 'integer'),
+				$this->db->quote($this->id, 'integer'));
+
+			SwatDB::exec($this->db, $sql);
+
+			$transaction->commit();
+		} catch (Exception $e) {
+			$transaction->rollback();
+			throw $e;
+		}
+
+		$this->photos->add($photo);
 	}
+
+	// }}}
 
 	/**
 	 * Checks whether or not this tag applies to a given photo
@@ -191,16 +215,33 @@ class PinholeTag extends PinholeAbstractTag
 	 * @param PinholePhoto the photo to check.
 	 *
 	 * @return boolean true if this tag applies to the given photo and false if
-	 *                  this tag does not apply to the given photo.
-	 *
-	 * @todo implement this method.
+	 *                  this tag does not apply to the given photo. If the given
+	 *                  photo does not have a database id or this tag does not
+	 *                  have an id, false is returned.
 	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
-		// TODO
-		// 1. check if photo tag binding exists
-		// 2. add photo to 'applies' cache if binding exists
-		// 3. return value
+		$applies = false;
+
+		if ($photo->id !== null && $this->id !== null) {
+			$sql = sprintf('select * from PinholePhoto
+				inner join PinholeTagBinding on
+					PinholePhoto.id = PinholeTagBinding.id and
+					PinholeTagBinding.tag = %s
+				where id = %s',
+				$this->db->quote($this->id, 'integer'),
+				$this->db->quote($photo->id, 'integer'));
+
+			$photo = SwatDB::query($this->db, $sql,
+				'PinholePhotoWrapper')->getFirst();
+
+			if ($photo !== null) {
+				$applies = true;
+				$this->photos->add($photo);
+			}
+		}
+
+		return $applies;
 	}
 
 	// {{{ public function setDatabase()

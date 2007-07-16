@@ -168,9 +168,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getWhereClause()
 	{
+		$operator = 'and';
+
 		$where_clause = '1 = 1';
 		foreach ($this as $tag)
-			$where_clause.= ' and '.$tag->getWhereClause();
+			$where_clause.= ' '.$operator.' ('.$tag->getWhereClause().')';
 
 		return $where_clause;
 	}

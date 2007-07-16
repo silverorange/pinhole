@@ -227,7 +227,7 @@ class PinholeTag extends PinholeAbstractTag
 		if ($photo->id !== null && $this->id !== null) {
 			$sql = sprintf('select * from PinholePhoto
 				inner join PinholePhotoTagBinding on
-					PinholePhoto.id = PinholePhotoTagBinding.id and
+					PinholePhoto.id = PinholePhotoTagBinding.photo and
 					PinholePhotoTagBinding.tag = %s
 				where id = %s',
 				$this->db->quote($this->id, 'integer'),

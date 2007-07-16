@@ -191,8 +191,8 @@ class PinholeTag extends PinholeAbstractTag
 			$this->save();
 
 			// save binding
-			$sql = sprintf(
-				'insert into PhotoTagBinding (photo, tag) values (%s, %s)',
+			$sql = sprintf('insert into PhotoPhotoTagBinding (photo, tag)
+				values (%s, %s)',
 				$this->db->quote($photo->id, 'integer'),
 				$this->db->quote($this->id, 'integer'));
 
@@ -226,9 +226,9 @@ class PinholeTag extends PinholeAbstractTag
 
 		if ($photo->id !== null && $this->id !== null) {
 			$sql = sprintf('select * from PinholePhoto
-				inner join PinholeTagBinding on
-					PinholePhoto.id = PinholeTagBinding.id and
-					PinholeTagBinding.tag = %s
+				inner join PinholePhotoTagBinding on
+					PinholePhoto.id = PinholePhotoTagBinding.id and
+					PinholePhotoTagBinding.tag = %s
 				where id = %s',
 				$this->db->quote($this->id, 'integer'),
 				$this->db->quote($photo->id, 'integer'));

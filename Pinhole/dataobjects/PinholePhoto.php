@@ -474,7 +474,7 @@ class PinholePhoto extends SwatDBDataObject
 			$dimension_binding->photo = $this;
 			$dimension_binding->dimension = $dimension;
 
-			$transformed->save($dimension_binding->getPath(),
+			$transformed->save($dimension_binding->getPath('../'),
 				false, $this->getCompressionQuality());
 		}
 	}

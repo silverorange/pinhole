@@ -43,8 +43,7 @@ class PinholeTagIntersection
 		$sql = sprintf('select * from PinholeTag where id = %s',
 			$this->db->quote($id, 'integer'));
 
-		$class_map = SwatDBClassMap::instance();
-		$wrapper = $class_map->resolveClass('PinholeTagWrapper');
+		$wrapper = SwatDBClassMap::get('PinholeTagWrapper');
 
 		$tags = SwatDB::query($this->db, $sql, $wrapper);
 		$tag = $tags->getFirst();
@@ -179,10 +178,7 @@ class PinholeTagIntersection
 			$this->getTagWhereClause(),
 			$this->getOrderByClause());
 
-		$class_map = SwatDBClassMap::instance();
-			
-		$photo_class =
-			$class_map->resolveClass('PinholePhotoWrapper');
+		$photo_class = SwatDBClassMap::get('PinholePhotoWrapper');
 
 		$rs = SwatDB::query($this->db, $sql, null);
 

@@ -67,9 +67,9 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 		parent::init();
 
 		$this->registerInternalProperty('dimension',
-			$this->class_map->resolveClass('PinholeDimension'));
+			SwatDBClassMap::get('PinholeDimension'));
 		$this->registerInternalProperty('photo',
-			$this->class_map->resolveClass('PinholePhoto'));
+			SwatDBClassMap::get('PinholePhoto'));
 	}
 
 	// }}}

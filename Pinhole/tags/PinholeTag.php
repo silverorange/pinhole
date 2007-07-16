@@ -208,6 +208,7 @@ class PinholeTag extends PinholeAbstractTag
 	}
 
 	// }}}
+	// {{{ public function appliesToPhoto()
 
 	/**
 	 * Checks whether or not this tag applies to a given photo
@@ -244,6 +245,7 @@ class PinholeTag extends PinholeAbstractTag
 		return $applies;
 	}
 
+	// }}}
 	// {{{ public function setDatabase()
 
 	/**

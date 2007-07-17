@@ -12,6 +12,7 @@ require_once 'Pinhole/tags/PinholeIterableTag.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeDateTag extends PinholeAbstractMachineTag
+	implements PinholeIterableTag
 {
 	const NAMESPACE = 'date';
 
@@ -35,6 +36,108 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		}
 
 		return $valid;
+	}
+
+	public function next()
+	{
+		$returned_tag = null;
+
+		switch ($this->name) {
+		case 'date':
+			$date = new SwatDate($this->value);
+			$value = $date->getNextDay()->format('%Y-%M-%D');
+			break;
+
+		case 'week':
+			if (ctype_digit($this->value)) {
+				$value = ($this->value < 52) ? $this->value + 1 : null;
+			} else {
+				$date = new SwatDate($this->value);
+				$start_date = new SwatDate(Date_Calc::beginOfNextWeek(
+					$date->getDay(), $date->getMonth(), $date->getYear()));
+
+				$value = $start_date->format('%Y-%M-%D');
+			}
+
+			break;
+
+		case 'year':
+			$value = $this->value + 1;
+			break;
+
+		case 'month':
+			$value = ($this->value < 12) ? $this->value + 1 : null;
+			break;
+
+		case 'day':
+			$value = ($this->value < 31) ? $this->value + 1 : null;
+			break;
+
+		default:
+			$value = null;
+			break;
+		}
+
+		if ($value !== null) {
+			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
+			$tag = new PinholeDateTag();
+			if ($tag->parse($string)) {
+				$returned_tag = $tag;
+			}
+		}
+
+		return $returned_tag;
+	}
+
+	public function prev()
+	{
+		$returned_tag = null;
+
+		switch ($this->name) {
+		case 'date':
+			$date = new SwatDate($this->value);
+			$value = $date->getPrevDay()->format('%Y-%M-%D');
+			break;
+
+		case 'week':
+			if (ctype_digit($this->value)) {
+				$value = ($this->value > 1) ? $this->value - 1 : null;
+			} else {
+				$date = new SwatDate($this->value);
+				$start_date = new SwatDate(Date_Calc::beginOfPrevWeek(
+					$date->getDay(), $date->getMonth(), $date->getYear()));
+
+				$value = $start_date->format('%Y-%M-%D');
+			}
+
+			break;
+
+		case 'year':
+			$value = ($this->value > 0) ? $this->value - 1 : null;
+			break;
+
+		case 'month':
+			$value = ($this->value > 1) ? $this->value - 1 : null;
+			break;
+
+		case 'day':
+			$value = ($this->value > 1) ? $this->value - 1 : null;
+			break;
+
+		default:
+			$value = null;
+			break;
+		}
+
+		if ($value !== null) {
+			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
+			$tag = new PinholeDateTag();
+			if ($tag->parse($string)) {
+				$returned_tag = $tag;
+			}
+		}
+
+		return $returned_tag;
 	}
 
 	protected function getNamespace()
@@ -79,19 +182,19 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 
 			break;
 
-		case 'year' :
+		case 'year':
 			$date = new SwatDate();
 			$date->setYear($this->value);
 			$title = $date->format('%Y');
 			break;
 
-		case 'month' :
+		case 'month':
 			$date = new SwatDate();
 			$date->setMonth($this->value);
 			$title = $date->format('%B');
 			break;
 
-		case 'day' :
+		case 'day':
 			$date = new SwatDate();
 			$date->setDay($this->value);
 			$title = $date->format('%d');
@@ -271,7 +374,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 
 			break;
 
-		case 'year' :
+		case 'year':
 			$year = intval($value);
 			$date = new SwatDate();
 			$valid = ($year > 0 && $year <= $date->getYear());

@@ -26,10 +26,15 @@ require_once 'Pinhole/tags/PinholeIterableTag.php';
 class PinholeDateTag extends PinholeAbstractMachineTag
 	implements PinholeIterableTag
 {
+	// {{{ class constants
+
 	/**
 	 * The namespace of the date machine tag
 	 */
 	const NAMESPACE = 'date';
+
+	// }}}
+	// {{{ private propeties
 
 	/**
 	 * Name of this date tag
@@ -46,6 +51,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	 * @var string
 	 */
 	private $value;
+
+	// }}}
+	// {{{ public function parse()
 
 	/**
 	 * Parses this date tag from a tag string
@@ -75,6 +83,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 
 		return $valid;
 	}
+
+	// }}}
+	// {{{ public function next()
 
 	/**
 	 * Gets the next tag after this tag
@@ -133,6 +144,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $returned_tag;
 	}
 
+	// }}}
+	// {{{ public function prev()
+
 	/**
 	 * Gets the previous tag before this tag
 	 *
@@ -190,6 +204,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $returned_tag;
 	}
 
+	// }}}
+	// {{{ protected function getNamespace()
+
 	/**
 	 * Gets the namespace of this date tag
 	 *
@@ -200,11 +217,11 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return self::NAMESPACE;
 	}
 
+	// }}}
+	// {{{ protected function getName()
+
 	/**
 	 * Gets the name of this date tag
-	 *
-	 * To set the name of this date tag, use the
-	 * {@link PinholeDateTag::parse()} method.
 	 *
 	 * @return string the name of this date tag.
 	 */
@@ -213,11 +230,12 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $this->name;
 	}
 
+	// }}}
+	// {{{ protected function getValue()
+
 	/**
 	 * Gets the value of this date tag
 	 *
-	 * To set the value of this date tag, use the
-	 * {@link PinholeDateTag::parse()} method.
 	 *
 	 * @return string the value of this date tag.
 	 */
@@ -225,6 +243,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	{
 		return $this->value;
 	}
+
+	// }}}
+	// {{{ public function getTitle()
 
 	/**
 	 * Gets the title of this date tag
@@ -283,6 +304,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 
 		return $title;
 	}
+
+	// }}}
+	// {{{ public function getWhereClause()
 
 	/**
 	 * Gets the SQL where clause for this date tag
@@ -355,6 +379,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $where;
 	}
 
+	// }}}
+	// {{{ public function appliesToPhoto()
+
 	/**
 	 * Checks whether or not this date tag applies to a given photo
 	 *
@@ -426,6 +453,9 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $applies;
 	}
 
+	// }}}
+	// {{{ private function isValid()
+
 	/**
 	 * Whether or not a name-value pair is valid for this date tag
 	 *
@@ -487,6 +517,8 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 
 		return $valid;
 	}
+
+	// }}}
 }
 
 ?>

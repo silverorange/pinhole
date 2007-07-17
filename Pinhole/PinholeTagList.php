@@ -371,6 +371,53 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function replace()
+
+	/**
+	 * Replaces a tag in this tag list
+	 *
+	 * @param string|PinholeAbstractTag $tag either a tag string or a tag
+	 *                                        object representing the tag to
+	 *                                        replace.
+	 * @param PinholeAbstractTag $replacement the replacement tag.
+	 *
+	 * @return PinholeAbstractTag the replacedtag object or null if this list
+	 *                             does not contain the given tag.
+	 *
+	 * @throws SwatInvalidClassException if the <i>$tag</i> parameter is
+	 *                                    neither a string nor a
+	 *                                    PinholeAbstractTag.
+	 */
+	public function replace($tag, PinholeAbstractTag $replacement)
+	{
+		$replaced = null;
+		if ($tag instanceof PinholeAbstractTag)
+			$tag = $tag->__toString();
+
+		if (!is_string($tag)) {
+			throw new SwatInvalidClassException(
+				'$tag must be either a string or a PinholeAbstractTag',
+				0, $tag);
+		}
+
+		if ($this->contains($replacement)) {
+			$replaced = $this->remove($tag);
+		} else {
+			if ($this->contains($tag)) {
+				$replaced = $this->get($tag);
+				unset($this->tags[$tag]);
+				$index = array_search($tag, $this->tag_keys);
+				array_splice($this->tag_keys, $index, 1,
+					array($replacement->__toString()));
+
+				$this->tags[$replacement->__toString()] = $replacement;
+			}
+		}
+
+		return $replaced;
+	}
+
+	// }}}
 	// {{{ public function getByType()
 
 	/**

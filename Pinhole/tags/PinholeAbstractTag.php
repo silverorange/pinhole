@@ -54,7 +54,8 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 */
 	public function __construct()
 	{
-		$this->photos = new PinholePhotoWrapper();
+		$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
+		$this->photos = new $wrapper();
 	}
 
 	// }}}

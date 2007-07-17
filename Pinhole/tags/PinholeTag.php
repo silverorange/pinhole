@@ -236,8 +236,8 @@ class PinholeTag extends PinholeAbstractTag
 					$this->db->quote($this->id, 'integer'),
 					$this->db->quote($photo->id, 'integer'));
 
-				$photo = SwatDB::query($this->db, $sql,
-					'PinholePhotoWrapper')->getFirst();
+				$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
+				$photo = SwatDB::query($this->db, $sql, $wrapper)->getFirst();
 
 				if ($photo !== null) {
 					$applies = true;

@@ -2,6 +2,7 @@
 
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
+require_once 'Pinhole/tags/PinholeIterableTag.php';
 
 /**
  * @package   Pinhole
@@ -9,6 +10,7 @@ require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeDateTag extends PinholeAbstractMachineTag
+	implements PinholeIterableTag
 {
 	const NAMESPACE = 'date';
 

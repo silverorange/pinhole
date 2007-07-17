@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Admin/pages/AdminPage.php';
-require_once 'Pinhole/admin/components/Photo/include/PinholePhotoUploader.php';
+require_once 'include/PinholePhotoUploader.php';
 
 /**
  * Page for uploading photos

@@ -3,7 +3,6 @@
 require_once 'Pinhole/tags/PinholeAbstractTag.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
 require_once 'Swat/SwatDate.php';
-require_once 'SwatDB/SwatDB.php';
 require_once 'SwatDB/SwatDBTransaction.php';
 
 /**

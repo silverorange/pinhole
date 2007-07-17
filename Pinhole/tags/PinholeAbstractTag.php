@@ -1,8 +1,11 @@
 <?php
 
+require_once 'MDB2.php';
+require_once 'SwatDB/SwatDB.php';
+require_once 'SwatDB/SwatDBClassMap.php';
+require_once 'SwatDB/SwatDBRange.php';
 require_once 'SwatDB/SwatDBRecordable.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**
  * Base class for tags

@@ -1,7 +1,9 @@
 <?php
 
-require_once 'Pinhole/tags/PinholeAbstractTag.php';
+require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
 require_once 'Pinhole/dataobjects/PinholeMachineTagDataObject.php';
+require_once 'Swat/SwatDate.php';
+require_once 'SwatDB/SwatDBTransaction.php';
 
 /**
  * Generic machine tag

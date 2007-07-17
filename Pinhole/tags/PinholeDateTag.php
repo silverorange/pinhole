@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Date.php';
+require_once 'Date/Calc.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';

@@ -9,7 +9,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoMetaData extends SwatDBDataObject
+class PinholePhotoMetaDataBinding extends SwatDBDataObject
 {
 	// {{{ public properties
 
@@ -53,8 +53,8 @@ class PinholePhotoMetaData extends SwatDBDataObject
 		$this->registerInternalProperty('photo',
 			$this->class_map->resolveClass('PinholePhoto'));
 
-		$this->registerInternalProperty('metadata',
-			$this->class_map->resolveClass('PinholeMetaData'));
+		//$this->registerInternalProperty('metadata',
+		//	$this->class_map->resolveClass('PinholeMetaData'));
 	}
 
 	// }}}

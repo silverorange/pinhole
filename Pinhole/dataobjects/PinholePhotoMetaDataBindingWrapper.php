@@ -3,7 +3,7 @@
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBRecordsetWrapper.php';
 require_once 'PinholePhoto.php';
-require_once 'PinholePhotoMetaData.php';
+require_once 'PinholePhotoMetaDataBinding.php';
 
 /**
  * A recordset wrapper class for PinholePhoto objects
@@ -13,7 +13,7 @@ require_once 'PinholePhotoMetaData.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @see       PinholePhoto
  */
-class PinholePhotoMetaDataWrapper extends SwatDBRecordsetWrapper
+class PinholePhotoMetaDataBindingWrapper extends SwatDBRecordsetWrapper
 {
 	// {{{ public static function loadSetFromDB()
 
@@ -39,7 +39,8 @@ class PinholePhotoMetaDataWrapper extends SwatDBRecordsetWrapper
 			$db->quote(true, 'boolean'),
 			$db->quote($photo_id, 'integer'));
 
-		$meta_data = SwatDB::query($db, $sql, 'PinholePhotoMetaDataWrapper');
+		$meta_data = SwatDB::query($db, $sql,
+			'PinholePhotoMetaDataBindingWrapper');
 
 		return $meta_data;
 	}
@@ -51,7 +52,8 @@ class PinholePhotoMetaDataWrapper extends SwatDBRecordsetWrapper
 	{
 		parent::init();
 
-		$this->row_wrapper_class = SwatDBClassMap::get('PinholePhotoMetaData');
+		$this->row_wrapper_class =
+			SwatDBClassMap::get('PinholePhotoMetaDataBinding');
 	}
 
 	// }}}

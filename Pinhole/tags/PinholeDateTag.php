@@ -81,7 +81,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		if ($value !== null) {
 			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
 			$tag = new PinholeDateTag();
-			if ($tag->parse($string, $this->db)) {
+			if ($tag->parse($string, $this->db) !== false) {
 				$returned_tag = $tag;
 			}
 		}
@@ -132,7 +132,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		if ($value !== null) {
 			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
 			$tag = new PinholeDateTag();
-			if ($tag->parse($string, $this->db)) {
+			if ($tag->parse($string, $this->db) !== false) {
 				$returned_tag = $tag;
 			}
 		}
@@ -354,7 +354,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		case 'date':
 			$matches = array();
 			if (preg_match($iso_date_expression, $value, $matches) == 1)
-				$valid = checkdate($matches[3], $matches[2], $matches[1]);
+				$valid = checkdate($matches[2], $matches[3], $matches[1]);
 			else
 				$valid = false;
 
@@ -367,7 +367,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			} else {
 				$matches = array();
 				if (preg_match($iso_date_expression, $value, $matches) == 1)
-					$valid = checkdate($matches[3], $matches[2], $matches[1]);
+					$valid = checkdate($matches[2], $matches[3], $matches[1]);
 				else
 					$valid = false;
 			}

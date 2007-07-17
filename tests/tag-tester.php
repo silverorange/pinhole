@@ -29,6 +29,27 @@ function test_tag($string)
 	}
 }
 
+function test_tag_list($db, $string)
+{
+	$tag_list = new PinholeTagList($db, $string);
+
+	echo "iterating list:\n";
+	foreach ($tag_list as $key => $tag) {
+		echo '=> ', $key, ' => ', $tag->getTitle(), "\n";
+	}
+
+	echo "\n", $tag_list->getPhotoCount(), " photos in tag list:\n";
+
+	foreach ($tag_list->getPhotos() as $photo) {
+		echo '=> ', $photo->id, ' ';
+		foreach ($tag_list as $tag) {
+			echo ($tag->appliesToPhoto($photo)) ? 'y ' : 'n ';
+		}
+		echo "\n";
+	}
+	echo "\n";
+}
+
 // Tag tests
 
 $start_time = microtime(true);
@@ -46,20 +67,7 @@ require_once 'Pinhole/PinholeTagList.php';
 
 echo "\nTagList Tests:\n\n";
 
-$tag_list = new PinholeTagList('christmas2001/date.year=2007/date.month=4');
-$tag_list->setDatabase($connection);
-
-echo "iterating list:\n";
-foreach ($tag_list as $key => $tag) {
-	echo '=> ', $key, ' => ', $tag->getTitle(), "\n";
-}
-
-echo "\n", $tag_list->getPhotoCount(), " photos in tag list:\n=> ";
-
-foreach ($tag_list->getPhotos() as $photo) {
-	echo $photo->id, ' ';
-}
-echo "\n";
+test_tag_list($connection, 'christmas2001/date.year=2007/daniel/date.month=4');
 
 $end_time = microtime(true);
 echo "\ntotal time: ", ($end_time - $start_time) * 1000, "ms\n";

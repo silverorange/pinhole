@@ -85,166 +85,6 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	}
 
 	// }}}
-	// {{{ public function next()
-
-	/**
-	 * Gets the next tag after this tag
-	 *
-	 * @return PinholeDateTag the next tag after this tag or null if there is
-	 *                         no next tag.
-	 */
-	public function next()
-	{
-		$returned_tag = null;
-
-		switch ($this->name) {
-		case 'date':
-			$date = new SwatDate($this->value);
-			$value = $date->getNextDay()->format('%Y-%m-%d');
-			break;
-
-		case 'week':
-			if (ctype_digit($this->value)) {
-				$value = ($this->value < 52) ? $this->value + 1 : null;
-			} else {
-				$date = new SwatDate($this->value);
-				$start_date = new SwatDate(Date_Calc::beginOfNextWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
-
-				$value = $start_date->format('%Y-%m-%d');
-			}
-
-			break;
-
-		case 'year':
-			$value = $this->value + 1;
-			break;
-
-		case 'month':
-			$value = ($this->value < 12) ? $this->value + 1 : null;
-			break;
-
-		case 'day':
-			$value = ($this->value < 31) ? $this->value + 1 : null;
-			break;
-
-		default:
-			$value = null;
-			break;
-		}
-
-		if ($value !== null) {
-			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
-			$tag = new PinholeDateTag();
-			if ($tag->parse($string, $this->db) !== false) {
-				$returned_tag = $tag;
-			}
-		}
-
-		return $returned_tag;
-	}
-
-	// }}}
-	// {{{ public function prev()
-
-	/**
-	 * Gets the previous tag before this tag
-	 *
-	 * @return PinholeDateTag the previous tag before this tag or null if there
-	 *                         is no previous tag.
-	 */
-	public function prev()
-	{
-		$returned_tag = null;
-
-		switch ($this->name) {
-		case 'date':
-			$date = new SwatDate($this->value);
-			$value = $date->getPrevDay()->format('%Y-%m-%d');
-			break;
-
-		case 'week':
-			if (ctype_digit($this->value)) {
-				$value = ($this->value > 1) ? $this->value - 1 : null;
-			} else {
-				$date = new SwatDate($this->value);
-				$start_date = new SwatDate(Date_Calc::beginOfPrevWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
-
-				$value = $start_date->format('%Y-%m-%d');
-			}
-
-			break;
-
-		case 'year':
-			$value = ($this->value > 0) ? $this->value - 1 : null;
-			break;
-
-		case 'month':
-			$value = ($this->value > 1) ? $this->value - 1 : null;
-			break;
-
-		case 'day':
-			$value = ($this->value > 1) ? $this->value - 1 : null;
-			break;
-
-		default:
-			$value = null;
-			break;
-		}
-
-		if ($value !== null) {
-			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
-			$tag = new PinholeDateTag();
-			if ($tag->parse($string, $this->db) !== false) {
-				$returned_tag = $tag;
-			}
-		}
-
-		return $returned_tag;
-	}
-
-	// }}}
-	// {{{ protected function getNamespace()
-
-	/**
-	 * Gets the namespace of this date tag
-	 *
-	 * @return string the namespace of this date tag.
-	 */
-	protected function getNamespace()
-	{
-		return self::NAMESPACE;
-	}
-
-	// }}}
-	// {{{ protected function getName()
-
-	/**
-	 * Gets the name of this date tag
-	 *
-	 * @return string the name of this date tag.
-	 */
-	protected function getName()
-	{
-		return $this->name;
-	}
-
-	// }}}
-	// {{{ protected function getValue()
-
-	/**
-	 * Gets the value of this date tag
-	 *
-	 *
-	 * @return string the value of this date tag.
-	 */
-	protected function getValue()
-	{
-		return $this->value;
-	}
-
-	// }}}
 	// {{{ public function getTitle()
 
 	/**
@@ -451,6 +291,166 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		}
 
 		return $applies;
+	}
+
+	// }}}
+	// {{{ public function next()
+
+	/**
+	 * Gets the next tag after this tag
+	 *
+	 * @return PinholeDateTag the next tag after this tag or null if there is
+	 *                         no next tag.
+	 */
+	public function next()
+	{
+		$returned_tag = null;
+
+		switch ($this->name) {
+		case 'date':
+			$date = new SwatDate($this->value);
+			$value = $date->getNextDay()->format('%Y-%m-%d');
+			break;
+
+		case 'week':
+			if (ctype_digit($this->value)) {
+				$value = ($this->value < 52) ? $this->value + 1 : null;
+			} else {
+				$date = new SwatDate($this->value);
+				$start_date = new SwatDate(Date_Calc::beginOfNextWeek(
+					$date->getDay(), $date->getMonth(), $date->getYear()));
+
+				$value = $start_date->format('%Y-%m-%d');
+			}
+
+			break;
+
+		case 'year':
+			$value = $this->value + 1;
+			break;
+
+		case 'month':
+			$value = ($this->value < 12) ? $this->value + 1 : null;
+			break;
+
+		case 'day':
+			$value = ($this->value < 31) ? $this->value + 1 : null;
+			break;
+
+		default:
+			$value = null;
+			break;
+		}
+
+		if ($value !== null) {
+			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
+			$tag = new PinholeDateTag();
+			if ($tag->parse($string, $this->db) !== false) {
+				$returned_tag = $tag;
+			}
+		}
+
+		return $returned_tag;
+	}
+
+	// }}}
+	// {{{ public function prev()
+
+	/**
+	 * Gets the previous tag before this tag
+	 *
+	 * @return PinholeDateTag the previous tag before this tag or null if there
+	 *                         is no previous tag.
+	 */
+	public function prev()
+	{
+		$returned_tag = null;
+
+		switch ($this->name) {
+		case 'date':
+			$date = new SwatDate($this->value);
+			$value = $date->getPrevDay()->format('%Y-%m-%d');
+			break;
+
+		case 'week':
+			if (ctype_digit($this->value)) {
+				$value = ($this->value > 1) ? $this->value - 1 : null;
+			} else {
+				$date = new SwatDate($this->value);
+				$start_date = new SwatDate(Date_Calc::beginOfPrevWeek(
+					$date->getDay(), $date->getMonth(), $date->getYear()));
+
+				$value = $start_date->format('%Y-%m-%d');
+			}
+
+			break;
+
+		case 'year':
+			$value = ($this->value > 0) ? $this->value - 1 : null;
+			break;
+
+		case 'month':
+			$value = ($this->value > 1) ? $this->value - 1 : null;
+			break;
+
+		case 'day':
+			$value = ($this->value > 1) ? $this->value - 1 : null;
+			break;
+
+		default:
+			$value = null;
+			break;
+		}
+
+		if ($value !== null) {
+			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
+			$tag = new PinholeDateTag();
+			if ($tag->parse($string, $this->db) !== false) {
+				$returned_tag = $tag;
+			}
+		}
+
+		return $returned_tag;
+	}
+
+	// }}}
+	// {{{ protected function getNamespace()
+
+	/**
+	 * Gets the namespace of this date tag
+	 *
+	 * @return string the namespace of this date tag.
+	 */
+	protected function getNamespace()
+	{
+		return self::NAMESPACE;
+	}
+
+	// }}}
+	// {{{ protected function getName()
+
+	/**
+	 * Gets the name of this date tag
+	 *
+	 * @return string the name of this date tag.
+	 */
+	protected function getName()
+	{
+		return $this->name;
+	}
+
+	// }}}
+	// {{{ protected function getValue()
+
+	/**
+	 * Gets the value of this date tag
+	 *
+	 *
+	 * @return string the value of this date tag.
+	 */
+	protected function getValue()
+	{
+		return $this->value;
 	}
 
 	// }}}

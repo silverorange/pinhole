@@ -160,21 +160,43 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	}
 
 	// }}}
+	// {{{ public function applyToPhoto()
 
 	/**
 	 * Applies this machine tag to a photo
 	 *
-	 * @param PinholePhoto $photo the photo this tag is to be applied to.
+	 * Any unsaved changes to the tag and photo are saved before this tag is
+	 * applied to the photo.
 	 *
-	 * @todo implement this method.
+	 * @param PinholePhoto $photo the photo this tag is to be applied to.
 	 */
 	public function applyToPhoto(PinholePhoto $photo)
 	{
-		// TODO
-		// 1. save this tag
-		// 2. update or insert photo tag binding
-		// 3. add photo to 'applies' cache
+		$transaction = new SwatDBTransaction($this->db);
+		try {
+			// save photo and tag
+			$photo->save();
+			$this->save();
+
+			// save binding
+			$sql = sprintf('insert into PhotoPhotoMachineTagBinding (photo, tag)
+				values (%s, %s)',
+				$this->db->quote($photo->id, 'integer'),
+				$this->db->quote($this->id, 'integer'));
+
+			SwatDB::exec($this->db, $sql);
+
+			$transaction->commit();
+		} catch (Exception $e) {
+			$transaction->rollback();
+			throw $e;
+		}
+
+		$this->photos->add($photo);
 	}
+
+	// }}}
+	// {{{ public function appliesToPhoto()
 
 	/**
 	 * Checks whether or not this machine tag applies to a given photo
@@ -182,18 +204,44 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	 * @param PinholePhoto the photo to check.
 	 *
 	 * @return boolean true if this tag applies to the given photo and false if
-	 *                  this tag does not apply to the given photo.
-	 *
-	 * @todo implement this method.
+	 *                  this tag does not apply to the given photo. If the given
+	 *                  photo does not have a database id, false is returned.
 	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
-		// TODO
-		// 1. check if photo tag binding exists
-		// 2. add photo to 'applies' cache if binding exists
-		// 3. return value
+		$applies = false;
+
+		// make sure photo has an id
+		if ($photo->id !== null) {
+			if ($this->photos->getByIndex($photo->id) === null &&
+				$this->id !== null) {
+				// not in photos cache, check in database binding
+				$sql = sprintf('select * from PinholePhoto
+					inner join PinholePhotoMachineTagBinding on
+						PinholePhoto.id =
+							PinholePhotoMachineTagBinding.photo and
+						PinholePhotoMachineTagBinding.tag = %s
+					where id = %s',
+					$this->db->quote($this->id, 'integer'),
+					$this->db->quote($photo->id, 'integer'));
+
+				$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
+				$photo = SwatDB::query($this->db, $sql, $wrapper)->getFirst();
+
+				if ($photo !== null) {
+					$applies = true;
+					$this->photos->add($photo);
+				}
+			} else {
+				// in photos cache so applies
+				$valid = true;
+			}
+		}
+
+		return $applies;
 	}
 
+	// }}}
 	// {{{ public function setDatabase()
 
 	/**

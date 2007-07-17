@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Date.php';
+require_once 'Swat/SwatDate.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
 require_once 'Pinhole/tags/PinholeIterableTag.php';
@@ -10,7 +12,6 @@ require_once 'Pinhole/tags/PinholeIterableTag.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeDateTag extends PinholeAbstractMachineTag
-	implements PinholeIterableTag
 {
 	const NAMESPACE = 'date';
 
@@ -109,6 +110,11 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		switch ($this->name) {
 		case 'date':
 			$date = new SwatDate($this->value);
+
+			// database content is always UTC
+			$date->clearTime();
+			$date->toUTC();
+
 			$where = sprintf('PinholePhoto.photo_date = %s',
 				$this->db->quote($date, 'date'));
 
@@ -136,6 +142,8 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			}
 
 			// database content is always UTC
+			$start_date->clearTime();
+			$end_date->clearTime();
 			$start_date->toUTC();
 			$end_date->toUTC();
 
@@ -170,9 +178,65 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
-		// TODO
-		// 1. check if photo date matches this date tag
-		// 2. return value
+		$applies = false;
+
+		switch ($this->name) {
+		case 'date':
+			$date = new SwatDate($this->value);
+
+			// database content is always UTC
+			$date->clearTime();
+			$date->toUTC();
+
+			$applies = (Date::compare($photo->photo_date, $date) == 0);
+			break;
+
+		case 'week':
+			if (ctype_digit($this->value)) {
+				// get date by week number
+				$span = new Date_Span();
+				$span->setFromDays(($this->value - 1) * 7);
+				$start_date = new SwatDate();
+				$start_date->setMonth(1);
+				$start_date->setDay(1);
+				$start_date->addSpan($span);
+				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
+					$start_date->getDay(), $start_date->getMonth(),
+					$start_date->getYear()));
+			} else {
+				$date = new SwatDate($this->value);
+				$start_date = new SwatDate(Date_Calc::beginOfWeek(
+					$date->getDay(), $date->getMonth(), $date->getYear()));
+
+				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
+					$date->getDay(), $date->getMonth(), $date->getYear()));
+			}
+
+			// database content is always UTC
+			$start_date->clearTime();
+			$end_date->clearTime();
+			$start_date->toUTC();
+			$end_date->toUTC();
+
+			$applies = ((Date::compare($photo->photo_date, $start_date) >= 0) &&
+				(Date::compare($photo->photo_date, $end_date) <= 0));
+
+			break;
+
+		case 'year':
+			$applies = ($photo->photo_date->getYear() == $this->value);
+			break;
+
+		case 'month':
+			$applies = ($photo->photo_date->getMonth() == $this->value);
+			break;
+
+		case 'day':
+			$applies = ($photo->photo_date->getDay() == $this->value);
+			break;
+		}
+
+		return $applies;
 	}
 
 	private function getDate()

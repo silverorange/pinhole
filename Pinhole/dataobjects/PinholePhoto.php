@@ -34,42 +34,46 @@ class PinholePhoto extends SwatDBDataObject
 	// {{{ public properties
 
 	/**
-	 * 
+	 * Unique identifier
 	 *
 	 * @var integer
 	 */
 	public $id;
 
 	/**
-	 * 
+	 * User visible title
 	 *
 	 * @var string
 	 */
 	public $title;
 
 	/**
-	 * 
+	 * Photo description
 	 *
 	 * @var string
 	 */
 	public $description;
 
 	/**
-	 * 
+	 * Upload date
+	 *
+	 * The date the photo was uploaded
 	 *
 	 * @var Date
 	 */
 	public $upload_date;
 
 	/**
-	 * 
+	 * Filename
+	 *
+	 * A unique filename stored without an extension.
 	 *
 	 * @var string
 	 */
 	public $filename;
 
 	/**
-	 * 
+	 * Original filename
 	 *
 	 * @var string
 	 */
@@ -86,28 +90,28 @@ class PinholePhoto extends SwatDBDataObject
 	public $serialized_exif;
 
 	/**
-	 * references PinholePhotographer(id),
+	 * Photo date
 	 *
-	 * @var integer
-	 */
-	public $photographer;
-
-	/**
-	 * 
+	 * The date the photo was taken.
 	 *
 	 * @var Date
 	 */
 	public $photo_date;
 
 	/**
-	 * not null default 0,
+	 * Date parts to display
+	 *
+	 * A bitwise value made up of PinholePhoto::DATE_PART* constants.
 	 *
 	 * @var integer
 	 */
 	public $photo_date_parts;
 
 	/**
-	 * 
+	 * Publish date
+	 *
+	 * The date the photo's status was published. See
+	 * {@link PinholePhoto::publish()}
 	 *
 	 * @var Date
 	 */
@@ -248,6 +252,9 @@ class PinholePhoto extends SwatDBDataObject
 	{
 		$this->table = 'PinholePhoto';
 		$this->id_field = 'integer:id';
+
+		$this->registerInternalProperty('photographer',
+			$this->class_map->resolveClass('PinholePhotographer'));
 
 		$this->registerDateProperty('upload_date');
 		$this->registerDateProperty('publish_date');

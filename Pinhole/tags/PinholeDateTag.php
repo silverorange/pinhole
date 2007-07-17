@@ -7,6 +7,18 @@ require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
 require_once 'Pinhole/tags/PinholeIterableTag.php';
 
 /**
+ * Machine tag for dates
+ *
+ * This machine tag has the namespace 'date' and the following names:
+ *
+ * - <i>date</i>:  represents a specific day with values of YYYY-MM-DD.
+ * - <i>week</i>:  represents a specific week with either a numeric value from
+ *                 1 to 52 or a day value of YYY-MM-DD.
+ * - <i>year</i>:  represents a specific year with a numeric value.
+ * - <i>month</i>: represents a specific month with a numeric value from
+ *                 1 to 12.
+ * - <i>day</i>:   represents a specific day with a numeric value from 1 to 31.
+ *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
@@ -14,11 +26,37 @@ require_once 'Pinhole/tags/PinholeIterableTag.php';
 class PinholeDateTag extends PinholeAbstractMachineTag
 	implements PinholeIterableTag
 {
+	/**
+	 * The namespace of the date machine tag
+	 */
 	const NAMESPACE = 'date';
 
+	/**
+	 * Name of this date tag
+	 *
+	 * Should be one of 'date', 'week', 'year', 'month', or 'day'.
+	 *
+	 * @var string
+	 */
 	private $name;
+
+	/**
+	 * Value of this date tag
+	 *
+	 * @var string
+	 */
 	private $value;
 
+	/**
+	 * Parses this date tag from a tag string
+	 *
+	 * @param string $string the tag string to parse. 
+	 * @param MDB2_Driver_Common $db the database connection used to parse the
+	 *                            tag string.
+	 *
+	 * @return boolean true if the tag string could be parsed and false if the
+	 *                  tag string could not be parsed.
+	 */
 	public function parse($string, MDB2_Driver_Common $db)
 	{
 		$this->setDatabase($db);
@@ -38,6 +76,12 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $valid;
 	}
 
+	/**
+	 * Gets the next tag after this tag
+	 *
+	 * @return PinholeDateTag the next tag after this tag or null if there is
+	 *                         no next tag.
+	 */
 	public function next()
 	{
 		$returned_tag = null;
@@ -89,6 +133,12 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $returned_tag;
 	}
 
+	/**
+	 * Gets the previous tag before this tag
+	 *
+	 * @return PinholeDateTag the previous tag before this tag or null if there
+	 *                         is no previous tag.
+	 */
 	public function prev()
 	{
 		$returned_tag = null;
@@ -140,21 +190,47 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $returned_tag;
 	}
 
+	/**
+	 * Gets the namespace of this date tag
+	 *
+	 * @return string the namespace of this date tag.
+	 */
 	protected function getNamespace()
 	{
 		return self::NAMESPACE;
 	}
 
+	/**
+	 * Gets the name of this date tag
+	 *
+	 * To set the name of this date tag, use the
+	 * {@link PinholeDateTag::parse()} method.
+	 *
+	 * @return string the name of this date tag.
+	 */
 	protected function getName()
 	{
 		return $this->name;
 	}
 
+	/**
+	 * Gets the value of this date tag
+	 *
+	 * To set the value of this date tag, use the
+	 * {@link PinholeDateTag::parse()} method.
+	 *
+	 * @return string the value of this date tag.
+	 */
 	protected function getValue()
 	{
 		return $this->value;
 	}
 
+	/**
+	 * Gets the title of this date tag
+	 *
+	 * @return string the title of this date tag.
+	 */
 	public function getTitle()
 	{
 		switch ($this->name) {
@@ -208,6 +284,11 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $title;
 	}
 
+	/**
+	 * Gets the SQL where clause for this date tag
+	 *
+	 * @return string the SQL where clause for this date tag.
+	 */
 	public function getWhereClause()
 	{
 		switch ($this->name) {
@@ -274,11 +355,14 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $where;
 	}
 
-	public function applyToPhoto(PinholePhoto $photo)
-	{
-		// do nothing, can't apply a date to a photo
-	}
-
+	/**
+	 * Checks whether or not this date tag applies to a given photo
+	 *
+	 * @param PinholePhoto the photo to check.
+	 *
+	 * @return boolean true if this tag applies to the given photo and false if
+	 *                  this tag does not apply to the given photo.
+	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
 		$applies = false;
@@ -342,10 +426,16 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		return $applies;
 	}
 
-	private function getDate()
-	{
-	}
-
+	/**
+	 * Whether or not a name-value pair is valid for this date tag
+	 *
+	 * @param string $name the name.
+	 * @param string $value the value.
+	 *
+	 * @return boolean true if the name-value pair is valid for this date tag
+	 *                  and false if the name-value pair is not valid for this
+	 *                  date tag.
+	 */
 	private function isValid($name, $value)
 	{
 		$iso_date_expression = '/^(\d{4})-?(\d{1,2})-?(\d{1,2})$/';

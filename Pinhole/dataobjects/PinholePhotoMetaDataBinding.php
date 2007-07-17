@@ -14,28 +14,35 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 	// {{{ public properties
 
 	/**
-	 * not null,
+	 * User visible title
 	 *
 	 * @var string
 	 */
 	public $title;
 
 	/**
-	 * not null,
+	 * A short textual identifier for this meta data
+	 *
+	 * This value should be read-only and is created from the embeded meta
+	 * data in photos.
 	 *
 	 * @var string
 	 */
 	public $shortname;
 
 	/**
-	 * not null,
+	 * User visible value
 	 *
 	 * @var string
 	 */
 	public $value;
 
 	/**
-	 * not null,
+	 * Whether or not this meta data can be browsed as a machine tag.
+	 *
+	 * Allows users to browse all photos that share the same value as this
+	 * meta data. Values with near-unique values like dates should not be browsed as
+	 * machine tags.
 	 *
 	 * @var boolean
 	 */

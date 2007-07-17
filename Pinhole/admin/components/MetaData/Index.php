@@ -96,9 +96,9 @@ class PinholeMetaDataIndex extends AdminIndex
 	// {{{ protected function getTableModel()
 
 	/**
-	 * Gets photographer data
+	 * Gets the metadata for display
 	 *
-	 * @return SwatTableModel with photographer information.
+	 * @return SwatTableModel with metadata information.
 	 */
 	protected function getTableModel(SwatTableView $view)
 	{

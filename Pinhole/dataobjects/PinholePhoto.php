@@ -3,6 +3,7 @@
 //require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
+require_once 'Pinhole/dataobjects/PinholePhotoMetaDataWrapper.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Swat/exceptions/SwatException.php';
@@ -111,15 +112,6 @@ class PinholePhoto extends SwatDBDataObject
 	 * @var Date
 	 */
 	public $publish_date;
-
-	/**
-	 * Meta Data
-	 *
-	 * An array of PinholeMetaData dataobjects
-	 *
-	 * @array
-	 */
-	public $meta_data;
 
 	/**
 	 * Visibility status
@@ -539,6 +531,15 @@ class PinholePhoto extends SwatDBDataObject
 			$this->db->quote($this->id, 'integer'));
 
 		return SwatDB::query($this->db, $sql, 'PinholeTagWrapper');
+	}
+
+	// }}}
+	// {{{ protected function loadMetaData()
+
+	protected function loadMetaData()
+	{
+		return PinholePhotoMetaDataWrapper::loadSetFromDB(
+			$this->db, $this->id);
 	}
 
 	// }}}

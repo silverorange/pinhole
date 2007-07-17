@@ -24,6 +24,10 @@ function test_tag($string)
 			echo $photo->id, ' ';
 		}
 		echo "\n";
+		if ($tag instanceof PinholeIterableTag) {
+			echo "   Iterable: ", $tag->prev()->getTitle(),
+				" <=> ", $tag->next()->getTitle(), "\n";
+		}
 	} else {
 		echo "=> {$string}: *** error loading tag ***\n";
 	}

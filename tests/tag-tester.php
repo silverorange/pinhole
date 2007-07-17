@@ -29,10 +29,8 @@ function test_tag($string)
 	}
 }
 
-function test_tag_list($db, $string)
+function test_tag_list($tag_list)
 {
-	$tag_list = new PinholeTagList($db, $string);
-
 	echo "iterating list:\n";
 	foreach ($tag_list as $key => $tag) {
 		echo '=> ', $key, ' => ', $tag->getTitle(), "\n";
@@ -48,6 +46,8 @@ function test_tag_list($db, $string)
 		echo "\n";
 	}
 	echo "\n";
+
+	$tag_list
 }
 
 // Tag tests
@@ -67,7 +67,10 @@ require_once 'Pinhole/PinholeTagList.php';
 
 echo "\nTagList Tests:\n\n";
 
-test_tag_list($connection, 'christmas2001/date.year=2007/daniel/date.month=4');
+$tag_list = new PinholeTagList($connection,
+	'christmas2001/date.year=2007/daniel/date.month=4');
+
+test_tag_list($tag_list);
 
 $end_time = microtime(true);
 echo "\ntotal time: ", ($end_time - $start_time) * 1000, "ms\n";

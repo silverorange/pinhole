@@ -57,7 +57,6 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 					$date->getDay(), $date->getMonth(), $date->getYear()));
 
 				$value = $start_date->format('%Y-%m-%d');
-				echo $value;
 			}
 
 			break;

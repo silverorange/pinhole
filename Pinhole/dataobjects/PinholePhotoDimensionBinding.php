@@ -45,7 +45,7 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 	// }}}
 	// {{{ public function getPath()
 
-	public function getPath($base_dir)
+	public function getPath($base_dir = '')
 	{
 		if ($this->dimension->publicly_accessible)
 			$path = '../www/images/photos/%s/';

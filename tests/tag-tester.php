@@ -46,8 +46,6 @@ function test_tag_list($tag_list)
 		echo "\n";
 	}
 	echo "\n";
-
-	$tag_list
 }
 
 // Tag tests
@@ -69,6 +67,10 @@ echo "\nTagList Tests:\n\n";
 
 $tag_list = new PinholeTagList($connection,
 	'christmas2001/date.year=2007/daniel/date.month=4');
+
+test_tag_list($tag_list);
+
+$tag_list->replaceTag('christmas2001', PinholeTagFactory::get('christmas'));
 
 test_tag_list($tag_list);
 

@@ -70,7 +70,7 @@ $tag_list = new PinholeTagList($connection,
 
 test_tag_list($tag_list);
 
-$tag_list->replaceTag('christmas2001', PinholeTagFactory::get('christmas'));
+$tag_list->replace('date.year=2007', PinholeTagFactory::get('christmas'));
 
 test_tag_list($tag_list);
 

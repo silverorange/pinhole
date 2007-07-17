@@ -45,7 +45,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		switch ($this->name) {
 		case 'date':
 			$date = new SwatDate($this->value);
-			$value = $date->getNextDay()->format('%Y-%M-%D');
+			$value = $date->getNextDay()->format('%Y-%m-%d');
 			break;
 
 		case 'week':
@@ -56,7 +56,8 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 				$start_date = new SwatDate(Date_Calc::beginOfNextWeek(
 					$date->getDay(), $date->getMonth(), $date->getYear()));
 
-				$value = $start_date->format('%Y-%M-%D');
+				$value = $start_date->format('%Y-%m-%d');
+				echo $value;
 			}
 
 			break;
@@ -81,7 +82,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		if ($value !== null) {
 			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
 			$tag = new PinholeDateTag();
-			if ($tag->parse($string)) {
+			if ($tag->parse($string, $this->db)) {
 				$returned_tag = $tag;
 			}
 		}
@@ -96,7 +97,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		switch ($this->name) {
 		case 'date':
 			$date = new SwatDate($this->value);
-			$value = $date->getPrevDay()->format('%Y-%M-%D');
+			$value = $date->getPrevDay()->format('%Y-%m-%d');
 			break;
 
 		case 'week':
@@ -107,7 +108,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 				$start_date = new SwatDate(Date_Calc::beginOfPrevWeek(
 					$date->getDay(), $date->getMonth(), $date->getYear()));
 
-				$value = $start_date->format('%Y-%M-%D');
+				$value = $start_date->format('%Y-%m-%d');
 			}
 
 			break;
@@ -132,7 +133,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		if ($value !== null) {
 			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
 			$tag = new PinholeDateTag();
-			if ($tag->parse($string)) {
+			if ($tag->parse($string, $this->db)) {
 				$returned_tag = $tag;
 			}
 		}

@@ -3,6 +3,8 @@
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'Swat/SwatUI.php';
 require_once 'Swat/SwatDetailsStore.php';
+require_once 'Swat/SwatDetailsViewField.php';
+require_once 'Swat/SwatTextCellRenderer.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeDateTagCellRenderer.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
@@ -59,6 +61,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$view = $this->details_ui->getWidget('photo_details_view');
 		$view->data = $this->getPhotoDetailsStore();
+		$this->buildMetaData();
 
 		$description = $this->details_ui->getWidget('description');
 		$description->content = $this->photo->description;
@@ -180,6 +183,24 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$tags->add($tag);
 
 		return $tags;
+	}
+
+	// }}}
+	// {{{ protected function buildMetaData()
+
+	protected function buildMetaData()
+	{
+		$view = $this->details_ui->getWidget('photo_details_view');
+
+		foreach ($this->photo->meta_data as $meta_data) {
+			$field = new SwatDetailsViewField();
+			$field->title = $meta_data->title;
+			$renderer = new SwatTextCellRenderer();
+			$renderer->text = $meta_data->value;
+			$view->appendField($field);
+			$field->addRenderer($renderer);
+		}
+
 	}
 
 	// }}}

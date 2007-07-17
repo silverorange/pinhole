@@ -225,7 +225,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	/**
 	 * Applies this tag to a photo
 	 *
-	 * Since date tages cannot be applied to photos, this method does nothing.
+	 * Since date tags cannot be applied to photos, this method does nothing.
 	 *
 	 * @param PinholePhoto $photo the photo this tag is to be applied to.
 	 */

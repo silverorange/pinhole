@@ -5,6 +5,7 @@ require_once 'Swat/SwatUI.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatDetailsViewField.php';
 require_once 'Swat/SwatTextCellRenderer.php';
+require_once 'Swat/SwatLinkCellRenderer.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeDateTagCellRenderer.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
@@ -195,8 +196,18 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		foreach ($this->photo->meta_data as $meta_data) {
 			$field = new SwatDetailsViewField();
 			$field->title = $meta_data->title;
-			$renderer = new SwatTextCellRenderer();
+
+			if ($meta_data->machine_tag) {
+				$renderer = new SwatLinkCellRenderer();
+				$renderer->link = sprintf('tag/meta.%s=%s',
+					$meta_data->shortname,
+					$meta_data->value);
+			} else {
+				$renderer = new SwatTextCellRenderer();
+			}
+
 			$renderer->text = $meta_data->value;
+
 			$view->appendField($field);
 			$field->addRenderer($renderer);
 		}

@@ -220,6 +220,21 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	}
 
 	// }}}
+	// {{{ public function applyToPhoto()
+
+	/**
+	 * Applies this tag to a photo
+	 *
+	 * Since date tages cannot be applied to photos, this method does nothing.
+	 *
+	 * @param PinholePhoto $photo the photo this tag is to be applied to.
+	 */
+	public function applyToPhoto(PinholePhoto $photo)
+	{
+		// do nothing since date tags cannot be applied to photos
+	}
+
+	// }}}
 	// {{{ public function appliesToPhoto()
 
 	/**

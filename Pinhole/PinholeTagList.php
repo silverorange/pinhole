@@ -418,6 +418,48 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function filter()
+
+	/**
+	 * Gets a new tag list based on this tag list with certain tag types
+	 * filtered out
+	 *
+	 * @param array $filter_types an array of class names of tag types to filter
+	 *                       out of the returned list.
+	 * @param boolean $filter_subclasses optional. Whether or not to filter
+	 *                                    tags that are subclasses of the filter
+	 *                                    tag types. By default, subclasses
+	 *                                    are filtered.
+	 *
+	 * @return PinholeTagList a new tag list containing all the tags of this
+	 *                         list except for the specified tag types.
+	 */
+	public function filter(array $filter_types, $filter_subclasses = true)
+	{
+		$tag_list = new PinholeTagList($this->db);
+
+		foreach ($this as $tag) {
+			if ($filter_subclasses) {
+				$filtered = false;
+				foreach ($filter_types as $type) {
+					if ($tag instanceof $type) {
+						$filtered = true;
+						break;
+					}
+				}
+			} else {
+				$filtered = in_array(get_class($tag), $filter_types);
+			}
+
+			if (!$filtered) {
+				$tag_list->add($tag);
+			}
+		}
+
+		return $tag_list;
+	}
+
+	// }}}
 	// {{{ public function getByType()
 
 	/**

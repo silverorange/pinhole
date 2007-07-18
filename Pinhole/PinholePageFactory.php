@@ -45,11 +45,8 @@ abstract class PinholePageFactory extends SitePageFactory
 			}
 		}
 
-		if ($page === null) {
-			// not found in page map so instantiate default page
-			$params = array($app, $layout);
-			$page = $this->instantiatePage('PinholePage', $params);
-		}
+		if ($page === null)
+			throw new SiteNotFoundException();
 
 		return $page;
 	}

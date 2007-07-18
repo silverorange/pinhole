@@ -18,10 +18,6 @@ class PinholeExceptionPage extends SiteExceptionPage
 	{
 		parent::init();
 
-		if (isset($_GET['source']) &&
-			substr($_GET['source'], 0, 7) == 'photos/')
-			$this->relocateOldUrl();
-
 		$search_ui = new SwatUI();
 		$search_ui->loadFromXML(
 			dirname(__FILE__).'/browser-search.xml');

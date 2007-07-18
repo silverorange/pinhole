@@ -6,7 +6,7 @@ require_once 'SwatDB/SwatDB.php';
 require_once 'Site/pages/SiteExceptionPage.php';
 
 /**
- * @package   gallery
+ * @package   Pinhole
  * @copyright 2007 silverorange
  */
 class PinholeExceptionPage extends SiteExceptionPage

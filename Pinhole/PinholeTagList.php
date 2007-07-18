@@ -40,7 +40,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	/**
 	 * Operator for excluding the set of photos in this tag list.
 	 */
-	const OPERATOR_NOT = 'not'
+	const OPERATOR_NOT = 'not';
 
 	// }}}
 	// {{{ private properties

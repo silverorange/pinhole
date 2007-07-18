@@ -23,6 +23,26 @@ require_once 'Pinhole/PinholeTagFactory.php';
  */
 class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 {
+	// {{{ class constants
+
+	/**
+	 * Operator for selecting the set of photos in the intersection of tags in
+	 * this list.
+	 */
+	const OPERATOR_AND = 'and';
+
+	/**
+	 * Operator for selecting the set of photos in the union of tags in this
+	 * list.
+	 */
+	const OPERATOR_OR  = 'or';
+
+	/**
+	 * Operator for excluding the set of photos in this tag list.
+	 */
+	const OPERATOR_NOT = 'not'
+
+	// }}}
 	// {{{ private properties
 
 	/**
@@ -168,11 +188,16 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getWhereClause()
 	{
-		$operator = 'and';
+		$operator = self::OPERATOR_AND;
 
-		$where_clause = '1 = 1';
+		$where_clauses = array();
 		foreach ($this as $tag)
-			$where_clause.= ' '.$operator.' ('.$tag->getWhereClause().')';
+			$where_clauses[] = '('.$tag->getWhereClause().')';
+
+		if ($operator == self::OPERATOR_OR)
+			$where_clauses = array_diff($where_clauses, array('1 = 1'));
+
+		$where_clause = implode(' '.$operator.' ', $where_clauses);
 
 		return $where_clause;
 	}

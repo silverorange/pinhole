@@ -127,7 +127,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
-	// {{{ public function __tostring()
+	// {{{ public function __toString()
 
 	/**
 	 * Gets a string representation of this tag list
@@ -183,8 +183,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *                Individual where clauses of the tags in this list are
 	 *                ANDed together to form the final clause.
 	 *
-	 * @todo Make it possible to OR clauses as well as ANDing them. Remember
-	 *       to not OR 1 = 1 clauses.
+	 * @todo Make it possible to OR clauses as well as ANDing them.
 	 */
 	public function getWhereClause()
 	{
@@ -485,6 +484,78 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function union()
+
+	/**
+	 * Gets a new tag list that is the union of this tag list with another tag
+	 * list
+	 *
+	 * @param PinholeTagList $tag_list the tag list to union with this tag list.
+	 *
+	 * @return PinholeTagList a new tag list that is the union of this tag
+	 *                         list with the tag list specified in
+	 *                         <i>$tag_list</i>.
+	 */
+	public function union(PinholeTagList $tag_list)
+	{
+		$new_tag_list = clone $this;
+
+		foreach ($tag_list as $tag)
+			$new_tag_list->add($tag);
+
+		return $new_tag_list;
+	}
+
+	// }}}
+	// {{{ public function intersect()
+
+	/**
+	 * Gets a new tag list that is the intersection of this tag list with
+	 * another tag list
+	 *
+	 * @param PinholeTagList $tag_list the tag list to intersect with this tag
+	 *                                  list.
+	 *
+	 * @return PinholeTagList a new tag list that is the intersection of this
+	 *                         tag list with the tag list specified in
+	 *                         <i>$tag_list</i>.
+	 */
+	public function intersect(PinholeTagList $tag_list)
+	{
+		$new_tag_list = new PinholeTagList($this->db);
+
+		foreach ($this as $tag)
+			if ($tag_list->contains($tag))
+				$new_tag_list->add($tag);
+
+		return $new_tag_list;
+	}
+
+	// }}}
+	// {{{ public function subtract()
+
+	/**
+	 * Gets a new tag list that is the complement of this tag list with
+	 * another tag list
+	 *
+	 * @param PinholeTagList $tag_list the tag list to subtract from this tag
+	 *                                  list.
+	 *
+	 * @return PinholeTagList a new tag list that is the complement of this
+	 *                         tag list with the tag list specified in
+	 *                         <i>$tag_list</i>.
+	 */
+	public function subtract(PinholeTagList $tag_list)
+	{
+		$new_tag_list = clone $this;
+
+		foreach ($tag_list as $tag)
+			$new_tag_list->remove($tag);
+
+		return $new_tag_list;
+	}
+
+	// }}}
 	// {{{ public function getByType()
 
 	/**
@@ -526,12 +597,17 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 * in this list.
 	 *
 	 * @return PinholePhotoWrapper the photos of this tag list.
+	 *
+	 * @todo add ability to set order of returned photo set.
 	 */
 	public function getPhotos()
 	{
 		$sql = sprintf('select * from PinholePhoto %s where %s',
 			implode("\n", $this->getJoinClauses()),
 			$this->getWhereClause());
+
+//		if ($order_by_clause !== null)
+//			$sql = $sql.' '.$order_by_clause;
 
 		$range = $this->getRange();
 		if ($range !== null)

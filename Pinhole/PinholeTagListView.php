@@ -49,6 +49,7 @@ class PinholeTagListView extends SwatControl
 
 			$only_anchor_tag = new SwatHtmlTag('a');
 			$only_anchor_tag->class = 'pinhole-tag-list-view-tag';
+			$only_anchor_tag->rel = 'tag';
 			$only_anchor_tag->title =
 				Pinhole::_('View all photos with this tag.');
 

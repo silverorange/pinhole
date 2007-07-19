@@ -145,7 +145,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$string.= '/'.$tag->__toString();
 
 		// strip leading slash
-		return substr($string, 1);
+		if (strlen($string) > 0)
+			$string = substr($string, 1);
+
+		return $string;
 	}
 
 	// }}}
@@ -197,6 +200,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$where_clauses = array_diff($where_clauses, array('1 = 1'));
 
 		$where_clause = implode(' '.$operator.' ', $where_clauses);
+
+		if (strlen($where_clause) == 0)
+			$where_clause = '1 = 1';
 
 		return $where_clause;
 	}
@@ -638,22 +644,51 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getSubTags()
 
 	/**
 	 * Gets a list of tags not in this list that also apply to the photos
 	 * of this list
 	 *
+	 * The list of subtags only includes {@link PinholeTag} objects. If this
+	 * list is empty, the returned list contains all tags.
+	 *
+	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
+	 *                            specified, all tags are loaded.
+	 *
 	 * @return PinholeTagList a list of tags not in this list that also apply
-	 *                         to the photos of this list.
+	 *                         to the photos of this list. The list only
+	 *                         contains PinholeTag objects.
 	 *
 	 * @see PinholeTagList::getPhotos()
-	 *
-	 * @todo implement this method.
+	 * @see PinholePhoto::getTags()
 	 */
-	public function getSubTags()
+	public function getSubTags(SwatDBRange $range = null)
 	{
+		$tag_list = new PinholeTagList($this->db);
+
+		$sql = sprintf('select * from PinholeTag where id in
+			(select tag from PinholePhotoTagBinding where photo in
+			(select id from PinholePhoto %s where %s))',
+			implode("\n", $this->getJoinClauses()),
+			$this->getWhereClause());
+
+		if ($range !== null)
+			$this->db->setLimit($range->getLimit(), $range->getOffset());
+
+		$tag_data_objects = SwatDB::query($this->db, $sql,
+			'PinholeTagDataObjectWrapper');
+
+		foreach ($tag_data_objects as $data_object) {
+			$tag = new PinholeTag($data_object);
+			$tag_list->add($tag);
+		}
+
+		$tag_list = $tag_list->subtract($this);
+		return $tag_list;
 	}
 
+	// }}}
 	// {{{ public function setDatabase()
 
 	/**

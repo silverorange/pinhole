@@ -117,8 +117,6 @@ class PinholePhotoFactory
 		chmod($file_path, 0666);
 
 		$this->process($file_path, $file['name']);
-
-		unlink($file_path);
 	}
 
 	// }}}
@@ -176,6 +174,8 @@ class PinholePhotoFactory
 		// extract anything)
 		$za->extractTo($dir);
 		$za->close();
+
+		unlink($archive);
 
 		$dh = opendir($dir);
 		while (($file = readdir($dh)) !== false) {

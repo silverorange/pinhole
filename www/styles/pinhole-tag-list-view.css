@@ -1,0 +1,52 @@
+.pinhole-tag-list-view {
+	font-size: 136%;
+	float: left;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-plus {
+	font-weight: bold;
+	margin: 0 0.4em 0 0;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper {
+	border-style: solid;
+	border-width: 0;
+	border-color: transparent;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper:hover {
+	border-color: #666;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper a.pinhole-tag-list-view-tag {
+	xxxborder-width: 1px 0 1px 1px;
+	xxxborder-style: solid;
+	xxxborder-color: transparent;
+	padding: 2px;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper:hover a.pinhole-tag-list-view-tag {
+	border-color: #666;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper a.pinhole-tag-list-view-remove {
+	visibility: hidden;
+	text-decoration: none;
+	color: #888a85;
+	xxxborder-width: 1px 1px 1px 0;
+	vertical-align: top;
+	position: relative;
+	top: -0.2em;
+	xxxborder-style: solid;
+	xxxborder-color: #666;
+	padding: 2px 0;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper:hover a.pinhole-tag-list-view-remove {
+	visibility: visible;
+}
+
+.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper a.pinhole-tag-list-view-remove:hover {
+	color: #666;
+}
+

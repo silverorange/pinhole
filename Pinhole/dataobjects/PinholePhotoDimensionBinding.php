@@ -57,7 +57,7 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 	 * 	from. Default is the web root.
 	 * @return string An absolute path to the current photo
 	 */
-	public function getPath($base_dir = '')
+	public function getPath($base_dir = '.')
 	{
 		if ($this->dimension->publicly_accessible)
 			$path = 'images/photos/%s/';

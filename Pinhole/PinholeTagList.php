@@ -117,7 +117,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				$data_object = $tag_data_objects->getByIndex($tag_string);
 				if ($data_object === null) {
 					$tag = PinholeTagFactory::get($tag_string, $db);
-					if ($tag !== false) {
+					if ($tag instanceof PinholeAbstractTag) {
 						$this->add($tag);
 					}
 				} else {

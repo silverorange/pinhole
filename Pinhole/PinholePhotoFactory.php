@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Image/Transform.php';
-require_once "File/Archive.php";
 require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
@@ -29,8 +28,6 @@ class PinholePhotoFactory
 
 	protected $archive_mime_types = array(
 		'zip'  => 'application/x-zip',
-		'gzip' => 'application/x-gzip',
-		'tar'  => 'application/x-tar',
 		);
 
 	// }}}
@@ -90,8 +87,10 @@ class PinholePhotoFactory
 		else
 			$files = array($file => $original_filename);
 
-		foreach ($files as $file => $original_filename)
+		foreach ($files as $file => $original_filename) {
 			$this->createDataObject($file, $original_filename);
+			unlink($file);
+		}
 	}
 
 	// }}}
@@ -138,8 +137,12 @@ class PinholePhotoFactory
 		$photo->original_filename = ($original_filename === null) ?
 			$file : $original_filename;
 
+		// error suppression is needed here because there are several
+		// ways unavoidable warnings can occur despite the file being
+		// properly read.
+		$photo->serialized_exif = serialize(@exif_read_data($file));
+
 		$photo->upload_date = new SwatDate();
-		$photo->serialized_exif = serialize(exif_read_data($file));
 		$photo->save();
 
 		$this->saveMetaDataFromFile($file, $photo);
@@ -158,19 +161,21 @@ class PinholePhotoFactory
 	{
 		$files = array();
 
+		$za = new ZipArchive();
+		$opened = $za->open($archive);
+
+		if ($opened !== true)
+			return; //TODO: throw some sort of error or feedback for the user
+
 		$dir = $this->path.'/../temp/'.uniqid('dir');
 		mkdir($dir);
+		chmod($dir, 0770);
 
-		File_Archive::extract(
-			File_Archive::readArchive($type, $archive),
-			File_Archive::appender($dir));
-
-		//TODO: - fix file permissions problem
-		//      - fix read_exif_data error
-		//	- sort out where File_Archive is throwing as pass by ref
-		//	  error
-		//	- see if there's cleaner way to access the files in the
-		//	  archive than moving them around like this
+		// unfortunately, renaming the files in the archive and then
+		// extracting them doesn't seem to work (extractTo doesn't
+		// extract anything)
+		$za->extractTo($dir);
+		$za->close();
 
 		$dh = opendir($dir);
 		while (($file = readdir($dh)) !== false) {
@@ -178,14 +183,15 @@ class PinholePhotoFactory
 				chmod($dir.'/'.$file, 0666);
 
 				$ext = strtolower(end(explode('.', $file)));
-				$file_path = $this->path.'/../temp/'.uniqid('file').'.jpg';
+				$file_path = sprintf('%s/../temp/%s.%s',
+					$this->path, uniqid('file'), $ext);
+
 				$files[$file_path] = $file;
 				rename($dir.'/'.$file, $file_path);
 			}
 		}
-		closedir($dh);
 
-		unlink($archive);
+		closedir($dh);
 		rmdir($dir);
 
 		return $files;

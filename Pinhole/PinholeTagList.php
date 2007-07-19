@@ -96,7 +96,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$this->setDatabase($db);
 		$db->loadModule('Datatype', null, true);
 
-		if (is_string($tag_list_string) && strlen($string) > 0) {
+		if (is_string($tag_list_string) && strlen($tag_list_string) > 0) {
 			$tag_strings = explode('/', $tag_list_string);
 			$tag_strings = array_unique($tag_strings);
 

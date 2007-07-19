@@ -93,6 +93,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function __construct(MDB2_Driver_Common $db, $tag_list_string = null)
 	{
 		$this->setDatabase($db);
+		$db->loadModule('Datatype', null, true);
 
 		if (is_string($tag_list_string)) {
 			$tag_strings = explode('/', $tag_list_string);
@@ -101,7 +102,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			// get all simple tag strings
 			$simple_tag_strings = preg_grep('/^[A-Za-z0-9]+$/', $tag_strings);
 			$quoted_tag_strings =
-				$db->implodeArray($simple_tag_strings, 'text');
+				$db->datatype->implodeArray($simple_tag_strings, 'text');
 
 			// load all simple tags in one query
 			$sql = sprintf('select * from PinholeTag where shortname in (%s)',

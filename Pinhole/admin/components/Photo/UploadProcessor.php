@@ -3,7 +3,7 @@
 require_once 'Swat/Swat.php';
 require_once 'Site/pages/SitePage.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Pinhole/PinholePhotoFactory.php';
 
 /**
  * Page for processing uploaded photos
@@ -40,43 +40,10 @@ class PinholePhotoUploadProcessor extends SitePage
 	 */
 	public function process()
 	{
-		foreach ($_FILES as $file) {
-			if ($file['name'] !== null) {
-				$ext = strtolower(end(explode('.', $file['name'])));
-
-				$file_path = sprintf('%s/%s.%s',
-					realpath('../../temp/'), uniqid('file'), $ext);
-
-				move_uploaded_file($file['tmp_name'], $file_path);
-				chmod($file_path, 0666);
-
-				if ($ext == 'zip' || $ext == 'tgz' || $ext == 'tar')
-					$files = $this->getArchivedFiles($file);
-				else
-					$files = array($file_path => $file['name']);
-
-				$this->processFiles($files);
-
-				unlink($file_path);
-			}
-
-		}
-	}
-
-	// }}}
-	// {{{ public function processFiles()
-
-	/**
-	 * Processes an array of files
-	 */
-	public function processFiles($files)
-	{
-		foreach ($files as $file => $original_filename) {
-			$photo = new PinholePhoto();
-			$photo->setDatabase($this->app->db);
-			$photo->createFromFile($file, $original_filename);
-			$photo->save();
-		}
+		$photo_factory = new PinholePhotoFactory();
+		$photo_factory->setPath(realpath('../'));
+		$photo_factory->setDatabase($this->app->db);
+		$photo_factory->processUploadedFile('file');
 	}
 
 	// }}}
@@ -94,8 +61,10 @@ class PinholePhotoUploadProcessor extends SitePage
 	{
 		$this->layout->startCapture('content');
 
+		/*
 		Swat::printObject($_POST);
 		Swat::printObject($_FILES);
+		*/
 
 		Swat::displayInlineJavaScript($this->getInlineJavaScript());
 

@@ -619,7 +619,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		$range = $this->getRange();
 		if ($range !== null)
-			$this->db->setRange($range->getLimit(), $range->getOffset());
+			$this->db->setLimit($range->getLimit(), $range->getOffset());
 
 		$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
 		return SwatDB::query($this->db, $sql, $wrapper);

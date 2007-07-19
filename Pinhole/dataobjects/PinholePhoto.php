@@ -5,10 +5,8 @@ require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
 require_once 'Swat/SwatDate.php';
-require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'SwatDB/SwatDBDataObject.php';
-require_once 'Image/Transform.php';
 
 /**
  * A dataobject class for photos
@@ -135,12 +133,21 @@ class PinholePhoto extends SwatDBDataObject
 	private $dimensions = array();
 
 	// }}}
-	// {{{ public function getCompressionQuality()
+	// {{{ public function publish()
 
-	// TODO: move this to Dimension object
-	public function getCompressionQuality()
+	/**
+	 * Publish photo to the site
+	 *
+	 * @param boolean $set_publish_date 
+	 */
+	public function publish($set_publish_date = true)
 	{
-		return 85;
+		if ($set_publish_date)
+			$this->publish_date = new SwatDate();
+
+		$this->status = self::STATUS_PUBLISHED;
+
+		$this->save();
 	}
 
 	// }}}
@@ -178,6 +185,22 @@ class PinholePhoto extends SwatDBDataObject
 			return $dimension->getFirst();
 		}
 
+	}
+
+	// }}}
+	// {{{ public function getTitle()
+
+	/*
+	 * Get a readable title for a photo
+	 *
+	 * @return string a readable title for a photo 
+	 */
+	public function getTitle()
+	{
+		if ($this->title === null)
+			return $this->original_filename;
+		else
+			return $this->title;
 	}
 
 	// }}}
@@ -262,268 +285,15 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
-
-	// {{{ protected function getDpi()
-
-	protected function getDpi()
-	{
-		return 72;
-	}
-
-	// }}}
 	// {{{ protected function getFilename()
 
 	protected function getFilename()
 	{
-		if ($this->id === null && $this->filename === null)
-			$this->filename = sha1(uniqid(rand(), true));
-		elseif ($this->filename === null)
+		if ($this->filename === null)
 			throw new SwatException('Filename must be set
 				on the dataobject');
 
 		return $this->filename;
-	}
-
-	// }}}
-
-	// processing methods
-	// {{{ public function createFromFile()
-
-	public function createFromFile($file, $original_filename)
-	{
-		//define('SWATDB_DEBUG', true);
-
-		if (!file_exists($file))
-			throw new SwatFileNotFoundException(null, 0, $file);
-
-		$this->db->beginTransaction();
-
-		$filename = $this->getFilename();
-
-		$this->original_filename = $original_filename;
-		$this->upload_date = new SwatDate();
-		$this->serialized_exif = serialize(exif_read_data($file));
-		$this->save();
-
-		$this->saveMetaDataFromFile($file);
-		$this->saveDimensionsFromFile($file);
-
-		$this->db->commit();
-	}
-
-	// }}}
-	// {{{ public function processImage()
-
-	/**
-	 * Does resizing for images
-	 *
-	 * @param Image_Transform $transformer the image transformer to work with.
-	 *                                     The tranformer should already have
-	 *                                     an image loaded.
-	 *
-	 * @param PinholeDimension $dimension the dimension to create.
-	 *
-	 * @return Image_Transform $transformer the image transformer with the
-	 * 			 		processed image.
-	 *
-	 * @throws SwatException if no image is loaded in the transformer.
-	 */
-	public function processImage(Image_Transform $transformer,
-		PinholeDimension $dimension)
-	{
-		if ($transformer->image === null)
-			throw new SwatException('No image loaded.');
-
-		// TODO: This doesn't handle panoramas corrently right now
-
-		if ($dimension->max_height !== null &&
-			$dimension->max_width !== null &&
-			$dimension->crop_to_max)
-			$this->cropToMax($transformer, $dimension);
-		else
-			$this->fitToMax($transformer, $dimension);
-
-		$dpi = $this->getDpi();
-		$transformer->setDpi($dpi, $dpi);
-
-		if ($dimension->strip)
-			$transformer->strip();
-
-		return $transformer;
-	}
-
-	// }}}
-	// {{{ public function publish()
-
-	/**
-	 * Publish photo to the site
-	 *
-	 * @param boolean $set_publish_date 
-	 */
-	public function publish($set_publish_date = true)
-	{
-		if ($set_publish_date)
-			$this->publish_date = new SwatDate();
-
-		$this->status = self::STATUS_PUBLISHED;
-
-		$this->save();
-	}
-
-	// }}}
-	// {{{ public function getTitle()
-
-	/*
-	 * Get a readable title for a photo
-	 *
-	 * @return string a readable title for a photo 
-	 */
-	public function getTitle()
-	{
-		if ($this->title === null)
-			return $this->original_filename;
-		else
-			return $this->title;
-	}
-
-	// }}}
-	// {{{ protected function saveMetaDataFromFile()
-
-	/**
-	 * Get the meta data from a photo
-	 *
-	 * @param string $filename 
-	 * @return array An array of PinholeMetaData dataobjects 
-	 */
-	protected function saveMetaDataFromFile($filename)
-	{
-		exec("exiftool -t $filename", $tag_names);
-		exec("exiftool -t -s $filename", $values);
-
-		$meta_data = SwatDB::getOptionArray($this->db,
-			'PinholeMetaData', 'shortname', 'id');
-
-		for ($i = 0; $i < count($tag_names); $i++) {
-			$ret = explode("\t", $values[$i]);
-			if (!isset($ret[1]))
-				continue;
-
-			$shortname = strtolower($ret[0]);
-			$value = $ret[1];
-
-			$ret = explode("\t", $tag_names[$i]);
-			$title = $ret[0];
-
-			if (!in_array($shortname, $meta_data)) {
-				$id = SwatDB::insertRow($this->db,
-					'PinholeMetaData',
-					array('text:shortname', 'text:title'),
-					array('shortname' => $shortname,
-						'title' => $title),
-					'id');
-			} else {
-				$id = array_search($shortname, $meta_data);
-			}
-
-			SwatDB::insertRow($this->db, 'PinholePhotoMetaDataBinding',
-				array('integer:photo',
-					'integer:meta_data',
-					'text:value'),
-				array('photo' => $this->id,
-					'meta_data' => $id,
-					'value' => $value));
-		}
-	}
-
-	// }}}
-	// {{{ protected function saveDimensionsFromFile()
-
-	protected function saveDimensionsFromFile($file)
-	{
-		static $dimensions;
-
-		if ($dimensions === null)
-			$dimensions = SwatDB::query($this->db,
-				'select * from PinholeDimension',
-				'PinholeDimensionWrapper');
-
-		$transformer = Image_Transform::factory('Imagick2');
-		if (PEAR::isError($transformer))
-			throw new AdminException($transformer);
-
-		foreach ($dimensions as $dimension) {
-			// TODO: I don't think we want to load the file for
-			// every dimension, but if I put it outside the loop,
-			// the variable looses its file resource after the
-			// first resize has taken place. (nick)
-			$transformer->load($file);
-			$transformed = $this->processImage($transformer, $dimension);
-
-			SwatDB::insertRow($this->db, 'PinholePhotoDimensionBinding',
-				array('integer:photo',
-					'integer:dimension',
-					'integer:width',
-					'integer:height'),
-				array('photo' => $this->id,
-					'dimension' => $dimension->id,
-					'width' => $transformed->new_x,
-					'height' => $transformed->new_y));
-
-			$dimension_binding = new PinholePhotoDimensionBinding();
-			$dimension_binding->photo = $this;
-			$dimension_binding->dimension = $dimension;
-
-			$transformed->save($dimension_binding->getPath('../'),
-				false, $this->getCompressionQuality());
-		}
-	}
-
-	// }}}
-	// {{{ private function fitToMax()
-
-	private function fitToMax(Image_Transform $transformer,
-		PinholeDimension $dimension)
-	{
-		if ($dimension->max_width !== null)
-			$transformer->fitX($dimension->max_width);
-
-		if ($dimension->max_height !== null)
-			if ($transformer->new_y > $dimension->max_height)
-				$transformer->fitY($dimension->max_height);
-	}
-
-	// }}}
-	// {{{ private function cropToMax()
-
-	private function cropToMax(Image_Transform $transformer,
-		PinholeDimension $dimension)
-	{
-		$max_y = $dimension->max_height;
-		$max_x = $dimension->max_width;
-
-		if ($transformer->img_x / $max_x > $transformer->img_y / $max_y) {
-			$new_y = $max_y;
-			$new_x = ceil(($new_y / $transformer->img_y) * $transformer->img_x);
-		} else {
-			$new_x = $max_x;
-			$new_y = ceil(($new_x / $transformer->img_x) * $transformer->img_y);
-		}
-
-		$transformer->resize($new_x, $new_y);
-
-		// crop to fit
-		if ($transformer->new_x != $max_x || $transformer->new_y != $max_y) {
-			$offset_x = 0;
-			$offset_y = 0;
-
-			if ($transformer->new_x > $max_x)
-				$offset_x = ceil(($transformer->new_x - $max_x) / 2);
-
-			if ($transformer->new_y > $max_y)
-				$offset_y = ceil(($transformer->new_y - $max_y) / 2);
-
-			$transformer->crop($max_x, $max_y, $offset_x, $offset_y);
-		}
 	}
 
 	// }}}

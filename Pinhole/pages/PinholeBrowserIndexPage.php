@@ -251,7 +251,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 	protected function getInlineJavaScript()
 	{
-		return sprintf("var %s_obj = new HoverFade('%s');",'photo_view','photo_vie');
+		return sprintf("var %s_obj = new HoverFade('%s');",'photo_view','photo_view');
 	}
 
 	// }}}

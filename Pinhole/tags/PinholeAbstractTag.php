@@ -110,14 +110,15 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 * included in the list of join clauses defined in
 	 * {@link PinholeAbstractTag::getJoinClauses()}.
 	 *
-	 * @return string the SQL where clause for this tag.
+	 * @return string the SQL where clause for this tag. If this tag does not
+	 *                 have a where clause, an empty string is returned.
 	 *
 	 * @see PinholeAbstractTag::getJoinClauses()
 	 * @see PinholeAbstractTag::getRange()
 	 */
 	public function getWhereClause()
 	{
-		return $this->db->quote(false, 'boolean');
+		return '';
 	}
 
 	// }}}

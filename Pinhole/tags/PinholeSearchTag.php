@@ -84,7 +84,7 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 			break;
 
 		default:
-			$where_clause = $this->db->quote(true, 'boolean');
+			$where_clause = '';
 			break;
 		}
 		

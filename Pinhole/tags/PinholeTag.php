@@ -99,8 +99,8 @@ class PinholeTag extends PinholeAbstractTag
 	 * This tag parses with any alphanumeric string.
 	 *
 	 * @param string $string the tag string to parse. 
-	 * @param MDB2_Driver_Common the database connection used to parse the tag
-	 *                            string.
+	 * @param MDB2_Driver_Common $db the database connection used to parse the
+	 *                                tag string.
 	 *
 	 * @return boolean true if the tag string could be parsed and false if the
 	 *                  tag string could not be parsed.
@@ -133,7 +133,7 @@ class PinholeTag extends PinholeAbstractTag
 	 * Gets the title of this tag
 	 *
 	 * @return string the title of this tag. This returns this tag's
-	 *                 <i>title</i> property.
+	 *                 <i>$title</i> property.
 	 */
 	public function getTitle()
 	{

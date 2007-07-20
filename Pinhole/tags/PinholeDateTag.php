@@ -247,8 +247,6 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
-		$applies = false;
-
 		switch ($this->name) {
 		case 'date':
 			$date = new SwatDate($this->value);
@@ -302,6 +300,10 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 
 		case 'day':
 			$applies = ($photo->photo_date->getDay() == $this->value);
+			break;
+
+		default:
+			$applies = false;
 			break;
 		}
 

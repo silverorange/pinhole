@@ -129,7 +129,6 @@ PinholePhotoUploadClient = function(id, form_action, progress_bar)
 
 	this.createIFrame();
 	this.uploadCompleteEvent = new YAHOO.util.CustomEvent('upload-complete');
-
 	YAHOO.util.Event.addListener(this.button, 'click', this.upload,
 		this, true);
 }
@@ -162,9 +161,12 @@ PinholePhotoUploadClient.prototype.setStatus = function(percent, time)
 
 PinholePhotoUploadClient.prototype.complete = function()
 {
+	document.getElementById(this.id + '_iframe').src = 'Photo/UploadProcessor';
+
 	this.progress_bar.setValue(1);
 	this.progress_bar.setText(PinholePhotoUploadClient.complete_text);
 	this.uploadCompleteEvent.fire();
+
 	PinholePhotoUploadManager.removeClient(this);
 }
 
@@ -229,8 +231,8 @@ PinholePhotoUploadClient.prototype.createIFrame = function()
 		iframe.name = this.id + '_iframe';
 		iframe.id = this.id + '_iframe';
 		iframe.style.border = '0';
-		iframe.style.width = '0';
-		iframe.style.height = '0';
+		iframe.style.width = '300';
+		iframe.style.height = '300';
 		this.button.parentNode.insertBefore(iframe, this.button);
 	}
 }

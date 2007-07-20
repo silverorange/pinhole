@@ -3,20 +3,18 @@
 require_once 'Swat/Swat.php';
 require_once 'Site/pages/SitePage.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Pinhole/PinholePhotoFactory.php';
 
 /**
- * Page for processing uploaded photos
+ * Page for indicating when an upload is complete
  *
- * This page is responsible for and decompressing, resizing, cropping and
- * database insertion required for new photos. It is triggered via javascript
- * when PinholePhotoUploadStatus has loaded.
+ * This page is responsible for indicating, via javascript, when the upload is
+ * complete. It is the target of the photo upload form.
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoUploadProcessor extends SitePage
+class PinholePhotoUploadStatus extends SitePage
 {
 	// {{{ public function __construct()
 
@@ -29,17 +27,18 @@ class PinholePhotoUploadProcessor extends SitePage
 	}
 
 	// }}}
-	// {{{ public function process()
+	// {{{ public function init()
 
 	/**
-	 * Processes uploaded photo files
+	 * Makes sure this page was loaded in a file upload context
+	 *
+	 * @throws AdminNotFoundException if this page was not loaded from a file
+	 *                                upload context.
 	 */
-	public function process()
+	public function init()
 	{
-		$photo_factory = new PinholePhotoFactory();
-		$photo_factory->setPath(realpath('../'));
-		$photo_factory->setDatabase($this->app->db);
-		$photo_factory->processUploadedFile('file');
+		if (!isset($_FILES))
+			throw new AdminNotFoundException(Pinhole::_('Page not found.'));
 	}
 
 	// }}}
@@ -48,8 +47,8 @@ class PinholePhotoUploadProcessor extends SitePage
 	/**
 	 * Builds the layout content of this upload processor
 	 *
-	 * This displays the required inline JavaScript to mark that file
-	 * processing is complete.
+	 * This displays the required inline JavaScript to mark this file upload
+	 * as complete.
 	 *
 	 * @see PinholePhotoUploadProcessor::getInlineJavaScript()
 	 */
@@ -57,9 +56,7 @@ class PinholePhotoUploadProcessor extends SitePage
 	{
 		$this->layout->startCapture('content');
 
-		echo 'completed processing';
-
-		//Swat::displayInlineJavaScript($this->getInlineJavaScript());
+		Swat::displayInlineJavaScript($this->getInlineJavaScript());
 
 		$this->layout->endCapture();
 	}
@@ -72,7 +69,11 @@ class PinholePhotoUploadProcessor extends SitePage
 	 */
 	protected function getInlineJavaScript()
 	{
-		return sprintf("window.parent.%s_obj.complete();\n", $id);
+		$javascript = '';
+		foreach ($_FILES as $id => $file)
+			$javascript.= sprintf("window.parent.%s_obj.complete();\n", $id);
+
+		return $javascript;
 	}
 
 	// }}}

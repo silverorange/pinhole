@@ -11,12 +11,10 @@
 .pinhole-tile-view .swat-tile a {
 	padding: 10px;
 	display: block;
-	border: 1px solid transparent;
 	text-decoration: none;
 }
 
 .pinhole-tile-view .swat-tile a:hover {
-	border: 1px solid #555753;
 	background: #33393a;
 }
 

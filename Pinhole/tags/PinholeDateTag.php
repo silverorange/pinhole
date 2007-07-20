@@ -212,7 +212,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			break;
 
 		default:
-			$where = '1 = 1';
+			$where = '';
 			break;
 		}
 

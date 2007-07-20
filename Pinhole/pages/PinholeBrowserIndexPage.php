@@ -242,6 +242,16 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		}
 
 		$div_tag->close();
+
+		Swat::displayInlineJavaScript($this->getInlineJavaScript());
+	}
+
+	// }}}
+	// {{{ protected function getInlineJavaScript()
+
+	protected function getInlineJavaScript()
+	{
+		return sprintf("var %s_obj = new HoverFade('%s');",'photo_view','photo_vie');
 	}
 
 	// }}}
@@ -254,6 +264,10 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		parent::finalize();
 		$this->layout->addHtmlHeadEntrySet(
 			$this->photo_ui->getRoot()->getHtmlHeadEntrySet());
+	
+		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
+			'packages/pinhole/javascript/pinhole-hover-fade.js',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

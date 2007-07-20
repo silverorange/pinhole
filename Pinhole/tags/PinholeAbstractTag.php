@@ -117,7 +117,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 */
 	public function getWhereClause()
 	{
-		return 'false';
+		return $this->db->quote(false, 'boolean');
 	}
 
 	// }}}

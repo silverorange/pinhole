@@ -203,9 +203,15 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	public function getPhotos(SwatDBRange $range = null)
 	{
 		if (!$this->photos_loaded) {
-			$sql = sprintf('select * from PinholePhoto %s where %s',
-				implode("\n", $this->getJoinClauses()),
-				$this->getWhereClause());
+			$sql = 'select * from PinholePhoto';
+
+			$join_clauses = implode(' ', $this->getJoinClauses());
+			if (strlen($join_clauses) > 0)
+				$sql.= ' '.$join_clauses.' ';
+
+			$where_clause = $this->getWhereClause();
+			if (strlen($where_clause) > 0)
+				$sql.= ' where '.$where_clause;
 
 			if ($range !== null)
 				$this->db->setRange($range->getLimit(), $range->getOffset());
@@ -233,9 +239,15 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 */
 	public function getPhotoCount()
 	{
-		$sql = sprintf('select count(id) from PinholePhoto %s where %s',
-			implode("\n", $this->getJoinClauses()),
-			$this->getWhereClause());
+		$sql = 'select count(id) from PinholePhoto';
+
+		$join_clauses = implode(' ', $this->getJoinClauses());
+		if (strlen($join_clauses) > 0)
+			$sql.= ' '.$join_clauses.' ';
+
+		$where_clause = $this->getWhereClause();
+		if (strlen($where_clause) > 0)
+			$sql.= ' where '.$where_clause;
 
 		return SwatDB::queryOne($this->db, $sql);
 	}

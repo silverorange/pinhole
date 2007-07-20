@@ -150,10 +150,19 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 		case 'keywords':
 			$applies = false;
 
-			$sql = sprintf('select id from PinholePhoto %s
-				where %s and PinholePhoto.id = %s',
-				implode("\n", $this->getJoinClauses()),
-				$this->getWhereClause(),
+			$sql = 'select * from PinholePhoto';
+
+			$join_clauses = implode(' ', $this->getJoinClauses());
+			if (strlen($join_clauses) > 0)
+				$sql.= ' '.$join_clauses.' ';
+
+			$sql.= ' where ';
+
+			$where_clause = $this->getWhereClause();
+			if (strlen($where_clause) > 0)
+				$sql.= $where_clause.' and ';
+
+			$sql.= sprintf('PinholePhoto.id = %s',
 				$this->db->quote($photo->id, 'integer'));
 
 			$count = SwatDB::exec($this->db, $sql);

@@ -64,7 +64,7 @@ class PinholeTagFactory
 		}
 
 		// get tag string namespace
-		$machine_tag_pattern = '/^([a-z]+)\.[a-z]+=[a-zA-Z0-9-\+]*$/';
+		$machine_tag_pattern = '/^([a-z]+)\.[a-z]+=[a-zA-Z0-9-\+ ]*$/';
 		$matches = array();
 		if (preg_match($machine_tag_pattern, $string, $matches) == 1)
 			$namespace = $matches[1];

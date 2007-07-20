@@ -26,7 +26,7 @@ abstract class PinholeAbstractMachineTag extends PinholeAbstractTag
 	 * The specific parts of the machine tag are captured in the regular
 	 * expression. [1] is the namespace, [2] is the name and [3] is the value.
 	 */
-	const SYNTAX_PATTERN = '/^([a-z]+)\.([a-z]+)=([a-zA-Z0-9-\+]*)$/';
+	const SYNTAX_PATTERN = '/^([a-z]+)\.([a-z]+)=([a-zA-Z0-9-\+ ]*)$/';
 
 	// }}}
 	// {{{ public function __toString()

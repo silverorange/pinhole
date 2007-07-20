@@ -180,6 +180,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getWhereClause()
 
 	/**
 	 * Gets the where clause used by the tags in this tag list
@@ -209,6 +210,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		return $where_clause;
 	}
 
+	// }}}
 	// {{{ public function getRange()
 
 	/**
@@ -618,8 +620,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 //			$sql = $sql.' '.$order_by_clause;
 
 		$range = $this->getRange();
-		if ($range !== null)
-			$this->db->setLimit($range->getLimit(), $range->getOffset());
+//		if ($range !== null)
+//			$this->db->setLimit($range->getLimit(), $range->getOffset());
+		$this->db->setLimit(50);
 
 		$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
 		return SwatDB::query($this->db, $sql, $wrapper);

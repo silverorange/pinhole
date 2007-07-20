@@ -58,9 +58,9 @@ class PinholePhotoLoaderPage extends PinholePage
 		parent::build();
 
 		$mime_type = 'image/jpeg';
-
 		header('Content-Type: '.$mime_type);
-		readfile($this->photo->getDimension($this->dimension_shortname)->getPath());	
+		readfile($this->photo->getDimension(
+			$this->dimension_shortname)->getPath());
 
 		exit();
 	}

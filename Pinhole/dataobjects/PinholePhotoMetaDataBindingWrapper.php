@@ -33,7 +33,7 @@ class PinholePhotoMetaDataBindingWrapper extends SwatDBRecordsetWrapper
 				PinholeMetaData.id = PinholePhotoMetaDataBinding.meta_data
 			where PinholeMetaData.show = %s
 				and PinholePhotoMetaDataBinding.photo = %s 
-			order by PinholeMetaData.displayorder';
+			order by PinholeMetaData.displayorder, PinholeMetaData.title';
 
 		$sql = sprintf($sql,
 			$db->quote(true, 'boolean'),

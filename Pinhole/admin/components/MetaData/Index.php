@@ -102,7 +102,7 @@ class PinholeMetaDataIndex extends AdminIndex
 	 *
 	 * @return SwatTableModel with metadata information.
 	 */
-	protected function getTableModel(SwatTableView $view)
+	protected function getTableModel(SwatView $view)
 	{
 		$sql = 'select * from PinholeMetaData
 			order by %s desc';

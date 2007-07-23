@@ -88,7 +88,7 @@ class PinholePhotographerIndex extends AdminIndex
 	 *
 	 * @return SwatTableModel with photographer information.
 	 */
-	protected function getTableModel(SwatTableView $view)
+	protected function getTableModel(SwatView $view)
 	{
 		$sql = 'select * from PinholePhotographer
 			order by %s';

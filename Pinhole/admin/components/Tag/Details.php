@@ -50,7 +50,7 @@ class PinholeTagDetails extends AdminIndex
 	// }}}
 	// {{{ protected function getTableModel()
 
-	protected function getTableModel(SwatTableView $view)
+	protected function getTableModel(SwatView $view)
 	{
 		switch ($view->id) {
 			case 'children_view':

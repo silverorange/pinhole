@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Admin/pages/AdminIndex.php';
+require_once 'Swat/SwatTableStore.php';
+require_once 'Swat/SwatDetailsView.php';
 
 /**
  * Index page for metadata
@@ -103,14 +105,32 @@ class PinholeMetaDataIndex extends AdminIndex
 	protected function getTableModel(SwatTableView $view)
 	{
 		$sql = 'select * from PinholeMetaData
-			order by %s';
+			order by %s desc';
 
 		$sql = sprintf($sql,
-			$this->getOrderByClause($view, 'title'));
+			$this->getOrderByClause($view, 'show'));
 		
-		$rs = SwatDB::query($this->app->db, $sql);
+		$metadata = SwatDB::query($this->app->db, $sql);
+		
+		$store = new SwatTableStore();
 
-		return $rs;
+		foreach ($metadata as $data) {
+			$ds = new SwatDetailsView();
+
+			$ds->title       = $data->title;
+			$ds->shortname   = $data->shortname;
+			$ds->id          = $data->id;
+			$ds->show        = $data->show;
+			$ds->machine_tag = $data->machine_tag;
+			if ($ds->show)
+				$ds->group_title = 'Shown';
+			else
+				$ds->group_title = 'Not Shown';
+
+			$store->add($ds);
+		}
+
+		return $store;
 	}
 
 	// }}}

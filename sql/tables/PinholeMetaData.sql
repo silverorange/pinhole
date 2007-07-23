@@ -4,7 +4,8 @@ create table PinholeMetaData (
 	title varchar(255),
 	show boolean default false,
 	machine_tag boolean default false,
-	primary key (id)
+	primary key (id),
+	displayorder serial
 );
 
 CREATE INDEX PinholeMetaData_shortname_index ON PinholeMetaData(shortname);

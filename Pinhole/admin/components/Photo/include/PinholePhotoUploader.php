@@ -145,6 +145,13 @@ class PinholePhotoUploader extends SwatFileEntry
 		$this->progress_bar->display();
 		$progress_bar_div_tag->close();
 
+		$processing_div_tag = new SwatHtmlTag('div');
+		$processing_div_tag->id = $this->id.'_processing';
+		$processing_div_tag->class = 'pinhole-photo-uploader-processing';
+		$processing_div_tag->open();
+		echo Pinhole::_('Processing');
+		$processing_div_tag->close();
+
 		$form_tag->close();
 
 		Swat::displayInlineJavaScript($this->getInlineJavaScript());

@@ -12,11 +12,11 @@
 				</widget>
 			</widget>
 			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Show in Menu?</property>
+				<property name="title" translatable="yes">Display in Photo Details</property>
 				<widget class="SwatCheckbox" id="show" />
 			</widget>
 			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Show Machine Tag</property>
+				<property name="title" translatable="yes">Display Machine Tag</property>
 				<widget class="SwatCheckbox" id="machine_tag" />
 			</widget>
 			<widget class="SwatFooterFormField">

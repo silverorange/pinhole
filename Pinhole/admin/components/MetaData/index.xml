@@ -33,13 +33,13 @@
 					</object>
 				</object>
 				<object class="SwatTableViewColumn">
-					<property name="title" translatable="yes">Show in photo datails?</property>
+					<property name="title" translatable="yes">Display in Photo Details</property>
 					<object class="SwatBooleanCellRenderer">
 						<property name="value" type="data">show</property>
 					</object>
 				</object>
 				<object class="SwatTableViewColumn">
-					<property name="title" translatable="yes">Machine Tag</property>
+					<property name="title" translatable="yes">Display Machine Tag</property>
 					<object class="SwatBooleanCellRenderer">
 						<property name="value" type="data">machine_tag</property>
 					</object>
@@ -50,16 +50,16 @@
 					<property name="title" translatable="yes">delete…</property>
 				</widget>
 				<widget class="SwatActionItem" id="show_details">
-					<property name="title" translatable="yes">show details</property>
+					<property name="title" translatable="yes">display in photo details</property>
 				</widget>
 				<widget class="SwatActionItem" id="dont_show_details">
-					<property name="title" translatable="yes">don't show details</property>
+					<property name="title" translatable="yes">don't display in photo details</property>
 				</widget>
 				<widget class="SwatActionItem" id="show_machine">
-					<property name="title" translatable="yes">show machine tag</property>
+					<property name="title" translatable="yes">display machine tag</property>
 				</widget>
 				<widget class="SwatActionItem" id="dont_show_machine">
-					<property name="title" translatable="yes">don't show machine tag</property>
+					<property name="title" translatable="yes">don't display machine tag</property>
 				</widget>
 			</widget>	
 		</widget>

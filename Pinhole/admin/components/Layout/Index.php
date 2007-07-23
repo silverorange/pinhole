@@ -37,7 +37,7 @@ class PinholeLayoutIndex extends AdminIndex
 	 *
 	 * @return SwatTableModel with layout information.
 	 */
-	protected function getTableModel(SwatTableView $view)
+	protected function getTableModel(SwatView $view)
 	{
 		$sql = 'select * from PinholeLayouts
 			order by %s';

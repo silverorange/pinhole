@@ -18,6 +18,15 @@ class PinholePhotoScroller extends SwatControl
 
 	protected $photo;
 
+	public function __construct($id = null)
+	{
+		parent::__construct($id);
+
+		$this->addStyleSheet(
+			'packages/pinhole/styles/pinhole-photo-scroller.css',
+			Pinhole::PACKAGE_ID);
+	}
+
 	public function display()
 	{
 		if (!$this->visible)

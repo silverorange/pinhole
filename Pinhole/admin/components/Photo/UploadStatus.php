@@ -3,6 +3,7 @@
 require_once 'Swat/Swat.php';
 require_once 'Site/pages/SitePage.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
+require_once 'Pinhole/PinholePhotoFactory.php';
 
 /**
  * Page for indicating when an upload is complete
@@ -16,6 +17,11 @@ require_once 'Admin/exceptions/AdminNotFoundException.php';
  */
 class PinholePhotoUploadStatus extends SitePage
 {
+	// {{{ protected properties
+
+	protected $files = array();
+
+	// }}}
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout = null)
@@ -39,6 +45,21 @@ class PinholePhotoUploadStatus extends SitePage
 	{
 		if (!isset($_FILES))
 			throw new AdminNotFoundException(Pinhole::_('Page not found.'));
+	}
+
+	// }}}
+	// {{{ public function process()
+
+	public function process()
+	{
+		$photo_factory = new PinholePhotoFactory();
+		$photo_factory->setPath(realpath('../'));
+
+		foreach ($_FILES as $id => $file) {
+			$this->files = array_merge(
+				$this->files,
+				$photo_factory->saveUploadedFile('file'));
+		}
 	}
 
 	// }}}
@@ -69,9 +90,16 @@ class PinholePhotoUploadStatus extends SitePage
 	 */
 	protected function getInlineJavaScript()
 	{
-		$javascript = '';
+		$javascript = "var uploaded_files = {\n";
+
+		foreach ($this->files as $filename => $original_filename)
+			$javascript.= sprintf("'%s' : '%s',\n",
+				$filename, $original_filename);
+
+		$javascript.= "}\n";
+
 		foreach ($_FILES as $id => $file)
-			$javascript.= sprintf("window.parent.%s_obj.complete();\n", $id);
+			$javascript.= sprintf("window.parent.%s_obj.uploadComplete(uploaded_files);\n", $id);
 
 		return $javascript;
 	}

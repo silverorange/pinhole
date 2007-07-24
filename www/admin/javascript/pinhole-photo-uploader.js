@@ -4,14 +4,23 @@
 
 // {{{ PinholePhotoUploadManager
 
-PinholePhotoUploadManager = {};
+PinholePhotoUploadManager = {
+};
 
 PinholePhotoUploadManager.status_client = null;
+PinholePhotoUploadManager.processor_client = null;
 PinholePhotoUploadManager.clients = [];
 PinholePhotoUploadManager.interval_period = 1500; // in milliseconds
 PinholePhotoUploadManager.interval = null;
 PinholePhotoUploadManager.sequence = 0;
 PinholePhotoUploadManager.received_sequence = 0;
+
+PinholePhotoUploadManager.setProcessorClient = function(uri)
+{
+	PinholePhotoUploadManager.processor_client = new XML_RPC_Client(uri);
+}
+
+PinholePhotoUploadManager.setProcessorClient('UploadProcessorServer');
 
 PinholePhotoUploadManager.setStatusClient = function(uri)
 {
@@ -121,6 +130,7 @@ PinholePhotoUploadClient = function(id, form_action, progress_bar)
 	this.id = id;
 	this.form_action = form_action;
 	this.progress_bar = progress_bar;
+	this.uploaded_files = [];
 
 	this.progress_bar.pulse_step = 0.10;
 
@@ -129,6 +139,8 @@ PinholePhotoUploadClient = function(id, form_action, progress_bar)
 
 	this.createIFrame();
 	this.uploadCompleteEvent = new YAHOO.util.CustomEvent('upload-complete');
+	this.fileProcessedEvent = new YAHOO.util.CustomEvent('file-processed');
+	this.processingCompleteEvent = new YAHOO.util.CustomEvent('processing-complete');
 	YAHOO.util.Event.addListener(this.button, 'click', this.upload,
 		this, true);
 }
@@ -159,13 +171,15 @@ PinholePhotoUploadClient.prototype.setStatus = function(percent, time)
 	this.progress_bar.setText(text);
 }
 
-PinholePhotoUploadClient.prototype.complete = function()
+PinholePhotoUploadClient.prototype.uploadComplete = function(file_array)
 {
-	document.getElementById(this.id + '_iframe').src = 'Photo/UploadProcessor';
-
 	this.progress_bar.setValue(1);
 	this.progress_bar.setText(PinholePhotoUploadClient.complete_text);
+
 	this.uploadCompleteEvent.fire();
+
+	this.uploaded_files = file_array;
+	this.processNextFile();
 
 	PinholePhotoUploadManager.removeClient(this);
 }
@@ -231,8 +245,8 @@ PinholePhotoUploadClient.prototype.createIFrame = function()
 		iframe.name = this.id + '_iframe';
 		iframe.id = this.id + '_iframe';
 		iframe.style.border = '0';
-		iframe.style.width = '300';
-		iframe.style.height = '300';
+		iframe.style.width = '0';
+		iframe.style.height = '0';
 		this.button.parentNode.insertBefore(iframe, this.button);
 	}
 }
@@ -240,4 +254,38 @@ PinholePhotoUploadClient.prototype.createIFrame = function()
 PinholePhotoUploadClient.prototype.getUploadIdentifier = function()
 {
 	return this.input.value;
+}
+
+PinholePhotoUploadClient.prototype.processNextFile = function()
+{
+	var that = this;
+
+	function callBack(response)
+	{
+		that.fileProcessedEvent.fire(response.processed_filename);
+
+		delete that.uploaded_files[response.filename];
+
+		// this is the only way I can think of count the number of
+		// entries in an object
+		var count = 0;
+		for (var file in that.uploaded_files)
+			count++;
+
+		if (count == 0)
+			that.processingCompleteEvent.fire();
+
+		// TODO: why doesn't the proper path work when it's first called?
+		PinholePhotoUploadManager.setProcessorClient('Photo/UploadProcessorServer');
+
+		that.processNextFile();
+
+	}
+
+	for (var file in this.uploaded_files) {
+		PinholePhotoUploadManager.processor_client.callProcedure(
+			'processFile', callBack,
+			[file, this.uploaded_files[file]]);
+		return;
+	}
 }

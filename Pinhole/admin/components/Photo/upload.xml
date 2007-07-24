@@ -9,7 +9,7 @@
 			<property name="target_action">Photo/UploadStatus</property>
 		</widget>
 		<widget class="AdminNote">
-			<property name="content" translatable="yes">Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in an zip archive file.</property>
+			<property name="content" translatable="yes">Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</property>
 		</widget>
 		<widget class="SwatDisplayableContainer" id="photo_container" />
 	</widget>

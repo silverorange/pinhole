@@ -108,7 +108,7 @@ class PinholeMetaDataIndex extends AdminIndex
 			order by %s';
 
 		$sql = sprintf($sql,
-			$this->getOrderByClause($view, 'show desc, displayorder'));
+			$this->getOrderByClause($view, 'show desc, displayorder, title'));
 		
 		$metadata = SwatDB::query($this->app->db, $sql);
 		

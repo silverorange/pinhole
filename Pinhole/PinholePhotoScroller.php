@@ -75,8 +75,7 @@ class PinholePhotoScroller extends SwatControl
 
 			$a_tag->title = $photo->title;
 			$a_tag->class = 'prev';
-			// this is a non-breaking space
-			$a_tag->setContent(Pinhole::_('« Prev'));
+			$a_tag->setContent(Pinhole::_('Prev'));
 			$a_tag->display();
 		}
 	}
@@ -113,8 +112,7 @@ class PinholePhotoScroller extends SwatControl
 
 			$a_tag->title = $photo->title;
 			$a_tag->class = 'next';
-			// this is a non-breaking space
-			$a_tag->setContent(Pinhole::_('Next »'));
+			$a_tag->setContent(Pinhole::_('Next'));
 			$a_tag->display();
 		}
 	}

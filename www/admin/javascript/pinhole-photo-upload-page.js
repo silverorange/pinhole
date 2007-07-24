@@ -10,8 +10,10 @@ PinholePhotoUploadPage = function(uploader)
 
 	this.uploader = uploader;
 
+	this.current_photo_path = null;
+
 	this.uploader.uploadCompleteEvent.subscribe(this.display, this, true);
-	this.uploader.fileProcessedEvent.subscribe(this.fadeInPhoto, this, true);
+	this.uploader.fileProcessedEvent.subscribe(this.addPhoto, this, true);
 	this.uploader.processingCompleteEvent.subscribe(this.complete, this, true);
 }
 
@@ -24,9 +26,11 @@ PinholePhotoUploadPage.path = '../images/photos/thumb';
 PinholePhotoUploadPage.processing_text = 'Processing photos … ';
 PinholePhotoUploadPage.processed_text = 'Finished Processing! ';
 
-/*
 PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 {
+	this.current_photo_path =
+		PinholePhotoUploadPage.path + '/' + args[0] + '.jpg';
+
 	this.spacer_div.style.width = '0';
 	this.spacer_div.style.height =
 		(PinholePhotoUploadPage.thumbnail_height +
@@ -48,12 +52,9 @@ PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 	animation.onComplete.subscribe(this.fadeInPhoto, this, true);
 	animation.animate();
 }
-*/
 
-PinholePhotoUploadPage.prototype.fadeInPhoto = function(type, args)
+PinholePhotoUploadPage.prototype.fadeInPhoto = function()
 {
-	var path = PinholePhotoUploadPage.path + '/' + args[0] + '.jpg';
-
 	var throbber_div = document.createElement('div');
 	//throbber_div.style.backgroundImage = 'url(http://www.webtwenny.com/images/Throbber.gif)';
 	throbber_div.style.backgroundPosition = 'center center';
@@ -81,13 +82,12 @@ PinholePhotoUploadPage.prototype.fadeInPhoto = function(type, args)
 	div.style.textAlign = 'center';
 
 	var image = document.createElement('img');
-	image.src = path;
+	image.src = this.current_photo_path;
 
 	div.appendChild(image);
 	throbber_div.appendChild(div);
 
-	this.photo_container.appendChild(throbber_div);
-	//this.photo_container.replaceChild(throbber_div, this.spacer_div);
+	this.photo_container.replaceChild(throbber_div, this.spacer_div);
 	var animation = new YAHOO.util.Anim(div, {opacity: { to:  1} }, 
 		PinholePhotoUploadPage.fade_duration, YAHOO.util.Easing.easeInStrong);
 

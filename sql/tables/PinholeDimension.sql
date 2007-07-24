@@ -1,5 +1,6 @@
 create table PinholeDimension (
 	id serial,
+	instance integer not null references PinholeInstance(id),
 	shortname varchar(255),
 	title varchar(255),
 	max_width int,

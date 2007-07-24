@@ -4,33 +4,28 @@
 
 PinholePhotoUploadPage = function(uploader)
 {
-	this.photos = [
-		'http://gallery.whitelands.com/files/thumb/photo57142.jpg',
-		'http://gallery.silverorange.com/files/thumb/photo43982.jpg',
-		'http://gallery.whitelands.com/files/thumb/photo56909.jpg',
-		'http://gallery.whitelands.com/files/thumb/photo56250.jpg',
-		'http://gallery.whitelands.com/files/thumb/photo53999.jpg'
-	];
-
-	this.count = 0;
-
 	this.photo_container = document.getElementById('photo_container');
 	this.spacer_div = document.createElement('div');
+	this.processing_message = document.createElement('h2');
 
 	this.uploader = uploader;
 
-	this.uploader.uploadCompleteEvent.subscribe(this.startDemo, this, true);
+	this.uploader.uploadCompleteEvent.subscribe(this.display, this, true);
+	this.uploader.fileProcessedEvent.subscribe(this.fadeInPhoto, this, true);
+	this.uploader.processingCompleteEvent.subscribe(this.complete, this, true);
 }
 
-PinholePhotoUploadPage.slide_duration = 1;
 PinholePhotoUploadPage.fade_duration = 1;
 PinholePhotoUploadPage.thumbnail_width = 100;
 PinholePhotoUploadPage.thumbnail_height = 100;
 PinholePhotoUploadPage.thumbnail_margin = 5;
 PinholePhotoUploadPage.thumbnail_padding = 10;
+PinholePhotoUploadPage.path = '../images/photos/thumb';
 PinholePhotoUploadPage.processing_text = 'Processing photos … ';
+PinholePhotoUploadPage.processed_text = 'Finished Processing! ';
 
-PinholePhotoUploadPage.prototype.addPhoto = function()
+/*
+PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 {
 	this.spacer_div.style.width = '0';
 	this.spacer_div.style.height =
@@ -53,11 +48,14 @@ PinholePhotoUploadPage.prototype.addPhoto = function()
 	animation.onComplete.subscribe(this.fadeInPhoto, this, true);
 	animation.animate();
 }
+*/
 
-PinholePhotoUploadPage.prototype.fadeInPhoto = function()
+PinholePhotoUploadPage.prototype.fadeInPhoto = function(type, args)
 {
+	var path = PinholePhotoUploadPage.path + '/' + args[0] + '.jpg';
+
 	var throbber_div = document.createElement('div');
-//	throbber_div.style.backgroundImage = 'url(http://www.webtwenny.com/images/Throbber.gif)';
+	//throbber_div.style.backgroundImage = 'url(http://www.webtwenny.com/images/Throbber.gif)';
 	throbber_div.style.backgroundPosition = 'center center';
 	throbber_div.style.backgroundRepeat = 'no-repeat';
 	throbber_div.style.width =
@@ -83,31 +81,33 @@ PinholePhotoUploadPage.prototype.fadeInPhoto = function()
 	div.style.textAlign = 'center';
 
 	var image = document.createElement('img');
-	image.src = this.photos[this.count % 5];
-	this.count++;
+	image.src = path;
 
 	div.appendChild(image);
 	throbber_div.appendChild(div);
-	this.photo_container.replaceChild(throbber_div, this.spacer_div);
+
+	this.photo_container.appendChild(throbber_div);
+	//this.photo_container.replaceChild(throbber_div, this.spacer_div);
 	var animation = new YAHOO.util.Anim(div, {opacity: { to:  1} }, 
 		PinholePhotoUploadPage.fade_duration, YAHOO.util.Easing.easeInStrong);
 
 	animation.animate();
 }
 
-PinholePhotoUploadPage.prototype.startDemo = function()
+PinholePhotoUploadPage.prototype.display = function()
 {
-	var processing_message = document.createElement('h2');
 	var processing_text = document.createTextNode(PinholePhotoUploadPage.processing_text);
-	processing_message.appendChild(processing_text);
-	this.photo_container.parentNode.insertBefore(processing_message,
+	this.processing_message.appendChild(processing_text);
+	this.photo_container.parentNode.insertBefore(this.processing_message,
 		this.photo_container);
 
 	var clear_div = document.createElement('div');
 	clear_div.style.clear = 'both';
 	this.photo_container.parentNode.appendChild(clear_div);
+}
 
-	this.addPhoto();
-	this.interval = window.setInterval(function(obj) { obj.addPhoto() },
-		4000, this);
+PinholePhotoUploadPage.prototype.complete = function()
+{
+	this.processing_message.innerHTML =
+		PinholePhotoUploadPage.processed_text;
 }

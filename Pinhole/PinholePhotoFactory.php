@@ -4,6 +4,7 @@ require_once 'Image/Transform.php';
 require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'MDB2.php';
 
@@ -21,6 +22,8 @@ require_once 'MDB2.php';
 class PinholePhotoFactory
 {
 	// {{{ protected properties
+
+	protected $temp_path = '../temp';
 
 	protected $path;
 
@@ -58,7 +61,40 @@ class PinholePhotoFactory
 	}
 
 	// }}}
-	// {{{ public function process()
+	// {{{ public function saveUploadedFile()
+
+	/**
+	 * Saves a file that has been uploaded
+	 *
+	 * Saves photo files with unique filenames. If the file is an archive,
+	 * the archive contents are extracted.
+	 *
+	 * @param string $name Name of the file input
+	 * @return array $files An array in the form $file =>
+	 *               $original_filename.
+	 */
+	public function saveUploadedFile($name)
+	{
+		if (!isset($_FILES[$name]))
+			return; //TODO: throw error
+
+		$file = $_FILES[$name];
+
+		$ext = strtolower(end(explode('.', $file['name'])));
+
+
+		$filename = uniqid('file').'.'.$ext;
+		$file_path = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, $filename);
+
+		move_uploaded_file($file['tmp_name'], $file_path);
+		chmod($file_path, 0666);
+
+		return $this->parseFile($filename, $file['name']);
+	}
+
+	// }}}
+	// {{{ public function parseFile()
 
 	/**
 	 * TODO: update documentation
@@ -73,80 +109,89 @@ class PinholePhotoFactory
 	 * @return PinholeAbstractTag the parsed tag object or null if the given
 	 *                             string could not be parsed.
 	 */
-	public function process($file, $original_filename = null)
+	public function parseFile($filename, $original_filename = null)
 	{
-		if (!file_exists($file))
-			throw new SwatFileNotFoundException(null, 0, $file);
+		$file_path = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, $filename);
+
+		if (!file_exists($file_path))
+			throw new SwatFileNotFoundException(null, 0, $filename);
 
 		$finfo = finfo_open(FILEINFO_MIME);
-		$mime_type = finfo_file($finfo, $file);
+		$mime_type = finfo_file($finfo, $file_path);
 
 		if (in_array($mime_type, $this->archive_mime_types))
-			$files = $this->getArchivedFiles($file,
+			$files = $this->getArchivedFiles($filename,
 				array_search($mime_type, $this->archive_mime_types));
 		else
-			$files = array($file => $original_filename);
+			$files = array($filename => $original_filename);
 
-		foreach ($files as $file => $original_filename) {
-			$this->createDataObject($file, $original_filename);
-			unlink($file);
-		}
+		return $files;
 	}
 
 	// }}}
-	// {{{ public function processUploadedFile()
+	// {{{ public function processFile()
 
 	/**
-	 * Process a file that has been uploaded
-	 *
-	 * @param string $name Name of the file input
+	 * TODO: update documentation
 	 */
-	public function processUploadedFile($name)
+	public function processFile($filename, $original_filename = null)
 	{
-		if (!isset($_FILES[$name]))
-			return; //TODO: throw error
+		$file_path = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, $filename);
 
-		$file = $_FILES[$name];
+		if (!file_exists($file_path))
+			throw new SwatFileNotFoundException(null, 0, $file_path);
 
-		$ext = strtolower(end(explode('.', $file['name'])));
+		$processed_filename =
+			$this->createDataObject($filename, $original_filename);
 
-		$file_path = sprintf('%s/../temp/%s.%s',
-			$this->path, uniqid('file'), $ext);
+		unlink($file_path);
 
-		move_uploaded_file($file['tmp_name'], $file_path);
-		chmod($file_path, 0666);
-
-		$this->process($file_path, $file['name']);
+		return $processed_filename;
 	}
 
 	// }}}
 	// {{{ protected function createDataObject()
 
-	protected function createDataObject($file, $original_filename)
+	protected function createDataObject($filename, $original_filename)
 	{
 		//define('SWATDB_DEBUG', true);
+
+		$file_path = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, $filename);
 
 		$this->db->beginTransaction();
 
 		$photo = new PinholePhoto();
 		$photo->setDatabase($this->db);
 
+		$meta_data = $this->getMetaDataFromFile($filename);
+
+		$photo->instance = 1; //TODO populate this correctly
 		$photo->filename = sha1(uniqid(rand(), true));
-		$photo->original_filename = ($original_filename === null) ?
-			$file : $original_filename;
+		$photo->original_filename = $original_filename;
 
 		// error suppression is needed here because there are several
 		// ways unavoidable warnings can occur despite the file being
 		// properly read.
-		$photo->serialized_exif = serialize(@exif_read_data($file));
-
+		$photo->serialized_exif = serialize(@exif_read_data($file_path));
 		$photo->upload_date = new SwatDate();
+
+		/*
+		if (isset($meta_data['createdate'])) {
+			$photo->photo_date = new SwatDate($meta_data['createdate']->value);
+		}
+		*/
+
 		$photo->save();
 
-		$this->saveMetaDataFromFile($file, $photo);
-		$this->saveDimensionsFromFile($file, $photo);
+		$this->saveMetaData($photo, $meta_data);
+		$this->saveDimensionsFromFile($filename, $photo);
 
 		$this->db->commit();
+
+		return $photo->filename;
 	}
 
 	// }}}
@@ -155,17 +200,19 @@ class PinholePhotoFactory
 	/**
 	 * Processes an array of files
 	 */
-	protected function getArchivedFiles($archive, $type)
+	protected function getArchivedFiles($filename, $type)
 	{
-		$files = array();
+		$file_path = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, $filename);
 
 		$za = new ZipArchive();
-		$opened = $za->open($archive);
+		$opened = $za->open($file_path);
 
 		if ($opened !== true)
 			return; //TODO: throw some sort of error or feedback for the user
 
-		$dir = $this->path.'/../temp/'.uniqid('dir');
+		$dir = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, uniqid('dir'));
 		mkdir($dir);
 		chmod($dir, 0770);
 
@@ -175,7 +222,7 @@ class PinholePhotoFactory
 		$za->extractTo($dir);
 		$za->close();
 
-		unlink($archive);
+		unlink($file_path);
 
 		$dh = opendir($dir);
 		while (($file = readdir($dh)) !== false) {
@@ -183,10 +230,11 @@ class PinholePhotoFactory
 				chmod($dir.'/'.$file, 0666);
 
 				$ext = strtolower(end(explode('.', $file)));
-				$file_path = sprintf('%s/../temp/%s.%s',
-					$this->path, uniqid('file'), $ext);
+				$filename = uniqid('file').'.'.$ext;
+				$file_path = sprintf('%s/%s/%s',
+					$this->path, $this->temp_path, $filename);
 
-				$files[$file_path] = $file;
+				$files[$filename] = $file;
 				rename($dir.'/'.$file, $file_path);
 			}
 		}
@@ -198,7 +246,43 @@ class PinholePhotoFactory
 	}
 
 	// }}}
-	// {{{ protected function saveMetaDataFromFile()
+	// {{{ protected function getMetaDataFromFile()
+
+	/**
+	 * Get the meta data from a photo
+	 *
+	 * @param string $filename
+	 *
+	 * @return array An array of PinholePhotoMetaDataBinding data objects
+	 *               with $shortname as the key of the array.
+	 */
+	protected function getMetaDataFromFile($filename)
+	{
+		exec("exiftool -t $filename", $tag_names);
+		exec("exiftool -t -s $filename", $values);
+
+		$data_objects = array();
+
+		for ($i = 0; $i < count($tag_names); $i++) {
+			$ret = explode("\t", $values[$i]);
+			if (!isset($ret[1]))
+				continue;
+
+			$meta_data = new PinholePhotoMetaDataBinding();
+			$meta_data->shortname = strtolower($ret[0]);
+			$meta_data->value = $ret[1];
+
+			$ret = explode("\t", $tag_names[$i]);
+			$meta_data->title = $ret[0];
+
+			$data_objects[$meta_data->shortname] = $meta_data;
+		}
+
+		return $data_objects;
+	}
+
+	// }}}
+	// {{{ protected function saveMetaData()
 
 	/**
 	 * Get the meta data from a photo
@@ -206,34 +290,22 @@ class PinholePhotoFactory
 	 * @param string $filename 
 	 * @return array An array of PinholeMetaData dataobjects 
 	 */
-	protected function saveMetaDataFromFile($filename, PinholePhoto $photo)
+	protected function saveMetaData(PinholePhoto $photo, $meta_data)
 	{
-		exec("exiftool -t $filename", $tag_names);
-		exec("exiftool -t -s $filename", $values);
-
-		$meta_data = SwatDB::getOptionArray($this->db,
+		$existing_meta_data = SwatDB::getOptionArray($this->db,
 			'PinholeMetaData', 'shortname', 'id');
 
-		for ($i = 0; $i < count($tag_names); $i++) {
-			$ret = explode("\t", $values[$i]);
-			if (!isset($ret[1]))
-				continue;
-
-			$shortname = strtolower($ret[0]);
-			$value = $ret[1];
-
-			$ret = explode("\t", $tag_names[$i]);
-			$title = $ret[0];
-
-			if (!in_array($shortname, $meta_data)) {
+		foreach ($meta_data as $data) {
+			if (!in_array($data->shortname, $existing_meta_data)) {
 				$meta_data_id = SwatDB::insertRow($this->db,
 					'PinholeMetaData',
 					array('text:shortname', 'text:title'),
-					array('shortname' => $shortname,
-						'title' => $title),
+					array('shortname' => $data->shortname,
+						'title' => $data->title),
 					'id');
 			} else {
-				$meta_data_id = array_search($shortname, $meta_data);
+				$meta_data_id = array_search($data->shortname,
+					$existing_meta_data);
 			}
 
 			SwatDB::insertRow($this->db, 'PinholePhotoMetaDataBinding',
@@ -242,16 +314,19 @@ class PinholePhotoFactory
 					'text:value'),
 				array('photo' => $photo->id,
 					'meta_data' => $meta_data_id,
-					'value' => $value));
+					'value' => $data->value));
 		}
 	}
 
 	// }}}
 	// {{{ protected function saveDimensionsFromFile()
 
-	protected function saveDimensionsFromFile($file, PinholePhoto $photo)
+	protected function saveDimensionsFromFile($filename, PinholePhoto $photo)
 	{
 		static $dimensions;
+
+		$file_path = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, $filename);
 
 		if ($dimensions === null)
 			$dimensions = SwatDB::query($this->db,
@@ -267,7 +342,7 @@ class PinholePhotoFactory
 			// every dimension, but if I put it outside the loop,
 			// the variable loses its file resource after the
 			// first resize has taken place. (nick)
-			$transformer->load($file);
+			$transformer->load($file_path);
 			$transformed = $this->processImage($transformer, $dimension);
 
 			SwatDB::insertRow($this->db, 'PinholePhotoDimensionBinding',

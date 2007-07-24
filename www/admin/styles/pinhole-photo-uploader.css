@@ -3,6 +3,11 @@ div.pinhole-photo-uploader-progress-bar {
 	display: none;
 }
 
+div.pinhole-photo-uploader-processing {
+	margin-top: 2px;
+	display: none;
+}
+
 input.ipinhole-photo-uploader-submit-button {
 	font-weight: bold;
 }

@@ -39,6 +39,13 @@ class PinholePhoto extends SwatDBDataObject
 	public $id;
 
 	/**
+	 * The PinholeInstance this photo belongs to
+	 *
+	 * @var PinholeInstance
+	 */
+	public $instance;
+
+	/**
 	 * User visible title
 	 *
 	 * @var string

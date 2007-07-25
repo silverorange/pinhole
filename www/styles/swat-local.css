@@ -51,3 +51,15 @@ table.swat-details-view th {
 	border-color: #555753;
 }
 
+
+/* SwatFieldset */
+
+.swat-fieldset,
+.swat-grouping-form-field-fieldset {
+	border-color: #555753;
+}
+
+.swat-fieldset legend, 
+swat-grouping-form-field legend {
+	color: #eeeeec;
+}

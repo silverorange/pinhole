@@ -206,26 +206,19 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		parent::buildInternal();
 
+		/*
 		$image = $this->ui->getWidget('image');
 		$dimension = $this->photo->getDimension('large');
 		$image->image = '../'.$dimension->getUri();
 		$image->width = $dimension->width;
 		$image->height = $dimension->height;
+		*/
 
 		$thumbnail = $this->ui->getWidget('thumbnail');
 		$dimension = $this->photo->getDimension('thumb');
 		$thumbnail->image = '../'.$dimension->getUri();
 		$thumbnail->width = $dimension->width;
 		$thumbnail->height = $dimension->height;
-
-		$this->ui->getWidget('details_page')->title = 
-			($this->photo->title == null) ?
-			Pinhole::_('Photo Edit') :
-			SwatString::condense($this->photo->title, 60);
-
-		if ($this->ui->getWidget('edit_form')->hasMessage() ||
-			$this->photo->status === PinholePhoto::STATUS_PENDING)
-			$this->ui->getWidget('notebook')->selected_page = 'edit_frame';
 	}
 
 	// }}}

@@ -6,10 +6,13 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatDetailsViewField.php';
 require_once 'Swat/SwatTextCellRenderer.php';
 require_once 'Swat/SwatLinkCellRenderer.php';
+require_once 'Swat/SwatDate.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeDateTagCellRenderer.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Pinhole/dataobjects/PinholeComment.php';
+require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
 
 /**
  * @package   Pinhole
@@ -37,6 +40,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->photo = new PinholePhoto();
 		$this->photo->setDatabase($this->app->db);
 		$this->photo->load(intval($photo_id));
+
+		$this->comment = new PinholeComment();
+		$this->comment->setDatabase($this->app->db);
 	}
 
 	// }}}
@@ -49,6 +55,41 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->details_ui = new SwatUI();
 		$this->details_ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
 		$this->details_ui->loadFromXML($this->details_ui_xml);
+		$this->details_ui->init();
+	}
+
+	// }}}
+
+	// process phase
+	// {{{ public function process()
+
+	public function process()
+	{
+		parent::process();
+
+		$form = $this->details_ui->getWidget('reply');
+		$form->process();
+		$form->action = sprintf('photo/%s',$this->photo->id);
+
+		if ($form->isSubmitted() && ($this->photo->comments_status == 0)) {
+			$recaptcha = $this->details_ui->getWidget('recaptcha');
+			
+			if (!$recaptcha->hasMessage()){
+				$fullname   = $this->details_ui->getWidget('fullname');
+				$email      = $this->details_ui->getWidget('email');
+				$bodytext   = $this->details_ui->getWidget('bodytext');
+				$webaddress = $this->details_ui->getWidget('webaddress');
+
+				$date = new SwatDate();
+				$this->comment->fullname    = $fullname->value;
+				$this->comment->email       = $email->value;
+				$this->comment->bodytext    = $bodytext->value;
+				$this->comment->webaddress  = $webaddress->value;
+				$this->comment->photo       = $this->photo->id;
+				$this->comment->create_date = $date;
+				$this->comment->save();
+			}
+		}
 	}
 
 	// }}}
@@ -66,6 +107,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$description = $this->details_ui->getWidget('description');
 		$description->content = $this->photo->description;
+		
+		$view = $this->details_ui->getWidget('comments_view');
+		$view->data = $this->getCommentsStore();
+		$this->buildComments();
 
 		/* Set YUI Grid CSS class for one full-width column on details page */
 		$this->layout->data->yui_grid_class = 'yui-t7';
@@ -215,6 +260,71 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
+	// {{{ protected function buildComments()
+	
+	protected function buildComments()
+	{
+		// build previous comments
+		$view = $this->details_ui->getWidget('comments_view');
+		$comments_status = $this->photo->comments_status;
+		
+		if ($comments_status == 0 || $comments_status == 1) {
+			foreach ($view->data as $comment) {
+				$field = new SwatDetailsViewField();
+
+				if ($comment->create_date){
+					$date = sprintf('[%s]', $comment->create_date);
+					$field->title = $comment->fullname.$date;
+				} else
+					$field->title = $comment->fullname;
+		
+				$renderer = new SwatTextCellRenderer();
+
+				$view->appendField($field);
+				$field->addRenderer($renderer);
+
+				if ($comment->email) {
+					$field = new SwatDetailsViewField();
+					$renderer = new SwatLinkCellRenderer();
+					$renderer->link = sprintf('mailto:%s', $comment->email);
+					$renderer->text = $comment->email;
+					$view->appendField($field);
+					$field->addRenderer($renderer);
+				}
+
+				if ($comment->webaddress) {
+					$field = new SwatDetailsViewField();
+					$renderer = new SwatLinkCellRenderer();
+					$renderer->link = $comment->webaddress;
+					$renderer->text = $comment->webaddress;
+					$view->appendField($field);
+					$field->addRenderer($renderer);
+				}
+
+	 			$field = new SwatDetailsViewField();
+				$renderer = new SwatTextCellRenderer();
+				$renderer->text = $comment->bodytext;
+				$view->appendField($field);
+				$field->addRenderer($renderer);
+			}
+		}
+	}
+
+	// }}}
+	// {{{ protected function getCommentsStore()
+
+	protected function getCommentsStore()
+	{
+		$sql = sprintf('select * from PinholeComment where '. 
+			'photo = %s order by id', $this->photo->id);
+
+		$sections = SwatDB::query($this->app->db, $sql, 'PinholeCommentWrapper');
+
+		return $sections;
+	}
+
+	// }}}
+
 
 	// finalize phase
 	// {{{ public function finalize()
@@ -224,6 +334,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		parent::finalize();
 		$this->layout->addHtmlHeadEntrySet(
 			$this->details_ui->getRoot()->getHtmlHeadEntrySet());
+
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/styles/pinhole-browser-details-page.css',
 			Pinhole::PACKAGE_ID));

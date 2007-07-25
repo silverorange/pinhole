@@ -20,7 +20,7 @@
 				</object>
 			</widget>
 			<widget class="AdminPagination" id="pager">
-				<property name="link">Photo</property>
+				<property name="link">Photo/Pending</property>
 			</widget>
 			<widget class="SwatActions" id="index_actions">
 				<widget class="SwatActionItem" id="delete">

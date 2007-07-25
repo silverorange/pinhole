@@ -27,6 +27,10 @@ class PinholePhoto extends SwatDBDataObject
 	const DATE_PART_MONTH = 2;
 	const DATE_PART_DAY = 4;
 	const DATE_PART_TIME = 8;
+	
+	const STATUS_NORMAL = 0;
+	const STATUS_LOCKED = 1;
+	const STATUS_DISABLED = 2;
 
 	// }}}
 	// {{{ public properties
@@ -133,6 +137,17 @@ class PinholePhoto extends SwatDBDataObject
 	 * @var integer
 	 */
 	public $status;
+	
+	/**
+	 * Comments status
+	 *
+	 * STATUS_NORMAL - allows for displaying and posting of comments
+	 * STATUS_LOCKED - allows for only displaying of comments
+	 * STATUS_DISABLED - displaying and posting of comments is turned off
+	 *
+	 * @var integer
+	 */
+	public $comments_status;
 
 	// }}}
 	// {{{ private properties

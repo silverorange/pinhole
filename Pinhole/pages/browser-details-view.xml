@@ -22,4 +22,44 @@
 			</object>
 		</widget>
 	</widget>
+	<widget class="SwatForm" id="comments">
+		<widget class="SwatFieldset">
+			<property name="title" type="string">Replies to Nick's Photos</property>
+			<widget class="SwatDetailsView" id="comments_view" />
+		</widget>
+	</widget>
+	<widget class="SwatForm" id="reply">
+		<widget class="SwatFieldset">
+			<property name="title" type="string">Post a Comment</property>
+			<widget class="SwatFormField">
+				<property name="title" type="string">Name</property>
+				<widget class="SwatEntry" id="fullname">
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" type="string">Email Address</property>
+				<widget class="SwatEntry" id="email"/>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" type="string">Web Address</property>
+				<widget class="SwatEntry" id="webaddress"/>
+			</widget>
+			<widget class="SwatFormField">
+				<widget class="SwatReCaptcha" id="recaptcha">
+					<property name="public_key" type="string">6LcMHwAAAAAAAMLTQmoBZy0eEAdV9FO3r7-5iiz6</property>
+					<property name="private_key" type="string">6LcMHwAAAAAAAAaNyPZdWk81OwYoeRtCUGimCVqr</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" type="string">Comment</property>
+				<widget class="SwatTextarea" id="bodytext">
+				</widget>
+			</widget>
+			<widget class="SwatFooterFormField">
+				<widget class="SwatButton">
+					<property name="title" type="string">Submit Button</property>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
 </swatml>

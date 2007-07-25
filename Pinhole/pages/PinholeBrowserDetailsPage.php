@@ -88,6 +88,12 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$this->comment->photo       = $this->photo->id;
 				$this->comment->create_date = $date;
 				$this->comment->save();
+
+				// resets the fields to blank
+				$fullname->value   = null;
+				$email->value      = null;
+				$bodytext->value   = null;
+				$webaddress->value = null;
 			}
 		}
 	}

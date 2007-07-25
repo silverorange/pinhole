@@ -1,49 +1,44 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
-	<widget class="SwatNoteBook" id="notebook">
-		<widget class="SwatNoteBookPage" id="edit_page">
-			<widget class="SwatImageDisplay" id="image" />
-		</widget>
-		<widget class="SwatNoteBookPage" id="edit_frame">
-			<property name="title" translatable="yes">Edit</property>
-			<widget class="SwatMessageDisplay" id="message_display" />
-			<widget class="SwatForm" id="edit_form">
-				<widget class="SwatImageDisplay" id="thumbnail" />
-				<widget class="SwatFormField">
-					<property name="title" translatable="yes">Title</property>
-					<widget class="SwatEntry" id="title" />
-				</widget>
-				<widget class="SwatFormField">
-					<property name="title" translatable="yes">Date Taken</property>
-					<widget class="SwatDateEntry" id="photo_date">
-						<property name="required_parts" type="constant">YEAR</property>
-						<property name="display_parts" type="constant">YEAR|MONTH|DAY|TIME|CALENDAR</property>
-					</widget>
-				</widget>
-				<widget class="SwatFormField">
-					<property name="title" translatable="yes">Description</property>
-					<widget class="SwatTextarea" id="description" />
-				</widget>
-				<widget class="SwatFormField">
-					<property name="title" translatable="yes">Add Tags</property>
-					<widget class="PinholePhotoTagEntry" id="tags" />
-				</widget>
-				<widget class="SwatFormField" id="status_field">
-					<property name="title" translatable="yes">Status</property>
-					<widget class="SwatRadioList" id="status" />
-				</widget>
-				<widget class="SwatFooterFormField">
-					<widget class="SwatButton" id="submit_button">
-						<property name="title" translatable="yes">Update</property>
-					</widget>
-					<widget class="SwatButton" id="proceed_button">
-						<property name="title" translatable="yes">Update &amp; Proceed to Next Photo</property>
-						<property name="visible" type="boolean">false</property>
-					</widget>
-				</widget>
-				<widget class="SwatContentBlock" id="status_info" />
+	<widget class="SwatFrame" id="edit_frame">
+		<property name="title" translatable="yes">Edit</property>
+		<widget class="SwatMessageDisplay" id="message_display" />
+		<widget class="SwatForm" id="edit_form">
+			<widget class="SwatImageDisplay" id="thumbnail" />
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Title</property>
+				<widget class="SwatEntry" id="title" />
 			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Date Taken</property>
+				<widget class="SwatDateEntry" id="photo_date">
+					<property name="required_parts" type="constant">YEAR</property>
+					<property name="display_parts" type="constant">YEAR|MONTH|DAY|TIME|CALENDAR</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Description</property>
+				<widget class="SwatTextarea" id="description" />
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Add Tags</property>
+				<widget class="PinholePhotoTagEntry" id="tags" />
+			</widget>
+			<widget class="SwatFormField" id="status_field">
+				<property name="title" translatable="yes">Status</property>
+				<widget class="SwatRadioList" id="status" />
+			</widget>
+			<widget class="SwatFooterFormField">
+				<widget class="SwatButton" id="submit_button">
+					<property name="title" translatable="yes">Update</property>
+				</widget>
+				<widget class="SwatButton" id="proceed_button">
+					<property name="title" translatable="yes">Update &amp; Proceed to Next Photo</property>
+					<property name="visible" type="boolean">false</property>
+				</widget>
+			</widget>
+			<widget class="SwatContentBlock" id="status_info" />
 		</widget>
 	</widget>
 </swatml>

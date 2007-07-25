@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Admin/pages/AdminDBDelete.php';
+require_once 'Swat/SwatTableStore.php';
+require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Admin/AdminListDependency.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';

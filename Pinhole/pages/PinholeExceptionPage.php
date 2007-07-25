@@ -49,6 +49,19 @@ class PinholeExceptionPage extends SiteExceptionPage
 	}
 
 	// }}}
+
+	// finalize phase
+	// {{{ public function finalize()
+
+	public function finalize()
+	{
+		parent::finalize();
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/styles/pinhole-exception-page.css',
+			Pinhole::PACKAGE_ID));
+	}
+
+	// }}}
 }
 
 ?>

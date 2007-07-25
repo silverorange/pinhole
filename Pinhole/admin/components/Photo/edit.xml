@@ -2,7 +2,7 @@
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
 	<widget class="SwatNoteBook" id="notebook">
-		<widget class="SwatNoteBookPage" id="details_page">
+		<widget class="SwatNoteBookPage" id="edit_page">
 			<widget class="SwatImageDisplay" id="image" />
 		</widget>
 		<widget class="SwatNoteBookPage" id="edit_frame">

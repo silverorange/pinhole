@@ -22,7 +22,7 @@
 		</widget>
 		<widget class="SwatMessageDisplay" id="message_display" />
 		<widget class="SwatForm" id="edit_form">
-			<widget class="SwatImageDisplay" id="thumbnail" />
+			<widget class="SwatImagePreviewDisplay" id="thumbnail" />
 			<widget class="SwatFormField">
 				<property name="title" translatable="yes">Title</property>
 				<widget class="SwatEntry" id="title" />

@@ -108,9 +108,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$description = $this->details_ui->getWidget('description');
 		$description->content = $this->photo->description;
 		
-		$view = $this->details_ui->getWidget('comments_view');
-		$view->data = $this->getCommentsStore();
-		$this->buildComments();
+		$this->buildComments($this->getCommentsStore());
 
 		/* Set YUI Grid CSS class for one full-width column on details page */
 		$this->layout->data->yui_grid_class = 'yui-t7';
@@ -262,50 +260,32 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	// }}}
 	// {{{ protected function buildComments()
 	
-	protected function buildComments()
+	protected function buildComments($store)
 	{
 		// build previous comments
-		$view = $this->details_ui->getWidget('comments_view');
+		$comments = $this->details_ui->getWidget('comments');
 		$comments_status = $this->photo->comments_status;
 		
 		if ($comments_status == 0 || $comments_status == 1) {
-			foreach ($view->data as $comment) {
-				$field = new SwatDetailsViewField();
+			foreach ($store as $comment) {
 
-				if ($comment->create_date){
-					$date = sprintf('[%s]', $comment->create_date);
-					$field->title = $comment->fullname.$date;
-				} else
-					$field->title = $comment->fullname;
-		
-				$renderer = new SwatTextCellRenderer();
+				$content_block = new SwatContentBlock();
+				$content_block->content_type = 'text/xml';
 
-				$view->appendField($field);
-				$field->addRenderer($renderer);
+				$date = sprintf(' [%s]<br>', $comment->create_date);
+				$content = $comment->fullname.$date;
 
 				if ($comment->email) {
-					$field = new SwatDetailsViewField();
-					$renderer = new SwatLinkCellRenderer();
-					$renderer->link = sprintf('mailto:%s', $comment->email);
-					$renderer->text = $comment->email;
-					$view->appendField($field);
-					$field->addRenderer($renderer);
+					$content .= sprintf('<a href="mailto:%s">%s</a><br>', $comment->email, $comment->email);
 				}
 
 				if ($comment->webaddress) {
-					$field = new SwatDetailsViewField();
-					$renderer = new SwatLinkCellRenderer();
-					$renderer->link = $comment->webaddress;
-					$renderer->text = $comment->webaddress;
-					$view->appendField($field);
-					$field->addRenderer($renderer);
+					$content .= sprintf('<a href="%s">%s</a><br>', $comment->webaddress, $comment->webaddress);
 				}
 
-	 			$field = new SwatDetailsViewField();
-				$renderer = new SwatTextCellRenderer();
-				$renderer->text = $comment->bodytext;
-				$view->appendField($field);
-				$field->addRenderer($renderer);
+				$content .= $comment->bodytext.'<br><br>';
+				$content_block->content = $content;
+				$comments->addWithField($content_block, null);
 			}
 		}
 	}
@@ -315,8 +295,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function getCommentsStore()
 	{
-		$sql = sprintf('select * from PinholeComment where '. 
-			'photo = %s order by id', $this->photo->id);
+		$sql = sprintf('select fullname, email, webaddress, bodytext,'. 
+		' create_date from PinholeComment where photo = %s order by '. 
+			'create_date',
+				$this->photo->id);
 
 		$sections = SwatDB::query($this->app->db, $sql, 'PinholeCommentWrapper');
 

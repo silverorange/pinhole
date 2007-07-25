@@ -17,11 +17,11 @@ require_once 'include/PinholePhotoTagEntry.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoDetails extends AdminDBEdit
+class PinholePhotoEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/details.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Photo/edit.xml';
 
 	/**
 	 * @var PinholePhoto
@@ -186,7 +186,7 @@ class PinholePhotoDetails extends AdminDBEdit
 			PinholePhoto::STATUS_PUBLISHED);
 
 		if ($this->ui->getWidget('proceed_button')->hasBeenClicked()) {
-			$this->app->relocate('Photo/Details?id='.
+			$this->app->relocate('Photo/Edit?id='.
 				current($this->pending_photo_ids));
 		} elseif ($pending !== null && count($this->pending_photo_ids) > 0) {
 			$this->app->relocate('Photo/Pending');
@@ -220,7 +220,7 @@ class PinholePhotoDetails extends AdminDBEdit
 
 		$this->ui->getWidget('details_page')->title = 
 			($this->photo->title == null) ?
-			Pinhole::_('Photo Details') :
+			Pinhole::_('Photo Edit') :
 			SwatString::condense($this->photo->title, 60);
 
 		if ($this->ui->getWidget('edit_form')->hasMessage() ||
@@ -260,7 +260,7 @@ class PinholePhotoDetails extends AdminDBEdit
 
 	protected function buildNavBar()
 	{
-		$this->navbar->createEntry(Pinhole::_('Details'));
+		$this->navbar->createEntry(Pinhole::_('Edit'));
 	}
 
 	// }}}

@@ -36,6 +36,17 @@ class PinholePhotoPending extends AdminIndex
 	// }}}
 
 	// process phase
+	// {{{ protected function processInternal()
+
+	protected function processInternal()
+	{
+		parent::processInternal();
+
+		$pager = $this->ui->getWidget('pager');
+		$pager->process();
+	}
+
+	// }}}
 	// {{{ protected function processActions()
 
 	/**
@@ -52,6 +63,8 @@ class PinholePhotoPending extends AdminIndex
 	}
 
 	// }}}
+
+	// build phase
 	// {{{ protected function getTableModel()
 
 	protected function getTableModel(SwatView $view)

@@ -22,10 +22,10 @@
 			</object>
 		</widget>
 	</widget>
-	<widget class="SwatForm" id="comments">
+	<widget class="SwatForm">
 		<widget class="SwatFieldset">
 			<property name="title" type="string">Replies to Nick's Photos</property>
-			<widget class="SwatDetailsView" id="comments_view" />
+			<widget class="SwatForm" id="comments" />
 		</widget>
 	</widget>
 	<widget class="SwatForm" id="reply">

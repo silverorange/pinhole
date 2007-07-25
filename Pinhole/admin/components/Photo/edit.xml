@@ -10,7 +10,7 @@
 				<property name="stock_id">edit</property>
 			</widget>
 			<widget class="SwatToolLink">
-				<property name="title" translatable="yes">View/Edit Comments</property>
+				<property name="title" translatable="yes">Manage Comments</property>
 				<property name="link">Photo/Comments?id=%s</property>
 				<property name="stock_id">edit</property>
 			</widget>

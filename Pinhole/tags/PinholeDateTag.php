@@ -163,7 +163,10 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			$date->clearTime();
 			$date->toUTC();
 
-			$where = sprintf('PinholePhoto.photo_date = %s',
+			// don't compare times
+			$where = sprintf(
+				'date_trunc(\'day\', PinholePhoto.photo_date) = '.
+					'date_trunc(\'day\', timestamp %s)',
 				$this->db->quote($date, 'date'));
 
 			break;

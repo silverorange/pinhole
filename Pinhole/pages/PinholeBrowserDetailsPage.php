@@ -274,6 +274,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		// build previous comments
 		$comments = $this->details_ui->getWidget('comments');
 		$comments_status = $this->photo->comments_status;
+
+		$this->details_ui->getWidget('comments_fieldset')->visible =
+			(count($store) > 0 &&
+			$comments_status != PinholePhoto::COMMENTS_STATUS_DISABLED);
 		
 		if ($comments_status == PinholePhoto::COMMENTS_STATUS_NORMAL
 			|| $comments_status == PinholePhoto::COMMENTS_STATUS_LOCKED) {

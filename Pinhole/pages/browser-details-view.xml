@@ -22,13 +22,14 @@
 			</object>
 		</widget>
 	</widget>
-	<widget class="SwatFieldset">
+	<widget class="SwatFieldset" id="comments_fieldset">
 		<property name="title" type="string">Replies to Nick's Photos</property>
 		<widget class="SwatForm" id="comments" />
 	</widget>
 	<widget class="SwatForm" id="reply">
-		<widget class="SwatFieldset">
+		<widget class="SwatDisclosure">
 			<property name="title" type="string">Post a Comment</property>
+			<property name="open" type="boolean">false</property>
 			<widget class="SwatFormField">
 				<property name="title" type="string">Name</property>
 				<widget class="SwatEntry" id="fullname">

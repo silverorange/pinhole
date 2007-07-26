@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Image/Transform.php';
+require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
@@ -178,11 +179,9 @@ class PinholePhotoFactory
 		$photo->serialized_exif = serialize(@exif_read_data($file_path));
 		$photo->upload_date = new SwatDate();
 
-		/*
-		if (isset($meta_data['createdate'])) {
-			$photo->photo_date = new SwatDate($meta_data['createdate']->value);
-		}
-		*/
+		if (isset($meta_data['createdate']))
+			$photo->photo_date = $this->parseMetaDataDate(
+				$meta_data['createdate']->value);
 
 		$photo->save();
 
@@ -258,8 +257,11 @@ class PinholePhotoFactory
 	 */
 	protected function getMetaDataFromFile($filename)
 	{
-		exec("exiftool -t $filename", $tag_names);
-		exec("exiftool -t -s $filename", $values);
+		$file_path = sprintf('%s/%s/%s',
+			$this->path, $this->temp_path, $filename);
+
+		exec("exiftool -t $file_path", $tag_names);
+		exec("exiftool -t -s $file_path", $values);
 
 		$data_objects = array();
 
@@ -468,6 +470,28 @@ class PinholePhotoFactory
 
 			$transformer->crop($max_x, $max_y, $offset_x, $offset_y);
 		}
+	}
+
+	// }}}
+	// {{{ private function parseMetaDataDate()
+
+	private function parseMetaDataDate($date)
+	{
+		list($year, $month, $day, $hour, $minute, $second) =
+			sscanf($date, "%d:%d:%d %d:%d:%d");
+
+		if ($second === null)
+			return null;
+
+		$date = new SwatDate();
+		$date->setYear($year);
+		$date->setMonth($month);
+		$date->setDay($day);
+		$date->setHour($hour);
+		$date->setMinute($minute);
+		$date->setSecond($second);
+
+		return $date;
 	}
 
 	// }}}

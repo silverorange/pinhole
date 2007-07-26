@@ -7,6 +7,7 @@ require_once 'Swat/SwatDetailsViewField.php';
 require_once 'Swat/SwatTextCellRenderer.php';
 require_once 'Swat/SwatLinkCellRenderer.php';
 require_once 'Swat/SwatDate.php';
+require_once 'Swat/SwatString.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeDateTagCellRenderer.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
@@ -75,27 +76,35 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$recaptcha = $this->details_ui->getWidget('recaptcha');
 			
 			if (!$recaptcha->hasMessage()){
-				$fullname   = $this->details_ui->getWidget('fullname');
+				$name       = $this->details_ui->getWidget('name');
 				$email      = $this->details_ui->getWidget('email');
 				$bodytext   = $this->details_ui->getWidget('bodytext');
-				$webaddress = $this->details_ui->getWidget('webaddress');
+				$url        = $this->details_ui->getWidget('url');
 				$rating     = $this->details_ui->getWidget('rating_flydown');
 
 				$date = new SwatDate();
-				$this->comment->fullname    = $fullname->value;
-				$this->comment->email       = $email->value;
-				$this->comment->bodytext    = $bodytext->value;
-				$this->comment->webaddress  = $webaddress->value;
+
+				$this->comment->name        = 
+					SwatString::minimizeEntities($name->value);
+
+				$this->comment->bodytext    = 
+					SwatString::minimizeEntities($bodytext->value);
+
+				$this->comment->url         = 
+					SwatString::minimizeEntities(ltrim($url->value, 'http://'));
+
 				$this->comment->rating      = $rating->value;
+				$this->comment->email       = $email->value;
 				$this->comment->photo       = $this->photo->id;
-				$this->comment->create_date = $date;
+				$this->comment->createdate  = $date;
+				$this->comment->remote_ip   = $_SERVER['REMOTE_ADDR'];
 				$this->comment->save();
 
 				// resets the fields to blank
-				$fullname->value   = null;
+				$name->value       = null;
 				$email->value      = null;
 				$bodytext->value   = null;
-				$webaddress->value = null;
+				$url->value        = null;
 				$rating->value     = null;
 			}
 		}
@@ -283,14 +292,16 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			|| $comments_status == PinholePhoto::COMMENTS_STATUS_LOCKED) {
 
 			foreach ($store as $comment) {
+				if (!$comment->show)
+					return;
 
 				$content_block = new SwatContentBlock();
 				$content_block->content_type = 'text/xml';
 
-				$date = new SwatDate($comment->create_date);
+				$date = new SwatDate($comment->createdate);
 
 				$content = sprintf('%s - %s<br />',
-					$comment->fullname,
+					$comment->name,
 					$date->format(SwatDate::DF_DATE_TIME_SHORT));
 
 				if ($comment->rating) {
@@ -298,13 +309,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 						(str_repeat('٭', $comment->rating)));
 				}
 
-				if ($comment->email)
-					$content.= sprintf('<a href="mailto:%s">%s</a><br />',
-						$comment->email, $comment->email);
-
-				if ($comment->webaddress)
-					$content.= sprintf('<a href="%s">%s</a><br>',
-						$comment->webaddress, $comment->webaddress);
+				if ($comment->url)
+					$content.= sprintf('<a href="http://%s">%s</a><br>',
+						$comment->url, $comment->url);
 
 				$content.= $comment->bodytext.'<br><br>';
 				$content_block->content = $content;
@@ -326,11 +333,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function getCommentsStore()
 	{
-		$sql = sprintf('select fullname, email, webaddress,
-					bodytext, create_date, rating
+		$sql = sprintf('select name, url, rating, show,
+					bodytext, createdate
 				from PinholeComment
 				where photo = %s
-				order by create_date',
+				order by createdate',
 			$this->photo->id);
 
 		$sections = SwatDB::query($this->app->db, $sql, 'PinholeCommentWrapper');

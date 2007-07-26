@@ -32,7 +32,7 @@
 			<property name="open" type="boolean">false</property>
 			<widget class="SwatFormField">
 				<property name="title" type="string">Name</property>
-				<widget class="SwatEntry" id="fullname">
+				<widget class="SwatEntry" id="name">
 					<property name="required" type="boolean">true</property>
 				</widget>
 			</widget>
@@ -42,7 +42,7 @@
 			</widget>
 			<widget class="SwatFormField">
 				<property name="title" type="string">Web Address</property>
-				<widget class="SwatEntry" id="webaddress"/>
+				<widget class="SwatEntry" id="url"/>
 			</widget>
 			<widget class="SwatFormField">
 				<widget class="SwatReCaptcha" id="recaptcha">
@@ -62,7 +62,7 @@
 			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton">
-					<property name="title" type="string">Submit Button</property>
+					<property name="title" type="string">Post This Comment</property>
 				</widget>
 			</widget>
 		</widget>

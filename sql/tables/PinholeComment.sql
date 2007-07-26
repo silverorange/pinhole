@@ -1,11 +1,13 @@
 create table PinholeComment (
 	id serial, 
-	photo serial references PinholePhoto (id),
-	fullname varchar(255),
+	photo references PinholePhoto (id) not null,
+	name varchar(255),
 	bodytext varchar(255),
 	email varchar(255),
-	webaddress varchar(255),
+	url varchar(255),
+	remote_ip varchar(15),
+	show boolean not null default true,
 	rating integer default null,
-	create_date timestamp,
+	createdate timestamp,
 	primary key (id)
 );

@@ -30,7 +30,7 @@ class PinholeComment extends SwatDBDataObject
 	 *
 	 * @var string
 	 */
-	public $fullname;
+	public $name;
 
 	/**
 	 * 
@@ -51,22 +51,36 @@ class PinholeComment extends SwatDBDataObject
 	 *
 	 * @var string
 	 */
-	public $webaddress;
+	public $url;
 	
 	/**
 	 *
 	 *
 	 * @var timestamp
 	 */
-	 public $create_date;
+	public $createdate;
 
 	/**
 	 *
 	 *
 	 * @var integer
 	 */
-	 public $rating;
-
+	public $rating;
+	 
+	 /**
+	  *
+	  *
+	  * @var string
+	  */
+	public $remote_ip;
+	
+	/**
+	 *
+	 *
+	 * @var boolean
+	 */
+	public $show;
+	  
 	// }}}
 	// {{{ protected function init()
 
@@ -75,7 +89,7 @@ class PinholeComment extends SwatDBDataObject
 		$this->table =	'PinholeComment';
 		$this->id_field = 'integer:id';
 
-		$this->registerDateProperty($this->create_date);
+		$this->registerDateProperty($this->createdate);
 	}
 
 	// }}}

@@ -17,7 +17,6 @@ class PinholeCommentWrapper extends SwatDBRecordsetWrapper
 	{
 		parent::init();
 		$this->row_wrapper_class = 'PinholeComment';
-		$this->index_field = 'id';
 	}
 
 	// }}}

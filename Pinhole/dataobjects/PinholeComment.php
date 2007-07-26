@@ -65,9 +65,10 @@ class PinholeComment extends SwatDBDataObject
 
 	protected function init()
 	{
-		$this->table =	SwatDBClassMap::get('PinholeComment');
+		$this->table =	'PinholeComment';
 		$this->id_field = 'integer:id';
-//		$this->registerDateProperty($this->create_date);
+
+		$this->registerDateProperty($this->create_date);
 	}
 
 	// }}}

@@ -60,6 +60,13 @@ class PinholeComment extends SwatDBDataObject
 	 */
 	 public $create_date;
 
+	/**
+	 *
+	 *
+	 * @var integer
+	 */
+	 public $rating;
+
 	// }}}
 	// {{{ protected function init()
 

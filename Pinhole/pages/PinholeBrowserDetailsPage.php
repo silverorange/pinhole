@@ -79,12 +79,14 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$email      = $this->details_ui->getWidget('email');
 				$bodytext   = $this->details_ui->getWidget('bodytext');
 				$webaddress = $this->details_ui->getWidget('webaddress');
+				$rating     = $this->details_ui->getWidget('rating_flydown');
 
 				$date = new SwatDate();
 				$this->comment->fullname    = $fullname->value;
 				$this->comment->email       = $email->value;
 				$this->comment->bodytext    = $bodytext->value;
 				$this->comment->webaddress  = $webaddress->value;
+				$this->comment->rating      = $rating->value;
 				$this->comment->photo       = $this->photo->id;
 				$this->comment->create_date = $date;
 				$this->comment->save();
@@ -94,6 +96,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$email->value      = null;
 				$bodytext->value   = null;
 				$webaddress->value = null;
+				$rating->value     = null;
 			}
 		}
 	}
@@ -286,6 +289,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 					$comment->fullname,
 					$date->format(SwatDate::DF_DATE_TIME_SHORT));
 
+				if ($comment->rating) {
+					$content .= sprintf('Rating:%s <br />', 
+						(str_repeat('٭', $comment->rating)));
+				}
+
 				if ($comment->email)
 					$content.= sprintf('<a href="mailto:%s">%s</a><br />',
 						$comment->email, $comment->email);
@@ -299,6 +307,13 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 				$comments->add($content_block);
 			}
+		
+		// build rating flydown
+		$ratings = array(1 => '٭', 2 => '٭٭', 3 => '٭٭٭', 
+			4 => '٭٭٭٭', 5 => '٭٭٭٭٭');
+
+		$flydown = $this->details_ui->getWidget('rating_flydown');
+		$flydown->addOptionsByArray($ratings);
 		}
 	}
 

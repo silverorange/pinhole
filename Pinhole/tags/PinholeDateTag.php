@@ -465,7 +465,6 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	/**
 	 * Gets the value of this date tag
 	 *
-	 *
 	 * @return string the value of this date tag.
 	 */
 	protected function getValue()

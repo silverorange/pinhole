@@ -309,8 +309,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			}
 		
 		// build rating flydown
-		$ratings = array(1 => '٭', 2 => '٭٭', 3 => '٭٭٭', 
-			4 => '٭٭٭٭', 5 => '٭٭٭٭٭');
+		$ratings = array(1 => '★', 2 => '★★', 3 => '★★★', 
+			4 => '★★★★', 5 => '★★★★★');
 
 		$flydown = $this->details_ui->getWidget('rating_flydown');
 		$flydown->addOptionsByArray($ratings);

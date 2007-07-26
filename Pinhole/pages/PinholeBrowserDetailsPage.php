@@ -272,26 +272,32 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$comments = $this->details_ui->getWidget('comments');
 		$comments_status = $this->photo->comments_status;
 		
-		if ($comments_status == 0 || $comments_status == 1) {
+		if ($comments_status == PinholePhoto::COMMENTS_STATUS_NORMAL
+			|| $comments_status == PinholePhoto::COMMENTS_STATUS_LOCKED) {
+
 			foreach ($store as $comment) {
 
 				$content_block = new SwatContentBlock();
 				$content_block->content_type = 'text/xml';
 
-				$date = sprintf(' [%s]<br>', $comment->create_date);
-				$content = $comment->fullname.$date;
+				$date = new SwatDate($comment->create_date);
 
-				if ($comment->email) {
-					$content .= sprintf('<a href="mailto:%s">%s</a><br>', $comment->email, $comment->email);
-				}
+				$content = sprintf('%s - %s<br />',
+					$comment->fullname,
+					$date->format(SwatDate::DF_DATE_TIME_SHORT));
 
-				if ($comment->webaddress) {
-					$content .= sprintf('<a href="%s">%s</a><br>', $comment->webaddress, $comment->webaddress);
-				}
+				if ($comment->email)
+					$content.= sprintf('<a href="mailto:%s">%s</a><br />',
+						$comment->email, $comment->email);
 
-				$content .= $comment->bodytext.'<br><br>';
+				if ($comment->webaddress)
+					$content.= sprintf('<a href="%s">%s</a><br>',
+						$comment->webaddress, $comment->webaddress);
+
+				$content.= $comment->bodytext.'<br><br>';
 				$content_block->content = $content;
-				$comments->addWithField($content_block, null);
+
+				$comments->add($content_block);
 			}
 		}
 	}
@@ -301,10 +307,12 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function getCommentsStore()
 	{
-		$sql = sprintf('select fullname, email, webaddress, bodytext,'. 
-		' create_date from PinholeComment where photo = %s order by '. 
-			'create_date',
-				$this->photo->id);
+		$sql = sprintf('select fullname, email, webaddress,
+					bodytext, create_date
+				from PinholeComment
+				where photo = %s
+				order by create_date',
+			$this->photo->id);
 
 		$sections = SwatDB::query($this->app->db, $sql, 'PinholeCommentWrapper');
 

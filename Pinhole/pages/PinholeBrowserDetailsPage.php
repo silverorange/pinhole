@@ -323,7 +323,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function getCommentsStore()
 	{
 		$sql = sprintf('select fullname, email, webaddress,
-					bodytext, create_date
+					bodytext, create_date, rating
 				from PinholeComment
 				where photo = %s
 				order by create_date',

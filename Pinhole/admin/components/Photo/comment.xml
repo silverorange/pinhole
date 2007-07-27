@@ -1,0 +1,73 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame" id="index_frame">
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTableView" id="index_view">
+				<object class="SwatTableViewCheckboxColumn" id="checkbox">
+					<object class="SwatCheckboxCellRenderer" id="items">
+						<property name="value" type="data">id</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="bodytext">
+					<property name="title" translatable="yes">Comment Posted:</property>
+					<object class="SwatTextCellRenderer">
+						<property name="text" type="data">bodytext</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="email">
+					<property name="title" translatable="yes">Email Address:</property>
+					<object class="SwatLinkCellRenderer">
+						<property name="text" type="data">email</property>
+						<property name="link">mailto:%s</property>
+						<property name="link_value" type="data">email</property>
+					</object>
+				</object>
+				<object class="AdminTableViewOrderableColumn" id="name">
+					<property name="title" translatable="yes">Name:</property>
+					<object class="SwatLinkCellRenderer">
+						<property name="text" type="data">name</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="url">
+					<property name="title" translatable="yes">Web Address:</property>
+					<object class="SwatLinkCellRenderer">
+						<property name="text" type="data">url</property>
+						<property name="link">%s</property>
+						<property name="link_value" type="data">url</property>
+					</object>
+				</object>
+				<object class="AdminTableViewOrderableColumn" id="createdate">
+					<property name="title" translatable="yes">Date Posted:</property>
+					<object class="SwatDateCellRenderer">
+						<property name="date" type="data">createdate</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="rating">
+					<property name="title" translatable="yes">Rating:</property>
+					<object class="SwatTextCellRenderer">
+						<property name="text" type="data">rating</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="show">
+					<property name="title" translatable="yes">Show Comment:</property>
+					<object class="SwatBooleanCellRenderer">
+						<property name="value" type="data">show</property>
+					</object>
+				</object>
+			</widget>
+			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="delete">
+					<property name="title" translatable="yes">delete…</property>
+				</widget>
+				<widget class="SwatActionItem" id="show">
+					<property name="title" translatable="yes">show comment</property>
+				</widget>
+				<widget class="SwatActionItem" id="hide">
+					<property name="title" translatable="yes">hide comment</property>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

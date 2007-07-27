@@ -283,11 +283,20 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		// build previous comments
 		$comments = $this->details_ui->getWidget('comments');
 		$comments_status = $this->photo->comments_status;
+		$hide_comments = 0;
+
+		foreach ($store as $comment) {
+			if (!$comment->show)
+				$hide_comments += 1;
+		}
 
 		$this->details_ui->getWidget('comments_fieldset')->visible =
 			(count($store) > 0 &&
 			$comments_status != PinholePhoto::COMMENTS_STATUS_DISABLED);
-		
+
+		if ($hide_comments === count($store))
+			$this->details_ui->getWidget('comments_fieldset')->visible = false;
+
 		if ($comments_status == PinholePhoto::COMMENTS_STATUS_NORMAL
 			|| $comments_status == PinholePhoto::COMMENTS_STATUS_LOCKED) {
 
@@ -326,6 +335,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$flydown = $this->details_ui->getWidget('rating_flydown');
 		$flydown->addOptionsByArray($ratings);
 		}
+
+		// checks to see if the reply disclosure has any error messages
+		$reply = $this->details_ui->getWidget('reply_disclosure');
+		if ($reply->hasMessage())
+			$reply->open = true;
 	}
 
 	// }}}

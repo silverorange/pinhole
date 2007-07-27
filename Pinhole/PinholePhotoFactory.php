@@ -92,7 +92,6 @@ class PinholePhotoFactory
 
 		$ext = strtolower(end(explode('.', $file['name'])));
 
-
 		$filename = uniqid('file').'.'.$ext;
 		$file_path = sprintf('%s/%s/%s',
 			$this->path, $this->temp_path, $filename);
@@ -100,7 +99,7 @@ class PinholePhotoFactory
 		move_uploaded_file($file['tmp_name'], $file_path);
 		chmod($file_path, 0666);
 
-		return $this->parseFile($filename, $file['name']);
+		return $this->parseFile($file_path, $file['name']);
 	}
 
 	// }}}
@@ -119,23 +118,20 @@ class PinholePhotoFactory
 	 * @return PinholeAbstractTag the parsed tag object or null if the given
 	 *                             string could not be parsed.
 	 */
-	public function parseFile($filename, $original_filename = null)
+	public function parseFile($file, $original_filename = null)
 	{
-		$file_path = sprintf('%s/%s/%s',
-			$this->path, $this->temp_path, $filename);
-
-		if (!file_exists($file_path))
-			return PEAR::raiseError('File could not be located.',
+		if (!file_exists($file))
+			return PEAR::raiseError('File could not be found.',
 				self::ERROR_PARSING_FILE);
 
 		$finfo = finfo_open(FILEINFO_MIME);
-		$mime_type = finfo_file($finfo, $file_path);
+		$mime_type = finfo_file($finfo, $file);
 
 		if (in_array($mime_type, $this->archive_mime_types))
-			$files = $this->getArchivedFiles($filename,
+			$files = $this->getArchivedFiles($file,
 				array_search($mime_type, $this->archive_mime_types));
 		else
-			$files = array($filename => $original_filename);
+			$files = array(basename($file) => $original_filename);
 
 		return $files;
 	}
@@ -146,19 +142,18 @@ class PinholePhotoFactory
 	/**
 	 * TODO: update documentation
 	 */
-	public function processPhoto($filename, $original_filename = null)
+	public function processPhoto($file, $original_filename = null,
+		$delete_original = true)
 	{
-		$file_path = sprintf('%s/%s/%s',
-			$this->path, $this->temp_path, $filename);
-
-		if (!file_exists($file_path))
+		if (!file_exists($file))
 			return PEAR::raiseError('Error loading photo. The photo 
 				file could not be found.',
 				self::ERROR_OPENING_PHOTO);
 
-		$photo = $this->createDataObject($filename, $original_filename);
+		$photo = $this->createDataObject($file, $original_filename);
 
-		unlink($file_path);
+		if ($delete_original)
+			unlink($file);
 
 		return $photo;
 	}
@@ -166,11 +161,8 @@ class PinholePhotoFactory
 	// }}}
 	// {{{ protected function createDataObject()
 
-	protected function createDataObject($filename, $original_filename)
+	protected function createDataObject($file, $original_filename)
 	{
-		$file_path = sprintf('%s/%s/%s',
-			$this->path, $this->temp_path, $filename);
-
 		if ($this->db === null)
 			return PEAR::raiseError('Database must be set before '. 
 				'creating a data-object. See: setDatabase().',
@@ -181,7 +173,7 @@ class PinholePhotoFactory
 		$photo = new PinholePhoto();
 		$photo->setDatabase($this->db);
 
-		$meta_data = $this->getMetaDataFromFile($filename);
+		$meta_data = $this->getMetaDataFromFile($file);
 
 		$photo->instance = 1; //TODO populate this correctly
 		$photo->filename = sha1(uniqid(rand(), true));
@@ -191,12 +183,12 @@ class PinholePhotoFactory
 		// error suppression is needed here because there are several
 		// ways unavoidable warnings can occur despite the file being
 		// properly read.
-		$photo->serialized_exif = serialize(@exif_read_data($file_path));
+		$photo->serialized_exif = serialize(@exif_read_data($file));
 
 		// save photo
 		$photo->save();
 
-		$saved = $this->saveDimensionsFromFile($filename, $photo);
+		$saved = $this->saveDimensionsFromFile($file, $photo);
 		if (PEAR::isError($saved)) {
 			$this->db->rollback();
 			return $saved;
@@ -219,13 +211,10 @@ class PinholePhotoFactory
 	/**
 	 * Processes an array of files
 	 */
-	protected function getArchivedFiles($filename, $type)
+	protected function getArchivedFiles($file, $type)
 	{
-		$file_path = sprintf('%s/%s/%s',
-			$this->path, $this->temp_path, $filename);
-
 		$za = new ZipArchive();
-		$opened = $za->open($file_path);
+		$opened = $za->open($file);
 
 		if ($opened !== true)
 			return PEAR::raiseError('Error opening file archive ',
@@ -242,7 +231,7 @@ class PinholePhotoFactory
 		$za->extractTo($dir);
 		$za->close();
 
-		unlink($file_path);
+		unlink($file);
 
 		$dh = opendir($dir);
 		while (($file = readdir($dh)) !== false) {
@@ -276,13 +265,10 @@ class PinholePhotoFactory
 	 * @return array An array of PinholePhotoMetaDataBinding data objects
 	 *               with $shortname as the key of the array.
 	 */
-	protected function getMetaDataFromFile($filename)
+	protected function getMetaDataFromFile($file)
 	{
-		$file_path = sprintf('%s/%s/%s',
-			$this->path, $this->temp_path, $filename);
-
-		exec("exiftool -t $file_path", $tag_names);
-		exec("exiftool -t -s $file_path", $values);
+		exec("exiftool -t $file", $tag_names);
+		exec("exiftool -t -s $file", $values);
 
 		$data_objects = array();
 
@@ -349,12 +335,9 @@ class PinholePhotoFactory
 	// }}}
 	// {{{ protected function saveDimensionsFromFile()
 
-	protected function saveDimensionsFromFile($filename, PinholePhoto $photo)
+	protected function saveDimensionsFromFile($file, PinholePhoto $photo)
 	{
 		static $dimensions;
-
-		$file_path = sprintf('%s/%s/%s',
-			$this->path, $this->temp_path, $filename);
 
 		if ($dimensions === null)
 			$dimensions = SwatDB::query($this->db,
@@ -372,7 +355,7 @@ class PinholePhotoFactory
 			// every dimension, but if I put it outside the loop,
 			// the variable loses its file resource after the
 			// first resize has taken place. (nick)
-			$loaded = $transformer->load($file_path);
+			$loaded = $transformer->load($file);
 
 			if (PEAR::isError($loaded))
 				return PEAR::raiseError('Image file can not '.

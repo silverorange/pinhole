@@ -30,7 +30,8 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 		$photo_factory->setPath(realpath('../'));
 		$photo_factory->setDatabase($this->app->db);
 
-		$photo = $photo_factory->processPhoto($filename, $original_filename);
+		$file = realpath('../../temp/'.$filename);
+		$photo = $photo_factory->processPhoto($file, $original_filename);
 
 		$response = array();
 		$response['filename'] = $filename;

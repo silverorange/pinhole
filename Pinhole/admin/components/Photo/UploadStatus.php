@@ -20,6 +20,7 @@ class PinholePhotoUploadStatus extends SitePage
 	// {{{ protected properties
 
 	protected $files = array();
+	protected $errors = array();
 
 	// }}}
 	// {{{ public function __construct()
@@ -56,9 +57,13 @@ class PinholePhotoUploadStatus extends SitePage
 		$photo_factory->setPath(realpath('../'));
 
 		foreach ($_FILES as $id => $file) {
-			$this->files = array_merge(
-				$this->files,
-				$photo_factory->saveUploadedFile('file'));
+			$saved = $photo_factory->saveUploadedFile('file');
+
+			if (PEAR::isError($saved))
+				$this->errors[] = sprintf('Error uploading file: %s',
+					Pinhole::_($_FILES[$id]['name']));
+			else
+				$this->files = array_merge($saved, $this->files);
 		}
 	}
 
@@ -98,8 +103,16 @@ class PinholePhotoUploadStatus extends SitePage
 
 		$javascript.= "}\n";
 
+
+		$javascript.= "var upload_errors = new Array();";
+
+		foreach ($this->errors as $filename)
+			$javascript.= sprintf("upload_errors.push('%s')",
+				$filename);
+
 		foreach ($_FILES as $id => $file)
-			$javascript.= sprintf("window.parent.%s_obj.uploadComplete(uploaded_files);\n", $id);
+			$javascript.= sprintf("window.parent.%s_obj.uploadComplete(".
+				"uploaded_files, upload_errors);\n", $id);
 
 		return $javascript;
 	}

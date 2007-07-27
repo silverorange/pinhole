@@ -16,6 +16,7 @@ PinholePhotoUploadPage = function(uploader)
 	this.current_photo_path = null;
 
 	this.uploader.uploadCompleteEvent.subscribe(this.display, this, true);
+	this.uploader.uploadErrorEvent.subscribe(this.uploadError, this, true);
 	this.uploader.fileProcessedEvent.subscribe(this.addPhoto, this, true);
 	this.uploader.fileErrorEvent.subscribe(this.addError, this, true);
 	this.uploader.processingCompleteEvent.subscribe(this.complete, this, true);
@@ -60,6 +61,12 @@ PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 PinholePhotoUploadPage.prototype.addError  = function(type, args)
 {
 	this.errors.push(args[0]);
+}
+
+PinholePhotoUploadPage.prototype.uploadError  = function(type, args)
+{
+	this.errors.push(args[0]);
+	this.complete();
 }
 
 PinholePhotoUploadPage.prototype.fadeInPhoto = function()

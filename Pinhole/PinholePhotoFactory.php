@@ -22,6 +22,15 @@ require_once 'MDB2.php';
  */
 class PinholePhotoFactory
 {
+	// {{{ constants
+
+	const ERROR_LOADING_IMAGE = 1;
+	const ERROR_OPENING_ARCHIVE = 2;
+	const ERROR_OPENING_PHOTO = 3;
+	const ERROR_PARSING_FILE = 4;
+	const ERROR_INSTANSIATING_FACTORY = 5;
+
+	// }}}
 	// {{{ protected properties
 
 	protected $temp_path = '../temp';
@@ -116,7 +125,8 @@ class PinholePhotoFactory
 			$this->path, $this->temp_path, $filename);
 
 		if (!file_exists($file_path))
-			throw new SwatFileNotFoundException(null, 0, $filename);
+			return PEAR::raiseError('File could not be located.',
+				self::ERROR_PARSING_FILE);
 
 		$finfo = finfo_open(FILEINFO_MIME);
 		$mime_type = finfo_file($finfo, $file_path);
@@ -131,25 +141,26 @@ class PinholePhotoFactory
 	}
 
 	// }}}
-	// {{{ public function processFile()
+	// {{{ public function processPhoto()
 
 	/**
 	 * TODO: update documentation
 	 */
-	public function processFile($filename, $original_filename = null)
+	public function processPhoto($filename, $original_filename = null)
 	{
 		$file_path = sprintf('%s/%s/%s',
 			$this->path, $this->temp_path, $filename);
 
 		if (!file_exists($file_path))
-			throw new SwatFileNotFoundException(null, 0, $file_path);
+			return PEAR::raiseError('Error loading photo. The photo 
+				file could not be found.',
+				self::ERROR_OPENING_PHOTO);
 
-		$processed_filename =
-			$this->createDataObject($filename, $original_filename);
+		$photo = $this->createDataObject($filename, $original_filename);
 
 		unlink($file_path);
 
-		return $processed_filename;
+		return $photo;
 	}
 
 	// }}}
@@ -157,10 +168,13 @@ class PinholePhotoFactory
 
 	protected function createDataObject($filename, $original_filename)
 	{
-		//define('SWATDB_DEBUG', true);
-
 		$file_path = sprintf('%s/%s/%s',
 			$this->path, $this->temp_path, $filename);
+
+		if ($this->db === null)
+			return PEAR::raiseError('Database must be set before '. 
+				'creating a data-object. See: setDatabase().',
+				self::ERROR_CREATING_DATA_OBJECT);
 
 		$this->db->beginTransaction();
 
@@ -172,25 +186,31 @@ class PinholePhotoFactory
 		$photo->instance = 1; //TODO populate this correctly
 		$photo->filename = sha1(uniqid(rand(), true));
 		$photo->original_filename = $original_filename;
+		$photo->upload_date = new SwatDate();
 
 		// error suppression is needed here because there are several
 		// ways unavoidable warnings can occur despite the file being
 		// properly read.
 		$photo->serialized_exif = serialize(@exif_read_data($file_path));
-		$photo->upload_date = new SwatDate();
+
+		// save photo
+		$photo->save();
+
+		$saved = $this->saveDimensionsFromFile($filename, $photo);
+		if (PEAR::isError($saved)) {
+			$this->db->rollback();
+			return $saved;
+		}
 
 		if (isset($meta_data['createdate']))
 			$photo->photo_date = $this->parseMetaDataDate(
 				$meta_data['createdate']->value);
 
-		$photo->save();
-
 		$this->saveMetaData($photo, $meta_data);
-		$this->saveDimensionsFromFile($filename, $photo);
 
 		$this->db->commit();
 
-		return $photo->filename;
+		return $photo;
 	}
 
 	// }}}
@@ -208,7 +228,8 @@ class PinholePhotoFactory
 		$opened = $za->open($file_path);
 
 		if ($opened !== true)
-			return; //TODO: throw some sort of error or feedback for the user
+			return PEAR::raiseError('Error opening file archive ',
+				self::ERROR_OPENING_ARCHIVE);
 
 		$dir = sprintf('%s/%s/%s',
 			$this->path, $this->temp_path, uniqid('dir'));
@@ -298,15 +319,20 @@ class PinholePhotoFactory
 			'PinholeMetaData', 'shortname', 'id');
 
 		foreach ($meta_data as $data) {
-			if (!in_array($data->shortname, $existing_meta_data)) {
+			$shortname = substr($data->shortname, 0, 255);
+			$title = substr($data->title, 0, 255);
+			$value = substr($data->value, 0, 255);
+
+			if (!in_array($shortname, $existing_meta_data)) {
 				$meta_data_id = SwatDB::insertRow($this->db,
 					'PinholeMetaData',
-					array('text:shortname', 'text:title'),
-					array('shortname' => $data->shortname,
-						'title' => $data->title),
+					array('text:shortname', 'text:title',
+						'integer:instance'),
+					array('shortname' => $shortname,
+						'title' => $title, 'instance' => 1),
 					'id');
 			} else {
-				$meta_data_id = array_search($data->shortname,
+				$meta_data_id = array_search($shortname,
 					$existing_meta_data);
 			}
 
@@ -316,7 +342,7 @@ class PinholePhotoFactory
 					'text:value'),
 				array('photo' => $photo->id,
 					'meta_data' => $meta_data_id,
-					'value' => $data->value));
+					'value' => $value));
 		}
 	}
 
@@ -337,15 +363,26 @@ class PinholePhotoFactory
 
 		$transformer = Image_Transform::factory('Imagick2');
 		if (PEAR::isError($transformer))
-			throw new AdminException($transformer);
+			return PEAR::raiseError('Error instansiating ImageTransform '.
+				'factory Imagick2.',
+				self::ERROR_INSTANSIATING_FACTORY);
 
 		foreach ($dimensions as $dimension) {
 			// TODO: I don't think we want to load the file for
 			// every dimension, but if I put it outside the loop,
 			// the variable loses its file resource after the
 			// first resize has taken place. (nick)
-			$transformer->load($file_path);
+			$loaded = $transformer->load($file_path);
+
+			if (PEAR::isError($loaded))
+				return PEAR::raiseError('Image file can not '.
+					'be loaded.',
+					self::ERROR_LOADING_IMAGE);
+
 			$transformed = $this->processImage($transformer, $dimension);
+
+			if (PEAR::isError($transformed))
+				return $transformed;
 
 			SwatDB::insertRow($this->db, 'PinholePhotoDimensionBinding',
 				array('integer:photo',
@@ -364,6 +401,8 @@ class PinholePhotoFactory
 			$transformed->save($dimension_binding->getPath($this->path),
 				false, $this->getCompressionQuality());
 		}
+
+		return true;
 	}
 
 	// }}}

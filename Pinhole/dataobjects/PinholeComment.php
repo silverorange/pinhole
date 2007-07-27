@@ -26,6 +26,13 @@ class PinholeComment extends SwatDBDataObject
 	public $photo;
 
 	/**
+	 *
+	 *
+	 * @var integer
+	 */
+	public $instance;
+
+	/**
 	 * 
 	 *
 	 * @var string

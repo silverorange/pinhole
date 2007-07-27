@@ -1,0 +1,52 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<!-- header -->
+	<widget class="SwatContainer" id="header_content">
+		<widget class="SwatForm" id="search_form">
+			<property name="action">search</property>
+			<widget class="SwatRadioList" id="search_options" />
+			<widget class="SwatFormField">
+				<property name="title">Keywords…</property>
+				<property name="access_key" type="string">4</property>
+				<widget class="SwatSearchEntry" id="keywords">
+					<property name="size" type="integer">30</property>
+					<property name="maxlength" type="integer">255</property>
+				</widget>
+				<widget class="SwatButton">
+					<property name="title">Search</property>
+					<property name="classes[]">compact-button</property>
+				</widget>
+			</widget>
+		</widget>
+		<widget class="SwatDisplayableContainer" id="sub_hd">
+			<widget class="PinholeTagListView" id="tag_list_view" />
+		</widget>
+		<widget class="PinholeDateTagBrowser" id="date_tag_browser" />
+	</widget>
+
+	<!-- sidebar -->
+	<widget class="SwatContainer" id="sidebar_content">
+		<widget class="PinholeSubTagListView" id="sub_tag_list_view" />
+	</widget>
+
+	<!-- content -->
+		<widget class="SwatForm">
+	<widget class="SwatContainer" id="content">
+		<widget class="SwatTileView" id="photo_view">
+			<property name="classes[]">pinhole-tile-view</property>
+			<object class="SwatTile">
+				<object class="PinholePhotoCellRenderer">
+					<property name="photo" type="data">photo</property>
+					<property name="link">photo/%s</property>
+					<property name="link_value" type="data">path</property>
+					<property name="classes[]">photo-title</property>
+				</object>
+			</object>
+		</widget>
+		<widget class="SwatPagination" id="pagination">
+			<property name="display_parts" type="constant">NEXT|PREV|PAGES</property>
+		</widget>
+	</widget>
+		</widget>
+</swatml>

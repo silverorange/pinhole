@@ -88,7 +88,7 @@ class PinholePhotoScroller extends SwatControl
 			'' : '/'.$this->tag_list->__toString();
 
 		$a_tag = new SwatHtmlTag('a');
-		$a_tag->setContent(Pinhole::_('View All'));
+		$a_tag->setContent(Pinhole::_('Thumbnails'));
 		$a_tag->href = 'tag'.$tag_path;
 		$a_tag->class = 'view-all';
 		$a_tag->display();

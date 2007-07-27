@@ -14,6 +14,8 @@ class PinholeSubTagListView extends SwatControl
 	public $base = 'tag';
 
 	protected $tag_list;
+
+	protected $sub_tag_list;
 	
 	public function __construct($id = null)
 	{
@@ -32,9 +34,7 @@ class PinholeSubTagListView extends SwatControl
 		if ($this->tag_list === null)
 			return;
 
-		$sub_tags = $this->tag_list->getSubTags();
-
-		if (count($sub_tags) == 0)
+		if ($this->sub_tag_list === null || count($this->sub_tag_list) == 0)
 			return;
 
 
@@ -45,7 +45,7 @@ class PinholeSubTagListView extends SwatControl
 
 		echo '<ul>';
 
-		foreach ($sub_tags as $tag) {
+		foreach ($this->sub_tag_list as $tag) {
 			$add_list = clone $this->tag_list;
 			$add_list->add($tag);
 
@@ -74,6 +74,11 @@ class PinholeSubTagListView extends SwatControl
 	public function setTagList(PinholeTagList $tag_list)
 	{
 		$this->tag_list = $tag_list;
+	}
+
+	public function setSubTagList(PinholeTagList $tag_list)
+	{
+		$this->sub_tag_list = $tag_list;
 	}
 }
 

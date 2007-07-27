@@ -1,7 +1,7 @@
 create table PinholeComment (
 	id serial, 
 	instance integer not null references PinholeInstance(id),
-	photo integer references PinholePhoto (id) not null,
+	photo integer not null references PinholePhoto (id),
 	name varchar(255),
 	bodytext varchar(255),
 	email varchar(255),

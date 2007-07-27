@@ -138,10 +138,13 @@ PinholePhotoUploadClient = function(id, form_action, progress_bar)
 	this.button = document.getElementById(this.id + '_button');
 
 	this.createIFrame();
+
 	this.uploadCompleteEvent = new YAHOO.util.CustomEvent('upload-complete');
+	this.uploadErrorEvent = new YAHOO.util.CustomEvent('upload-error');
 	this.fileProcessedEvent = new YAHOO.util.CustomEvent('file-processed');
 	this.fileErrorEvent = new YAHOO.util.CustomEvent('file-error');
 	this.processingCompleteEvent = new YAHOO.util.CustomEvent('processing-complete');
+
 	YAHOO.util.Event.addListener(this.button, 'click', this.upload,
 		this, true);
 }
@@ -172,15 +175,19 @@ PinholePhotoUploadClient.prototype.setStatus = function(percent, time)
 	this.progress_bar.setText(text);
 }
 
-PinholePhotoUploadClient.prototype.uploadComplete = function(file_array)
+PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error_array)
 {
 	this.progress_bar.setValue(1);
 	this.progress_bar.setText(PinholePhotoUploadClient.complete_text);
 
 	this.uploadCompleteEvent.fire();
 
-	this.uploaded_files = file_array;
-	this.processNextFile();
+	this.uploaded_files = file_objects;
+
+	if (error_array.length > 0)
+		this.uploadErrorEvent.fire(error_array);
+	else
+		this.processNextFile();
 
 	PinholePhotoUploadManager.removeClient(this);
 }

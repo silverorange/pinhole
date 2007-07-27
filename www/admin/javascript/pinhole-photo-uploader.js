@@ -140,6 +140,7 @@ PinholePhotoUploadClient = function(id, form_action, progress_bar)
 	this.createIFrame();
 	this.uploadCompleteEvent = new YAHOO.util.CustomEvent('upload-complete');
 	this.fileProcessedEvent = new YAHOO.util.CustomEvent('file-processed');
+	this.fileErrorEvent = new YAHOO.util.CustomEvent('file-error');
 	this.processingCompleteEvent = new YAHOO.util.CustomEvent('processing-complete');
 	YAHOO.util.Event.addListener(this.button, 'click', this.upload,
 		this, true);
@@ -262,7 +263,10 @@ PinholePhotoUploadClient.prototype.processNextFile = function()
 
 	function callBack(response)
 	{
-		that.fileProcessedEvent.fire(response.processed_filename);
+		if (response.error)
+			that.fileErrorEvent.fire(response.error);
+		else
+			that.fileProcessedEvent.fire(response.processed_filename);
 
 		delete that.uploaded_files[response.filename];
 

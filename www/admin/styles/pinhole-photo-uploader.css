@@ -11,3 +11,7 @@ div.pinhole-photo-uploader-processing {
 input.ipinhole-photo-uploader-submit-button {
 	font-weight: bold;
 }
+
+ul.pinhole-photo-uploader-errors {
+	color: #900;
+}

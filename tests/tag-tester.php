@@ -35,6 +35,8 @@ function test_tag($string)
 
 function test_tag_list($tag_list)
 {
+	echo 'List: ', $tag_list, "\n";
+
 	echo "iterating list:\n";
 	foreach ($tag_list as $key => $tag) {
 		echo '=> ', $key, ' => ', $tag->getTitle(), "\n";
@@ -50,6 +52,10 @@ function test_tag_list($tag_list)
 		echo "\n";
 	}
 	echo "\n";
+
+	$sub_tags = $tag_list->getSubTags();
+	if (count($sub_tags) > 0)
+		test_tag_list($sub_tags);
 }
 
 // Tag tests
@@ -75,6 +81,10 @@ $tag_list = new PinholeTagList($connection,
 test_tag_list($tag_list);
 
 $tag_list->replace('date.year=2007', PinholeTagFactory::get('christmas'));
+
+test_tag_list($tag_list);
+
+$tag_list = $tag_list->filter(array('PinholeAbstractMachineTag'));
 
 test_tag_list($tag_list);
 

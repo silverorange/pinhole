@@ -12,15 +12,11 @@
 			<a href="." title="Home Page" accesskey="1">Gallery</a>
 			<? /* TODO: make this gallery name dynamic  */ ?>
 		</h1>
-		<?= $this->search_content ?>
-		<div id="sub_hd" class="clearfix">
-			<?= $this->header_content ?>
-		</div><!-- close #sub_hd -->
+		<?= $this->header_content ?>
 	</div><!-- close #hd -->
 
 	<div id="bd">
 
-		<div id="dates"><?= $this->dates ?></div>
 		<div id="yui-main">
 		<div class="yui-b">
 			<div id="content">

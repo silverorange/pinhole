@@ -1,44 +1,60 @@
 <?php
 
-require_once 'Swat/SwatYUI.php';
 require_once 'Swat/SwatUI.php';
-require_once 'SwatDB/SwatDB.php';
+require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
 require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/PinholeTagIntersection.php';
+require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/pages/PinholePage.php';
 
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 abstract class PinholeBrowserPage extends PinholePage
 {
 	// {{{ protected properties
 
 	/**
-	 * @var PinholeTagIntersection
+	 * @var SwatUI
 	 */
-	protected $tag_intersection;
+	protected $ui;
 
-	protected $search_ui;
+	/**
+	 * @var string
+	 */
+	protected $ui_xml;
 
 	// }}}
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$tags = null)
+		$tags = '')
 	{
 		parent::__construct($app, $layout);
+		$this->createTagList($tags);
+	}
 
-		$this->tag_intersection = new PinholeTagIntersection($app->db);
+	// }}}
+	// {{{ protected function createTagList()
 
-		if ($tags !== null)
-			foreach (explode('/', $tags) as $tag)
-				$this->tag_intersection->addTagByShortname($tag);
+	protected function createTagList($tags)
+	{
+		$this->tag_list = new PinholeTagList($this->app->db, $tags);
 
-		$this->search_ui = new SwatUI();
-		$this->search_ui->loadFromXML(
-			dirname(__FILE__).'/browser-search.xml');
+		$this->tag_list->setPhotoWhereClause(sprintf(
+			'PinholePhoto.status = %s',
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
+
+		if (count($this->tag_list) == 0) {
+			// if we're at the root, show newest photos first
+			$this->tag_list->setPhotoOrderByClause(
+				'PinholePhoto.photo_date desc, id desc');
+		} else { 
+			// if we have tags selected, show oldest photos first
+			$this->tag_list->setPhotoOrderByClause(
+				'PinholePhoto.photo_date asc, id asc');
+		}
 	}
 
 	// }}}
@@ -48,23 +64,20 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	public function init()
 	{
-		$radio_widget = $this->search_ui->getWidget('search_options');
-		$tags = $this->tag_intersection->getIntersectingTags();
+		$this->ui = new SwatUI();
+		$this->ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
+		$this->ui->loadFromXML($this->ui_xml);
 
-		if (count($tags) > 0) {
-			$radio_options = array(
-				'all' => Pinhole::_('All Photos'),
-				'set' => Pinhole::_('This Set'));
+		$this->initInternal();
 
-			$radio_widget->addOptionsByArray($radio_options);
-			$radio_widget->value = 'all';
-		} else {
-			$radio_widget->visible = false;
-		}
+		$this->ui->init();
+	}
 
-		$this->search_ui->getWidget('search_form')->action =
-			'tag/'.$this->tag_intersection->getIntersectingTagPath(
-				null, array('site.page'));
+	// }}}
+	// {{{ protected function initInternal()
+
+	protected function initInternal()
+	{
 	}
 
 	// }}}
@@ -74,24 +87,40 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	public function process()
 	{
-		$this->search_ui->process();
+		$this->ui->process();
+		$this->processInternal();
+	}
 
-		$form = $this->search_ui->getWidget('search_form');
+	// }}}
+	// {{{ protected function processInternal()
 
-		if ($form->isSubmitted()) {
-			$keywords= $this->search_ui->getWidget('keywords')->value;
+	protected function processInternal()
+	{
+		$this->processSearchForm();
+	}
 
-			$keyword_tag = ($keywords === null) ? '' : sprintf(
-					'/search.keywords=%s', urlencode($keywords));
+	// }}}
+	// {{{ protected function processSearchForm()
 
-			$options = $this->search_ui->getWidget('search_options')->value;
+	protected function processSearchForm()
+	{
+		try {
+			$form = $this->ui->getWidget('search_form');
+			if ($form->isSubmitted()) {
+				$keywords= $this->ui->getWidget('keywords')->value;
 
-			if ($options == 'all') {
-				$this->app->relocate('tag'.$keyword_tag);
-			} else {
-				$path = $this->tag_intersection->getIntersectingTagPath(); 
-				$this->app->relocate('tag/'.$path.$keyword_tag);
+				$keyword_tag = ($keywords === null) ? '' : sprintf(
+					'search.keywords=%s', urlencode($keywords));
+
+				$options = $this->ui->getWidget('search_options');
+				if ($options->value == 'all') {
+					$this->app->relocate('tag/'.$keyword_tag);
+				} else {
+					$this->tag_list->add($keyword_tag);
+					$this->app->relocate('tag/'.$this->tag_list->__toString());
+				}
 			}
+		} catch (SwatWidgetNotFoundException $e) {
 		}
 	}
 
@@ -104,17 +133,86 @@ abstract class PinholeBrowserPage extends PinholePage
 	{
 		parent::build();
 
+		$this->buildInternal();
+
 		$this->layout->startCapture('header_content');
 		$this->displayHeaderContent();
 		$this->layout->endCapture();
 
 		$this->layout->startCapture('sidebar_content');
-		$this->displayTagList();
+		$this->displaySidebarContent();
 		$this->layout->endCapture();
 
-		$this->layout->startCapture('search_content');
-		$this->displaySearchForm();
+		$this->layout->startCapture('content');
+		$this->displayContent();
 		$this->layout->endCapture();
+	}
+
+	// }}}
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
+	{
+		$this->buildSearchForm();
+		$this->buildTagListView();
+		$this->buildSubTagListView();
+	}
+
+	// }}}
+	// {{{ protected function buildSearchForm()
+
+	protected function buildSearchForm()
+	{
+		try {
+			$radio_widget = $this->ui->getWidget('search_options');
+
+			if (count($this->tag_list) > 0) {
+				$radio_options = array(
+					'all' => Pinhole::_('All Photos'),
+					'set' => Pinhole::_('This Set'));
+
+				$radio_widget->addOptionsByArray($radio_options);
+				$radio_widget->value = 'all';
+			} else {
+				$radio_widget->visible = false;
+			}
+
+			$this->ui->getWidget('search_form')->action = $this->app->getUri();
+		} catch (SwatWidgetNotFoundException $e) {
+		}
+	}
+
+	// }}}
+	// {{{ protected function buildTagListView()
+
+	protected function buildTagListView()
+	{
+		try {
+			$tag_list_view = $this->ui->getWidget('tag_list_view');
+			$tag_list_view->setTagList($this->tag_list);
+		} catch (SwatWidgetNotFoundException $e) {
+		}
+	}
+
+	// }}}
+	// {{{ protected function buildSubTagListView()
+
+	protected function buildSubTagListView()
+	{
+		try {
+			$tag_list_view = $this->ui->getWidget('sub_tag_list_view');
+			$tag_list_view->setTagList($this->tag_list);
+			$tag_list_view->setSubTagList($this->getSubTagList());
+		} catch (SwatWidgetNotFoundException $e) {
+		}
+	}
+
+	// }}}
+	// {{{ protected function getSubTagList()
+
+	protected function getSubTagList()
+	{
+		return $this->tag_list->getSubTags();
 	}
 
 	// }}}
@@ -122,106 +220,35 @@ abstract class PinholeBrowserPage extends PinholePage
 
 	protected function displayHeaderContent()
 	{
-		$this->displayIntersectingTags();
-	}
-
-	// }}}
-	// {{{ protected function displayIntersectingTags()
-
-	protected function displayIntersectingTags()
-	{
-		$tags = $this->tag_intersection->getIntersectingTags();
-		if (count($tags) > 0) {
-			echo '<div class="intersecting-tag-list">';
-
-			$count = 0;
-			
-			foreach ($tags as $tag) {
-				$title = $tag->getTitle();
-				if ($title !== null) {
-					if ($count > 0)
-						echo ' <span class="plus">+</span> ';
-
-					$tag_link = new SwatHtmlTag('a');
-					$tag_link->href = 'tag/'.$tag->getPath();
-					$tag_link->rel = 'tag';
-					$tag_link->title = 'view all photos with this tag';
-					$tag_link->setContent($tag->getTitle());
-					$tag_link->display();
-					$count++;
-				}
-			}
-
-			echo '</div>';
+		try {
+			$header = $this->ui->getWidget('header_content');
+			$header->display();
+		} catch (SwatWidgetNotFoundException $e) {
 		}
 	}
 
 	// }}}
-	// {{{ protected function displayTagList()
+	// {{{ protected function displaySidebarContent()
 
-	protected function displayTagList()
+	protected function displaySidebarContent()
 	{
-		$tags = $this->getTagListTags();
-		if (count($tags) > 0) {
-			echo '<div id="pinhole_tag_sort"></div>';
-			echo '<ul class="tag-list" id="pinhole_tag_list">';
-
-			$root = 'tag';
-			$path = $this->tag_intersection->getIntersectingTagPath();
-			if (strlen($path) > 0)
-				$root.= '/'.$path;
-
-			foreach ($tags as $tag) {
-				$li_tag = new SwatHtmlTag('li');
-				$li_tag->id = sprintf('%s.%s.%s',
-					$tag->shortname,
-					$tag->getLastUpdated()->getTime(),
-					$tag->getPhotoCount());
-				$li_tag->open();
-
-				$anchor_tag = new SwatHtmlTag('a');
-				$anchor_tag->setContent($tag->title);
-				$anchor_tag->href = $root.'/'.$tag->shortname;
-				$anchor_tag->title = sprintf('%d %s',
-					$tag->getPhotoCount(),
-					Pinhole::ngettext('photo', 'photos', $tag->getPhotoCount()));
-				$anchor_tag->rel = 'tag';
-				$anchor_tag->display();
-
-				$li_tag->close();
-
-			}
-
-			echo '</ul>';
-
-			Swat::displayInlineJavaScript($this->getInlineJavascript());
+		try {
+			$sidebar = $this->ui->getWidget('sidebar_content');
+			$sidebar->display();
+		} catch (SwatWidgetNotFoundException $e) {
 		}
 	}
 
 	// }}}
-	// {{{ protected function displaySearchForm()
+	// {{{ protected function displayContent()
 
-	protected function displaySearchForm()
+	protected function displayContent()
 	{
-		$this->search_ui->display();
-	}
-
-	// }}}
-	// {{{ protected function getTagListTags()
-
-	protected function getTagListTags()
-	{
-		return $this->tag_intersection->getTags();
-	}
-
-	// }}}
-	// {{{ protected function getInlineJavaScript()
-
-	protected function getInlineJavaScript()
-	{
-		return sprintf("var %s_obj =
-			new PinholeSortableTagList('%s', '%s');",
-			'tag_list', 'pinhole_tag_list', 'pinhole_tag_sort');
+		try {
+			$content = $this->ui->getWidget('content');
+			$content->display();
+		} catch (SwatWidgetNotFoundException $e) {
+		}
 	}
 
 	// }}}
@@ -233,19 +260,11 @@ abstract class PinholeBrowserPage extends PinholePage
 	{
 		parent::finalize();
 
-		$yui = new SwatYUI(array('dom', 'animation'));
-		$this->layout->addHtmlHeadEntrySet($yui->getHtmlHeadEntrySet());
-
 		$this->layout->addHtmlHeadEntrySet(
-			$this->search_ui->getRoot()->getHtmlHeadEntrySet(),
-			Pinhole::PACKAGE_ID);
+			$this->ui->getRoot()->getHtmlHeadEntrySet());
 
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/styles/pinhole-browser-page.css',
-			Pinhole::PACKAGE_ID));
-
-		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
-			'packages/pinhole/javascript/pinhole-sortable-tag-list.js',
 			Pinhole::PACKAGE_ID));
 	}
 

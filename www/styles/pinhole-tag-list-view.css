@@ -3,9 +3,9 @@
 	float: left;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-plus {
+.pinhole-tag-list-view span.pinhole-tag-list-view-operator{
 	font-weight: bold;
-	margin: 0 0.4em 0 0;
+	margin: 0 0.5em 0 0;
 }
 
 .pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper {

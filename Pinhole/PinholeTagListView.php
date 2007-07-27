@@ -29,50 +29,57 @@ class PinholeTagListView extends SwatControl
 		if (!$this->visible)
 			return;
 
-		if ($this->tag_list === null || count($this->tag_list) == 0)
+		if ($this->tag_list === null)
 			return;
-
+		
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->class = 'pinhole-tag-list-view';
 		$div_tag->id = $this->id;
 		$div_tag->open();
 
-		$count = 0;
-		foreach ($this->tag_list as $tag) {
-			$remove_list = clone $this->tag_list;
-			$remove_list->remove($tag);
+		if (count($this->tag_list) == 0) {
+			echo Pinhole::_('Displaying All Photos');
+		} else {
 
-			if ($count > 0)
-				echo '<span class="pinhole-tag-list-view-plus">+</span>';
+			$count = 0;
+			foreach ($this->tag_list as $tag) {
+				$remove_list = clone $this->tag_list;
+				$remove_list->remove($tag);
 
-			echo '<span class="pinhole-tag-list-view-tag-wrapper">';
+				if ($count > 0) {
+					echo '<span class="pinhole-tag-list-view-operator">+',
+						'</span>';
+				}
 
-			$only_anchor_tag = new SwatHtmlTag('a');
-			$only_anchor_tag->class = 'pinhole-tag-list-view-tag';
-			$only_anchor_tag->rel = 'tag';
-			$only_anchor_tag->title =
-				Pinhole::_('View all photos with this tag.');
+				echo '<span class="pinhole-tag-list-view-tag-wrapper">';
 
-			$only_anchor_tag->href = $this->base.'/'.$tag->__toString();
-			$only_anchor_tag->setContent($tag->getTitle());
-			$only_anchor_tag->display();
+				$only_anchor_tag = new SwatHtmlTag('a');
+				$only_anchor_tag->class = 'pinhole-tag-list-view-tag';
+				$only_anchor_tag->rel = 'tag';
+				$only_anchor_tag->title =
+					Pinhole::_('View all photos with this tag.');
 
-			$remove_anchor_tag = new SwatHtmlTag('a');
-			$remove_anchor_tag->class = 'pinhole-tag-list-view-remove';
-			$remove_anchor_tag->title =
-				Pinhole::_('Remove this tag.');
+				$only_anchor_tag->href = $this->base.'/'.$tag->__toString();
+				$only_anchor_tag->setContent($tag->getTitle());
+				$only_anchor_tag->display();
 
-			$remove_anchor_tag->href =
-				$this->base.'/'.$remove_list->__toString();
+				$remove_anchor_tag = new SwatHtmlTag('a');
+				$remove_anchor_tag->class = 'pinhole-tag-list-view-remove';
+				$remove_anchor_tag->title =
+					Pinhole::_('Remove this tag.');
 
-			$remove_anchor_tag->setContent('×');
-			$remove_anchor_tag->display();
+				$remove_anchor_tag->href =
+					$this->base.'/'.$remove_list->__toString();
 
-			echo '</span>';
+				$remove_anchor_tag->setContent('×');
+				$remove_anchor_tag->display();
 
-			unset($remove_list);
+				echo '</span>';
 
-			$count++;
+				unset($remove_list);
+
+				$count++;
+			}
 		}
 
 		$div_tag->close();

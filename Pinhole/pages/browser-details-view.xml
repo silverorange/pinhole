@@ -27,7 +27,7 @@
 		<widget class="SwatForm" id="comments" />
 	</widget>
 	<widget class="SwatForm" id="reply">
-		<widget class="SwatDisclosure">
+		<widget class="SwatDisclosure" id="reply_disclosure">
 			<property name="title" type="string">Post a Comment</property>
 			<property name="open" type="boolean">false</property>
 			<widget class="SwatFormField">

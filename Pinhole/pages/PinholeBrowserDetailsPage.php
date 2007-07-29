@@ -10,8 +10,6 @@ require_once 'Swat/SwatString.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholeComment.php';
-require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
 
 /**
  * @package   Pinhole
@@ -37,10 +35,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->ui_xml = 'Pinhole/pages/browser-details.xml';
 
 		$this->createPhoto($photo_id);
-
-		$this->comment = new PinholeComment();
-		$this->comment->setDatabase($this->app->db);
-
 	}
 
 	// }}}
@@ -53,56 +47,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->photo = new $photo_class();
 		$this->photo->setDatabase($this->app->db);
 		$this->photo->load($photo_id);
-	}
-
-	// }}}
-
-	// process phase
-	// {{{ public function process()
-
-	public function process()
-	{
-		parent::process();
-
-		$form = $this->ui->getWidget('reply');
-		$form->action = sprintf('photo/%s',$this->photo->id);
-
-		if ($form->isSubmitted() && ($this->photo->comments_status == 0)) {
-			$recaptcha = $this->ui->getWidget('recaptcha');
-			
-			if (!$recaptcha->hasMessage()){
-				$name       = $this->ui->getWidget('name');
-				$email      = $this->ui->getWidget('email');
-				$bodytext   = $this->ui->getWidget('bodytext');
-				$url        = $this->ui->getWidget('url');
-				$rating     = $this->ui->getWidget('rating_flydown');
-
-				$date = new SwatDate();
-
-				$this->comment->name        = 
-					SwatString::minimizeEntities($name->value);
-
-				$this->comment->bodytext    = 
-					SwatString::minimizeEntities($bodytext->value);
-
-				$this->comment->url         = 
-					SwatString::minimizeEntities(ltrim($url->value, 'http://'));
-
-				$this->comment->rating      = $rating->value;
-				$this->comment->email       = $email->value;
-				$this->comment->photo       = $this->photo->id;
-				$this->comment->createdate  = $date;
-				$this->comment->remote_ip   = $_SERVER['REMOTE_ADDR'];
-				$this->comment->save();
-
-				// resets the fields to blank
-				$name->value       = null;
-				$email->value      = null;
-				$bodytext->value   = null;
-				$url->value        = null;
-				$rating->value     = null;
-			}
-		}
 	}
 
 	// }}}
@@ -137,8 +81,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$description = $this->ui->getWidget('description');
 		$description->content = $this->photo->description;
-		
-		$this->buildComments($this->getCommentsStore());
 	}
 
 	// }}}
@@ -170,73 +112,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
-	// {{{ protected function buildComments()
-	
-	protected function buildComments($store)
-	{
-		// build previous comments
-		$comments = $this->ui->getWidget('comments');
-		$comments_status = $this->photo->comments_status;
-		$hide_comments = 0;
-
-		foreach ($store as $comment) {
-			if (!$comment->show)
-				$hide_comments += 1;
-		}
-
-		$this->ui->getWidget('comments_fieldset')->visible =
-			(count($store) > 0 &&
-			$comments_status != PinholePhoto::COMMENTS_STATUS_DISABLED);
-
-		if ($hide_comments === count($store))
-			$this->ui->getWidget('comments_fieldset')->visible = false;
-
-		if ($comments_status == PinholePhoto::COMMENTS_STATUS_NORMAL
-			|| $comments_status == PinholePhoto::COMMENTS_STATUS_LOCKED) {
-
-			foreach ($store as $comment) {
-				if (!$comment->show)
-					return;
-
-				$content_block = new SwatContentBlock();
-				$content_block->content_type = 'text/xml';
-
-				$date = new SwatDate($comment->createdate);
-
-				$content = sprintf('%s - %s<br />',
-					$comment->name,
-					$date->format(SwatDate::DF_DATE_TIME_SHORT));
-
-				if ($comment->rating) {
-					$content .= sprintf('Rating:%s <br />', 
-						(str_repeat('٭', $comment->rating)));
-				}
-
-				if ($comment->url)
-					$content.= sprintf('<a href="http://%s">%s</a><br>',
-						$comment->url, $comment->url);
-
-				$content.= $comment->bodytext.'<br><br>';
-				$content_block->content = $content;
-
-				$comments->add($content_block);
-			}
-		
-		// build rating flydown
-		$ratings = array(1 => '٭', 2 => '٭٭', 3 => '٭٭٭', 
-			4 => '٭٭٭٭', 5 => '٭٭٭٭٭');
-
-		$flydown = $this->ui->getWidget('rating_flydown');
-		$flydown->addOptionsByArray($ratings);
-		}
-
-		// checks to see if the reply disclosure has any error messages
-		$reply = $this->ui->getWidget('reply_disclosure');
-		if ($reply->hasMessage())
-			$reply->open = true;
-	}
-
-	// }}}
 	// {{{ protected function buildPhotoScroller()
 
 	protected function buildPhotoScroller()
@@ -244,22 +119,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$photo_scroller = $this->ui->getWidget('photo_scroller');
 		$photo_scroller->setPhoto($this->photo);
 		$photo_scroller->setTagList($this->tag_list);
-	}
-
-	// }}}
-	// {{{ protected function getCommentsStore()
-
-	protected function getCommentsStore()
-	{
-		$sql = sprintf('select PinholeComment.*
-				from PinholeComment
-				where photo = %s
-				order by createdate desc',
-			$this->photo->id);
-
-		$sections = SwatDB::query($this->app->db, $sql, 'PinholeCommentWrapper');
-
-		return $sections;
 	}
 
 	// }}}

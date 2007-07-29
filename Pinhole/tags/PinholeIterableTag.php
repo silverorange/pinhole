@@ -4,7 +4,7 @@
  * Interface for iterable tags
  *
  * Iterable tags are tags that can be incremented and decremented. For example,
- * date tags can increate and decrease their values.
+ * date tags can increase and decrease their values.
  *
  * @package   Pinhole
  * @copyright 2007 silverorange

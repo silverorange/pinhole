@@ -5,6 +5,15 @@ require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
 
 /**
+ * Machine tag for performing searches on photos
+ *
+ * This machine tag has the namespace 'search' and the following names:
+ *
+ * - <i>keywords</i>: performs a keyword search for the tag value. If the
+ *                    NateGoSearch feature is enabled a fulltext search is
+ *                    performed on the keywords. Otherwise, a simple SQL
+ *                    'like' search is performed.
+ *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
@@ -13,18 +22,43 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 {
 	// {{{ class constants
 
+	/**
+	 * The namespace of the search machine tag
+	 */
 	const NAMESPACE = 'search';
 
 	// }}}
 	// {{{ private propeties
 
+	/**
+	 * Name of this search tag
+	 *
+	 * Should be 'keywords'.
+	 *
+	 * @var string
+	 */
 	private $name;
 
+	/**
+	 * Value of this search tag
+	 *
+	 * @var string
+	 */
 	private $value;
 
 	// }}}
 	// {{{ public function parse()
 
+	/**
+	 * Parses this search tag from a tag string
+	 *
+	 * @param string $string the tag string to parse. 
+	 * @param MDB2_Driver_Common $db the database connection used to parse the
+	 *                            tag string.
+	 *
+	 * @return boolean true if the tag string could be parsed and false if the
+	 *                  tag string could not be parsed.
+	 */
 	public function parse($string, MDB2_Driver_Common $db)
 	{
 		$this->setDatabase($db);
@@ -47,6 +81,11 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ public function getTitle()
 
+	/**
+	 * Gets the title of this search tag
+	 *
+	 * @return string the title of this search tag.
+	 */
 	public function getTitle()
 	{
 		switch ($this->name) {
@@ -67,6 +106,15 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ public function getWhereClause()
 
+	/**
+	 * Gets the SQL where clause for this search tag
+	 *
+	 * If the NateGoSearch feature is enabled this returns an empty string as
+	 * NateGoSearch uses table joins. See
+	 * {@link PinholeSearchTag::getJoinClauses()}.
+	 *
+	 * @return string the SQL where clause for this search tag.
+	 */
 	public function getWhereClause()
 	{
 		switch ($this->name) {
@@ -94,6 +142,14 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ public function getJoinClauses()
 
+	/**
+	 * Gets the SQL join clauses for this search tag
+	 *
+	 * If the NateGoSearch feature is enabled, this returns a unique join
+	 * statement for the given keyword search results.
+	 *
+	 * @return array an array of join clauses used by this search tag.
+	 */
 	public function getJoinClauses()
 	{
 		// Ensure joined NateGoSearchResult table is unique even if we have
@@ -136,6 +192,13 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ public function applyToPhoto()
 
+	/**
+	 * Applies this tag to a photo
+	 *
+	 * Since search tags cannot be applied to photos, this method does nothing.
+	 *
+	 * @param PinholePhoto $photo the photo this tag is to be applied to.
+	 */
 	public function applyToPhoto(PinholePhoto $photo)
 	{
 		// do nothing since search tags cannot be applied to photos
@@ -144,6 +207,14 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ public function appliesToPhoto()
 
+	/**
+	 * Checks whether or not this search tag applies to a given photo
+	 *
+	 * @param PinholePhoto the photo to check.
+	 *
+	 * @return boolean true if this tag applies to the given photo and false if
+	 *                  this tag does not apply to the given photo.
+	 */
 	public function appliesToPhoto(PinholePhoto $photo)
 	{
 		switch ($this->name) {
@@ -181,6 +252,11 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ protected function getNamespace()
 
+	/**
+	 * Gets the namespace of this search tag
+	 *
+	 * @return string the namespace of this search tag.
+	 */
 	protected function getNamespace()
 	{
 		return self::NAMESPACE;
@@ -189,6 +265,11 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ protected function getName()
 
+	/**
+	 * Gets the name of this search tag
+	 *
+	 * @return string the name of this search tag.
+	 */
 	protected function getName()
 	{
 		return $this->name;
@@ -197,6 +278,11 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ protected function getValue()
 
+	/**
+	 * Gets the value of this search tag
+	 *
+	 * @return string the value of this search tag.
+	 */
 	protected function getValue()
 	{
 		return $this->value;
@@ -215,6 +301,16 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	// }}}
 	// {{{ private function isValid()
 
+	/**
+	 * Whether or not a name-value pair is valid for this search tag
+	 *
+	 * @param string $name the name.
+	 * @param string $value the value.
+	 *
+	 * @return boolean true if the name-value pair is valid for this search tag
+	 *                  and false if the name-value pair is not valid for this
+	 *                  search tag.
+	 */
 	private function isValid($name, $value)
 	{
 		switch ($name) {

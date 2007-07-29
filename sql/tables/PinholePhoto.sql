@@ -17,8 +17,7 @@ create table PinholePhoto (
 
 	publish_date timestamp,
 	status integer not null default 0,
-	comments_status integer not null default 0,
-	
+
 	primary key (id)
 );
 

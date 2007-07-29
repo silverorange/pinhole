@@ -53,50 +53,5 @@
 				</object>
 			</widget>
 		</widget>
-		<widget class="SwatFieldset" id="comments_fieldset">
-			<property name="title" type="string">Replies to Nick's Photos</property>
-			<widget class="SwatForm" id="comments" />
-		</widget>
-		<widget class="SwatForm" id="reply">
-			<widget class="SwatDisclosure" id="reply_disclosure">
-				<property name="title" type="string">Post a Comment</property>
-				<property name="open" type="boolean">false</property>
-				<widget class="SwatFormField">
-					<property name="title" type="string">Name</property>
-					<widget class="SwatEntry" id="fullname">
-						<property name="required" type="boolean">true</property>
-					</widget>
-				</widget>
-				<widget class="SwatFormField">
-					<property name="title" type="string">Email Address</property>
-					<widget class="SwatEntry" id="email"/>
-				</widget>
-				<widget class="SwatFormField">
-					<property name="title" type="string">Web Address</property>
-					<widget class="SwatEntry" id="webaddress"/>
-				</widget>
-				<widget class="SwatFormField">
-					<widget class="SwatReCaptcha" id="recaptcha">
-						<property name="public_key" type="string">6LcMHwAAAAAAAMLTQmoBZy0eEAdV9FO3r7-5iiz6</property>
-						<property name="private_key" type="string">6LcMHwAAAAAAAAaNyPZdWk81OwYoeRtCUGimCVqr</property>
-					</widget>
-				</widget>
-				<widget class="SwatFormField">
-					<property name="title" type="string">Rate This Photo</property>
-					<widget class="SwatFlydown" id="rating_flydown" />
-				</widget>
-				<widget class="SwatFormField">
-					<property name="title" type="string">Comment</property>
-					<widget class="SwatTextarea" id="bodytext">
-						<property name="required" type="boolean">true</property>
-					</widget>
-				</widget>
-				<widget class="SwatFooterFormField">
-					<widget class="SwatButton">
-						<property name="title" type="string">Submit Button</property>
-					</widget>
-				</widget>
-			</widget>
-		</widget>
 	</widget>
 </swatml>

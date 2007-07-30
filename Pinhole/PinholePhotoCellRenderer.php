@@ -5,18 +5,26 @@
 require_once 'Swat/SwatImageCellRenderer.php';
 
 /**
- * A renderer for photo checkboxes
+ * A cell renderer for photos
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ * @todo      Make this cell renderer encapsulate SwatImageCellRenderer or
+ *            SwatImageLinkCellRenderer instead of extending
+ *            SwatImageCellRenderer.
  */
 class PinholePhotoCellRenderer extends SwatImageCellRenderer
 {
 	// {{{ public properties
 
+	/**
+	 * @var PinholePhoto
+	 */
 	public $photo;
+
 	public $link;
+
 	public $link_value;
 
 	// }}}

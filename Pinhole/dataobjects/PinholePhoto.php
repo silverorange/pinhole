@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Pinhole/dataobjects/PinholeInstance.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
@@ -297,6 +298,9 @@ class PinholePhoto extends SwatDBDataObject
 
 		$this->registerInternalProperty('photographer',
 			SwatDBClassMap::get('PinholePhotographer'));
+
+		$this->registerInternalProperty('instance',
+			SwatDBClassMap::get('PinholeInstance'));
 
 		$this->registerDateProperty('upload_date');
 		$this->registerDateProperty('publish_date');

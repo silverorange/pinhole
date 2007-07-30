@@ -49,7 +49,7 @@ class PinholeInstance extends SwatDBDataObject
 	 *
 	 * @param string $shortname the shortname of the instance to load.
 	 */
-	public function loadFromName($shortname)
+	public function loadFromShortname($shortname)
 	{
 		$row = null;
 

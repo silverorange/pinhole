@@ -7,10 +7,15 @@ require_once 'Pinhole/tags/PinholeIterableTag.php';
 class PinholePageTag extends PinholeAbstractMachineTag
 	implements PinholeIterableTag
 {
+	// {{{ class constants
+
 	/**
 	 * The namespace of the page machine tag
 	 */
 	const NAMESPACE = 'page';
+
+	// }}}
+	// {{{ private properties
 
 	/**
 	 * Name of this page tag
@@ -27,6 +32,9 @@ class PinholePageTag extends PinholeAbstractMachineTag
 	 * @var string
 	 */
 	private $value;
+
+	// }}}
+	// {{{ public function parse()
 
 	/**
 	 * Parses this page tag from a tag string
@@ -57,6 +65,9 @@ class PinholePageTag extends PinholeAbstractMachineTag
 		return $valid;
 	}
 
+	// }}}
+	// {{{ public function getTitle()
+
 	/**
 	 * Gets the title of this page tag
 	 *
@@ -70,12 +81,15 @@ class PinholePageTag extends PinholeAbstractMachineTag
 			break;
 
 		default:
-			$title = Pinhole::_('Unknown Date');
+			$title = Pinhole::_('Unknown Page Tag');
 			break;
 		}
 
 		return $title;
 	}
+
+	// }}}
+	// {{{ public function applyToPhoto()
 
 	/**
 	 * Applies this tag to a photo
@@ -88,6 +102,9 @@ class PinholePageTag extends PinholeAbstractMachineTag
 	{
 		// do nothing since page tags cannot be applied to photos
 	}
+
+	// }}}
+	// {{{ public function appliesToPhoto()
 
 	/**
 	 * Checks whether or not this page tag applies to a given photo
@@ -103,13 +120,26 @@ class PinholePageTag extends PinholeAbstractMachineTag
 		return false;
 	}
 
+	// }}}
+	// {{{ public function getPageNumber()
+
+	/**
+	 * Gets the page number of this page tag
+	 *
+	 * @return integer the page number of this page tag.
+	 */
 	public function getPageNumber()
 	{
-		return $this->value;
+		return intval($this->value);
 	}
+
+	// }}}
+	// {{{ public function next()
 
 	/**
 	 * Gets the next tag after this tag
+	 *
+	 * For page tags, this gets the next page if there is a next page.
 	 *
 	 * @return PinholePageTag the next tag after this tag or null if there is
 	 *                         no next tag.
@@ -139,8 +169,13 @@ class PinholePageTag extends PinholeAbstractMachineTag
 		return $returned_tag;
 	}
 
+	// }}}
+	// {{{ public function prev()
+
 	/**
 	 * Gets the previous tag before this tag
+	 *
+	 * For page tags, this gets the previous page if there is a previous page.
 	 *
 	 * @return PinholePageTag the previous tag before this tag or null if there
 	 *                         is no previous tag.
@@ -170,6 +205,9 @@ class PinholePageTag extends PinholeAbstractMachineTag
 		return $returned_tag;
 	}
 
+	// }}}
+	// {{{ protected function getNamespace()
+
 	/**
 	 * Gets the namespace of this page tag
 	 *
@@ -179,6 +217,9 @@ class PinholePageTag extends PinholeAbstractMachineTag
 	{
 		return self::NAMESPACE;
 	}
+
+	// }}}
+	// {{{ protected function getName()
 
 	/**
 	 * Gets the name of this page tag
@@ -190,6 +231,9 @@ class PinholePageTag extends PinholeAbstractMachineTag
 		return $this->name;
 	}
 
+	// }}}
+	// {{{ protected function getValue()
+
 	/**
 	 * Gets the value of this page tag
 	 *
@@ -199,6 +243,9 @@ class PinholePageTag extends PinholeAbstractMachineTag
 	{
 		return $this->value;
 	}
+
+	// }}}
+	// {{{ private function isValid()
 
 	/**
 	 * Whether or not a name-value pair is valid for this page tag
@@ -224,6 +271,8 @@ class PinholePageTag extends PinholeAbstractMachineTag
 
 		return $valid;
 	}
+
+	// }}}
 }
 
 ?>

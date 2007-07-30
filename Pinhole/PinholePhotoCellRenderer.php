@@ -36,16 +36,20 @@ class PinholePhotoCellRenderer extends SwatImageCellRenderer
 		$this->image = $this->getUri();
 		$this->width = $this->photo->getDimension('thumb')->width;
 		$this->height = $this->photo->getDimension('thumb')->height;
-		$this->occupy_width = $this->photo->getDimension('thumb')->dimension->max_width;
-		$this->occupy_height = $this->photo->getDimension('thumb')->dimension->max_height;
+		$this->occupy_width =
+			$this->photo->getDimension('thumb')->dimension->max_width;
+
+		$this->occupy_height =
+			$this->photo->getDimension('thumb')->dimension->max_height;
 
 		parent::render();
 
 		$title_tag = new SwatHtmlTag('span');
 		if ($this->photo->title !== null) {
-			$title_tag->setContent(SwatString::condense($this->photo->title, 30));
+			$title_tag->setContent(SwatString::condense(
+				$this->photo->title, 30));
 		} else {
-			/* Prevent self-closing span tag: <span/>  */
+			// Prevent self-closing span tag: <span/>
 			$title_tag->setContent('');
 		}
 

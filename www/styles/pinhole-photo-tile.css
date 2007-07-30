@@ -29,6 +29,10 @@
 	padding: 0.3em 0;
 }
 
+.pinhole-tile-view .swat-tile a span {
+	cursor: pointer; /* for Ie6 */
+}
+
 .pinhole-tile-view img {
 	display: block;
 	margin: 0 auto;

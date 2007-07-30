@@ -31,9 +31,9 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 	// {{{ public function getURI()
 
 	/**
-	 * Get the URI for the current photo and dimension.
+	 * Gets the URI for the current photo and dimension
 	 *
-	 * @return string A URI for loading the current photo
+	 * @return string the URI for loading the current photo.
 	 */
 	public function getURI()
 	{
@@ -51,11 +51,12 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 	// {{{ public function getPath()
 
 	/**
-	 * Get the absolute file path for the current photo and dimension.
+	 * Gets the absolute file path for the current photo and dimension
 	 *
-	 * @param string $base_dir An optional directory to start the path
-	 * 	from. Default is the web root.
-	 * @return string An absolute path to the current photo
+	 * @param string $base_dir optional. The directory to start the path from.
+	 *                          If not specified, defaults to the web root.
+	 *
+	 * @return string an absolute path to the current photo.
 	 */
 	public function getPath($base_dir = '.')
 	{
@@ -82,6 +83,7 @@ class PinholePhotoDimensionBinding extends SwatDBDataObject
 
 		$this->registerInternalProperty('dimension',
 			SwatDBClassMap::get('PinholeDimension'));
+
 		$this->registerInternalProperty('photo',
 			SwatDBClassMap::get('PinholePhoto'));
 	}

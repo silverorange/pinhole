@@ -1,5 +1,6 @@
 <?php
 
+require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBDataObject.php';
 
 /**
@@ -41,8 +42,8 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 	 * Whether or not this meta data can be browsed as a machine tag.
 	 *
 	 * Allows users to browse all photos that share the same value as this
-	 * meta data. Values with near-unique values like dates should not be browsed as
-	 * machine tags.
+	 * meta data. Values with near-unique values like dates should not be
+	 * browsed as machine tags.
 	 *
 	 * @var boolean
 	 */
@@ -58,7 +59,7 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 		$this->table = 'PinholePhotoMetaDataBinding';
 
 		$this->registerInternalProperty('photo',
-			$this->class_map->resolveClass('PinholePhoto'));
+			SwatDBClassMap::get('PinholePhoto'));
 
 		//$this->registerInternalProperty('metadata',
 		//	$this->class_map->resolveClass('PinholeMetaData'));

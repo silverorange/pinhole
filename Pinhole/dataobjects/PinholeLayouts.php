@@ -52,7 +52,7 @@ class PinholeLayouts extends SwatDBDataObject
 
 	protected function init()
 	{
-		$this->table =	SwatDBClassMap::get('PinholeLayouts');
+		$this->table = 'PinholeLayouts';
 		$this->id_field = 'integer:id';
 	}
 

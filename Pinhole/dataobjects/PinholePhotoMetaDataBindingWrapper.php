@@ -11,7 +11,7 @@ require_once 'PinholePhotoMetaDataBinding.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       PinholePhoto
+ * @see       PinholePhotoMetaDataBinding
  */
 class PinholePhotoMetaDataBindingWrapper extends SwatDBRecordsetWrapper
 {
@@ -40,7 +40,7 @@ class PinholePhotoMetaDataBindingWrapper extends SwatDBRecordsetWrapper
 			$db->quote($photo_id, 'integer'));
 
 		$meta_data = SwatDB::query($db, $sql,
-			'PinholePhotoMetaDataBindingWrapper');
+			SwatDBClassMap::get('PinholePhotoMetaDataBindingWrapper'));
 
 		return $meta_data;
 	}

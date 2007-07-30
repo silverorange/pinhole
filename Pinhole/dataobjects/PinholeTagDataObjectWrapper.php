@@ -17,7 +17,6 @@ class PinholeTagDataObjectWrapper extends SwatDBRecordsetWrapper
 
 	protected function init()
 	{
-		parent::init();
 		$this->index_field = 'name';
 		$this->row_wrapper_class = SwatDBClassMap::get('PinholeTagDataObject');
 	}

@@ -18,14 +18,14 @@ class PinholePhoto extends SwatDBDataObject
 {
 	// {{{ constants
 
-	const STATUS_PENDING = 0;
-	const STATUS_PUBLISHED = 1;
+	const STATUS_PENDING     = 0;
+	const STATUS_PUBLISHED   = 1;
 	const STATUS_UNPUBLISHED = 2;
 
-	const DATE_PART_YEAR = 1;
-	const DATE_PART_MONTH = 2;
-	const DATE_PART_DAY = 4;
-	const DATE_PART_TIME = 8;
+	const DATE_PART_YEAR     = 1;
+	const DATE_PART_MONTH    = 2;
+	const DATE_PART_DAY      = 4;
+	const DATE_PART_TIME     = 8;
 
 	// }}}
 	// {{{ public properties
@@ -142,7 +142,7 @@ class PinholePhoto extends SwatDBDataObject
 	// {{{ public function publish()
 
 	/**
-	 * Publish photo to the site
+	 * Publishes this photo
 	 *
 	 * @param boolean $set_publish_date 
 	 */
@@ -196,10 +196,11 @@ class PinholePhoto extends SwatDBDataObject
 	// }}}
 	// {{{ public function getTitle()
 
-	/*
-	 * Get a readable title for a photo
+	/**
+	 * Gets the title of this photo
 	 *
-	 * @return string a readable title for a photo 
+	 * @return string the title of this photo. If this photo has no title then
+	 *                 the original filename is returned.
 	 */
 	public function getTitle()
 	{
@@ -266,12 +267,12 @@ class PinholePhoto extends SwatDBDataObject
 	{
 		return array(
 			self::STATUS_PUBLISHED =>
-			self::getStatusTitle(self::STATUS_PUBLISHED),
+				self::getStatusTitle(self::STATUS_PUBLISHED),
 			self::STATUS_UNPUBLISHED =>
-			self::getStatusTitle(self::STATUS_UNPUBLISHED),
+				self::getStatusTitle(self::STATUS_UNPUBLISHED),
 			self::STATUS_PENDING =>
-			self::getStatusTitle(self::STATUS_PENDING),
-			);
+				self::getStatusTitle(self::STATUS_PENDING),
+		);
 	}
 
 	// }}}
@@ -283,7 +284,7 @@ class PinholePhoto extends SwatDBDataObject
 		$this->id_field = 'integer:id';
 
 		$this->registerInternalProperty('photographer',
-			$this->class_map->resolveClass('PinholePhotographer'));
+			SwatDBClassMap::get('PinholePhotographer'));
 
 		$this->registerDateProperty('upload_date');
 		$this->registerDateProperty('publish_date');

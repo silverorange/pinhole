@@ -63,19 +63,14 @@ class PinholePhotographer extends SwatDBDataObject
 	public $status;
 
 	// }}}
-	// {{{ private properties
-
-	private $statuses = array();
-
-	// }}}
 	// {{{ public static function getStatuses()
 
-	/*
+	/**
 	 * Gets the array of photographer statuses
 	 *
 	 * @return array an array of status in the form: id => title.
 	 */
-	public function getStatuses()
+	public static function getStatuses()
 	{
 		return array(
 			self::STATUS_ENABLED  =>

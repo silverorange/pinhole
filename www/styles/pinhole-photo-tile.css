@@ -6,6 +6,11 @@
 	float: left;
 	text-align: center;
 	border: 1px solid transparent;
+	/* IE6 Hack
+	   set an unused color to be index color
+	   then remove this indexed color */
+	_border-color: tomato;
+	_filter:chroma(color=tomato);
 }
 
 .pinhole-tile-view .swat-tile a {
@@ -31,4 +36,3 @@
 	border: 1px solid #888a85;
 	background: #555753;
 }
-

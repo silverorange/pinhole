@@ -46,16 +46,6 @@ class PinholeTagDataObject extends SwatDBDataObject
 	public $createdate;
 
 	// }}}
-	// {{{ protected function init()
-
-	protected function init()
-	{
-		$this->table = 'PinholeTag';
-		$this->id_field = 'integer:id';
-		$this->registerDateProperty('createdate');
-	}
-
-	// }}}
 	// {{{ public function loadFromShortname()
 
 	/**
@@ -82,6 +72,16 @@ class PinholeTagDataObject extends SwatDBDataObject
 		$this->initFromRow($row);
 		$this->generatePropertyHashes();
 		return true;
+	}
+
+	// }}}
+	// {{{ protected function init()
+
+	protected function init()
+	{
+		$this->table = 'PinholeTag';
+		$this->id_field = 'integer:id';
+		$this->registerDateProperty('createdate');
 	}
 
 	// }}}

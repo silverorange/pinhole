@@ -54,11 +54,9 @@ class PinholeTagDetails extends AdminPage
 		$this->tag->setDatabase($this->app->db);
 
 		if (!$this->tag->load($this->id))
-			throw new AdminNotFoundException(sprintf(
-				Pinhole::_('A tag with an id of ‘%d’ does not exist.'),
-				$this->id));
-
-		return $this->tag;
+			throw new AdminNotFoundException(
+				sprintf(Pinhole::_('Tag with id “%s” not found.'),
+					$this->id));
 	}
 
 	// }}}
@@ -89,8 +87,6 @@ class PinholeTagDetails extends AdminPage
 	}
 
 	// }}}
-
-	// build phase - tag details
 	// {{{ private function buildNavBar()
 
 	private function buildNavBar()
@@ -99,8 +95,7 @@ class PinholeTagDetails extends AdminPage
 		$this->navbar->addEntry(
 			new SwatNavBarEntry(Pinhole::_('Tags'), 'Tag'));
 
-		$this->navbar->addEntry(new SwatNavBarEntry(
-			$this->tag->title));
+		$this->navbar->addEntry(new SwatNavBarEntry($this->tag->title));
 	}
 
 	// }}}

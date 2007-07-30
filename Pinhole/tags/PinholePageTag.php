@@ -4,6 +4,20 @@ require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
 require_once 'Pinhole/tags/PinholeIterableTag.php';
 
+/**
+ * Machine tag for pages 
+ *
+ * This machine tag has the namespace 'page' and the following names:
+ *
+ * - <i>number</i>: represents a specific page number with an integer value.
+ *
+ * Page tags are used to paginate large photo sets. See
+ * {@link PinholePageTag::getPageNumber()}.
+ *
+ * @package   Pinhole
+ * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ */
 class PinholePageTag extends PinholeAbstractMachineTag
 	implements PinholeIterableTag
 {

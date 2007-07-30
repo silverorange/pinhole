@@ -7,7 +7,9 @@ require_once 'Admin/pages/AdminDBEdit.php';
 require_once 'Pinhole/dataobjects/PinholePhotographer.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
+require_once 'Pinhole/PinholeTagList.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
+require_once 'Pinhole/tags/PinholeTag.php';
 require_once 'include/PinholePhotoTagEntry.php';
 
 /**
@@ -43,17 +45,23 @@ class PinholePhotoEdit extends AdminDBEdit
 		parent::initInternal();
 
 		$this->ui->loadFromXML($this->ui_xml);
+
 		$this->initPhoto();
 		$this->initStatuses();
 		$this->initPendingPhotos();
 
-		$sql = sprintf('select * from PinholeTag
-			where status = %s order by title',
-			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'));
+		// setup tag list
+		$tag_list = new PinholeTagList($this->app->db);
+		$sql = 'select PinholeTag.* from PinholeTag order by title';
+		$tags = SwatDB::query($this->app->db, $sql,
+			'PinholeTagDataObjectWrapper');
+		
+		foreach ($tags as $data_object) {
+			$tag = new PinholeTag($data_object);
+			$tag_list->add($tag);
+		}
 
-		$tags = SwatDB::query($this->app->db, $sql, 'PinholeTagWrapper');
-
-		$this->ui->getWidget('tags')->tags = $tags;
+		$this->ui->getWidget('tags')->setTagList($tag_list);
 
 		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
 			$this->ui->getWidget('edit_form')->addHiddenField(
@@ -229,15 +237,6 @@ class PinholePhotoEdit extends AdminDBEdit
 	}
 
 	// }}}
-	// {{{ protected function loadDBData()
-
-	protected function loadDBData()
-	{
-		$this->ui->setValues(get_object_vars($this->photo));
-		$this->ui->getWidget('tags')->values = $this->photo->tags;
-	}
-
-	// }}}
 	// {{{ protected function buildButton()
 
 	protected function buildButton()
@@ -261,6 +260,15 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected function buildNavBar()
 	{
 		$this->navbar->createEntry(Pinhole::_('Edit'));
+	}
+
+	// }}}
+	// {{{ protected function loadDBData()
+
+	protected function loadDBData()
+	{
+		$this->ui->setValues(get_object_vars($this->photo));
+		$this->ui->getWidget('tags')->values = $this->photo->tags;
 	}
 
 	// }}}

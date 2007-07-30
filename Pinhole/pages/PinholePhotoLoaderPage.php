@@ -3,6 +3,7 @@
 require_once 'Pinhole/pages/PinholePage.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Swat/exceptions/SwatException.php';
+require_once 'Site/exceptions/SiteNotFoundException.php';
 
 /**
  * @package   Pinhole
@@ -44,10 +45,11 @@ class PinholePhotoLoaderPage extends PinholePage
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, $dimension, $where_clause);
 
-		if ($photos === null)
-			throw SiteNotFoundException(sprintf("Photo with ".
+		if (count($photos) == 0) {
+			throw new SiteNotFoundException(sprintf("Photo with ".
 				"filename '%s' does not exist in the instance '%s'.",
 				$filename, $instance->shortname));
+		}
 
 		return $photos->getFirst();
 	}

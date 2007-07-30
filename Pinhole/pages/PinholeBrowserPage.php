@@ -42,6 +42,8 @@ abstract class PinholeBrowserPage extends PinholePage
 	{
 		$this->tag_list = new PinholeTagList($this->app->db, $tags);
 
+		$this->tag_list->setInstance($this->app->instance->getInstance());
+
 		$this->tag_list->setPhotoWhereClause(sprintf(
 			'PinholePhoto.status = %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));

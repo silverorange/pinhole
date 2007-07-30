@@ -10,10 +10,6 @@
 				<widget class="AdminSearchOperatorFlydown" id="search_title_operator" />
 				<widget class="SwatEntry" id="search_title" />
 			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Belongs to</property>
-				<widget class="SwatTreeFlydown" id="search_parent" />
-			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
 					<property name="title" translatable="yes">Search</property>
@@ -41,16 +37,10 @@
 						<property name="link_value" type="data">id</property>
 					</object>
 				</object>
-				<object class="AdminTableViewOrderableColumn" id="shortname">
-					<property name="title" translatable="yes">Shortname</property>
+				<object class="AdminTableViewOrderableColumn" id="name">
+					<property name="title" translatable="yes">Name</property>
 					<object class="SwatTextCellRenderer">
-						<property name="text" type="data">shortname</property>
-					</object>
-				</object>
-				<object class="AdminTableViewOrderableColumn">
-					<property name="title" translatable="yes">Status</property>
-					<object class="SwatTextCellRenderer">
-						<property name="text" type="data">status_title</property>
+						<property name="text" type="data">name</property>
 					</object>
 				</object>
 			</widget>
@@ -60,12 +50,6 @@
 			<widget class="SwatActions" id="index_actions">
 				<widget class="SwatActionItem" id="delete">
 					<property name="title" translatable="yes">delete…</property>
-				</widget>
-				<widget class="SwatActionItem" id="status_action">
-					<property name="title" translatable="yes">change status…</property>
-					<widget class="SwatFlydown" id="status_flydown">
-						<property name="show_blank" type="boolean">false</property>
-					</widget>
 				</widget>
 			</widget>
 		</widget>

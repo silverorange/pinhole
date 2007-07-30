@@ -105,6 +105,15 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	private $photo_range = null;
 
+	/**
+	 * Site instance to apply to photos and tags in this tag list
+	 *
+	 * @see PinholeTagList::setInstance()
+	 *
+	 * @var PinholeInstance
+	 */
+	private $instance = null;
+
 	// }}}
 	// {{{ public function __construct()
 
@@ -843,6 +852,25 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function setPhotoRange(SwatDBRange $range)
 	{
 		$this->photo_range = $range;
+	}
+
+	// }}}
+	// {{{ public function setInstance()
+
+	/**
+	 * Sets the site instance to apply to photos and tags in this tag list
+	 *
+	 * If no site instance is set for this tag list, all photos and tags are
+	 * included in results from this list. If an instance is set, only photos
+	 * and tags belonging to the specified instance are included in results
+	 * from this list.
+	 *
+	 * @param PinholeInstance $instance the site instance to apply to photos
+	 *                                   and tags in this tag list.
+	 */
+	public function setInstance(PinholeInstance $instance)
+	{
+		$this->instance = $instance;
 	}
 
 	// }}}

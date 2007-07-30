@@ -138,9 +138,6 @@ class PinholePhotoFactory
 	// }}}
 	// {{{ public function processPhoto()
 
-	/**
-	 * TODO: update documentation
-	 */
 	public function processPhoto($file, $original_filename = null)
 	{
 		if (!file_exists($file))
@@ -148,7 +145,44 @@ class PinholePhotoFactory
 				file could not be found.',
 				self::ERROR_OPENING_PHOTO);
 
-		$photo = $this->createDataObject($file, $original_filename);
+		if ($this->db === null)
+			return PEAR::raiseError('Database must be set before '. 
+				'creating a data-object. See: setDatabase().',
+				self::ERROR_CREATING_DATA_OBJECT);
+
+		$this->db->beginTransaction();
+
+		$photo = new PinholePhoto();
+		$photo->setDatabase($this->db);
+
+		$meta_data = $this->getMetaDataFromFile($file);
+
+		$photo->instance = 1; //TODO populate this correctly
+		$photo->filename = sha1(uniqid(rand(), true));
+		$photo->original_filename = $original_filename;
+		$photo->upload_date = new SwatDate();
+
+		// error suppression is needed here because there are several
+		// ways unavoidable warnings can occur despite the file being
+		// properly read.
+		$photo->serialized_exif = serialize(@exif_read_data($file));
+
+		// save photo
+		$photo->save();
+
+		$saved = $this->resizeFile($file, $photo, true);
+		if (PEAR::isError($saved)) {
+			$this->db->rollback();
+			return $saved;
+		}
+
+		if (isset($meta_data['createdate']))
+			$photo->photo_date = $this->parseMetaDataDate(
+				$meta_data['createdate']->value);
+
+		$this->saveMetaData($photo, $meta_data);
+
+		$this->db->commit();
 
 		unlink($file);
 
@@ -204,53 +238,6 @@ class PinholePhotoFactory
 		}
 
 		return $transformations;
-	}
-
-	// }}}
-	// {{{ protected function createDataObject()
-
-	protected function createDataObject($file, $original_filename)
-	{
-		if ($this->db === null)
-			return PEAR::raiseError('Database must be set before '. 
-				'creating a data-object. See: setDatabase().',
-				self::ERROR_CREATING_DATA_OBJECT);
-
-		$this->db->beginTransaction();
-
-		$photo = new PinholePhoto();
-		$photo->setDatabase($this->db);
-
-		$meta_data = $this->getMetaDataFromFile($file);
-
-		$photo->instance = 1; //TODO populate this correctly
-		$photo->filename = sha1(uniqid(rand(), true));
-		$photo->original_filename = $original_filename;
-		$photo->upload_date = new SwatDate();
-
-		// error suppression is needed here because there are several
-		// ways unavoidable warnings can occur despite the file being
-		// properly read.
-		$photo->serialized_exif = serialize(@exif_read_data($file));
-
-		// save photo
-		$photo->save();
-
-		$saved = $this->resizeFile($file, $photo, true);
-		if (PEAR::isError($saved)) {
-			$this->db->rollback();
-			return $saved;
-		}
-
-		if (isset($meta_data['createdate']))
-			$photo->photo_date = $this->parseMetaDataDate(
-				$meta_data['createdate']->value);
-
-		$this->saveMetaData($photo, $meta_data);
-
-		$this->db->commit();
-
-		return $photo;
 	}
 
 	// }}}

@@ -44,7 +44,11 @@ class PinholePhotoCellRenderer extends SwatImageCellRenderer
 		$title_tag = new SwatHtmlTag('span');
 		if ($this->photo->title !== null) {
 			$title_tag->setContent(SwatString::condense($this->photo->title, 30));
+		} else {
+			/* Prevent self-closing span tag: <span/>  */
+			$title_tag->setContent('');
 		}
+
 		$title_tag->display();
 
 		if ($this->link !== null)

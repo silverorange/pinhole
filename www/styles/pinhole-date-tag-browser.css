@@ -37,10 +37,15 @@
 .pinhole-date-tag-browser span {
 	float: left;
 	display: block;
-	border: 1px solid transparent;
 	border-bottom: 0;
 	padding: 0.2em 0.2em;
 	text-decoration: none;
+	border: 1px solid transparent;
+	/* IE6 Hack
+	   set an unused color to be index color
+	   then remove this indexed color */
+	_border-color: tomato;
+	_filter:chroma(color=tomato);
 }
 
 .pinhole-date-tag-browser a:hover,

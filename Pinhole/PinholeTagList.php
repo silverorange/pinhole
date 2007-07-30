@@ -133,14 +133,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$this->setDatabase($db);
 		$db->loadModule('Datatype', null, true);
 
-		// TODO: make this work for all galleries
-		$instance = new PinholeInstance();
-		$instance->setDatabase($db);
-		$instance->load(1);
-		$this->setInstance($instance);
-		$this->setPhotoWhereClause = '(PinholePhoto.instance = '.
-			$this->instance->id.')';
-
 		if (is_string($tag_list_string) && strlen($tag_list_string) > 0) {
 			$tag_strings = explode('/', $tag_list_string);
 			$tag_strings = array_unique($tag_strings);
@@ -250,7 +242,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		if ($this->photo_where_clause !== null)
 			$where_clauses[] = '('.$this->photo_where_clause.')';
-			
+
+		if ($this->instance !== null)
+			$where_clauses[] = sprintf('(PinholePhoto.instance = %s)',
+				$this->db->quote($this->instance->id, 'integer'));
+
 		$where_clause = implode(' '.$operator.' ', $where_clauses);
 
 		return $where_clause;
@@ -920,6 +916,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			(select tag from PinholePhotoTagBinding where photo in
 			(%s))',
 			$photo_id_sql);
+
+		if ($this->instance !== null)
+			$sql.= sprintf(' and PinholeTag.instance = %s',
+				$this->db->quote($this->instance->id, 'integer'));
 
 		if ($range !== null)
 			$this->db->setLimit($range->getLimit(), $range->getOffset());

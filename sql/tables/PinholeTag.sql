@@ -8,3 +8,4 @@ create table PinholeTag (
 );
 
 CREATE INDEX PinholeTag_name_index ON PinholeTag(shortname);
+CREATE INDEX PinholeTag_instance_index ON PinholeTag(instance);

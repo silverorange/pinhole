@@ -10,6 +10,7 @@ create table PinholeMetaData (
 );
 
 CREATE INDEX PinholeMetaData_shortname_index ON PinholeMetaData(shortname);
+CREATE INDEX PinholeMetaData_instance_index ON PinholeMetaData(instance);
 
 insert into PinholeMetaData (shortname, title, show, machine_tag, instance) values ('exiftoolversion', 'ExifTool Version Number', false, false, 1);
 insert into PinholeMetaData (shortname, title, show, machine_tag, instance) values ('filename', 'File Name', false, false, 1);

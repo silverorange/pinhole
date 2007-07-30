@@ -3,7 +3,6 @@
 require_once 'Image/Transform.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatFileNotFoundException.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
@@ -58,7 +57,7 @@ class PinholePhotoFactory
 	}
 
 	// }}}
-	// {{{ public function setWebRoot()
+	// {{{ public function setPath()
 
 	/**
 	 * Sets the path to the web root 
@@ -142,8 +141,7 @@ class PinholePhotoFactory
 	/**
 	 * TODO: update documentation
 	 */
-	public function processPhoto($file, $original_filename = null,
-		$delete_original = true)
+	public function processPhoto($file, $original_filename = null)
 	{
 		if (!file_exists($file))
 			return PEAR::raiseError('Error loading photo. The photo 
@@ -152,10 +150,60 @@ class PinholePhotoFactory
 
 		$photo = $this->createDataObject($file, $original_filename);
 
-		if ($delete_original)
-			unlink($file);
+		unlink($file);
 
 		return $photo;
+	}
+
+	// }}}
+	// {{{ public function resizeFile()
+
+	public function resizeFile($file, $photo)
+	{
+		static $dimensions;
+
+		if ($dimensions === null)
+			$dimensions = SwatDB::query($this->db,
+				'select * from PinholeDimension',
+				'PinholeDimensionWrapper');
+
+		$transformer = Image_Transform::factory('Imagick2');
+		if (PEAR::isError($transformer))
+			return PEAR::raiseError('Error instansiating ImageTransform '.
+				'factory Imagick2.',
+				self::ERROR_INSTANSIATING_FACTORY);
+
+		$transformations = array();
+
+		foreach ($dimensions as $dimension) {
+			// TODO: I don't think we want to load the file for
+			// every dimension, but if I put it outside the loop,
+			// the variable loses its file resource after the
+			// first resize has taken place. (nick)
+			$loaded = $transformer->load($file);
+
+			if (PEAR::isError($loaded))
+				return PEAR::raiseError('Image file can not '.
+					'be loaded.',
+					self::ERROR_LOADING_IMAGE);
+
+			$transformed = $this->processImage($transformer, $dimension);
+
+			if (PEAR::isError($transformed))
+				return $transformed; //TODO: return an exception
+
+			$dimension_binding = new PinholePhotoDimensionBinding();
+			$dimension_binding->photo = $photo;
+			$dimension_binding->dimension = $dimension;
+
+			$transformed->save($dimension_binding->getPath($this->path),
+				false, $this->getCompressionQuality());
+
+			$this->saveDimension($photo, $dimension,
+				$transformed->new_x, $transformed->new_y);
+		}
+
+		return $transformations;
 	}
 
 	// }}}
@@ -188,7 +236,7 @@ class PinholePhotoFactory
 		// save photo
 		$photo->save();
 
-		$saved = $this->saveDimensionsFromFile($file, $photo);
+		$saved = $this->resizeFile($file, $photo, true);
 		if (PEAR::isError($saved)) {
 			$this->db->rollback();
 			return $saved;
@@ -329,57 +377,20 @@ class PinholePhotoFactory
 	}
 
 	// }}}
-	// {{{ protected function saveDimensionsFromFile()
+	// {{{ protected function saveDimension()
 
-	protected function saveDimensionsFromFile($file, PinholePhoto $photo)
+	protected function saveDimension(PinholePhoto $photo,
+		PinholeDimension $dimension, $width, $height)
 	{
-		static $dimensions;
-
-		if ($dimensions === null)
-			$dimensions = SwatDB::query($this->db,
-				'select * from PinholeDimension',
-				'PinholeDimensionWrapper');
-
-		$transformer = Image_Transform::factory('Imagick2');
-		if (PEAR::isError($transformer))
-			return PEAR::raiseError('Error instansiating ImageTransform '.
-				'factory Imagick2.',
-				self::ERROR_INSTANSIATING_FACTORY);
-
-		foreach ($dimensions as $dimension) {
-			// TODO: I don't think we want to load the file for
-			// every dimension, but if I put it outside the loop,
-			// the variable loses its file resource after the
-			// first resize has taken place. (nick)
-			$loaded = $transformer->load($file);
-
-			if (PEAR::isError($loaded))
-				return PEAR::raiseError('Image file can not '.
-					'be loaded.',
-					self::ERROR_LOADING_IMAGE);
-
-			$transformed = $this->processImage($transformer, $dimension);
-
-			if (PEAR::isError($transformed))
-				return $transformed;
-
-			SwatDB::insertRow($this->db, 'PinholePhotoDimensionBinding',
-				array('integer:photo',
-					'integer:dimension',
-					'integer:width',
-					'integer:height'),
-				array('photo' => $photo->id,
-					'dimension' => $dimension->id,
-					'width' => $transformed->new_x,
-					'height' => $transformed->new_y));
-
-			$dimension_binding = new PinholePhotoDimensionBinding();
-			$dimension_binding->photo = $photo;
-			$dimension_binding->dimension = $dimension;
-
-			$transformed->save($dimension_binding->getPath($this->path),
-				false, $this->getCompressionQuality());
-		}
+		SwatDB::insertRow($this->db, 'PinholePhotoDimensionBinding',
+			array('integer:photo',
+				'integer:dimension',
+				'integer:width',
+				'integer:height'),
+			array('photo' => $photo->id,
+				'dimension' => $dimension->id,
+				'width' => $width,
+				'height' => $height));
 
 		return true;
 	}

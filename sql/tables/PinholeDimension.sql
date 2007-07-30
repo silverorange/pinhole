@@ -10,3 +10,5 @@ create table PinholeDimension (
 	publicly_accessible boolean default false,
 	primary key (id)
 );
+
+CREATE INDEX PinholeDimension_instance_index ON PinholeDimension(instance);

@@ -10,3 +10,5 @@ create table PinholeMachineTag (
 
 	primary key (id)
 );
+
+CREATE INDEX PinholeMachineTag_instance_index ON PinholeMachineTag(instance);

@@ -6,3 +6,5 @@ create table PinholePhotographer (
 	status int not null default 0,
 	primary key (id)
 );
+
+CREATE INDEX PinholePhotographer_instance_index ON PinholePhotographer(instance);

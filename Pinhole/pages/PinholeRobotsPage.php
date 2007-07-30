@@ -5,6 +5,7 @@ require_once 'Pinhole/pages/PinholePage.php';
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeRobotsPage extends PinholePage
 {

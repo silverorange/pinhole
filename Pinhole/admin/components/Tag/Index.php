@@ -2,11 +2,14 @@
 
 require_once 'Admin/pages/AdminSearch.php';
 require_once 'Admin/AdminSearchClause.php';
+require_once 'Swat/SwatTableStore.php';
 require_once 'SwatDB/SwatDB.php';
-require_once 'Pinhole/dataobjects/PinholeTag.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
+require_once 'Pinhole/tags/PinholeTag.php';
 
 /**
- * Search page for Tags
+ * Search page for tags
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
@@ -88,41 +91,16 @@ class PinholeTagIndex extends AdminSearch
 	// }}}
 
 	// build phase
-	// {{{ protected function buildInternal()
-
-	protected function buildInternal()
-	{
-		parent::buildInternal();
-
-		$rs = SwatDB::executeStoredProc($this->app->db, 'getPinholeTagTree', array('null'));
-		$tree = SwatDB::getDataTree($rs, 'title', 'id', 'levelnum');
-		$this->ui->getWidget('search_parent')->setTree($tree);
-
-		$this->ui->getWidget('status_flydown')->addOptionsByArray(
-			PinholeTag::getStatuses());
-	}
-
-	// }}}
 	// {{{ protected function getWhereClause()
 
 	protected function getWhereClause()
 	{
 		if ($this->where_clause === null) {
-			$where = 'PinholeTag.name_space is null';
-
 			$clause = new AdminSearchClause('title');
 			$clause->table = 'PinholeTag';
 			$clause->value = $this->ui->getWidget('search_title')->value;
 			$clause->operator = $this->ui->getWidget('search_title_operator')->value;
-			$where.= $clause->getClause($this->app->db);
-
-			$clause = new AdminSearchClause('id');
-			$clause->table = 'PinholeTag';
-			$clause->value = $this->ui->getWidget('search_parent')->value;
-			$clause->operator = AdminSearchClause::OP_EQUALS;
-			$where.= $clause->getClause($this->app->db);
-
-			$this->where_clause = $where;
+			$this->where_clause = $clause->getClause($this->app->db, '');
 		}
 
 		return $this->where_clause;
@@ -133,38 +111,39 @@ class PinholeTagIndex extends AdminSearch
 
 	protected function getTableModel(SwatView $view)
 	{
-		$sql = sprintf('select count(id) from PinholeTag where %s',
-			$this->getWhereClause());
+		$store = new SwatTableStore();
+
+		$sql = 'select count(id) from PinholeTag';
+		$where_clause = $this->getWhereClause();
+		if (strlen($where_clause) > 0)
+			$sql.= ' where '.$this->getWhereClause();
 
 		$pager = $this->ui->getWidget('pager');
 		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
 
-		$sql = 'select PinholeTag.id,
-					PinholeTag.title, 
-					PinholeTag.shortname,
-					PinholeTag.status
-				from PinholeTag
-				where %s
-				order by %s';
+		$sql = 'select PinholeTag.* from PinholeTag';
+		$where_clause = $this->getWhereClause();
+		if (strlen($where_clause) > 0)
+			$sql.= ' where '.$this->getWhereClause();
 
-		$sql = sprintf($sql,
-			$this->getWhereClause(),
-			$this->getOrderByClause($view, 'PinholeTag.title'));
-
+		$sql.= ' order by '.$this->getOrderByClause($view, 'PinholeTag.title');
 		$this->app->db->setLimit($pager->page_size, $pager->current_record);
-		$rs = SwatDB::query($this->app->db, $sql);
+		$data_objects = SwatDB::query($this->app->db, $sql,
+			'PinholeTagDataObjectWrapper');
 
-		$this->ui->getWidget('results_frame')->visible = true;
-
-		if (count($rs) > 0)
+		if (count($data_objects) > 0) {
+			$this->ui->getWidget('results_frame')->visible = true;
 			$this->ui->getWidget('results_message')->content =
 				$pager->getResultsMessage(Pinhole::_('result'), 
 					Pinhole::_('results'));
 
-		foreach ($rs as $row)
-			$row->status_title = PinholeTag::getStatusTitle($row->status);
+			foreach ($data_objects as $data_object) {
+				$tag = new PinholeTag($data_object);
+				$store->add($tag);
+			}
+		}
 
-		return $rs;
+		return $store;
 	}
 
 	// }}}

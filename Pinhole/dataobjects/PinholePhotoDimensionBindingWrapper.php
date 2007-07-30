@@ -10,7 +10,7 @@ require_once 'PinholePhotoDimensionBinding.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       PinholePhoto
+ * @see       PinholePhotoDimensionBinding
  */
 class PinholePhotoDimensionBindingWrapper extends SwatDBRecordsetWrapper
 {
@@ -20,7 +20,8 @@ class PinholePhotoDimensionBindingWrapper extends SwatDBRecordsetWrapper
 	{
 		parent::init();
 
-		$this->row_wrapper_class = 'PinholePhotoDimensionBinding';
+		$this->row_wrapper_class =
+			SwatDBClassMap::get('PinholePhotoDimensionBinding');
 	}
 
 	// }}}

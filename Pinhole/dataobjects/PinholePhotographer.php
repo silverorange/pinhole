@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Pinhole/Pinhole.php';
 require_once 'SwatDB/SwatDBDataObject.php';
 
 /**
@@ -70,27 +71,31 @@ class PinholePhotographer extends SwatDBDataObject
 	// {{{ public static function getStatuses()
 
 	/*
-	 * Get an array of status options
+	 * Gets the array of photographer statuses
 	 *
-	 * @return array An array of status in the form: id => title
+	 * @return array an array of status in the form: id => title.
 	 */
 	public function getStatuses()
 	{
 		return array(
-			self::STATUS_ENABLED  => Pinhole::_('Visible on Site & Admin Photo Tools'),
-			self::STATUS_ARCHIVED => Pinhole::_('Visible on Site & Archived in Admin Photo Tools'),
-			self::STATUS_DISABLED => Pinhole::_('Not Visible on Site or Admin Photo Tools'),
+			self::STATUS_ENABLED  =>
+				Pinhole::_('Visible on Site & Admin Photo Tools'),
+			self::STATUS_ARCHIVED =>
+				Pinhole::_('Visible on Site & Archived in Admin Photo Tools'),
+			self::STATUS_DISABLED =>
+				Pinhole::_('Not Visible on Site or Admin Photo Tools'),
 		);
 	}
 
 	// }}}
 	// {{{ public static function getStatusTitle()
 
-	/*
-	 * Get status title
+	/**
+	 * Gets the title of a photographer status
 	 *
-	 * @param integer $status The status to retrieve the title for.
-	 * @return string Status title
+	 * @param integer $status the status to retrieve the title for.
+	 *
+	 * @return string the title of the specified status.
 	 */
 	public static function getStatusTitle($status)
 	{
@@ -103,7 +108,7 @@ class PinholePhotographer extends SwatDBDataObject
 
 	protected function init()
 	{
-		$this->table =	SwatDBClassMap::get('PinholePhotographer');
+		$this->table = 'PinholePhotographer';
 		$this->id_field = 'integer:id';
 	}
 

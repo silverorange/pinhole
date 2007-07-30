@@ -11,6 +11,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
 class PinholeMetaData extends SwatDBDataObject
 {
 	// {{{ public properties
+
 	/**
 	 * 
 	 *
@@ -45,12 +46,13 @@ class PinholeMetaData extends SwatDBDataObject
 	 * @var boolean
 	 */
 	public $machine_tag;
+
 	// }}}
 	// {{{ protected function init()
 
 	protected function init()
 	{
-		$this->table =	SwatDBClassMap::get('PinholeMetaData');
+		$this->table = 'PinholeMetaData';
 		$this->id_field = 'integer:id';
 	}
 

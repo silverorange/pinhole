@@ -77,7 +77,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$view->data = $this->getPhotoDetailsStore();
 
 		$this->buildMetaData();
-		$this->buildPhotoScroller();
+		$this->buildPhotoNextPrev();
 
 		$description = $this->ui->getWidget('description');
 		$description->content = $this->photo->description;
@@ -112,13 +112,13 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
-	// {{{ protected function buildPhotoScroller()
+	// {{{ protected function buildPhotoNextPrev()
 
-	protected function buildPhotoScroller()
+	protected function buildPhotoNextPrev()
 	{
-		$photo_scroller = $this->ui->getWidget('photo_scroller');
-		$photo_scroller->setPhoto($this->photo);
-		$photo_scroller->setTagList($this->tag_list);
+		$photo_next_prev = $this->ui->getWidget('photo_next_prev');
+		$photo_next_prev->setPhoto($this->photo);
+		$photo_next_prev->setTagList($this->tag_list);
 	}
 
 	// }}}

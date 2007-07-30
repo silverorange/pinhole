@@ -10,7 +10,7 @@ require_once 'Swat/SwatControl.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoScroller extends SwatControl
+class PinholePhotoNextPrev extends SwatControl
 {
 	public $base = 'tag';
 
@@ -23,7 +23,7 @@ class PinholePhotoScroller extends SwatControl
 		parent::__construct($id);
 
 		$this->addStyleSheet(
-			'packages/pinhole/styles/pinhole-photo-scroller.css',
+			'packages/pinhole/styles/pinhole-photo-next-prev.css',
 			Pinhole::PACKAGE_ID);
 	}
 
@@ -39,7 +39,7 @@ class PinholePhotoScroller extends SwatControl
 
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->id = $this->id;
-		$div_tag->class = 'pinhole-photo-scroller';
+		$div_tag->class = 'pinhole-photo-next-prev';
 		$div_tag->open();
 
 		$this->displayPrev($photos['prev']);

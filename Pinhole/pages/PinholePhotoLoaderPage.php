@@ -34,16 +34,20 @@ class PinholePhotoLoaderPage extends PinholePage
 
 	protected function getPhoto($filename, $dimension)
 	{
-		$where_clause = sprintf('PinholePhoto.filename = %s',
-			$this->app->db->quote($filename, 'text'));
+		$instance = $this->app->instance->getInstance();
+		$where_clause = sprintf(
+			'PinholePhoto.filename = %s and '.
+			'PinholePhoto.instance = %s',
+			$this->app->db->quote($filename, 'text'),
+			$this->app->db->quote($instance->id, 'integer'));
 
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, $dimension, $where_clause);
 
 		if ($photos === null)
-			throw SiteNotFoundException(sprintf('Photo with
-				filename %s does not exist',
-				$filename));
+			throw SiteNotFoundException(sprintf("Photo with ".
+				"filename '%s' does not exist in the instance '%s'.",
+				$filename, $instance->shortname));
 
 		return $photos->getFirst();
 	}

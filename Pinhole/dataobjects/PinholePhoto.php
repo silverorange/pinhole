@@ -190,7 +190,6 @@ class PinholePhoto extends SwatDBDataObject
 			$this->setDimension($shortname, $dimension->getFirst());
 			return $dimension->getFirst();
 		}
-
 	}
 
 	// }}}
@@ -204,14 +203,16 @@ class PinholePhoto extends SwatDBDataObject
 	 */
 	public function getTitle()
 	{
+		$title = $this->title;
+
 		if ($this->title === null)
-			return $this->original_filename;
-		else
-			return $this->title;
+			$title = $this->original_filename;
+
+		return $title;
 	}
 
 	// }}}
-	// {{{ static public function setStatus()
+	// {{{ public static function setStatus()
 
 	public function setStatus($status)
 	{
@@ -226,9 +227,9 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
-	// {{{ static public function getDateRange()
+	// {{{ public static function getDateRange()
 
-	static public function getDateRange($db, $where = null)
+	public static function getDateRange($db, $where = null)
 	{
 		$date_range = SwatDB::queryRow($db,
 			sprintf('select max(photo_date) as last_photo_date,
@@ -246,24 +247,35 @@ class PinholePhoto extends SwatDBDataObject
 	}
 
 	// }}}
-	// {{{ static public function getStatusTitle()
+	// {{{ public static function getStatusTitle()
 
-	static public function getStatusTitle($status)
+	public static function getStatusTitle($status)
 	{
 		switch ($status) {
 		case self::STATUS_PUBLISHED :
-			return Pinhole::_('Published');
+			$title = Pinhole::_('Published');
+			break;
+
 		case self::STATUS_UNPUBLISHED :
-			return Pinhole::_('Hidden');
+			$title = Pinhole::_('Hidden');
+			break;
+
 		case self::STATUS_PENDING :
-			return Pinhole::_('Pending');
+			$title = Pinhole::_('Pending');
+			break;
+
+		default:
+			$title = Pinhole::_('Unknown Photo Status');
+			break;
 		}
+
+		return $title;
 	}
 
 	// }}}
-	// {{{ static public function getStatuses()
+	// {{{ public static function getStatuses()
 
-	static public function getStatuses()
+	public static function getStatuses()
 	{
 		return array(
 			self::STATUS_PUBLISHED =>

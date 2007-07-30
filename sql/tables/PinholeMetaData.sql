@@ -6,7 +6,7 @@ create table PinholeMetaData (
 	show boolean default false,
 	machine_tag boolean default false,
 	displayorder integer not null default 0,
-	primary key (id),
+	primary key (id)
 );
 
 CREATE INDEX PinholeMetaData_shortname_index ON PinholeMetaData(shortname);

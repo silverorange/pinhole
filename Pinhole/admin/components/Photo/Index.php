@@ -7,7 +7,7 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatTableStore.php';
 require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'include/PinholePhotoTagEntry.php';
 require_once 'include/PinholeAdminPhotoCellRenderer.php';
 require_once 'include/PinholePhotoActionsProcessor.php';
@@ -39,14 +39,20 @@ class PinholePhotoIndex extends AdminSearch
 
 		$this->ui->loadFromXML($this->ui_xml);
 
-		$sql = sprintf('select * from PinholeTag
-			where status = %s order by title',
-			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'));
+		// setup tag list
+		$tag_list = new PinholeTagList($this->app->db);
+		$sql = 'select PinholeTag.* from PinholeTag order by title';
+		$tags = SwatDB::query($this->app->db, $sql,
+			'PinholeTagDataObjectWrapper');
+		
+		foreach ($tags as $data_object) {
+			$tag = new PinholeTag($data_object);
+			$tag_list->add($tag);
+		}
 
-		$tags = SwatDB::query($this->app->db, $sql, 'PinholeTagWrapper');
+		$this->ui->getWidget('tags')->setTagList($tag_list);
 
-		$this->ui->getWidget('tags')->tags = $tags;
-
+		// setup status list
 		$status_flydown = $this->ui->getWidget('status_flydown');
 		$status_flydown->addOptionsByArray(PinholePhoto::getStatuses());
 	}

@@ -6,7 +6,7 @@ require_once 'Swat/SwatInputControl.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'Swat/SwatState.php';
 require_once 'Swat/SwatString.php';
-require_once 'Pinhole/dataobjects/PinholeTag.php';
+require_once 'Pinhole/PinholeTagList.php';
 
 /**
  * A tag entry widget for photos 
@@ -20,18 +20,21 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	// {{{ public properties
 
 	/**
-	 * An array of PinholeTag dataobjects to populate the list
-	 *
-	 * @var array
-	 */
-	public $tags = array();
-
-	/**
 	 * The array of PinholeTag dataobjects chosen
 	 *
 	 * @var array
 	 */
 	public $values = array();
+
+	// }}}
+	// {{{ private properties
+
+	/**
+	 * An array of PinholeTag dataobjects to populate the list
+	 *
+	 * @var PinholeTagList
+	 */
+	private $tag_list;
 
 	// }}}
 	// {{{ public function __construct()
@@ -47,14 +50,17 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	{
 		parent::__construct($id);
 
-		$yui = new SwatYUI(array('autocomplete'));
+		$this->requires_id = true;
 
+		$yui = new SwatYUI(array('autocomplete'));
 		$this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
-		$this->addJavaScript('packages/pinhole/javascript/pinhole-photo-tag-entry.js',
+		$this->addJavaScript(
+			'packages/pinhole/javascript/pinhole-photo-tag-entry.js',
 			Pinhole::PACKAGE_ID);
 
-		$this->addStyleSheet('packages/pinhole/styles/pinhole-photo-tag-entry.css',
+		$this->addStyleSheet(
+			'packages/pinhole/styles/pinhole-photo-tag-entry.css',
 			Pinhole::PACKAGE_ID);
 	}
 
@@ -92,7 +98,6 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 		$container_tag->close();
 
 		$div_tag->close();
-
 		
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->class = 'pinhole-photo-tag-list';
@@ -128,8 +133,8 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 
 		$this->values = array();
 
-		foreach ($this->tags as $tag)
-			if (in_array($tag->shortname, $tag_shortnames))
+		foreach ($this->tag_list as $tag)
+			if (in_array($tag->name, $tag_shortnames))
 				$this->values[] = $tag;
 
 		if ($this->required && count($this->values) == 0) {
@@ -187,24 +192,32 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	}
 
 	// }}}
+	// {{{ public function setTagList()
+
+	public function setTagList(PinholeTagList $tag_list)
+	{
+		$this->tag_list = $tag_list;
+	}
+
+	// }}}
 	// {{{ protected function getInlineJavaScript()
 
 	/**
-	 * Gets the inline JavaScript for this textarea widget
+	 * Gets the inline JavaScript for this photo tag entry widget
 	 *
-	 * @return string the inline JavaScript for this textarea widget.
+	 * @return string the inline JavaScript for this photo tag entry widget.
 	 */
 	protected function getInlineJavaScript()
 	{
 		$tag_array = array();
-		foreach ($this->tags as $tag)
+		foreach ($this->tag_list as $tag)
 			$tag_array[] = sprintf("[%s, %s]\n",
 				SwatString::quoteJavaScriptString($tag->title),
-				SwatString::quoteJavaScriptString($tag->shortname));
+				SwatString::quoteJavaScriptString($tag->name));
 
 		$value_array = array();
 		foreach ($this->values as $tag)
-			$value_array[] = SwatString::quoteJavaScriptString($tag->shortname);
+			$value_array[] = SwatString::quoteJavaScriptString($tag->name);
 
 		return sprintf("var %1\$s_obj = new PinholePhotoTagEntry('%1\$s');
 			%1\$s_obj.tag_array = [%2\$s];

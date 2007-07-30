@@ -46,7 +46,20 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$photo_class = SwatDBClassMap::get('PinholePhoto');
 		$this->photo = new $photo_class();
 		$this->photo->setDatabase($this->app->db);
-		$this->photo->load($photo_id);
+		if ($this->photo->load($photo_id)) {
+			// ensure we are loading a photo in the current site instance
+			$current_instance = $this->app->instance->getInstance();
+			$photo_instance_id = $this->photo->getInternalValue('instance');
+			if ($photo_instance_id != $current_instance->id) {
+				throw new SiteNotFoundException(sprintf(
+					'Photo does not belong to the current instance: %s.',
+					$current_instance->shortname));
+			}
+		} else {
+			// photo was not found
+			throw new SiteNotFoundException(sprintf(
+				'No photo with the id %d exists.', $photo_id));
+		}
 	}
 
 	// }}}

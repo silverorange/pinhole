@@ -8,6 +8,7 @@ require_once 'Site/exceptions/SiteNotFoundException.php';
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhotoLoaderPage extends PinholePage
 {

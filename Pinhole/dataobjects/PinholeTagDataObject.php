@@ -51,7 +51,7 @@ class PinholeTagDataObject extends SwatDBDataObject
 	protected function init()
 	{
 		$this->table = 'PinholeTag';
-		$this->id_field = 'id:integer';
+		$this->id_field = 'integer:id';
 		$this->registerDateProperty('createdate');
 	}
 

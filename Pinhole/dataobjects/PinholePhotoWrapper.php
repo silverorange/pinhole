@@ -21,9 +21,9 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 	/**
 	 * Load a set of photos for a specified dimension
 	 *
-	 * A convenience method for efficiently loading a set of {@link
-	 * PinholePhoto} dataobjects with all commonly used sub-dataobjects
-	 * pre-loaded.
+	 * A convenience method for efficiently loading a set of
+	 * {@link PinholePhoto} data-objects with all commonly used
+	 * sub-data-objects pre-loaded.
 	 *
 	 * @param MDB2_Driver_Common $db
 	 * @param string $dimension_shortname
@@ -32,8 +32,8 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 	 * @param string $order_by_clause
 	 * @param integer $limit
 	 * @param integer $offset
-	 * @return PinholePhotoWrapper A collection of PinholePhoto dataobjects
-	 * 	with pre-loaded sub-dataobjects.
+	 * @return PinholePhotoWrapper a collection of PinholePhoto data-objects
+	 * 	                            with pre-loaded sub-data-objects.
 	 */
 	public static function loadSetFromDBWithDimension($db, $dimension_shortname,
 		$where_clause = '1 = 1', $join_clause = '', $order_by_clause = null,
@@ -75,8 +75,10 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 
 		$photo_class =
 			SwatDBClassMap::get('PinholePhoto');
+
 		$dimension_class =
 			SwatDBClassMap::get('PinholeDimension');
+
 		$dimension_binding_class =
 			SwatDBClassMap::get('PinholePhotoDimensionBinding');
 

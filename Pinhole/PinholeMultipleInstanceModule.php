@@ -4,6 +4,7 @@ require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/dataobjects/PinholeInstance.php';
 require_once 'Site/SiteMultipleInstanceModule.php';
 require_once 'Site/exceptions/SiteException.php';
+require_once 'SwatDB/SwatDBClassMap.php';
 
 /**
  * @package   Pinhole
@@ -45,7 +46,8 @@ class PinholeMultipleInstanceModule extends SiteMultipleInstanceModule
 	public function init()
 	{
 		// create a default instance (for single instance sites)
-		$this->instance = new PinholeInstance();
+		$class_name = SwatDBClassMap::get('PinholeInstance');
+		$this->instance = new $class_name();
 		$this->instance->setDatabase($this->app->database->getConnection());
 		$this->instance->id        = 1;
 		$this->instance->shortname = 'default';

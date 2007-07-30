@@ -1,0 +1,18 @@
+.pinhole-photo-next-prev {
+	float: right;
+	padding-top: 0.3em;
+}
+
+.pinhole-photo-next-prev a,
+.pinhole-photo-next-prev span {
+	color: #babdb6;
+	margin-left: 0.1em;
+	padding: 0.2em 0.5em;
+	border: 1px solid #555753;
+	text-decoration: none;
+}
+
+.pinhole-photo-next-prev a:link    { color: #babdb6; }
+.pinhole-photo-next-prev a:visited { color: #babdb6; }
+.pinhole-photo-next-prev a:hover   { color: #eeeeec; background-color: #555753; }
+.pinhole-photo-next-prev a:active  { color: #eeeeec; }

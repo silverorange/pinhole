@@ -21,7 +21,7 @@
 		</widget>
 		<widget class="SwatDisplayableContainer" id="sub_hd">
 			<widget class="PinholeTagListView" id="tag_list_view" />
-			<widget class="PinholePhotoScroller" id="photo_scroller" />
+			<widget class="PinholePhotoNextPrev" id="photo_next_prev" />
 		</widget>
 	</widget>
 

@@ -35,9 +35,9 @@ class PinholeInstance extends SwatDBDataObject
 	public $title;
 
 	/**
-	 * If this instance is enabled
+	 * Whether or not this instance is enabled
 	 *
-	 * @var boolean defaults true
+	 * @var boolean
 	 */
 	public $enabled;
 
@@ -46,7 +46,7 @@ class PinholeInstance extends SwatDBDataObject
 
 	protected function init()
 	{
-		$this->table =	SwatDBClassMap::get('PinholeInstance');
+		$this->table = 'PinholeInstance';
 		$this->id_field = 'integer:id';
 	}
 

@@ -220,36 +220,32 @@ class PinholePhotoFactory
 			return PEAR::raiseError('Error opening file archive ',
 				self::ERROR_OPENING_ARCHIVE);
 
-		$dir = sprintf('%s/%s/%s',
-			$this->path, $this->temp_path, uniqid('dir'));
-		mkdir($dir);
-		chmod($dir, 0770);
+		$file_path = sprintf('%s/%s',
+			$this->path, $this->temp_path);
 
-		// unfortunately, renaming the files in the archive and then
-		// extracting them doesn't seem to work (extractTo doesn't
-		// extract anything)
-		$za->extractTo($dir);
+		for ($i = 0; $i < $za->numFiles; $i++) {
+			$stat = $za->statIndex($i);
+
+			$ext = strtolower(end(explode('.', $stat['name'])));
+
+			// TODO: we probably need a better way to keep from
+			// extracting sub-dirs (mac archive files contain
+			// sub-dirs with system files)
+			if ($stat['size'] == 0 ||
+				strpos($stat['name'], '/') !== false)
+				continue;
+
+			$filename = uniqid('file').'.'.$ext;
+			$files[$filename] = $stat['name'];
+
+			$za->renameIndex($i, $filename);
+			$za->extractTo($file_path, $filename);
+			chmod($file_path.'/'.$filename, 0666);
+		}
+
 		$za->close();
 
 		unlink($file);
-
-		$dh = opendir($dir);
-		while (($file = readdir($dh)) !== false) {
-			if ($file != '.' && $file != '..') {
-				chmod($dir.'/'.$file, 0666);
-
-				$ext = strtolower(end(explode('.', $file)));
-				$filename = uniqid('file').'.'.$ext;
-				$file_path = sprintf('%s/%s/%s',
-					$this->path, $this->temp_path, $filename);
-
-				$files[$filename] = $file;
-				rename($dir.'/'.$file, $file_path);
-			}
-		}
-
-		closedir($dh);
-		rmdir($dir);
 
 		return $files;
 	}

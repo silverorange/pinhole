@@ -43,6 +43,10 @@ class PinholeSubTagListView extends SwatControl
 		$div_tag->id = $this->id;
 		$div_tag->open();
 
+		$header_tag = new SwatHtmlTag('h3');
+		$header_tag->setContent(Pinhole::_('Tags'));
+		$header_tag->display();
+
 		echo '<ul>';
 
 		foreach ($this->sub_tag_list as $tag) {

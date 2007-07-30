@@ -9,6 +9,7 @@ require_once 'Swat/exceptions/SwatInvalidClassException.php';
 require_once 'Pinhole/PinholeTagFactory.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeInstance.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 
 /**
@@ -132,6 +133,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$this->setDatabase($db);
 		$db->loadModule('Datatype', null, true);
 
+		// TODO: make this work for all galleries
+		$instance = new PinholeInstance();
+		$instance->setDatabase($db);
+		$instance->load(1);
+		$this->setInstance($instance);
+		$this->setPhotoWhereClause = '(PinholePhoto.instance = '.
+			$this->instance->id.')';
+
 		if (is_string($tag_list_string) && strlen($tag_list_string) > 0) {
 			$tag_strings = explode('/', $tag_list_string);
 			$tag_strings = array_unique($tag_strings);
@@ -241,7 +250,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		if ($this->photo_where_clause !== null)
 			$where_clauses[] = '('.$this->photo_where_clause.')';
-
+			
 		$where_clause = implode(' '.$operator.' ', $where_clauses);
 
 		return $where_clause;

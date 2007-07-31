@@ -19,9 +19,15 @@ class PinholePhotographerDelete extends AdminDBDelete
 	{
 		parent::processDBData();
 
-		$sql = 'delete from PinholePhotographer where id in (%s)';
+		$instance = $this->app->instance->getInstance();
+
+		$sql = 'delete from PinholePhotographer where id in (%s)
+			and instance = %s';
+
 		$item_list = $this->getItemList('integer');
-		$sql = sprintf($sql, $item_list);
+		$sql = sprintf($sql, $item_list,
+			$this->app->db->quote($instance->id, 'integer'));
+
 		$num = SwatDB::exec($this->app->db, $sql);
 
 		$message = new SwatMessage(sprintf(Admin::ngettext(
@@ -43,12 +49,17 @@ class PinholePhotographerDelete extends AdminDBDelete
 		parent::buildInternal();
 
 		$item_list = $this->getItemList('integer');
+		$instance = $this->app->instance->getInstance();
+
+		$where_clause = sprintf('id in (%s) and instance = %s',
+			$item_list,
+			$this->app->db->quote($instance->id, 'integer'));
 
 		$dep = new AdminListDependency();
 		$dep->setTitle(Admin::_('pinhole photographer'), Admin::_('pinhole photographers'));
 		$dep->entries = AdminListDependency::queryEntries($this->app->db,
 			'PinholePhotographer', 'integer:id', null, 'text:fullname', 'fullname',
-			'id in ('.$item_list.')', AdminDependency::DELETE);
+			$where_clause, AdminDependency::DELETE);
 
 		$message = $this->ui->getWidget('confirmation_message');
 		$message->content = $dep->getMessage();

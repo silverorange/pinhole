@@ -52,6 +52,7 @@ class PinholeTagDetails extends AdminPage
 	{
 		$this->tag = new PinholeTag();
 		$this->tag->setDatabase($this->app->db);
+		$this->tag->setInstance($this->app->instance->getInstance());
 
 		if (!$this->tag->load($this->id))
 			throw new AdminNotFoundException(

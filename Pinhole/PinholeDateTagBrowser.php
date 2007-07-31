@@ -114,7 +114,7 @@ class PinholeDateTagBrowser extends SwatControl
 					$a_tag->class = 'selected';
 				}
 
-				$a_tag->href = 'tag/'.$tag_list->__toString();
+				$a_tag->href = 'tag?'.$tag_list->__toString();
 
 				$a_tag->setContent($date->format('%Y'));
 				$a_tag->display();
@@ -162,7 +162,7 @@ class PinholeDateTagBrowser extends SwatControl
 					$a_tag->class = 'selected';
 				}
 
-				$a_tag->href = 'tag/'.$tag_list->__toString();
+				$a_tag->href = 'tag?'.$tag_list->__toString();
 
 				$a_tag->setContent($date->format('%B'));
 				$a_tag->display();
@@ -210,7 +210,7 @@ class PinholeDateTagBrowser extends SwatControl
 					$a_tag->class = 'selected';
 				}
 
-				$a_tag->href = 'tag/'.$tag_list->__toString();
+				$a_tag->href = 'tag?'.$tag_list->__toString();
 
 				$a_tag->setContent($date->format('%d'));
 				$a_tag->display();

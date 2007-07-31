@@ -41,7 +41,7 @@ class PinholeDateTagCellRenderer extends SwatDateCellRenderer
 			$a_tag = new SwatHtmlTag('a');
 			
 			$a_tag->setContent($date->format('%B'));
-			$a_tag->href = sprintf('tag/date.month=%s/date.year=%s',
+			$a_tag->href = sprintf('tag?date.month=%s/date.year=%s',
 				$date->getMonth(),
 				$date->getYear());
 			$a_tag->display();
@@ -49,7 +49,7 @@ class PinholeDateTagCellRenderer extends SwatDateCellRenderer
 			echo ' ';
 
 			$a_tag->setContent($date->format('%e'));
-			$a_tag->href = sprintf('tag/date.date=%s-%s-%s',
+			$a_tag->href = sprintf('tag?date.date=%s-%s-%s',
 				$date->getYear(),
 				$date->getMonth(),
 				$date->getDay());
@@ -58,7 +58,7 @@ class PinholeDateTagCellRenderer extends SwatDateCellRenderer
 			echo ', ';
 
 			$a_tag->setContent($date->format('%Y'));
-			$a_tag->href = sprintf('tag/date.year=%s',
+			$a_tag->href = sprintf('tag?date.year=%s',
 				$date->getYear());
 			$a_tag->display();
 

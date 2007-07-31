@@ -109,7 +109,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 			if ($meta_data->machine_tag) {
 				$renderer = new SwatLinkCellRenderer();
-				$renderer->link = sprintf('tag/meta.%s=%s',
+				$renderer->link = sprintf('tag?meta.%s=%s',
 					$meta_data->shortname,
 					$meta_data->value);
 			} else {

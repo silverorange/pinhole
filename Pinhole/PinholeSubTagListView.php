@@ -61,7 +61,7 @@ class PinholeSubTagListView extends SwatControl
 //			$add_anchor_tag->title = 
 //				Pinhole::_('View all photos with this tag.');
 
-			$add_anchor_tag->href = $this->base.'/'.$add_list->__toString();
+			$add_anchor_tag->href = $this->base.'?'.$add_list->__toString();
 			$add_anchor_tag->setContent($tag->getTitle());
 			$add_anchor_tag->display();
 

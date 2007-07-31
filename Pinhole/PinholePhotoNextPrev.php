@@ -67,10 +67,10 @@ class PinholePhotoNextPrev extends SwatControl
 			$span_tag->display();
 		} else {
 			$tag_path = (count($this->tag_list) == 0) ?
-				'' : '/'.$this->tag_list->__toString();
+				'' : $this->tag_list->__toString();
 
 			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href = sprintf('photo/%s%s',
+			$a_tag->href = sprintf('photo/%s?%s',
 				$photo->id, $tag_path);
 
 			$a_tag->title = $photo->title;
@@ -85,11 +85,11 @@ class PinholePhotoNextPrev extends SwatControl
 		echo ' ';
 
 		$tag_path = (count($this->tag_list) == 0) ?
-			'' : '/'.$this->tag_list->__toString();
+			'' : $this->tag_list->__toString();
 
 		$a_tag = new SwatHtmlTag('a');
 		$a_tag->setContent(Pinhole::_('Thumbnails'));
-		$a_tag->href = 'tag'.$tag_path;
+		$a_tag->href = 'tag?'.$tag_path;
 		$a_tag->class = 'view-all';
 		$a_tag->display();
 

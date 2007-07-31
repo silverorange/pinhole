@@ -125,10 +125,17 @@ class PinholeLayout extends SiteLayout
 	{
 		parent::finalize();
 
-		$this->data->html_title = $this->data->title.
-			((strlen($this->data->title) > 0) ? ' - ' : '').
-			'Gallery';
-			/* TODO: make this gallery name dynamic  */
+		// build html title (goes in html head)
+		$instance_title = $this->app->instance->getInstance()->title;
+		$page_title = $this->data->title;
+
+		if (strlen($page_title) > 0)
+			$this->data->html_title = $page_title.' - '.$instance_title;
+		else
+			$this->data->html_title = $instance_title;
+
+		// build displayed title (top of page)
+		$this->data->instance_title = $instance_title;
 	}
 
 	// }}}

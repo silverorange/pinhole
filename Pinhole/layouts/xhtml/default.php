@@ -9,8 +9,7 @@
 
 	<div id="hd">
 		<h1>
-			<a href="." title="Home Page" accesskey="1">Gallery</a>
-			<? /* TODO: make this gallery name dynamic  */ ?>
+			<a href="." title="Home Page" accesskey="1"><?= $this->instance_title ?></a>
 		</h1>
 		<?= $this->header_content ?>
 	</div><!-- close #hd -->

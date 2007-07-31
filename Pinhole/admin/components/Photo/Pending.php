@@ -98,9 +98,14 @@ class PinholePhotoPending extends AdminIndex
 
 	protected function getWhereClause()
 	{
-		return sprintf('PinholePhoto.status = %s',
+		$instance = $this->app->instance->getInstance();
+
+		return sprintf('PinholePhoto.status = %s
+			and PinholePhoto.instance = %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING,
-			'integer'));
+				'integer'),
+			$this->app->db->quote($instance->id, 'integer')
+			);
 	}
 
 	// }}}

@@ -75,6 +75,7 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		$this->photo = new PinholePhoto();
 		$this->photo->setDatabase($this->app->db);
+		$this->photo->setInstance($this->app->instance->getInstance());
 
 		if ($this->id === null) {
 			throw new AdminNoAccessException(
@@ -119,11 +120,15 @@ class PinholePhotoEdit extends AdminDBEdit
 			$this->photo->status != PinholePhoto::STATUS_PENDING)
 			return;
 
+		$instance = $this->app->instance->getInstance();
+
 		$sql = sprintf('select id, title
-			from PinholePhoto where status = %s
+			from PinholePhoto
+			where PinholePhoto.status = %s and PinholePhoto.instance = %s
 			order by PinholePhoto.upload_date, PinholePhoto.id',
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING,
-				'integer'));
+				'integer'),
+			$this->app->db->quote($instance->id, 'integer'));
 
 		$rs = SwatDB::query($this->app->db, $sql, null);
 

@@ -35,10 +35,15 @@ class PinholePhotoDelete extends AdminDBDelete
 	protected function getPhotos()
 	{
 		$item_list = $this->getItemList('integer');
+		$instance = $this->app->instance->getInstance();
+
+		$where_clause = sprintf('PinholePhoto.id in (%s)
+			and PinholePhoto.instance = %s',
+			$item_list,
+			$this->app->db->quote($instance->id, 'integer'));
 
 		return PinholePhotoWrapper::loadSetFromDBWithDimension(
-			$this->app->db, 'thumb',
-			'PinholePhoto.id in ('.$item_list.')');
+			$this->app, 'thumb', $where_clause);
 	}
 
 	// }}}

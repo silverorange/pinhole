@@ -40,6 +40,8 @@ class PinholePhotoActionsProcessor
 	 */
 	public function process($view, $actions, $ui)
 	{
+		//TODO: enforce PinholeInstance for selected items
+
 		switch ($actions->selected->id) {
 		case 'delete':
 			$this->page->app->replacePage('Photo/Delete');

@@ -267,6 +267,19 @@ class PinholeTag extends PinholeAbstractTag
 	}
 
 	// }}}
+	// {{{ public function setInstance()
+
+	/**
+	 * Sets the instance for this data object
+	 *
+	 * @param PinholeInstance $instance The instance for this dataobject.
+	 */
+	public function setInstance(PinholeInstance $instance)
+	{
+		$this->data_object->setInstance($instance);
+	}
+
+	// }}}
 	// {{{ public function save()
 
 	/**

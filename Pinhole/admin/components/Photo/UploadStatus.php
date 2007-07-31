@@ -108,7 +108,7 @@ class PinholePhotoUploadStatus extends SitePage
 		$javascript.= "var upload_errors = [];";
 
 		foreach ($this->errors as $filename)
-			$javascript.= sprintf("upload_errors.push('%s')",
+			$javascript.= sprintf("upload_errors.push('%s');\n",
 				$filename);
 
 		foreach ($_FILES as $id => $file)

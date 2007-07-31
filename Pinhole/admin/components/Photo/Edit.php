@@ -237,8 +237,10 @@ class PinholePhotoEdit extends AdminDBEdit
 		$thumbnail->preview_width = $large_dimension->width;
 		$thumbnail->preview_height = $large_dimension->height;
 
+		/*
 		$toolbar = $this->ui->getWidget('edit_toolbar');
 		$toolbar->setToolLinkValues($this->photo->id);
+		*/
 	}
 
 	// }}}

@@ -30,12 +30,9 @@
 	visibility: hidden;
 	text-decoration: none;
 	color: #888a85;
-	xxxborder-width: 1px 1px 1px 0;
 	vertical-align: top;
 	position: relative;
 	top: -0.2em;
-	xxxborder-style: solid;
-	xxxborder-color: #666;
 	padding: 2px 0;
 }
 
@@ -47,3 +44,7 @@
 	color: #666;
 }
 
+.pinhole-tag-list-view span.photo-count {
+	color: #babdb6;
+	font-size: 85%;
+}

@@ -81,8 +81,11 @@ class PinholeTagDetails extends AdminPage
 
 		$toolbar = $this->ui->getWidget('details_toolbar');
 		$toolbar->setToolLinkValues(array($this->id));
+
+		/*
 		$this->ui->getWidget('view_in_gallery')->link =
 			'photos/'.$this->tag->name;
+		*/
 
 		$this->buildNavBar();
 	}

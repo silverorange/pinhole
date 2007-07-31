@@ -43,7 +43,7 @@ class PinholePhotoDelete extends AdminDBDelete
 			$this->app->db->quote($instance->id, 'integer'));
 
 		return PinholePhotoWrapper::loadSetFromDBWithDimension(
-			$this->app, 'thumb', $where_clause);
+			$this->app->db, 'thumb', $where_clause);
 	}
 
 	// }}}

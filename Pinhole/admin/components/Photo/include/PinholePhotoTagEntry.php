@@ -132,6 +132,9 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	 *
 	 * If a validation error occurs, an error message is attached to this
 	 * widget.
+	 *
+	 * @throws SwatException if no database connection is set on this tag
+	 *                        entry control.
 	 */
 	public function process()
 	{

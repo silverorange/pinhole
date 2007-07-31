@@ -52,7 +52,7 @@ PinholePhotoTagEntry.prototype.handleOnAvailable = function()
 		formatResult:
 			function(item, query)
 			{
-				// 0 is shortname, 1 is title
+				// 0 is title, 1 is tag string
 				return item[0] + ' (' + item[1] + ')'; 
 			}
 	});

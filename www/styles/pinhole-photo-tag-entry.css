@@ -1,12 +1,15 @@
 /*
-.pinhole-photo-tag-entry {
-	position: relative;
-}
-*/
+ * Styles for Pinhole tag auto-complete control
+ *
+ * Many of these styles are dictated by YUI and required for the auto-complete
+ * to function in all browsers. See
+ * http://developer.yahoo.com/yui/examples/autocomplete/states_jsarray.html
+ * before making radical changes to this CSS.
+ */
 
 .pinhole-photo-tag-entry { /* set width of widget here*/
 	position: relative;
-	width: 30em;
+	width: 20em;
 	margin-bottom: 1em;
 }
 .pinhole-photo-tag-entry { /* for IE z-index of absolute divs inside relative divs issue */
@@ -14,37 +17,29 @@
 } 
 
 .pinhole-photo-tag-entry input { /* abs for ie quirks */
-	position: absolute;
+	_position: absolute;
 	width: 100%;
 	z-index: 0;
 } 
 
 .pinhole-photo-tag-container {
 	position: absolute;
-	top: 1.3em;
+	top: 1.7em;
 	width: 100%
 }
 
 .pinhole-photo-tag-container .yui-ac-content {
 	position: absolute;
 	width: 100%;
-	border: 1px solid #404040;
+	border: 1px solid #888;
 	background: #fff;
 	overflow: hidden;
 	z-index: 9050;
 }
 
-/*.pinhole-photo-tag-container .yui-ac-shadow {
-	position: absolute;
-	margin: .3em;
-	width: 100%;
-	background: #a0a0a0;
-	z-index: 9049;
-}*/
-
 .pinhole-photo-tag-container ul {
 	margin: 0;
-	padding: 5px 0;
+	padding: 0;
 	width: 100%;
 }
 
@@ -63,15 +58,13 @@ li.pinhole-photo-tag-prehighlight {
 }
 
 .pinhole-photo-tag-list {
-	padding: 3px;
-	width: 30em;
-}
-
-.pinhole-photo-tag-list ul {
-	margin: 1.8em 0 0 0;
+	padding: 0;
+	margin: 0.5em 0 0 0;
+	list-style-type: none;
+	width: 20em;
 }
 
 .pinhole-photo-tag-list li {
-	margin-left: 0;
+	margin: 0 0 0 0.5em;
 	padding: 2px;
 }

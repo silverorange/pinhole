@@ -8,7 +8,7 @@ require_once 'SwatDB/SwatDB.php';
  * Order page for PinholeMetaData
  *
  * @package   Pinhole
- * @copyright 2005-2006 silverorange
+ * @copyright 2007 silverorange
  */
 class PinholeMetaDataOrder extends AdminDBOrder
 {

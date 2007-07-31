@@ -8,7 +8,7 @@ require_once 'Admin/AdminListDependency.php';
  * Delete confirmation page for PinholePhotographer component
  *
  * @package   Pinhole
- * @copyright 2005-2006 silverorange
+ * @copyright 2007 silverorange
  */
 class PinholePhotographerDelete extends AdminDBDelete
 {

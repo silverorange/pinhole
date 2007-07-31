@@ -7,7 +7,7 @@ require_once 'Swat/SwatDateCellRenderer.php';
  * A cell renderer that represents date parts as date tag links.
  *
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2005-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeDateTagCellRenderer extends SwatDateCellRenderer

@@ -10,7 +10,7 @@ require_once 'SwatDB/SwatDB.php';
  * photos page.
  *
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2005-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhotoActionsProcessor

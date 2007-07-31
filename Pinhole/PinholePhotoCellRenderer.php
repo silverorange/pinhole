@@ -9,7 +9,7 @@ require_once 'Swat/SwatImageCellRenderer.php';
  * A cell renderer for photos
  *
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2005-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhotoCellRenderer extends SwatCellRenderer

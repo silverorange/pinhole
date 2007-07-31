@@ -94,7 +94,7 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 			(select PinholePhotoMetaDataBinding.photo
 				from PinholePhotoMetaDataBinding
 			where PinholePhotoMetaDataBinding.meta_data = %s and
-				PinholePhotoMetaDataBinding.value = %s)',
+				lower(PinholePhotoMetaDataBinding.value) = lower(%s))',
 			$this->db->quote($this->meta_data->id, 'integer'),
 			$this->db->quote($this->value, 'text'));
 	}
@@ -160,9 +160,11 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 					inner join PinholePhotoMetaDataBinding on
 						PinholePhoto.id =
 							PinholePhotoMetaDataBinding.photo and
-						PinholePhotoMetaDataBinding.meta_data = %s
+						PinholePhotoMetaDataBinding.meta_data = %s and
+						lower(PinholePhotoMetaDataBinding.value) = lower(%s)
 					where id = %s',
 					$this->db->quote($this->meta_data->id, 'integer'),
+					$this->db->quote($this->value, 'text'),
 					$this->db->quote($photo->id, 'integer'));
 
 				$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');

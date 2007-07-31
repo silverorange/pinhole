@@ -57,6 +57,20 @@ class PinholePhotoFactory
 	}
 
 	// }}}
+	// {{{ public function setInstance()
+
+	/**
+	 * Sets the instance for this factory 
+	 *
+	 * @param PinholeInstance $instance The PinholeInstance this file
+	 *                        belongs to.
+	 */
+	public function setInstance(PinholeInstance $instance)
+	{
+		$this->instance = $instance;
+	}
+
+	// }}}
 	// {{{ public function setPath()
 
 	/**
@@ -157,7 +171,7 @@ class PinholePhotoFactory
 
 		$meta_data = $this->getMetaDataFromFile($file);
 
-		$photo->instance = 1; //TODO populate this correctly
+		$photo->instance = $this->instance;
 		$photo->filename = sha1(uniqid(rand(), true));
 		$photo->original_filename = $original_filename;
 		$photo->upload_date = new SwatDate();
@@ -198,7 +212,8 @@ class PinholePhotoFactory
 
 		if ($dimensions === null)
 			$dimensions = SwatDB::query($this->db,
-				'select * from PinholeDimension',
+				sprintf('select * from PinholeDimension where instance = %s',
+					$this->db->quote($this->instance->id, 'integer')),
 				'PinholeDimensionWrapper');
 
 		$transformer = Image_Transform::factory('Imagick2');
@@ -346,7 +361,8 @@ class PinholePhotoFactory
 					array('text:shortname', 'text:title',
 						'integer:instance'),
 					array('shortname' => $shortname,
-						'title' => $title, 'instance' => 1),
+						'title' => $title,
+						'instance' => $this->instance->id),
 					'id');
 			} else {
 				$meta_data_id = array_search($shortname,

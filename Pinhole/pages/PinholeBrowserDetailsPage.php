@@ -157,9 +157,13 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function displayPhoto()
 	{
 		$img_tag = new SwatHtmlTag('img');
-		$img_tag->src = $this->photo->getDimension('large')->getUri();
-		$img_tag->width = $this->photo->getDimension('large')->width;
-		$img_tag->height = $this->photo->getDimension('large')->height;
+		$large = $this->photo->getDimension('large');
+		if ($large !== null) {
+			$img_tag->src = $large->getUri();
+			$img_tag->width = $large->width;
+			$img_tag->height = $large->height;
+		}
+
 		$img_tag->alt = $this->photo->title;
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();

@@ -47,6 +47,7 @@ class PinholePhotoActionsProcessor
 			$this->page->app->replacePage('Photo/Delete');
 			$this->page->app->getPage()->setItems($view->getSelection());
 			break;
+
 		case 'status_action':
 			$num = count($view->getSelection());
 
@@ -75,36 +76,45 @@ class PinholePhotoActionsProcessor
 
 			$this->page->app->messages->add($message);
 			break;
+
 		case 'tags_action':
-			$tags = $ui->getWidget('tags')->values;
-			$tag_ids = array();
-			foreach ($tags as $tag)
-				$tag_ids[] = $this->page->app->db->quote($tag->id, 'integer');
+			$tag_list = $ui->getWidget('tags')->getSelectedTagList();
+			$tag_list = $tag_list->getByType('PinholeTag');
+			if (count($tag_list) > 0) {
+				$tag_ids = array();
+				foreach ($tag_list as $tag)
+					$tag_ids[] = $tag->id;
 
-			$sql = sprintf('insert into PinholePhotoTagBinding
-				(photo, tag) select %%1$s, id from PinholeTag
-				where id in (%s) and id not in (select tag
-				from PinholePhotoTagBinding where photo = %%1$s)',
-				implode(',', $tag_ids));
+				$db = $this->page->app->db;
+				$insert_sql = sprintf('insert into PinholePhotoTagBinding
+					(photo, tag) select %%1$s, id from PinholeTag
+					where id in (%s) and id not in (select tag
+					from PinholePhotoTagBinding where photo = %%1$s)',
+					$db->datatype->implodeArray($tag_ids, 'integer'));
 
-			foreach ($view->getSelection() as $id)
-				SwatDB::query($this->page->app->db, sprintf($sql,
-					$this->page->app->db->quote($id, 'integer')));
+				foreach ($view->getSelection() as $id) {
+					$sql = sprintf($insert_sql,
+						$db->quote($id, 'integer'));
 
-			$num = count($view->getSelection());
+					SwatDB::exec($db, $sql);
+				}
 
-			if (count($tags) > 1)
-				$message = new SwatMessage(sprintf(Pinhole::ngettext(
-					'Tags have been added to one photo.',
-					'Tags have been added to %s photos.', $num),
-					SwatString::numberFormat($num)));
-			else
-				$message = new SwatMessage(sprintf(Pinhole::ngettext(
-					'A tag has been added to one photo.',
-					'A tag has been added to %s photos.', $num),
-					SwatString::numberFormat($num)));
+				$num = count($view->getSelection());
+				if (count($tag_list) > 1) {
+					$message = new SwatMessage(sprintf(Pinhole::ngettext(
+						'Tags have been added to one photo.',
+						'Tags have been added to %s photos.', $num),
+						SwatString::numberFormat($num)));
+				} else {
+					$message = new SwatMessage(sprintf(Pinhole::ngettext(
+						'A tag has been added to one photo.',
+						'A tag has been added to %s photos.', $num),
+						SwatString::numberFormat($num)));
+				}
 
-			$this->page->app->messages->add($message);
+				$this->page->app->messages->add($message);
+			}
+
 			break;
 		}
 	}

@@ -111,7 +111,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$renderer = new SwatLinkCellRenderer();
 				$renderer->link = sprintf('tag?meta.%s=%s',
 					$meta_data->shortname,
-					$meta_data->value);
+					rawurlencode($meta_data->value));
 			} else {
 				$renderer = new SwatTextCellRenderer();
 			}

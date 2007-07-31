@@ -143,7 +143,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				$db->datatype->implodeArray($simple_tag_strings, 'text');
 
 			// load all simple tags in one query
-			$sql = sprintf('select * from PinholeTag where shortname in (%s)',
+			$sql = sprintf('select * from PinholeTag where name in (%s)',
 				$quoted_tag_strings);
 
 			$tag_data_objects =

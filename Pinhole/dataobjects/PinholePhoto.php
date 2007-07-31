@@ -1,12 +1,12 @@
 <?php
 
+require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
 require_once 'Pinhole/dataobjects/PinholeInstance.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
-require_once 'SwatDB/SwatDBDataObject.php';
 
 /**
  * A dataobject class for photos
@@ -15,7 +15,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhoto extends SwatDBDataObject
+class PinholePhoto extends PinholeInstanceDataObject
 {
 	// {{{ constants
 
@@ -37,13 +37,6 @@ class PinholePhoto extends SwatDBDataObject
 	 * @var integer
 	 */
 	public $id;
-
-	/**
-	 * The PinholeInstance this photo belongs to
-	 *
-	 * @var PinholeInstance
-	 */
-	public $instance;
 
 	/**
 	 * User visible title
@@ -293,14 +286,13 @@ class PinholePhoto extends SwatDBDataObject
 
 	protected function init()
 	{
+		parent::init();
+
 		$this->table = 'PinholePhoto';
 		$this->id_field = 'integer:id';
 
 		$this->registerInternalProperty('photographer',
 			SwatDBClassMap::get('PinholePhotographer'));
-
-		$this->registerInternalProperty('instance',
-			SwatDBClassMap::get('PinholeInstance'));
 
 		$this->registerDateProperty('upload_date');
 		$this->registerDateProperty('publish_date');

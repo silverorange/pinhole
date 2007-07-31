@@ -1,6 +1,6 @@
 <?php
 
-require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
 
 /**
  * An internal dataobject class for generic machine tags
@@ -12,7 +12,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeMachineTagDataObject extends SwatDBDataObject
+class PinholeMachineTagDataObject extends PinholeInstanceDataObject
 {
 	// {{{ public properties
 
@@ -56,6 +56,8 @@ class PinholeMachineTagDataObject extends SwatDBDataObject
 
 	protected function init()
 	{
+		parent::init();
+
 		$this->table = 'PinholeMachineTag';
 		$this->id_field = 'integer:id';
 		$this->registerDateProperty('createdate');
@@ -80,11 +82,13 @@ class PinholeMachineTagDataObject extends SwatDBDataObject
 
 		if ($this->table !== null) {
 			$sql = sprintf('select * from %s
-				where namespace = %s and name = %s and value = %s',
+				where namespace = %s and name = %s and value = %s
+					and instance = %s',
 				$this->table,
 				$this->db->quote($namespace, 'text'),
 				$this->db->quote($name, 'text'),
-				$this->db->quote($value, 'text'));
+				$this->db->quote($value, 'text'),
+				$this->db->quote($this->instance->id, 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);
 			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);

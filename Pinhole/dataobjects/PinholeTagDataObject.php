@@ -1,6 +1,6 @@
 <?php
 
-require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
 require_once 'Swat/SwatDate.php';
 
 /**
@@ -13,7 +13,7 @@ require_once 'Swat/SwatDate.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeTagDataObject extends SwatDBDataObject
+class PinholeTagDataObject extends PinholeInstanceDataObject
 {
 	// {{{ public properties
 
@@ -58,9 +58,11 @@ class PinholeTagDataObject extends SwatDBDataObject
 		$row = null;
 
 		if ($this->table !== null) {
-			$sql = sprintf('select * from %s where name = %s',
+			$sql = sprintf('select * from %s where name = %s
+				and instance = %s',
 				$this->table,
-				$this->db->quote($name, 'text'));
+				$this->db->quote($name, 'text'),
+				$this->db->quote($this->instance->id, 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);
 			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);
@@ -79,6 +81,8 @@ class PinholeTagDataObject extends SwatDBDataObject
 
 	protected function init()
 	{
+		parent::init();
+
 		$this->table = 'PinholeTag';
 		$this->id_field = 'integer:id';
 		$this->registerDateProperty('createdate');

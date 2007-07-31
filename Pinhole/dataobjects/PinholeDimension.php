@@ -1,6 +1,6 @@
 <?php
 
-require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
 
 /**
  * A dataobject class for dimensions
@@ -9,7 +9,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeDimension extends SwatDBDataObject
+class PinholeDimension extends PinholeInstanceDataObject
 {
 	// {{{ public properties
 
@@ -82,6 +82,8 @@ class PinholeDimension extends SwatDBDataObject
 
 	protected function init()
 	{
+		parent::init();
+
 		$this->table = 'PinholeDimension';
 		$this->id_field = 'integer:id';
 	}

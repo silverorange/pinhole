@@ -26,8 +26,8 @@ class PinholeRobotsPage extends PinholePage
 
 	protected function getDisallowString()
 	{
-		return '';
-		// return "User-agent: * \nDisallow: /";
+		//return '';
+		return "User-agent: * \nDisallow: /";
 	}
 
 	// }}}

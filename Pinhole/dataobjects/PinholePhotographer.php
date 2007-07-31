@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Pinhole/Pinhole.php';
-require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
 
 /**
  * A dataobject class for photographers
@@ -10,7 +10,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotographer extends SwatDBDataObject
+class PinholePhotographer extends PinholeInstanceDataObject
 {
 	// {{{ constants
 
@@ -103,6 +103,8 @@ class PinholePhotographer extends SwatDBDataObject
 
 	protected function init()
 	{
+		parent::init();
+
 		$this->table = 'PinholePhotographer';
 		$this->id_field = 'integer:id';
 	}

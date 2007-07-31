@@ -37,10 +37,7 @@ class PinholeTagListView extends SwatControl
 		$div_tag->id = $this->id;
 		$div_tag->open();
 
-		if (count($this->tag_list) == 0) {
-			echo Pinhole::_('Displaying All Photos');
-		} else {
-
+		if (count($this->tag_list) > 0) {
 			$count = 0;
 			foreach ($this->tag_list as $tag) {
 				$remove_list = clone $this->tag_list;
@@ -81,6 +78,16 @@ class PinholeTagListView extends SwatControl
 				$count++;
 			}
 		}
+
+		// show a count of photos in the tag list
+		$photo_count = $this->tag_list->getPhotoCount();
+		$span_tag = new SwatHtmlTag('span');
+		$span_tag->class = 'photo-count';
+		$span_tag->setContent(sprintf(Pinhole::ngettext(
+			'(%s Photo)', '(%s Photos)',
+			$photo_count), SwatString::numberFormat($photo_count)));
+
+		$span_tag->display();
 
 		$div_tag->close();
 	}

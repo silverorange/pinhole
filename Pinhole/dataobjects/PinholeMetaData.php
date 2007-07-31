@@ -1,6 +1,6 @@
 <?php
 
-require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
 
 /**
  * A dataobject for the meta-data contained in photos
@@ -9,7 +9,7 @@ require_once 'SwatDB/SwatDBDataObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeMetaData extends SwatDBDataObject
+class PinholeMetaData extends PinholeInstanceDataObject
 {
 	// {{{ public properties
 
@@ -53,6 +53,8 @@ class PinholeMetaData extends SwatDBDataObject
 
 	protected function init()
 	{
+		parent::init();
+
 		$this->table = 'PinholeMetaData';
 		$this->id_field = 'integer:id';
 	}

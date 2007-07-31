@@ -46,7 +46,7 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	public $createdate;
 
 	// }}}
-	// {{{ public function loadFromShortname()
+	// {{{ public function loadFromName()
 
 	/**
 	 * Loads a tag data-object by its name

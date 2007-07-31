@@ -48,6 +48,9 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 	 */
 	protected function loadInternal($id)
 	{
+		if ($this->instance === null)
+			return parent::loadInternal($id);
+
 		if ($this->table !== null && $this->id_field !== null) {
 			$id_field = new SwatDBField($this->id_field, 'integer');
 			$sql = 'select * from %s where %s = %s and instance = %s';
@@ -95,6 +98,14 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 	 */
 	protected function deleteInternal()
 	{
+		if ($this->instance === null) {
+			trigger_error(
+				sprintf('No instance defined for %s', get_class($this)),
+				E_USER_NOTICE);
+
+			return;
+		}
+
 		if ($this->table === null || $this->id_field === null)
 			return;
 

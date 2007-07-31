@@ -27,6 +27,12 @@ a:hover   { color: #729fcf; }
 a:active  { color: #729fcf; }
 
 
+h2#page_title {
+	font-size: 156%;
+}
+
+p { margin-bottom: 1em; }
+
 .clearfix:after {
 	content:".";
 	display:block;

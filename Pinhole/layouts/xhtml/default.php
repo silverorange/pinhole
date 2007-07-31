@@ -32,7 +32,7 @@
 
 	</div><!-- close #bd -->
 
-	<div id="ft">Powered by Pinhole</div>
+	<div id="ft">Powered by <a href="http://swat.silverorange.com/Pinhole">Pinhole</a></div>
 
 </div>
 

@@ -33,9 +33,7 @@
 	<!-- content -->
 	<widget class="SwatContainer" id="content">
 		<widget class="SwatDisplayableContainer" id="description_container">
-			<widget class="SwatContentBlock" id="description">
-				<property name="content_type">text/xml</property>
-			</widget>
+			<widget class="SwatContentBlock" id="description" />
 		</widget>
 		<widget class="SwatDisclosure" id="photo_details">
 			<property name="title">Photo Details</property>

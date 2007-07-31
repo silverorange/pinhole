@@ -60,8 +60,9 @@ class PinholePhotoUploadStatus extends SitePage
 			$saved = $photo_factory->saveUploadedFile('file');
 
 			if (PEAR::isError($saved))
-				$this->errors[] = sprintf('Error uploading file: %s',
-					Pinhole::_($_FILES[$id]['name']));
+				$this->errors[] = sprintf(
+					Pinhole::_('Error uploading file: %s'),
+					$_FILES[$id]['name']);
 			else
 				$this->files = array_merge($saved, $this->files);
 		}
@@ -101,7 +102,7 @@ class PinholePhotoUploadStatus extends SitePage
 			$javascript.= sprintf("'%s' : '%s',\n",
 				$filename, $original_filename);
 
-		$javascript.= "}\n";
+		$javascript.= "};\n";
 
 
 		$javascript.= "var upload_errors = new Array();";

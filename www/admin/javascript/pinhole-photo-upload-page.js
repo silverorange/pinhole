@@ -134,6 +134,9 @@ PinholePhotoUploadPage.prototype.display = function(type, args)
 
 PinholePhotoUploadPage.prototype.updateProcessingText = function(count)
 {
+	// TODO: get this to work correctly.
+	return;
+
 	var text = PinholePhotoUploadPage.processing_text;
 	text+= ' ' + this.current_photo + ' of ' + this.total_photos;
 	this.processing_message.innerHTML = text;

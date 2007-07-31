@@ -41,22 +41,6 @@ abstract class PinholeBrowserPage extends PinholePage
 	protected function createTagList($tags)
 	{
 		$this->tag_list = new PinholeTagList($this->app->db, $tags);
-
-		$this->tag_list->setInstance($this->app->instance->getInstance());
-
-		$this->tag_list->setPhotoWhereClause(sprintf(
-			'PinholePhoto.status = %s',
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
-
-		if (count($this->tag_list) == 0) {
-			// if we're at the root, show newest photos first
-			$this->tag_list->setPhotoOrderByClause(
-				'PinholePhoto.photo_date desc, id desc');
-		} else { 
-			// if we have tags selected, show oldest photos first
-			$this->tag_list->setPhotoOrderByClause(
-				'PinholePhoto.photo_date asc, id asc');
-		}
 	}
 
 	// }}}
@@ -76,10 +60,33 @@ abstract class PinholeBrowserPage extends PinholePage
 	}
 
 	// }}}
+	// {{{ protected function initTagList()
+
+	protected function initTagList()
+	{
+		$this->tag_list->setInstance($this->app->instance->getInstance());
+
+		$this->tag_list->setPhotoWhereClause(sprintf(
+			'PinholePhoto.status = %s',
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
+
+		if (count($this->tag_list) == 0) {
+			// if we're at the root, show newest photos first
+			$this->tag_list->setPhotoOrderByClause(
+				'PinholePhoto.photo_date desc, id desc');
+		} else { 
+			// if we have tags selected, show oldest photos first
+			$this->tag_list->setPhotoOrderByClause(
+				'PinholePhoto.photo_date asc, id asc');
+		}
+	}
+
+	// }}}
 	// {{{ protected function initInternal()
 
 	protected function initInternal()
 	{
+		$this->initTagList();
 	}
 
 	// }}}

@@ -5,6 +5,7 @@ require_once 'SwatDB/SwatDBRecordsetWrapper.php';
 require_once 'PinholePhoto.php';
 require_once 'PinholePhotoDimensionBinding.php';
 require_once 'PinholeDimension.php';
+require_once 'PinholeInstance.php';
 
 /**
  * A recordset wrapper class for PinholePhoto objects
@@ -44,6 +45,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 				PinholePhoto.title';
 
 		$sql = 'select PinholePhoto.id,
+				PinholePhoto.instance,
 				PinholePhoto.filename,
 				PinholePhoto.title,
 				PinholePhoto.photo_date,
@@ -76,6 +78,9 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 		$photo_class =
 			SwatDBClassMap::get('PinholePhoto');
 
+		$instance_class =
+			SwatDBClassMap::get('PinholeInstance');
+
 		$dimension_class =
 			SwatDBClassMap::get('PinholeDimension');
 
@@ -85,6 +90,10 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
 			$photo = new $photo_class($row, true);
 			$photo->setDataBase($db);
+
+			$instance = new $instance_class();
+			$instance->id = $row->instance;
+			$photo->setInstance($instance);
 
 			$dimension = new $dimension_class($row, true);
 			$dimension_binding = new $dimension_binding_class($row, true);

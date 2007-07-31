@@ -180,7 +180,8 @@ PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error
 	this.progress_bar.setValue(1);
 	this.progress_bar.setText(PinholePhotoUploadClient.complete_text);
 
-	this.uploadCompleteEvent.fire();
+	var total_photos = this.getObjectArrayLength(file_objects);
+	this.uploadCompleteEvent.fire(total_photos);
 
 	this.uploaded_files = file_objects;
 
@@ -277,13 +278,7 @@ PinholePhotoUploadClient.prototype.processNextFile = function()
 
 		delete that.uploaded_files[response.filename];
 
-		// this is the only way I can think of count the number of
-		// entries in an object
-		var count = 0;
-		for (var file in that.uploaded_files)
-			count++;
-
-		if (count == 0)
+		if (that.getObjectArrayLength(that.uploaded_files) == 0)
 			that.processingCompleteEvent.fire();
 
 		// TODO: why doesn't the proper path work when it's first called?
@@ -299,4 +294,13 @@ PinholePhotoUploadClient.prototype.processNextFile = function()
 			[file, this.uploaded_files[file]]);
 		return;
 	}
+}
+
+PinholePhotoUploadClient.prototype.getObjectArrayLength = function(obj)
+{
+	var count = 0;
+	for (var elem in obj)
+		count++;
+
+	return count;
 }

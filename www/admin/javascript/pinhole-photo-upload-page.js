@@ -11,7 +11,8 @@ PinholePhotoUploadPage = function(uploader)
 	this.error_messages.className = 'pinhole-photo-uploader-errors';
 
 	this.uploader = uploader;
-	this.errors = new Array();
+	this.total_photos;
+	this.errors = [];
 
 	this.current_photo_path = null;
 
@@ -28,8 +29,8 @@ PinholePhotoUploadPage.thumbnail_height = 100;
 PinholePhotoUploadPage.thumbnail_margin = 5;
 PinholePhotoUploadPage.thumbnail_padding = 10;
 PinholePhotoUploadPage.path = '../images/photos/thumb';
-PinholePhotoUploadPage.processing_text = 'Processing photos … ';
-PinholePhotoUploadPage.processed_text = 'Finished Processing! ';
+PinholePhotoUploadPage.processing_text = 'Processing Photo … ';
+PinholePhotoUploadPage.processed_text = 'Finished Processing!';
 
 PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 {
@@ -56,10 +57,16 @@ PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 
 	animation.onComplete.subscribe(this.fadeInPhoto, this, true);
 	animation.animate();
+
+	this.current_photo++;
+	this.updateProcessingText();
 }
 
 PinholePhotoUploadPage.prototype.addError  = function(type, args)
 {
+	this.current_photo++;
+	this.updateProcessingText();
+
 	this.errors.push(args[0]);
 }
 
@@ -110,16 +117,26 @@ PinholePhotoUploadPage.prototype.fadeInPhoto = function()
 	animation.animate();
 }
 
-PinholePhotoUploadPage.prototype.display = function()
+PinholePhotoUploadPage.prototype.display = function(type, args)
 {
-	var processing_text = document.createTextNode(PinholePhotoUploadPage.processing_text);
-	this.processing_message.appendChild(processing_text);
+	this.total_photos = args[0];
+	this.current_photo = 1;
+
+	this.updateProcessingText();
+
 	this.photo_container.parentNode.insertBefore(this.processing_message,
 		this.photo_container);
 
 	var clear_div = document.createElement('div');
 	clear_div.style.clear = 'both';
 	this.photo_container.parentNode.appendChild(clear_div);
+}
+
+PinholePhotoUploadPage.prototype.updateProcessingText = function(count)
+{
+	var text = PinholePhotoUploadPage.processing_text;
+	text+= ' ' + this.current_photo + ' of ' + this.total_photos;
+	this.processing_message.innerHTML = text;
 }
 
 PinholePhotoUploadPage.prototype.complete = function()

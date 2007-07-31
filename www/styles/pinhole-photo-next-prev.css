@@ -12,6 +12,10 @@
 	text-decoration: none;
 }
 
+.pinhole-photo-next-prev span {
+	color: #888;
+}
+
 .pinhole-photo-next-prev a:link    { color: #babdb6; }
 .pinhole-photo-next-prev a:visited { color: #babdb6; }
 .pinhole-photo-next-prev a:hover   { color: #eeeeec; background-color: #555753; }

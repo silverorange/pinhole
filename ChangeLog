@@ -1,0 +1,2884 @@
+2007-07-31  nrf
+
+	* [r18918]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  URL encode machine tag values.
+	* [r18912] pinhole/trunk/Pinhole/PinholePhotoNextPrev.php:
+	  missed a link
+	* [r18910] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php,
+	  pinhole/trunk/Pinhole/PinholeDateTagCellRenderer.php,
+	  pinhole/trunk/Pinhole/PinholePhotoNextPrev.php,
+	  pinhole/trunk/Pinhole/PinholeSubTagListView.php,
+	  pinhole/trunk/Pinhole/PinholeTagListView.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Change URL scheme so that we can properly encode tag values in
+	  URLs without breaking apache rewrites.
+	  The tag list is now the query string, so the '/' that used to
+	  begin the tag list is now a '?'
+	* [r18899] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Robustify to better handle photos without a dimension. I know
+	  this might be impossible, but it happened to me while importing
+	  resulting in ugly errors.
+	* [r18898] pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  Default data for dimensions
+	* [r18897] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  I think is supposed to be "name"
+	* [r18896] pinhole/trunk/Pinhole/PinholeDateTagCellRenderer.php,
+	  pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Order.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholeAdminPhotoCellRenderer.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Edit.php,
+	  pinhole/trunk/Pinhole/exceptions/PinholeException.php,
+	  pinhole/trunk/Pinhole/pages/PinholeSearchPage.php:
+	  update copyright dates from SVN logs
+
+2007-07-31  nick
+
+	* [r18887]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php:
+	  
+	  Added instance to Photos
+
+2007-07-31  gauthierm
+
+	* [r18886]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMachineTagDataObject.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObject.php:
+	  Tidy up load methods to work without instances better. Also move
+	  public method before protected method.
+	* [r18885]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeInstanceDataObject.php:
+	  Code and documentation cleanups. The delete and save methods
+	  need work.
+
+2007-07-31  steven
+
+	* [r18884] pinhole/trunk/www/styles/pinhole-photo-next-prev.css:
+	  make disabled next/prev links look more disabled (I might do
+	  more to make the active links look more clickable too)
+
+2007-07-31  nick
+
+	* [r18883] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Add instance to tag dataobject
+	* [r18882] pinhole/trunk/Pinhole/admin/components/Tag/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php:
+	  Add instance to tags
+	* [r18881]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/index.xml:
+	  There is no delete for meta data (for now). It's all
+	  automatically created.
+	* [r18880]
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php:
+	  Add instance to photographers
+
+2007-07-31  steven
+
+	* [r18879] pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  Remove redundant styles (these live in
+	  pinhole-photo-next-prev.css - which will probably be renamed too)
+
+2007-07-31  nick
+
+	* [r18878]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Order.php:
+	  Add instance to meta data
+	* [r18877] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMachineTagDataObject.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObject.php:
+	  Use PinholeInstanceDataObject base class.
+	* [r18876]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeInstanceDataObject.php:
+	  Don't load with instance if loaded as a sub-dataobject.
+	* [r18875]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeInstanceDataObject.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMetaData.php:
+	  New PinholeInstanceDataObject enforces instance property for
+	  loading, saving, &
+	  deleting dataobjects.
+
+2007-07-30  gauthierm
+
+	* [r18873] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php:
+	  Do a todo: Make PinholePhotoCellRenderer encapsulate rather than
+	  extend SwatImageCellRenderer.
+
+2007-07-30  nick
+
+	* [r18872]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php:
+	  First admin implementation of instance.
+
+2007-07-30  gauthierm
+
+	* [r18870] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php:
+	  Remove unused widget. (was used on calendar page).
+	* [r18869] pinhole/trunk/Pinhole/pages/PinholePage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeRobotsPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeSearchPage.php:
+	  More license tags.
+
+2007-07-30  nick
+
+	* [r18867]
+	  pinhole/trunk/Pinhole/admin/PinholeAdminApplication.php:
+	  Admin application (will be overridden by gallery)
+
+2007-07-30  gauthierm
+
+	* [r18866] pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php:
+	  Add license tag.
+	* [r18865] pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php:
+	  Throw exception properly on photo loader.
+	* [r18864] pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php:
+	  Only load photo thumbnails in the current instance.
+	* [r18862]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  Remove calendar page. If it's wanted/needed later it can be
+	  ressurected from SVN.
+	* [r18861] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Set current site instance on tag list of browser page.
+	* [r18860]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Don't load photos not in the current instance and throw an
+	  exceptino if trying to load a photo that does not exist.
+	* [r18859] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Add instance field to photo dataobject.
+
+2007-07-30  nick
+
+	* [r18858] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  Simplify the method structure a little to make it easier to use
+
+2007-07-30  gauthierm
+
+	* [r18857] pinhole/trunk/Pinhole/dataobjects/PinholeInstance.php:
+	  Fix method name.
+	* [r18854]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObject.php:
+	  Public before protected method.
+	* [r18853] pinhole/trunk/Pinhole/dataobjects/PinholeInstance.php:
+	  Add PinholeInstance::loadFromShortname().
+	* [r18852]
+	  pinhole/trunk/Pinhole/PinholeMultipleInstanceModule.php:
+	  Use class map when creating instance object.
+	* [r18851]
+	  pinhole/trunk/Pinhole/PinholeMultipleInstanceModule.php:
+	  Multiple instance module for pinhole that creates a default
+	  instance for single-instance sites.
+
+2007-07-30  nrf
+
+	* [r18848] pinhole/trunk/sql/tables/PinholeInstance.sql,
+	  pinhole/trunk/sql/tables/PinholeMetaData.sql,
+	  pinhole/trunk/sql/tables/PinholePhotoMetaDataBinding.sql,
+	  pinhole/trunk/sql/tables/PinholeTag.sql:
+	  Fix broken SQL files
+
+2007-07-30  nick
+
+	* [r18847] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  Refactoring to make it work with photo importing
+
+2007-07-30  gauthierm
+
+	* [r18845] pinhole/trunk/Pinhole/PinholeSubTagListView.php:
+	  Add a header to sub-tag list
+	* [r18844] pinhole/trunk/Pinhole/PinholePhotoNextPrev.php,
+	  pinhole/trunk/Pinhole/PinholePhotoScroller.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details.xml,
+	  pinhole/trunk/www/styles/pinhole-photo-next-prev.css,
+	  pinhole/trunk/www/styles/pinhole-photo-scroller.css:
+	  Rename scroller as next-prev.
+	* [r18843] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php:
+	  Make photo edit page load again.
+	* [r18841] pinhole/trunk/Pinhole/admin/components/Front,
+	  pinhole/trunk/Pinhole/admin/components/Front/Index.php:
+	  Add simple admin front-page to Pinhole that redirects to the
+	  photo tool.
+
+2007-07-30  nick
+
+	* [r18839] pinhole/trunk/sql/tables/PinholeDimension.sql,
+	  pinhole/trunk/sql/tables/PinholeMachineTag.sql,
+	  pinhole/trunk/sql/tables/PinholeMetaData.sql,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql,
+	  pinhole/trunk/sql/tables/PinholePhotographer.sql,
+	  pinhole/trunk/sql/tables/PinholeTag.sql:
+	  Added instance index. Ticket 11337.
+	* [r18836] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  A much better way to unzip archives. Also fixes the file
+	  permissions problems I
+	  was having.
+
+2007-07-30  gauthierm
+
+	* [r18831] pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/edit.xml:
+	  Make edit page work.
+	* [r18827] pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/index.xml:
+	  Fix tag details page.
+	* [r18826]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObject.php:
+	  Fix id field.
+	* [r18825] pinhole/trunk/Pinhole/admin/components/Tag/Index.php:
+	  Fix tag index.
+	* [r18823] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Make tag entry widget work again.
+	* [r18822] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  In PinholeTaglist, only filter by instance if the instance is
+	  set. Also filter sub tags by instance if the instance is set.
+
+2007-07-30  charles
+
+	* [r18821] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Part of ticket #1129, Pinhole now queries only the photos that
+	  belong to a certain instance.
+
+2007-07-30  steven
+
+	* [r18820] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Small IE fix to PhotoTile alignment
+
+2007-07-30  gauthierm
+
+	* [r18819] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php:
+	  Fix documentation and add a todo. Contrary to popular belief,
+	  the photo cell renderer renders photos, not photo checkboxes.
+	* [r18818] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php:
+	  Wrap long lines and use conventional comment style.
+	* [r18817] pinhole/trunk/Pinhole/dataobjects/PinholeLayouts.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMetaData.php:
+	  Add license tags to dataobjects.
+
+2007-07-30  steven
+
+	* [r18816] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Fix cursor on hover over PhotoTile title spans in IE6
+
+2007-07-30  gauthierm
+
+	* [r18815]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php:
+	  cleanup and coding conventions.
+	* [r18814]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php:
+	  More code cleanup. I hope it was early in the morning when you
+	  wrote this.
+	* [r18813] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Code cleanup. Shame on Nick.
+
+2007-07-30  steven
+
+	* [r18812] pinhole/trunk/www/styles/pinhole-date-tag-browser.css,
+	  pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Add IE6 hack for transparent CSS border colors - fixes IE
+	  rendering issues on PhotoTiles and Date/Tag browser
+
+2007-07-30  gauthierm
+
+	* [r18811] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeLayouts.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMetaData.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBinding.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObjectWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php:
+	  Clean up dataobjects. There is still a lot to clean up here.
+
+2007-07-30  steven
+
+	* [r18810] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php:
+	  Prevent PhotoTile title span tag from self-closing (<span/>)
+	  which is invalid HTML and breaks IE bad
+
+2007-07-30  gauthierm
+
+	* [r18809] pinhole/trunk/Pinhole/dataobjects/PinholeInstance.php:
+	  Tiny changes to insatnce dataobject.
+
+2007-07-30  charles
+
+	* [r18808] pinhole/trunk/Pinhole/dataobjects/PinholeInstance.php:
+	  Ticket #1130, this is a dataobject for the PinholeInstance table.
+
+2007-07-30  gauthierm
+
+	* [r18807] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add instance support to tag list. Needs to be added to queries
+	  still.
+	* [r18806] pinhole/trunk/Pinhole/tags/PinholePageTag.php:
+	  Add class-level documentation to page tag.
+	* [r18805] pinhole/trunk/Pinhole/tags/PinholePageTag.php:
+	  Add folding and documentation to page tag.
+
+2007-07-29  gauthierm
+
+	* [r18803] pinhole/trunk/Pinhole/tags/PinholeIterableTag.php:
+	  fix typo
+	* [r18802] pinhole/trunk/Pinhole/tags/PinholeSearchTag.php:
+	  Add documentation to PinholeSearchTag.
+	* [r18801]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Comment.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/CommentDelete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/comment.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeComment.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeCommentWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details.xml,
+	  pinhole/trunk/sql/tables/PinholeComment.sql,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql:
+	  Remove comments from trunk in the interests of getting the
+	  gallery launched this week. The comments system should still be
+	  maintained in the 'comments-branch' branch of pinhole.
+
+2007-07-27  gauthierm
+
+	* [r18797] pinhole/trunk/Pinhole/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/PinholePhotoScroller.php,
+	  pinhole/trunk/Pinhole/PinholeSearchTag.php,
+	  pinhole/trunk/Pinhole/PinholeSiteTag.php,
+	  pinhole/trunk/Pinhole/PinholeSubTagListView.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/PinholeTagList.php,
+	  pinhole/trunk/Pinhole/PinholeTagListView.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml,
+	  pinhole/trunk/Pinhole/pages/browser-details.xml,
+	  pinhole/trunk/Pinhole/pages/browser-index.xml,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml,
+	  pinhole/trunk/Pinhole/tags/PinholePageTag.php,
+	  pinhole/trunk/sql/tables/PinholeMachineTag.sql,
+	  pinhole/trunk/sql/tables/PinholePhotoMachineTagBinding.sql,
+	  pinhole/trunk/tests/tag-tester.php,
+	  pinhole/trunk/www/styles/pinhole-browser-page.css,
+	  pinhole/trunk/www/styles/pinhole-tag-list-view.css:
+	  Implement new tag system on front-end.
+	  
+	  This is a large set of changes that includes:
+	  
+	  Tag system:
+	  - using new tag system on front-end
+	  - removing old tag system
+	  - adding page tags
+	  - many new useful methods for the tag list
+	  - many bug fixes for the tag list
+	  - database definition for machine tags
+	  - documentation fixes and additions (more to come)
+	  
+	  Browser pages:
+	  - use new pinhole widgets
+	  - unify the ui so we are only loading one XML file per page
+	  - split init, process and build methods up into individual
+	  methods
+	  - make subclassing browser pages easier by creating internal
+	  versions of the main methods
+	  
+	  There are likely bugs I missed here. The most noticeable
+	  regression is the sub-tag-list view on the sidebar.
+	  
+	  I will add documentation over the next few days.
+
+2007-07-27  nrf
+
+	* [r18795] pinhole/trunk/sql/tables/PinholeComment.sql:
+	  convention
+	* [r18794] pinhole/trunk/sql/tables/PinholeComment.sql:
+	  Creation package expects this syntax
+
+2007-07-27  nick
+
+	* [r18792]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatus.php,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Now also display an error if the zip archive is
+	  corrupt/unreadable
+	* [r18791] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessorServer.php:
+	  
+	  Take file as a path rather than building the path internally.
+	  Makes this more
+	  flexible for using on things like the conversion scripts.
+
+2007-07-27  charles
+
+	* [r18788] pinhole/trunk/Pinhole/dataobjects/PinholeComment.php,
+	  pinhole/trunk/sql/tables/PinholeComment.sql:
+	  Pinhole Comment dataobject now has a property that represents
+	  that site instance that it belongs to.
+	* [r18785]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Comment.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/CommentDelete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/comment.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml,
+	  pinhole/trunk/sql/tables/PinholeComment.sql:
+	  Added an admin component for dealing with comments, you can now
+	  delete hide and show comments. Also made some naming convention
+	  changes and some sql changes. Also the comments disclosure will
+	  not display if all of the comments are hidden by the admin.
+
+2007-07-27  nick
+
+	* [r18782] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessorServer.php,
+	  
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js,
+	  pinhole/trunk/www/admin/styles/pinhole-photo-uploader.css:
+	  First step adding error handling to the photo processor
+
+2007-07-26  charles
+
+	* [r18781] pinhole/trunk/Pinhole/dataobjects/PinholeComment.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml,
+	  pinhole/trunk/sql/tables/PinholeComment.sql:
+	  Made some small changes to naming convention, also comments now
+	  log the users IP, this will help track abuse. Also new
+	  formatting is added to user submitted items, this will stop
+	  harmful code from being displayed.
+
+2007-07-26  nick
+
+	* [r18780] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  Save photo date and meta data correctly
+	* [r18771]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml:
+	  Hide comments fieldset if no comments exist and put the submit
+	  comment in a
+	  disclosure. This whole layout of photo details/comments needs
+	  some more thought
+	  though.
+
+2007-07-26  gauthierm
+
+	* [r18761] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Whitespace
+
+2007-07-26  steven
+
+	* [r18759]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Revert last change with clearer stars - of course, they worked
+	  everywhere but on Windows.
+	* [r18758]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Try a more clear/larger star character for the rating flydown
+	  (will have to test for font coverage in windows/mac)
+
+2007-07-26  charles
+
+	* [r18757]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Small fix to make the ratings work.
+	* [r18756] pinhole/trunk/Pinhole/dataobjects/PinholeComment.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml,
+	  pinhole/trunk/sql/tables/PinholeComment.sql:
+	  Added a new property for recording the rating of a photo, also
+	  made the name and bodytext fields required.
+
+2007-07-26  nick
+
+	* [r18755] pinhole/trunk/Pinhole/dataobjects/PinholeComment.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeCommentWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml:
+	  Some code cleanup:
+	  - use the PinholePhoto::COMMENTS_STATUS* constants rather than
+	  integers
+	  - don't display date as string, make it into a SwatDate object
+	  - if ($conditional) {} curly brackets not needed for single-line
+	  conditionals
+	  - silverorange conventions have no space before concatonation
+	  $var.='';
+	  - break long lines
+	  - don't use a SwatForm where it's unncessary
+	  - register the date property in the Comment dataobject
+	  - index field isn't needed for DataWrappers
+
+2007-07-25  nick
+
+	* [r18754] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Comment statuses should be named differently than photo statuses
+	* [r18753] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml:
+	  Image thumbnail now also does lightbox preview.
+
+2007-07-25  charles
+
+	* [r18751]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  If the comment is posted then the fields should become blank
+	  once again.
+	* [r18750]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml:
+	  Updated commets, look better and now order by date they were
+	  submitted.
+
+2007-07-25  nick
+
+	* [r18749]
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  Larger page size
+
+2007-07-25  gauthierm
+
+	* [r18747] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php,
+	  pinhole/trunk/www/styles/pinhole-date-tag-browser.css:
+	  Date tag browser widget.
+	* [r18746] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Don't include times when comparing photo dates in date tag.
+
+2007-07-25  charles
+
+	* [r18743] pinhole/trunk/Pinhole/dataobjects/PinholeComment.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeCommentWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml,
+	  pinhole/trunk/sql/tables/PinholeComment.sql,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql:
+	  Ticket #1121, a rough version of the comment system for the
+	  gallery system.
+
+2007-07-25  nick
+
+	* [r18742] pinhole/trunk/Pinhole/admin/components/Photo/edit.xml:
+	  Better wording
+	* [r18741]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php:
+	  Require classes used in this file (worked before because this
+	  was loaded
+	  through the index, but single deletes are now possible)
+	* [r18740] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml:
+	  Add a basic toolbar to the edit page
+	* [r18739] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml:
+	  Make the edit page just an edit page - remove notebook
+	  Steven and I discussed how to integrate comments and meta data
+	  editing with
+	  photos and have decided against notebook tabs and instead to use
+	  toolbar links
+
+2007-07-25  steven
+
+	* [r18738] pinhole/trunk/www/styles/swat-local.css:
+	  Fix typo
+	* [r18737] pinhole/trunk/www/styles/swat-local.css:
+	  SwatFieldset stylin'
+
+2007-07-25  nick
+
+	* [r18736] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Get the index working again
+	* [r18735]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  Move Details to Edit
+
+2007-07-25  steven
+
+	* [r18734] pinhole/trunk/www/styles/swat-local.css:
+	  Keep the swat form colors from being the same color as the
+	  background
+
+2007-07-25  nick
+
+	* [r18733]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  Pending pagination properly performing
+
+2007-07-25  steven
+
+	* [r18718] pinhole/trunk/Pinhole/pages/PinholeExceptionPage.php,
+	  pinhole/trunk/www/styles/pinhole-exception-page.css:
+	  style 404 page (Ticket #1116)
+
+2007-07-24  nick
+
+	* [r18717]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js:
+	  Use this javascript as it was intended. There's a bit of
+	  flashing for me as
+	  each new photo is loaded in - mike is that normal or just me?
+	* [r18715] pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  Add instance to Dimensions. This was the plan in the original
+	  spec.
+	* [r18714]
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml:
+	  typo
+	* [r18713]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php:
+	  
+	  Not needed anymore, UploadProcessorServer does the same thing
+	  via ajax
+	* [r18712] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessorServer.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatus.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js,
+	  pinhole/trunk/www/admin/styles/pinhole-photo-uploader.css:
+	  A rough commit of a working file upload component. Try uploading
+	  a zip file
+	  containing a bunch of jpgs.
+	  - shows progress bar correctly
+	  - processes photos via ajax calls
+	  - shows thumbnail of each photo after it has been processed
+	  
+	  Things that need to be cleaned up:
+	  - UploadProcessPage is no longer needed
+	  - We need to figure out what to do once the processing is
+	  complete
+	  - go to pending photos page?
+	  - show link to pending photos page?
+	  - Better error handling
+	  - make sure conversion of common image types to jpg works
+	  - what to do if a file is corrupt or not valid?
+	  - Review both the javascript and PinholePhotoFactory and make
+	  sure things still
+	  make sense since this latest refactoring.
+
+2007-07-24  gauthierm
+
+	* [r18699] pinhole/trunk/Pinhole/PinholePhotoScroller.php:
+	  Remove arrow text. These can be added in CSS.
+	* [r18697] pinhole/trunk/Pinhole/PinholePhotoScroller.php,
+	  pinhole/trunk/www/styles/pinhole-photo-scroller.css:
+	  Add styles to photo scroller.
+	* [r18696] pinhole/trunk/Pinhole/PinholePhotoScroller.php:
+	  Add widget for scrolling through photos.
+
+2007-07-24  charles
+
+	* [r18694]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php:
+	  Nick said: You should also order by title (show desc,
+	  displayorder, title) so
+	  that if displayorder is set to be "automatically" sorted, the
+	  list
+	  then gets sorted alphabetically.
+	* [r18689]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/index.xml:
+	  Put all the order clause arguements into a getOrderByClause()
+	  method and removed the orderable column, replacing it with a
+	  normal column.
+
+2007-07-23  nick
+
+	* [r18678] pinhole/trunk/sql/tables/PinholeInstance.sql,
+	  pinhole/trunk/sql/tables/PinholeMachineTag.sql,
+	  pinhole/trunk/sql/tables/PinholeMetaData.sql,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql,
+	  pinhole/trunk/sql/tables/PinholePhotoMachineTagBinding.sql,
+	  pinhole/trunk/sql/tables/PinholePhotographer.sql,
+	  pinhole/trunk/sql/tables/PinholeTag.sql:
+	  Add instance to the database tables.
+	  Also:
+	  - fix mistake for displayorder in meta-data table
+	  - remove unused machinetag tables
+
+2007-07-23  charles
+
+	* [r18677]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php:
+	  Small ordering change so that the metadata displays in the order
+	  in which it will appear on the front end.
+	* [r18671]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/index.xml:
+	  Better wording for the index and edit pages of Metadata.
+
+2007-07-23  nick
+
+	* [r18654]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php:
+	  
+	  We should also order by title so that the automatically order
+	  alphabetically
+	  works.
+
+2007-07-23  charles
+
+	* [r18651]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php:
+	  
+	  Now the gallery will list MetaData according to the display
+	  order set using the admin tool.
+
+2007-07-23  nick
+
+	* [r18644] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoUploader.php:
+	  
+	  Proper table store includes
+
+2007-07-23  nrf
+
+	* [r18641]
+	  pinhole/trunk/Pinhole/admin/components/Layout/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php:
+	  change type-hinting to SwatView
+
+2007-07-23  charles
+
+	* [r18636]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Order.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/index.xml,
+	  pinhole/trunk/sql/tables/PinholeMetaData.sql:
+	  Tickets #1118 and #1119, the table of meta data is no seperated
+	  into Shown and Not Shown and you can also now change the display
+	  order of the meta data but I don't believe that ir works on the
+	  front end yet.
+
+2007-07-20  gauthierm
+
+	* [r18626] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeSearchTag.php:
+	  Clean up SQL generation now that getWhereClause() can return an
+	  empty string.
+	* [r18625] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeSearchTag.php:
+	  Make empty where clauses return a blank string instead of a
+	  'true' value.
+	* [r18624] pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php:
+	  whitespace
+
+2007-07-20  charles
+
+	* [r18623]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Small typo
+	* [r18622]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/www/javascript/pinhole-hover-fade.js:
+	  Pinhole nows uses some fancy javascript to add a nice visual
+	  effect when the photo is moused over.
+
+2007-07-20  steven
+
+	* [r18619] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Remove CSS border hover (we're going to have a JS-powered
+	  animated border instead)
+
+2007-07-20  gauthierm
+
+	* [r18618] pinhole/trunk/Pinhole/dataobjects/PinholeLayouts.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMetaData.php:
+	  remove trailing whitespace
+
+2007-07-20  nick
+
+	* [r18616]
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml:
+	  TGZ files aren't supported for now.
+
+2007-07-20  gauthierm
+
+	* [r18615] pinhole/trunk/Pinhole/PinholeTagFactory.php,
+	  pinhole/trunk/Pinhole/tags/PinholeAbstractMachineTag.php:
+	  Allow machine tag values with spaces.
+	* [r18610] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Small doc fixes.
+	* [r18609] pinhole/trunk/Pinhole/tags/PinholeSearchTag.php:
+	  Search tag for new tag system.
+	* [r18608] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Add a 'default' to switch statement.
+	* [r18607] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php:
+	  Add db abstraction to default where clause.
+
+2007-07-20  nick
+
+	* [r18605]
+	  pinhole/trunk/Pinhole/layouts/PinholePhotoUploadProcessorLayout.php:
+	  
+	  I don't know why I ever created this file.
+
+2007-07-20  gauthierm
+
+	* [r18604] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  I think it's safe to say we'll be launching the alpha without
+	  the ability to create complex tag expressions.
+
+2007-07-20  nick
+
+	* [r18603]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  - Debug iframe width/height
+	  - Relocate to do image processing
+	* [r18602]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatus.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml:
+	  Updated upload processing
+	  - the initial target to the iframe can't do the processing or we
+	  won't know
+	  that the upload is complete
+	  - relocate using javascript once the upload is complete to the
+	  processing page
+
+2007-07-19  nick
+
+	* [r18601] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  Fix deleting of archive file
+	* [r18600] pinhole/trunk/sql/tables/PinholeMetaData.sql:
+	  Defaulting as discussed this afternoon
+	* [r18599]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php:
+	  
+	  Defautl dir better
+
+2007-07-19  gauthierm
+
+	* [r18598] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Fix method name. setLimit, not setRange.
+	* [r18597] pinhole/trunk/Pinhole/PinholeSubTagListView.php,
+	  pinhole/trunk/www/styles/pinhole-sub-tag-list-view.css:
+	  Add subtag list view (needs work to make it as functional as the
+	  old implementation).
+	* [r18596] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Add tag microformat to tag list view tags.
+
+2007-07-19  nick
+
+	* [r18593] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  Lots of cleanup. I also switched from using File_Archive to the
+	  built in Zip
+	  capabilities of PHP. File_Archive isn't built well for PHP5
+	  (lots of
+	  pass-by-ref errors) and doesn't seamlessly handle different
+	  kinds of archives
+	  the way an abstraction class should. There's lots of support for
+	  zip on various
+	  OSs anyhow.
+
+2007-07-19  charles
+
+	* [r18592] pinhole/trunk/Pinhole/admin/components/Layout,
+	  pinhole/trunk/Pinhole/admin/components/Layout/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Layout/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Layout/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Layout/index.xml,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeLayouts.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMetaData.php,
+	  pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/sql/tables/PinholeLayouts.sql:
+	  An admin component for selecting the layout of the front page
+	  and also a dataobject for Pinhole MetaData.
+
+2007-07-19  gauthierm
+
+	* [r18589] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Fix parameter name.
+	* [r18588] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Don't try to parse an empty string.
+	* [r18587] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Fix parsing bad tag strings.
+
+2007-07-19  steven
+
+	* [r18586] pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  Make the header div position relative so the search form can be
+	  positioned inside it (via absolute positioning). - fixes a
+	  layout bug with fixed width pages
+
+2007-07-19  gauthierm
+
+	* [r18585] pinhole/trunk/Pinhole/PinholeTagListView.php,
+	  pinhole/trunk/www/styles/pinhole-tag-list-view.css:
+	  Tag list view for tags at the top of the page.
+	* [r18582] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add required file.
+	* [r18581] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Make implode array work correctly.
+	* [r18579] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Implement PinholeTagList::getSubTags() and fix bugs in
+	  PinholeTagList::__toString() and
+	  PinholeTagList::getWhereClause() when the list is empty.
+
+2007-07-19  nick
+
+	* [r18576] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php:
+	  
+	  Shift processing of photos out of the PinholePhoto dataobject
+	  and into a
+	  processing factory. Probably still needs a bunch of work, but
+	  mostly works.
+
+2007-07-18  gauthierm
+
+	* [r18575] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add set operations to tag list.
+
+2007-07-18  nick
+
+	* [r18564] pinhole/trunk/Pinhole/pages/PinholeExceptionPage.php:
+	  Fix package info
+	* [r18563] pinhole/trunk/Pinhole/pages/PinholeExceptionPage.php:
+	  These lines are in the Gallery version of the file
+	* [r18560] pinhole/trunk/Pinhole/pages/PinholeExceptionPage.php:
+	  Add a pinhole exception page that shows the search
+	* [r18559] pinhole/trunk/Pinhole/PinholePageFactory.php:
+	  I'm not sure why this originally showed the default page instead
+	  of throwing an
+	  exception, but a page-not-found exception would seem to make
+	  more sense.
+
+2007-07-18  gauthierm
+
+	* [r18557] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Fix syntax error.
+	* [r18556] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  More support for logical operators in PinholeTagList.
+
+2007-07-17  nick
+
+	* [r18548] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBinding.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php:
+	  Added documentation and a few small code fixes. I didn't touch
+	  PinholeTag
+	  stuff for now Mike - I think we're getting rid of some of the
+	  stuff here
+	  anyhow.
+	* [r18547] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  typo
+	* [r18546]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Add links to view as machine tags (the machine tags don't yet
+	  exist for them
+	  yet though)
+	* [r18545] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaData.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBinding.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataWrapper.php:
+	  
+	  Rename dataobjects to follow the standard of naming them after
+	  the db tables
+	  they represent.
+	* [r18544] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaData.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataWrapper.php:
+	  
+	  Load meta data from photos and add meta data object
+
+2007-07-17  gauthierm
+
+	* [r18543] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add PinholeTagList::filter() method.
+	* [r18542] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Use list database when parsing tag stirng in
+	  PinholeTagList::add().
+	* [r18540] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Add PinholeDateTag::applyToPhoto().
+	* [r18539] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Reorder methods.
+	* [r18538] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Add folding.
+	* [r18537] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Documentation for PinholeDateTag.
+	* [r18536] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php:
+	  This is still required unless Pinhole adds a search path to the
+	  class map.
+	* [r18535] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Clean up require statements in pinhole tags.
+
+2007-07-17  nick
+
+	* [r18529]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Add meta data to photo details pages.
+	* [r18528]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php:
+	  
+	  Whoops - this should have a default value (broken photo loader).
+
+2007-07-17  gauthierm
+
+	* [r18526] pinhole/trunk/tests/tag-tester.php:
+	  test iterable tags
+	* [r18523] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Use correct parameter order in checkdate() in PinholeDateTag.
+
+2007-07-17  charles
+
+	* [r18518]
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php:
+	  Doc fix.
+	* [r18517] pinhole/trunk/Pinhole/admin/components/MetaData,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Delete.php:
+	  Part of ticket #1094, this is the Metadata admin component for
+	  pinhole.
+
+2007-07-17  gauthierm
+
+	* [r18516] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  remove debug
+	* [r18515] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Fix date format strings.
+	* [r18514] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Implement PinholeIteratableTag in PinholeDateTag.
+	* [r18513] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Implement PinholeDateTag::appliesToPhoto().
+	* [r18511] pinhole/trunk/Pinhole/tags/PinholeMachineTag.php:
+	  Implement PinholeMachineTag::applyToPhoto() and
+	  PinholeMachineTag::appliesToPhoto().
+	* [r18504] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Use class map in tags.
+	* [r18503] pinhole/trunk/Pinhole/tags/PinholeIterableTag.php:
+	  Add interface for iterable tags.
+	* [r18502] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add replace() method to PinholeTagList.
+	* [r18501] pinhole/trunk/tests/tag-tester.php:
+	  Better tests for tag list.
+	* [r18500] pinhole/trunk/tests/tag-tester.php:
+	  Better tests for tag list.
+	* [r18499] pinhole/trunk/tests/tag-tester.php:
+	  Better tests for tag list.
+	* [r18498] pinhole/trunk/tests/tag-tester.php:
+	  Better tests for tag list.
+
+2007-07-17  nick
+
+	* [r18497]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  Fix file include
+	* [r18496]
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml:
+	  Updated wording
+	* [r18495]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php:
+	  
+	  File processing for UploadProcessor
+
+2007-07-16  nick
+
+	* [r18494] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php:
+	  
+	  Fix path issue - photos weren't being saved correctly
+	* [r18493] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Creating a photo from a file now works
+
+2007-07-16  gauthierm
+
+	* [r18492] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Check the photos cache before performing a query in
+	  appliesToPhoto().
+	* [r18491] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Fix SQL query.
+	* [r18490] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Fix table name.
+	* [r18489] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Add folding.
+	* [r18488] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  implement applyToPhoto() and appliesToPhoto() for PinholeTag and
+	  complete some todos in PinholeAbstractTag.
+	* [r18475] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Part of a todo.
+	* [r18474]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObjectWrapper.php:
+	  
+	  Wrapper for tag data objects used for efficiently loading tags.
+	* [r18473] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Efficiently load simple tags in the tag list.
+
+2007-07-16  charles
+
+	* [r18470] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimensionWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographerWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php:
+	  Ticket #1101, Pinhole now uses the new SwatDBClassMap API.
+
+2007-07-16  nick
+
+	* [r18469] pinhole/trunk/sql/tables/PinholeMetaData.sql:
+	  Add machine_tag boolean field to mark which meta data should be
+	  browsable as a
+	  tag
+
+2007-07-16  gauthierm
+
+	* [r18460] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Do a todo.
+	* [r18459] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  don't double join tables in the tag list.
+	* [r18458] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Tiny cleanups.
+	* [r18457] pinhole/trunk/Pinhole/tags/PinholeMachineTag.php:
+	  Reorder methods.
+	* [r18456] pinhole/trunk/Pinhole/tags/PinholeMachineTag.php:
+	  Add folding to machine tag.
+	* [r18455] pinhole/trunk/Pinhole/tags/PinholeMachineTag.php:
+	  Add documentation to machine tag.
+
+2007-07-15  gauthierm
+
+	* [r18441] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  The prev() method is not part of the SPL Iterator interface.
+
+2007-07-13  nick
+
+	* [r18437]
+	  pinhole/trunk/sql/tables/PinholePhotoMetaDataBinding.sql:
+	  Correct case
+
+2007-07-13  nrf
+
+	* [r18435] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php:
+	  replace getTableStore() with getTableModel()
+	  add type-hinting
+	  rename local var $store to $rs where there is no store object
+
+2007-07-13  nick
+
+	* [r18433] pinhole/trunk/sql/tables/PinholeMetaData.sql:
+	  Add all of the common meta tags (taken from exif tool's -f
+	  (force output of all
+	  tags) output)
+
+2007-07-13  nrf
+
+	* [r18423]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Use new SwatTableStore API
+	* [r18422] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php:
+	  Remove AdminTableStore
+
+2007-07-12  gauthierm
+
+	* [r18382] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Don't allow parsing of non-alphanumeric tags.
+	* [r18380] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Reorder methods to match abstract tag.
+	* [r18379] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Add folding. Methods with todos don't get folding.
+	* [r18377] pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Documentation for pinhole tag.
+	* [r18375]
+	  pinhole/trunk/Pinhole/tags/PinholeAbstractMachineTag.php:
+	  Folding for pinhole abstract machine tag.
+	* [r18374]
+	  pinhole/trunk/Pinhole/tags/PinholeAbstractMachineTag.php:
+	  Documentation for pinhole abstract machine tag.
+
+2007-07-12  nick
+
+	* [r18373] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Early commit of a rough createFromFile method and meta data
+	  methods
+
+2007-07-12  gauthierm
+
+	* [r18371] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Fix renamed parameter.
+	* [r18370] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Require MDB2 since it is used in method signatures.
+	* [r18369] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php:
+	  Reorder require statements.
+	* [r18368] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php:
+	  Add folding. Todos don't get folding yet.
+	* [r18367] pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php:
+	  Documentation for pinhole abstract tag.
+
+2007-07-11  gauthierm
+
+	* [r18350] pinhole/trunk/Pinhole/PinholeTagFactory.php:
+	  Folding.
+	* [r18349] pinhole/trunk/Pinhole/PinholeTagFactory.php:
+	  Documentation for pinhole tag factory.
+	* [r18345] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add folding. Methods with todos don't get folding yet.
+	* [r18344] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  More documentation for PinholeTagList.
+
+2007-07-10  gauthierm
+
+	* [r18336] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Beginning of documentation for PinholeTagList.
+	* [r18334]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php:
+	  Revert changes to PinholeTagWrapper. This is an experiment in my
+	  tree. Something similar may eventually be checked in.
+	* [r18333] pinhole/trunk/Pinhole/PinholeTagFactory.php,
+	  pinhole/trunk/Pinhole/PinholeTagList.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMachineTagDataObject.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObject.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php,
+	  pinhole/trunk/Pinhole/tags,
+	  pinhole/trunk/Pinhole/tags/PinholeAbstractMachineTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeTag.php,
+	  pinhole/trunk/sql/tables/PinholeMachineTag.sql,
+	  pinhole/trunk/sql/tables/PinholePhotoMachineTagBinding.sql,
+	  pinhole/trunk/sql/tables/PinholeTag.sql, pinhole/trunk/tests,
+	  pinhole/trunk/tests/tag-tester.php:
+	  First revision of tag system. I will be cleaning up this code
+	  and writing documentation this week. This is not ready to use on
+	  the site yet but I'm checking it in for code management.
+
+2007-07-05  nick
+
+	* [r18274] pinhole/trunk/sql/tables/PinholePhoto.sql:
+	  Rename the exif column to make it more clear what it is
+	* [r18271] pinhole/trunk/sql/tables/PinholeMetaData.sql,
+	  pinhole/trunk/sql/tables/PinholePhotoMetaDataBinding.sql:
+	  Tables to store exif and other meta data
+
+2007-06-06  nick
+
+	* [r17911]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Details.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Update publish_date properly.
+
+2007-06-05  nick
+
+	* [r17897]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Details.php:
+	  Show edit notebook page if the photo is pending - this makes
+	  more sense because
+	  you'll be wanting to enter data.
+	* [r17895] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  Add statuses to the photo index
+	* [r17894] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  - Share actions between pending and photo index
+	  - Add proper status action handling
+
+2007-06-05  gauthierm
+
+	* [r17882] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  API change in r17881.
+
+2007-06-05  nick
+
+	* [r17880] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php:
+	  A much better way to load the photo from the PhotoLoader
+	* [r17879]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php:
+	  
+	  Actually delete files as well as db data when a photo is
+	  deleted. TODO, todone.
+
+2007-06-04  nick
+
+	* [r17878] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Bring up-to-date with changes to SwatViewSelection and
+	  AdminDBConfirmation
+	* [r17867] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  AdminDBConfirmation now handles type hinting for the selection.
+
+2007-06-03  nick
+
+	* [r17857] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  Make the tags action work and fix problem with Delete action
+	  selected_items
+	* [r17856]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Details.php:
+	  Make path shorter
+	* [r17853]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  - fix inclusion of now-extinct PinholePhotoCheckboxCellRenderer
+	  - add basic status handling and relocation handling for the
+	  photo editor
+
+2007-06-01  gauthierm
+
+	* [r17846]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoCheckboxCellRenderer.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  Use a standard checkbox cell renderer as it does what's needed
+	  here now.
+
+2007-06-01  nick
+
+	* [r17834]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php:
+	  Load partial dataobjects, faster.
+	* [r17833]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Set page size as a class var, fix formatting for protected
+	  properties
+
+2007-05-31  nick
+
+	* [r17825] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php:
+	  Speed improvements:
+	  - use MDB2 row wrappers rather than SwatDB wrappers
+	  - load dataobjects as read-only
+	* [r17822] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Add a static method to get status titles
+	* [r17818]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Better folding
+	* [r17817] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Optomize next/prev. It's now about 10 times faster than it used
+	  to be.
+
+2007-05-30  nick
+
+	* [r17816] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/www/javascript/pinhole-sortable-tag-list.js:
+	  Deliminate id parts with a "." as suggested by mike
+	* [r17806]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Handle no tags better.
+	* [r17805]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  I think it makes more sense for the combined details/edit page
+	  to be named a details
+	  page.
+	* [r17804] pinhole/trunk/Pinhole/admin/components/Photo/edit.xml:
+	  This was just required for testing purposes
+	* [r17803] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  Add a notebook view to the edit page
+
+2007-05-30  steven
+
+	* [r17800] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php:
+	  Output the title span on photo tiles, even if there is not title
+	  - the span is used to hold the height of the tile open
+	* [r17799] pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  make the admin photo tiles a bit wider
+	* [r17798] pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  a bit of formatting for admin photo tiles
+
+2007-05-30  nick
+
+	* [r17796] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Dimension dataobj needs to be required for internal property
+	  binding
+	* [r17795]
+	  pinhole/trunk/www/javascript/pinhole-photo-tag-entry.js:
+	  Allow viewing the tags without entering one
+	* [r17794]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Fix missing closing tag - which fixes the layout error on the
+	  edit page
+	* [r17793]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php,
+	  pinhole/trunk/www/javascript/pinhole-photo-tag-entry.js:
+	  Make adding tags smarter - no need to repeat title value
+	* [r17792] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php,
+	  pinhole/trunk/www/javascript/pinhole-photo-tag-entry.js,
+	  pinhole/trunk/www/styles/pinhole-photo-tag-entry.css:
+	  The YUI autocomplete widget and Edit page ofr adding tags now
+	  fully works:
+	  - allows existing values to be passed in
+	  - fixes sorting of the autoselect list if a tag is added back to
+	  the list (i.e.
+	  removed from the selected list)
+	  - returns an array of selected tags
+	  - updates bindingtable
+
+2007-05-29  nick
+
+	* [r17784] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php:
+	  Move the loading of tag by shortname into the dataobject. We
+	  need to do the
+	  same thing elsewhere.
+	* [r17782] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Dates weren't registered before
+	* [r17781] pinhole/trunk/Pinhole/PinholeDateTagCellRenderer.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml:
+	  Add a date cell renderer with links to view photos taken on the
+	  same
+	  day/month/year as the current date.
+	* [r17780]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-details-view.xml,
+	  pinhole/trunk/Pinhole/pages/photo-details-view.xml:
+	  Renamed the xml to better match the fact that it's part of the
+	  browser system
+	* [r17779] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Only grab partial dataobjects
+
+2007-05-29  steven
+
+	* [r17778]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/photo-details-view.xml:
+	  Move the photo description out of the DetailsView and into a
+	  content block
+	* [r17777] pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php:
+	  Remove unused layout variable
+
+2007-05-29  nick
+
+	* [r17775] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Fix variable names
+	  -This line, and those below, will be ignored--
+	  
+	  M PinholeTagIntersection.php
+	* [r17774] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Handle case where we're at the end of the group (false isn't
+	  returned by the
+	  recordsetwrappery next method)
+	* [r17773] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  More fixes to the next/prev, and added class maps where
+	  necessary.
+	* [r17772] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Temporary fix
+	* [r17771] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Fix ordering of next/prev. We can't query single photos for each
+	  because photos
+	  can have the same photo_date and it makes selecting the single
+	  next one
+	  impossible.
+	* [r17770]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Add navigation links to the header_content rather than their own
+	  layout var
+
+2007-05-29  steven
+
+	* [r17769]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  Style up the next/prev links
+
+2007-05-29  nick
+
+	* [r17768] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Add smarter ordering of photos. Order photos by publish_date if
+	  there are no tag intersections (essentially
+	  a newest photo list), and then by photo_date if there are
+	  (chronological list)
+
+2007-05-28  steven
+
+	* [r17767] pinhole/trunk/www/styles/swat-local.css:
+	  Style SwatDisclosure title in no-Javascript case
+	* [r17766] pinhole/trunk/Pinhole/pages/photo-details-view.xml:
+	  Close the photo details disclosure by default
+	* [r17765] pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  Float next/prev links to the right of tag intersection list
+	* [r17764]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Put spaces between Next/View All/Prev links
+	* [r17763] pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/www/styles/pinhole-intersecting-tag-list.css,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  Group intersecting tag list and next/prev links into one
+	  sub-header div
+
+2007-05-28  nick
+
+	* [r17762] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php:
+	  Add order_by_clause to the photo wrapper loader method
+	* [r17761] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/www/javascript/pinhole-sortable-tag-list.js:
+	  Change from "/" to "_" for the orderable ids
+	* [r17760]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  tag is singular in the path
+	* [r17759] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Next/prev links on a photo details page
+	* [r17758] pinhole/trunk/Pinhole/PinholeNateGoSearchIndexer.php:
+	  Whoops - remove debug
+	* [r17757] pinhole/trunk/Pinhole/PinholeNateGoSearchIndexer.php:
+	  fix duplicate field name of title
+	* [r17756] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Manually alter the page for limiting - we don't use a pagination
+	  widget to
+	  calculate it here.
+
+2007-05-28  steven
+
+	* [r17753] pinhole/trunk/Pinhole/pages/photo-details-view.xml,
+	  pinhole/trunk/www/styles/pinhole-browser-details-page.css,
+	  pinhole/trunk/www/styles/swat-local.css:
+	  Add SwatDisclosure to photo details, move styles from details
+	  page to swat-local
+	* [r17752]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Add UI head entries
+
+2007-05-28  nick
+
+	* [r17751] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Simplify where and join clauses
+
+2007-05-28  steven
+
+	* [r17750]
+	  pinhole/trunk/www/styles/pinhole-browser-details-page.css:
+	  Add some basic styles for Details view
+	* [r17749] pinhole/trunk/Pinhole/pages/photo-details-view.xml:
+	  Use SwatNullCellRenderer for description - this will probably be
+	  taken out of the Details view and into a content block anyhow
+	* [r17748]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Remove called to function that was removed in last commit
+	* [r17747]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/photo-details-view.xml:
+	  Add SwatDetailsView to browser photo details page to display
+	  basic photo info. Starting with desc/dates for now, but EXIF
+	  data can be added here.
+
+2007-05-28  nick
+
+	* [r17746] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  exclude page tag from the form action
+	* [r17745] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Hide radio list of we're at the root
+	* [r17744] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Don't need the SiteSearchForm here - although it will be useful
+	  for other
+	  sites.
+	* [r17743] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-search.xml:
+	  Search form now works. There's no need to use a "GET" method on
+	  the form
+	  because we always relocate after a search anyhow.
+
+2007-05-28  steven
+
+	* [r17742] pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  Give radio buttons and submit button a bit of horizontal padding
+	  from the text
+	* [r17741] pinhole/trunk/Pinhole/pages/browser-search.xml,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  Style changes to match SwatForm implementation of search form
+
+2007-05-28  nick
+
+	* [r17739] pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/Pinhole/layouts/search.xml,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-search.xml:
+	  A non-functional search - comitted so Steven can format it
+
+2007-05-28  steven
+
+	* [r17738] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Remove the "Related Tags:" title - let's see if it makes sense
+	  without it
+
+2007-05-28  nick
+
+	* [r17737] pinhole/trunk/Pinhole/layouts/search.xml:
+	  Comitting before I move this.
+
+2007-05-28  steven
+
+	* [r17735] pinhole/trunk/www/styles/pinhole-date-browser.css:
+	  Make the selected tab-style date links a bit wider
+	* [r17734] pinhole/trunk/www/styles/pinhole-date-browser.css:
+	  Minor CSS simplification and padding adjustment for the date
+	  browser
+	* [r17728] pinhole/trunk/www/styles/pinhole-layout-sidebar.css:
+	  Revert the tag-shape CSS - I wanted it stored in SVN history
+	* [r17727] pinhole/trunk/www/styles/pinhole-layout-sidebar.css:
+	  Add tag-shape styles to tags (experimental)
+
+2007-05-28  nick
+
+	* [r17726] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  Make the links to photo details work with the tag path
+	* [r17725] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php:
+	  Add proper security to PinholePhotoLoader that can be expanded
+	  upon for a
+	  gallery like silverorange's where additional values (like site)
+	  need to be
+	  checked
+
+2007-05-28  nrf
+
+	* [r17723]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  Switch argument order for URL restrurcturing.
+
+2007-05-28  steven
+
+	* [r17722] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Remove underline from image titles (experimental)
+
+2007-05-28  nick
+
+	* [r17720] pinhole/trunk/Pinhole/layouts/xhtml/blank.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/photo-loader.php,
+	  pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeRobotsPage.php:
+	  Add a customizable robots page
+
+2007-05-27  nick
+
+	* [r17717] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  We need PinholeTag dataobjects instead of reverting to generic
+	  dataobjects
+	* [r17714] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/www/javascript/pinhole-sortable-tag-list.js:
+	  Javascript ordering for the tag list
+
+2007-05-25  steven
+
+	* [r17697] pinhole/trunk/Pinhole/layouts/xhtml/default.php:
+	  Add a dummy action to the dummy form - for validation
+	* [r17696]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Add ALT text to large image view
+	* [r17695] pinhole/trunk/www/styles/pinhole-date-browser.css:
+	  Give the selected day a bit more horizontal padding
+	* [r17694] pinhole/trunk/www/styles/pinhole-date-browser.css:
+	  minor tweaking of horizontal spaces between month/days in date
+	  viewer
+	* [r17693] pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  smaller font for (still dummy) search form
+
+2007-05-24  steven
+
+	* [r17692] pinhole/trunk/www/images,
+	  pinhole/trunk/www/images/date-browser-background.png,
+	  pinhole/trunk/www/styles/pinhole-date-browser.css,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css:
+	  Try a new way of styling the date browsing bars to better
+	  integrate them into the layout (experimental)
+	* [r17691] pinhole/trunk/www/styles/pinhole-date-browser.css:
+	  Try rounded corners on the date link tabs
+
+2007-05-24  nick
+
+	* [r17690]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Small fix
+	* [r17689]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Make tooltip show "6 pages" rather than just "6"
+	* [r17686] pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php:
+	  Make sure name_space tags don't show up in Tag admin tools
+	* [r17685] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimensionWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographerWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php:
+	  Add class-mapping using SwatDBClassMap
+	* [r17684] pinhole/trunk/sql/tables/PinholeTag.sql:
+	  Add name_space to Tags
+
+2007-05-24  steven
+
+	* [r17683] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Add Microformats!!! If you add rel="tag" to any tag links or
+	  spans with tags in them, tag-browsers can pick them out
+	* [r17682] pinhole/trunk/www/styles/pinhole-date-browser.css:
+	  Make the date browser take up less vertical space
+	* [r17681] pinhole/trunk/www/styles/pinhole-date-browser.css:
+	  tighten up lines in date browser
+	* [r17680]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/www/styles/pinhole-browser-page.css,
+	  pinhole/trunk/www/styles/pinhole-date-browser.css,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  Initial styling of the date browser
+	* [r17679] pinhole/trunk/www/styles/swat-local.css:
+	  Remove typo line
+
+2007-05-24  nick
+
+	* [r17668] pinhole/trunk/Pinhole/dataobjects/PinholeTag.php:
+	  typo
+
+2007-05-23  nick
+
+	* [r17662] pinhole/trunk/Pinhole/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/PinholeSearchTag.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/www/styles/pinhole-browser-page.css:
+	  A fairly rough implementation of Steve's date idea. Works, but
+	  could be made
+	  faster and cleaner I'm sure.
+	  
+	  see: http://zest/gallery/work-nick/www/tag/date.date=2004-07-17
+	  
+	  Steven, I'm not sure I put the date div in the right place in
+	  the layout file.
+	  I also only very quickly roughed in some basic styles.
+	  
+	  We need better ways to build tag intersection paths and probably
+	  a
+	  better/faster way to count photos in date ranges. Mike, Nathan,
+	  we should
+	  talk things over soon to decide how some of these machine tags
+	  should work.
+	  I'm hesitant to keep building on more tools while things are in
+	  a bit of a mess
+	  like this.
+
+2007-05-23  steven
+
+	* [r17661] pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/www/styles/pinhole-forms.css,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  Add a dummy HTML search form to the layout so I can have
+	  something to style for now. Style it.
+	* [r17660] pinhole/trunk/www/styles/pinhole-layout-sidebar.css:
+	  remove tighter line-height for tag list - some Windows fonts
+	  don't like it
+
+2007-05-23  nick
+
+	* [r17650] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php,
+	  pinhole/trunk/Pinhole/PinholeDateTag.php:
+	  Replace "day" date name with "date" and make "day" its own
+	  value. This could be
+	  handy for things like: /date.month=12/date.day=25 (all photos on
+	  Christmas from
+	  any year)
+
+2007-05-22  steven
+
+	* [r17646] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  give images a light background color change on hover
+	* [r17645] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php,
+	  pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Move hover effect to the link <a> tag rather than the div
+
+2007-05-22  nick
+
+	* [r17644] pinhole/trunk/Pinhole/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/PinholeSiteTag.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Another sketched in Machine Tag for pagination
+	* [r17643] pinhole/trunk/Pinhole/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/PinholeSearchTag.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php:
+	  A rough implementation of a NateGoSearch tag element. Needs to
+	  be done more
+	  carefully to deal with sites that don't have NateGoSearch.
+	  
+	  Example of both keywords and a normal tag:
+	  http://zest/gallery/work-nick/www/tag/search.keywords=food/amazing
+	* [r17642]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  Default year if none is set
+
+2007-05-21  nick
+
+	* [r17640] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php,
+	  pinhole/trunk/Pinhole/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php,
+	  pinhole/trunk/sql/views/PinholePhotoCountByDateView.sql,
+	  pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  Calendar is now fully updated.
+	  - works with tags (just like browsing by tags, but instead of
+	  digging deeper,
+	  it starts with a new date tag(s) everytime you click a link)
+	  - shows various years and lets you switch between them
+	* [r17636] pinhole/trunk/Pinhole/PinholeMachineTag.php:
+	  wrong replacement type
+	* [r17635] pinhole/trunk/Pinhole/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/exceptions,
+	  pinhole/trunk/Pinhole/exceptions/PinholeException.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql:
+	  A basically working machine tag for dates. Still needs a way to
+	  enter them
+	  (i.e. a calendar) but works pretty nicely. Try:
+	  
+	  http://zest/gallery/work-nick/www/tag/date.day=12-20-2003
+	  http://zest/gallery/work-nick/www/tag/date.year=2007
+	  http://zest/gallery/work-nick/www/tag/date.month=6/date.year=2007
+	  http://zest/gallery/work-nick/www/tag/nick/date.week.12-20-2004
+
+2007-05-18  nick
+
+	* [r17612] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql:
+	  Bring photo filename and private dir up-to-date
+	* [r17603] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/photo-loader.php,
+	  pinhole/trunk/Pinhole/pages/PinholePhotoLoaderPage.php:
+	  Add a very basic photo loader.
+	* [r17602] pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  "public" is a reserved word, but this is probably more readable
+	  anyway
+
+2007-05-17  nick
+
+	* [r17594]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  Bring pending photo index up-to-date
+	* [r17593] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Add note
+	* [r17592]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Bring browser index up-to-date
+	* [r17591] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php,
+	  pinhole/trunk/Pinhole/PinholePhotoTile.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/delete.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholeAdminPhotoCellRenderer.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoCellRenderer.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml,
+	  pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Remove the custom photo tile, and instead use the same renderer
+	  we use in the
+	  admin to layout photos. This is really nice an clean, allows all
+	  the internal
+	  calculation for h/w/padding, etc... and fixes the a tag wrapped
+	  around a div
+	  tag problem.
+	* [r17586]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/delete.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoCellRenderer.php:
+	  
+	  A basically working photo delete tool. Still needs to actually
+	  delete the
+	  files, but I'm working on that next.
+	* [r17572] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  Make loadSetFromDB more flexible so it can be used in the admin
+	* [r17571] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  Fix whacky page size problem
+	* [r17570] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Remove old code
+	* [r17568] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Deal with view, not tableview
+	* [r17566] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Clean up
+	* [r17565] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoCellRenderer.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/Pinhole/pages/PinholeSearchPage.php,
+	  pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  Photo index page is really coming along. Mostly done now.
+	* [r17564]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  white space
+	* [r17563] pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  This just looks to silly
+
+2007-05-16  nick
+
+	* [r17562] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Add date search options
+	* [r17561] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Make natego actually work.
+	* [r17555] pinhole/trunk/Pinhole/PinholeNateGoSearchIndexer.php:
+	  Pinhole-specific NateGo indexer page
+	* [r17550]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  Default calendar date to the date of the last photo taken
+	* [r17548] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  Make check-all work and add some styles
+
+2007-05-15  steven
+
+	* [r17532] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  override SwatTileView default height to be auto
+	* [r17530] pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  Style cleanup - still in progress
+	* [r17526] pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  remove typo
+
+2007-05-15  nick
+
+	* [r17525] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoCheckboxCellRenderer.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  More rough work on the Photo index page
+
+2007-05-14  nick
+
+	* [r17520] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  An early and rough implementation of a SwatTileView in an admin
+	* [r17514] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php:
+	  Off by one error
+	* [r17513]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php,
+	  pinhole/trunk/sql/views,
+	  pinhole/trunk/sql/views/PinholePhotoCountByDateView.sql,
+	  pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  More changes to the calendar page
+	* [r17508]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  Simple logic fix
+	* [r17503] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  The calendar page is now pretty much functionally complete.
+	  Still need a way to
+	  view previous years, but the rest is there including pagination
+
+2007-05-11  nick
+
+	* [r17480] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php,
+	  pinhole/trunk/www/styles/pinhole-browser-page.css,
+	  pinhole/trunk/www/styles/swat-local.css:
+	  More updates to the calendar page - it now actually shows photos.
+	  Still left to do:
+	  - browsing previous years
+	  - next/prev page links
+	  - highlighting the right days
+
+2007-05-10  nick
+
+	* [r17470] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php,
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php,
+	  pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  Add some selected date range tools to the calendar. Now, if a
+	  week is selected,
+	  show a "selected" class on the tr, if a month is selected, do it
+	  on the table.
+	  It's late, so some of this might be a bit rough, but it works.
+	  The styles
+	  obviously need a bunch of work.
+	* [r17469]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php:
+	  Highlight today correctly
+
+2007-05-09  steven
+
+	* [r17468] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php:
+	  Display first letter of weekday only - this is a hack - I don't
+	  know how to do it better
+	* [r17467] pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  try faint lines between calendar rows - too much?
+	* [r17466] pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  Further styling for PinholeCalendar
+	* [r17465] pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  Some more stylin' for the PinholeCalendar
+	* [r17464] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php:
+	  Fix HTML mixup
+	* [r17463] pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  Update PinholeCalendar to match HTML changes from my last commit
+	  - also be more specific about which elements are being targetted
+	* [r17462] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php:
+	  HTML improvements to PinholeCalendar:
+	  - Use <caption> rather than <h2> and eliminate wrapper div
+	  - Add <thead> and <tbody> tags, use <th> tags rather than a CSS
+	  class to identify week header
+
+2007-05-09  nick
+
+	* [r17461]
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php,
+	  pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  Small style changes.
+	* [r17460] pinhole/trunk/Pinhole/PinholeCalendarDisplay.php,
+	  pinhole/trunk/Pinhole/pages/PinholeCalendarIndexPage.php,
+	  pinhole/trunk/www/styles/pinhole-calendar-display.css:
+	  An initial calendar page. Things could be cleaned up, but in
+	  general it's a
+	  good start.
+	  - calendar allows a classname with an array of dates to be
+	  passed in and adds
+	  the css class to the <td> tags of those dates
+	  - steven: I need your help making the left-column wider. I
+	  switched it to the
+	  yui-t3 template, but 300px isn't quite wide enough and it'd be
+	  better to
+	  specify the width in ems
+
+2007-05-08  steven
+
+	* [r17418] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:
+	  Add URL to comment for YUI Grid
+
+2007-05-08  gauthierm
+
+	* [r17417] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:
+	  coding convention fix at the request of Steven.
+
+2007-05-08  steven
+
+	* [r17416] pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/www/styles/pinhole-layout-sidebar.css:
+	  Make YUI Grid CSS class and IDs layout data variables
+	  Default to 100% width with 180px left side bar
+	  Turn off left side-bar on PhotoDetailsPage
+	* [r17415] pinhole/trunk/www/styles/pinhole-layout.css,
+	  pinhole/trunk/www/styles/swat-local.css:
+	  Add local pinhole styles for SwatPagination
+
+2007-05-08  nick
+
+	* [r17411] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  More updates to the Pinhole dimensions loading.
+	  - renamed methods from loadDimension and addDimension to get/set
+	  Dimension
+	  - made it so dimensions load dynamically on single-image pages
+	* [r17410] pinhole/trunk/Pinhole/dataobjects/PinholeTag.php:
+	  white space
+
+2007-05-07  nick
+
+	* [r17408] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml,
+	  pinhole/trunk/www/styles/pinhole-browser-page.css,
+	  pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Add basic pagination (doesn't work yet because we need re-write
+	  rules).
+	  - photo titles are now concatenated at 30 characters which fixes
+	  some layout
+	  issues
+	* [r17407] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Move getURI method to the PinholePhotoDimensionBinding
+	* [r17406] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  typo
+	* [r17405] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Make the loader function for getting a set of photos with
+	  dimension information
+	  actually give back proper dataobjects with dimension information.
+	* [r17404]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php:
+	  
+	  Hey nrf, take this typo and shove it up your pinehole.
+	* [r17403]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php:
+	  fix folding
+
+2007-05-06  gauthierm
+
+	* [r17381]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Only show related tags also tagged on the current photo when
+	  viewing a photo. Known bug - when there is no tag intersection
+	  defined, the related tag list is blank.'
+	* [r17380]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php:
+	  add index field to tag wrapper
+	* [r17379] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  remove shortcut return.
+	* [r17378] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  This is what I mean to do in r17376.
+	* [r17377] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Add method to photo object to get tags.
+	* [r17376] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Make it possible for subclasses to change the list of tags
+	  displayed in the sidebar.
+	* [r17375] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Coding conventions and other small fixes.
+	* [r17374]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  coding conventions
+	* [r17373]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  $steven->shame += 10. Read r17312. Head entries were never
+	  supposed to be added in init() before r17312 anyways.
+	* [r17372] pinhole/trunk/Pinhole/PinholePhotoTile.php:
+	  coding conventions
+
+2007-05-02  steven
+
+	* [r17346]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  output some basic photo details (just description for now)
+	  This should probably be a SwatDetailsView or something like that
+	  and incorporate exif data
+	* [r17345] pinhole/trunk/www/styles/pinhole-layout-footer.css:
+	  Darker footer text
+	* [r17344] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  tighten up padding to fit more thumbnails on a page
+	* [r17343] pinhole/trunk/www/styles/pinhole-layout-sidebar.css:
+	  line-spacing/padding improvements for tag-list
+
+2007-05-01  steven
+
+	* [r17342] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  lighter hover color (this will have to change when tile links
+	  are done properly anyhow)
+	* [r17341] pinhole/trunk/www/styles/pinhole-layout.css:
+	  Try some mac/vista fonts when available
+	* [r17340] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  A bit smaller area for text to show more thumbnails on a page -
+	  to keep text from spilling out, we'll have to trim it pretty
+	  aggressively - maybe around 20 characters
+
+2007-05-01  nick
+
+	* [r17337] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  I'm not 100% sure this is the best way to do this, we probably
+	  want to load
+	  photo dataobjects with attached dimension objects (?) but this
+	  is a start in
+	  the right direction.
+
+2007-05-01  steven
+
+	* [r17332]
+	  pinhole/trunk/www/styles/pinhole-intersecting-tag-list.css:
+	  Bold the plus (+)
+	* [r17331] pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/www/styles/pinhole-intersecting-tag-list.css,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  General padding/margin adjustments
+	  Tighten up the header a bit
+	  give #content and #sidebar their own divs so margin/padding
+	  doesn't step on YUI Grid toes
+
+2007-05-01  gauthierm
+
+	* [r17330] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  CSS goes in finalize method, not init or build.
+
+2007-05-01  steven
+
+	* [r17329]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/www/styles/pinhole-browser-details-page.css:
+	  Border styles for primary image on details page
+	* [r17328] pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/www/styles/pinhole-browser-page.css,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  Give main content div some top margin
+	* [r17327] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/www/styles/pinhole-browser-page.css:
+	  Add pinhole-browser-page styles and a title to the tag links
+
+2007-05-01  gauthierm
+
+	* [r17324] pinhole/trunk/Pinhole/layouts/xhtml/common,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php:
+	  Move gallery layout to pinhole.
+	* [r17323] pinhole/trunk/www/pinhole-intersecting-tag-list.css,
+	  pinhole/trunk/www/pinhole-layout-footer.css,
+	  pinhole/trunk/www/pinhole-layout-header.css,
+	  pinhole/trunk/www/pinhole-layout-sidebar.css,
+	  pinhole/trunk/www/pinhole-photo-tile.css,
+	  pinhole/trunk/www/styles/pinhole-intersecting-tag-list.css,
+	  pinhole/trunk/www/styles/pinhole-layout-footer.css,
+	  pinhole/trunk/www/styles/pinhole-layout-header.css,
+	  pinhole/trunk/www/styles/pinhole-layout-sidebar.css,
+	  pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Move css files to correct directory.
+	* [r17321]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js,
+	  pinhole/trunk/www/pinhole-intersecting-tag-list.css,
+	  pinhole/trunk/www/pinhole-layout-footer.css,
+	  pinhole/trunk/www/pinhole-layout-header.css,
+	  pinhole/trunk/www/pinhole-layout-sidebar.css,
+	  pinhole/trunk/www/pinhole-photo-tile.css,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  M<ove more gallery css to Pinhole package.
+	* [r17319] pinhole/trunk/www/styles/pinhole-layout.css:
+	  Move gallery layout css to Pinhole package.
+	* [r17318] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:
+	  Update layout to fit in Pinhole package.
+	* [r17316] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:
+	  move gallery layout to Pinhole package.
+	* [r17313]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  Use finalize method on PinholePhotoUpload page.
+	* [r17312]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Use finalize method on PinholeBrowserDetailsPage.
+
+2007-05-01  steven
+
+	* [r17306]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Use the layout title rather than outputting another title for
+	  images
+	  also include some CSS on the photo details page
+	* [r17303]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Display the photo title on the photo details page
+
+2007-05-01  nrf
+
+	* [r17284] pinhole/trunk/Pinhole/PinholePhotoTile.php:
+	  Add a TODO
+	* [r17283] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Fit in both dimensions when maxes are specified in both
+	  dimensions.
+	* [r17282] pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  Drop hardcoded dimensions, add TODOs
+	* [r17281]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Add a TODO
+	* [r17279] pinhole/trunk/Pinhole/PinholePageFactory.php,
+	  pinhole/trunk/Pinhole/PinholePhotoTile.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholePage.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  Make things work more, add a details page, add TODOs, experiment
+	  with top level that shows all.
+
+2007-04-30  nrf
+
+	* [r17277] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  Fix doc
+
+2007-04-30  steven
+
+	* [r17274] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Use more generic term for layout variable and add title to
+	  related tags list
+
+2007-04-30  nrf
+
+	* [r17273] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  get thumbnails working and add some TODOs
+
+2007-04-30  nick
+
+	* [r17270] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Add constants for date parts
+
+2007-04-30  nrf
+
+	* [r17267]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimensionWrapper.php:
+	  use Swat, not Store
+
+2007-04-30  gauthierm
+
+	* [r17265] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Create layout content for subtags.
+	* [r17264] pinhole/trunk/Pinhole/Pinhole.php:
+	  Make Pinhole depend on XML-RPC.
+	* [r17263] pinhole/trunk/Pinhole/PinholeTagIntersection.php:
+	  New methods to get intersecting tag path and to get subtags of
+	  current intersecting tags.
+
+2007-04-30  steven
+
+	* [r17261] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Rename layout variable to something more generic (header_content)
+	* [r17260] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Link up the tags in the intersecting tag list
+	* [r17259] pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  Some temporary development code to make the gallery a bit easier
+	  to look at while we develop - over-write this whenever you have
+	  real data
+	* [r17256] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Don't output the + at the end of the list of intersecting tags
+	  also, move interesting tags into another layout variable to be
+	  shown elsewhere in the layout
+
+2007-04-26  nrf
+
+	* [r17207]
+	  pinhole/trunk/sql/tables/PinholePhotoDimensionBinding.sql:
+	  Typo
+
+2007-04-26  gauthierm
+
+	* [r17206]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Iframe hack for Internet Explorer.
+
+2007-04-26  nrf
+
+	* [r17205]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/browser-photo-view.xml:
+	  Use SwatTileView for displaying photos.
+
+2007-04-26  gauthierm
+
+	* [r17202]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Display time left instead of percent
+	* [r17194]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js:
+	  Add some bling. This code is pretty messy; it's just a preview
+	  of the effect.
+
+2007-04-25  gauthierm
+
+	* [r17193]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  Pass uploader object to uploade page object.
+	* [r17192]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js:
+	  Don't show photo processing mockup until uploade is complete.
+	* [r17191]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml:
+	  Enable photo processing mockup.
+	* [r17190]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js:
+	  Mockup of processing photos.
+	* [r17189]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Add YUI custom event that fires when upload is complete.
+
+2007-04-25  nick
+
+	* [r17188] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php,
+	  pinhole/trunk/www/javascript/pinhole-photo-tag-entry.js,
+	  pinhole/trunk/www/styles/pinhole-photo-tag-entry.css:
+	  A very rudimentry tag entry widget. Know bugs:
+	  - when removing a tag from the selected list, the order is wrong
+	  - tag data is not yet stored in hidden fields
+	  - we need a way to add existing tags for the photo and display
+	  them
+
+2007-04-25  nrf
+
+	* [r17186] pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Output photos in the intersection
+	* [r17185] pinhole/trunk/sql/tables/PinholePhotoTagBinding.sql:
+	  BOO!!!
+	* [r17181] pinhole/trunk/Pinhole/PinholePageFactory.php,
+	  pinhole/trunk/Pinhole/PinholeTagIntersection.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  The very beginning of some frontend pages.
+
+2007-04-24  nick
+
+	* [r17155] pinhole/trunk/Pinhole/admin/components/Tag/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/index.xml,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/sql/tables/PinholeTag.sql:
+	  Add status to Tags, and update the entire Tag admin component to
+	  work on
+	  dataobjects
+	* [r17133]
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/index.xml,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographerWrapper.php,
+	  pinhole/trunk/sql/tables/PinholePhotographer.sql:
+	  Change archived & enabled for photographers to status
+
+2007-04-21  gauthierm
+
+	* [r17074]
+	  pinhole/trunk/www/admin/styles/pinhole-photo-uploader.css:
+	  Update CSS class names and add some margin-top to the
+	  progress-bar.
+	* [r17073]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoUploader.php:
+	  
+	  Fix css class names.
+	* [r17072]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml:
+	  Use new uploader on photo upload tool.
+	* [r17071]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoUploader.php:
+	  
+	  Wrap inputs in a div for strict validation
+	* [r17070]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php:
+	  
+	  Another todo todone
+	* [r17069]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php:
+	  
+	  Layout todo todone and add folding and docs to all methods.
+	* [r17067] pinhole/trunk/Pinhole/layouts,
+	  pinhole/trunk/Pinhole/layouts/PinholePhotoUploadProcessorLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml,
+	  pinhole/trunk/Pinhole/layouts/xhtml/upload-processor.php:
+	  Custom layout for photo upload processor page.
+	* [r17066]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Set correct XML-RPC URI.
+	* [r17065]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php:
+	  
+	  Make upload processor extend admin page and add docblock.
+	* [r17064]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatusServer.php:
+	  
+	  Fix class name
+	* [r17063]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatusServer.php:
+	  
+	  Add folding
+	* [r17062]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatusServer.php:
+	  
+	  make status server extend admin xml-rpc server.
+	* [r17061]
+	  pinhole/trunk/Pinhole/admin/components/Photo/PinholeUploadProcessor.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/PinholeUploadStatusServer.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessor.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatusServer.php:
+	  
+	  Remove Pinhole prefix from admin component file names.
+	* [r17060]
+	  pinhole/trunk/Pinhole/admin/components/Photo/PinholeUploadProcessor.php,
+	  pinhole/trunk/Pinhole/pages/UploaderTarget.php:
+	  Move uploader target to admin component.
+	* [r17059]
+	  pinhole/trunk/Pinhole/admin/components/Photo/PinholeUploadStatusServer.php,
+	  pinhole/trunk/Pinhole/pages/UploaderStatusServer.php:
+	  Move status server to admin component.
+	* [r17058]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoUploader.php:
+	  
+	  Use new JavaScript class name
+	* [r17057]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Rename JavaScript classes.
+	* [r17056]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoUploader.php:
+	  
+	  Load correct JavaScript and CSS files in uploader widget.
+	* [r17055]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js,
+	  pinhole/trunk/www/admin/javascript/uploader.js,
+	  pinhole/trunk/www/admin/styles/pinhole-photo-uploader.css,
+	  pinhole/trunk/www/admin/styles/uploader.css:
+	  rename javascript and CSS files.
+	* [r17054] pinhole/trunk/www/javascript, pinhole/trunk/www/styles:
+	  add javascript and styles dirs back
+	* [r17053] pinhole/trunk/www/admin/javascript,
+	  pinhole/trunk/www/admin/styles, pinhole/trunk/www/javascript,
+	  pinhole/trunk/www/styles:
+	  Move admin javascript and styles to admin dir.
+	* [r17052] pinhole/trunk/www/admin:
+	  Dir for pinhole admin www files.
+	* [r17051]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoUploader.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholeUploader.php:
+	  
+	  Rename class
+	* [r17050] pinhole/trunk/Pinhole/PinholeUploader.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholeUploader.php:
+	  
+	  Move uploader to admin component
+	* [r17049] pinhole/trunk/Pinhole/PinholeUploader.php:
+	  Add SwatForm class to uploader form.
+	* [r17048] pinhole/trunk/Pinhole/admin/components/Photo/include:
+	  Add include dir to Photo component
+	* [r17046] pinhole/trunk/Pinhole/PinholeUploader.php,
+	  pinhole/trunk/Pinhole/Uploader.php:
+	  Rename file.
+	* [r17045] pinhole/trunk/Pinhole/Uploader.php:
+	  Tidy file and more formally add it to the Pinhole package.
+
+2007-04-20  nick
+
+	* [r17039] pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/details.xml,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/sql/functions/getPinholeTagPath.sql:
+	  Cleanup and add toolbar link values
+	* [r17037] pinhole/trunk/Pinhole/admin/components/Tag/Edit.php:
+	  global search/replace mishap
+	* [r17036] pinhole/trunk/Pinhole/admin/components/Tag,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/index.xml,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/sql/admin-changes.sql,
+	  pinhole/trunk/sql/functions,
+	  pinhole/trunk/sql/functions/getPinholeTagNavBar.php,
+	  pinhole/trunk/sql/functions/getPinholeTagTree.sql:
+	  Added a Tag component to the admin - still needs a bunch of
+	  work, but it's
+	  somewhere to start.
+
+2007-04-20  gauthierm
+
+	* [r17028] pinhole/trunk/Pinhole/pages/UploaderStatusServer.php:
+	  tidy docs
+	* [r17027] pinhole/trunk/www/javascript/uploader.js:
+	  Remove unused array.
+	* [r17026] pinhole/trunk/www/javascript/uploader.js:
+	  Add sequence numbers to upload status requests.
+	* [r17025] pinhole/trunk/Pinhole/pages/UploaderStatusServer.php:
+	  Don't clear the response struct when iterating clients.
+	* [r17024] pinhole/trunk/Pinhole/pages/UploaderStatusServer.php:
+	  More changes to status protocol (Should be pretty good this
+	  time).
+	* [r17023] pinhole/trunk/Pinhole/pages/UploaderStatusServer.php:
+	  More changes to status protocol.
+	* [r17022] pinhole/trunk/Pinhole/pages/UploaderStatusServer.php:
+	  Update docs and return what the docs say.
+	* [r17021] pinhole/trunk/Pinhole/pages/UploaderStatusServer.php:
+	  Better docs for status server results.
+	* [r17019] pinhole/trunk/Pinhole/UploaderStatusServer.php,
+	  pinhole/trunk/Pinhole/UploaderTarget.php,
+	  pinhole/trunk/Pinhole/pages/UploaderStatusServer.php,
+	  pinhole/trunk/Pinhole/pages/UploaderTarget.php:
+	  Move uploader pages to the pages directory.
+
+2007-04-19  gauthierm
+
+	* [r17018] pinhole/trunk/Pinhole/pages:
+	  add pages dir to Pinhole
+	* [r17017] pinhole/trunk/Pinhole/Uploader.php:
+	  Update the JavaScript and style-sheets for the uploader tool
+	  since it was checked into SVN.
+	* [r17016] pinhole/trunk/Pinhole/Uploader.php,
+	  pinhole/trunk/Pinhole/UploaderStatusServer.php,
+	  pinhole/trunk/Pinhole/UploaderTarget.php, pinhole/trunk/www,
+	  pinhole/trunk/www/javascript,
+	  pinhole/trunk/www/javascript/uploader.js,
+	  pinhole/trunk/www/styles, pinhole/trunk/www/styles/uploader.css:
+	  Check in the work-in-progress file uploader to SVN. It will live
+	  and be developed in Pinhole for now.
+
+2007-04-16  nick
+
+	* [r16886] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml:
+	  - added a photo upload page
+	  - added a pending photos page
+	  - add status check to photos index (don't show pending photos)
+	* [r16885] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Load default xml correctly
+	* [r16877] pinhole/trunk/Pinhole/admin/components/Photo,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml:
+	  A very rudimentry photo component
+	* [r16876] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Add table details to the dataobject
+	* [r16875]
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Edit.php:
+	  id wasn't being filled in
+	* [r16873] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Add a method for getting a title for photos - even if title is
+	  null
+	* [r16867] pinhole/trunk/sql/admin-changes.sql:
+	  add tools for photos as subcomponents
+	* [r16858] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql:
+	  changed published to status
+
+2007-04-13  nrf
+
+	* [r16829]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/sql/tables/PinholePhotographer.sql:
+	  Add an init() to dataobject
+	* [r16828] pinhole/trunk/Pinhole/admin/components/Photographer,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/PinholePhotographer:
+	  The admin package expects prefixed class names but not prefixed
+	  files. This makes overriding easier.
+	* [r16827] pinhole/trunk/sql/admin-changes.sql:
+	  it was right the first time
+	* [r16826] pinhole/trunk/sql/admin-changes.sql:
+	  fix component name
+	* [r16825] pinhole/trunk/sql/admin-changes.sql:
+	  new file
+
+2007-04-12  gauthierm
+
+	* [r16794]
+	  pinhole/trunk/Pinhole/admin/components/PinholePhotographer/Index.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/PinholePhotographer/index.xml:
+	  
+	  Index page for photographers'
+
+2007-04-11  nrf
+
+	* [r16790] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Better image procssing. Cropping to max only make sense when
+	  both max width and max height are set.
+	* [r16788] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Initial image processing.
+	* [r16787] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  Add a boolean field
+
+2007-04-11  gauthierm
+
+	* [r16784] pinhole/trunk/sql/tables/PinholePhotographer.sql:
+	  respect dataobject changes
+	* [r16783] pinhole/trunk/Pinhole/admin,
+	  pinhole/trunk/Pinhole/admin/components,
+	  pinhole/trunk/Pinhole/admin/components/PinholePhotographer,
+	  pinhole/trunk/Pinhole/admin/components/PinholePhotographer/Edit.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/PinholePhotographer/edit.xml:
+	  
+	  Component page to edit photographers.
+	* [r16782]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php:
+	  remove createdate and rename bodytext
+
+2007-04-11  nrf
+
+	* [r16780] pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimensionWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographerWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php:
+	  License and doc
+	* [r16779] pinhole/trunk/Pinhole/dataobjects,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimensionWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographer.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotographerWrapper.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTag.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagWrapper.php:
+	  Dataobjects!
+	* [r16778] pinhole/trunk/Pinhole/sql:
+	  Remove old sql
+	* [r16777] pinhole/trunk/sql/tables/PinholePhoto.sql,
+	  pinhole/trunk/sql/tables/PinholePhotographer.sql:
+	  Add some fields
+	* [r16776] pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  add some fields
+	* [r16775] pinhole/trunk/sql, pinhole/trunk/sql/tables,
+	  pinhole/trunk/sql/tables/PinholeDimension.sql,
+	  pinhole/trunk/sql/tables/PinholePhoto.sql,
+	  pinhole/trunk/sql/tables/PinholePhotoDimensionBinding.sql,
+	  pinhole/trunk/sql/tables/PinholePhotoTagBinding.sql,
+	  pinhole/trunk/sql/tables/PinholeTag.sql:
+	  Make some tables.
+
+2007-03-15  nick
+
+	* [r15900] pinhole/trunk/Pinhole/sql,
+	  pinhole/trunk/Pinhole/sql/tables:
+	  Move the tables I created from gallery to pinhole
+
+2007-02-14  nrf
+
+	* [r15004] pinhole/trunk/Pinhole,
+	  pinhole/trunk/Pinhole/Pinhole.php, pinhole/trunk/package.php:
+	  Start a new package.
+	* [r15003] pinhole/trunk:
+	  new dir
+

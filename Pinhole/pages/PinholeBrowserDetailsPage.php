@@ -93,6 +93,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->buildPhotoNextPrev();
 
 		$description = $this->ui->getWidget('description');
+
+		// Set to text/xml for now pending review in ticket #1159.
+		$description->content_type = 'text/xml';
 		$description->content = $this->photo->description;
 	}
 

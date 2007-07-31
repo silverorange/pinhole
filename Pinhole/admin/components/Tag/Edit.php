@@ -43,6 +43,7 @@ class PinholeTagEdit extends AdminDBEdit
 	{
 		$this->tag = new PinholeTag();
 		$this->tag->setDatabase($this->app->db);
+		$this->tag->setInstance($this->app->instance->getInstance());
 
 		if ($this->id !== null && !$this->tag->load($this->id)) {
 			throw new AdminNotFoundException(

@@ -52,6 +52,61 @@ class PinholeMachineTagDataObject extends PinholeInstanceDataObject
 	public $createdate;
 
 	// }}}
+	// {{{ public function loadFromFields()
+
+	/**
+	 * Loads a machine tag data-object from fields 
+	 *
+	 * If this object is associeted with an instance through the
+	 * {@link PinholeInstanceDataObject::setInstance()} method, loadFromFields()
+	 * will only load rows matching the specified instance.
+	 *
+	 * @param string $namespace the namespace of the machine tag data-object to
+	 *                           load.
+	 * @param string $name the name of the machine tag data-object to load.
+	 * @param string $value the value of the machine tag data-object to load.
+	 *
+	 * @return boolean true if this machine tag data-object was loaded and
+	 *                  false if it could not be loaded.
+	 */
+	public function loadFromFields($namespace, $name, $value)
+	{
+		$row = null;
+		$loaded = false;
+
+		if ($this->table !== null) {
+			if ($this->instance === null) {
+				$sql = sprintf('select * from %s
+					where namespace = %s and name = %s and value = %s',
+					$this->table,
+					$this->db->quote($namespace, 'text'),
+					$this->db->quote($name, 'text'),
+					$this->db->quote($value, 'text'));
+			} else {
+				$sql = sprintf('select * from %s
+					where namespace = %s and name = %s and value = %s
+						and instance = %s',
+					$this->table,
+					$this->db->quote($namespace, 'text'),
+					$this->db->quote($name, 'text'),
+					$this->db->quote($value, 'text'),
+					$this->db->quote($this->instance->id, 'integer'));
+			}
+
+			$rs = SwatDB::query($this->db, $sql, null);
+			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);
+		}
+
+		if ($row !== null) {
+			$this->initFromRow($row);
+			$this->generatePropertyHashes();
+			$loaded = true;
+		}
+
+		return $loaded;
+	}
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()
@@ -61,45 +116,6 @@ class PinholeMachineTagDataObject extends PinholeInstanceDataObject
 		$this->table = 'PinholeMachineTag';
 		$this->id_field = 'integer:id';
 		$this->registerDateProperty('createdate');
-	}
-
-	// }}}
-	// {{{ public function loadFromFields()
-
-	/**
-	 * Loads a machine tag data-object from fields 
-	 *
-	 * @param string $namespace the namespace of the machine tag data-object to
-	 *                           load.
-	 * @param string $name the name of the machine tag data-object to load.
-	 * @param string $value the value of the machine tag data-object to load.
-	 *
-	 * @return boolean
-	 */
-	public function loadFromFields($namespace, $name, $value)
-	{
-		$row = null;
-
-		if ($this->table !== null) {
-			$sql = sprintf('select * from %s
-				where namespace = %s and name = %s and value = %s
-					and instance = %s',
-				$this->table,
-				$this->db->quote($namespace, 'text'),
-				$this->db->quote($name, 'text'),
-				$this->db->quote($value, 'text'),
-				$this->db->quote($this->instance->id, 'integer'));
-
-			$rs = SwatDB::query($this->db, $sql, null);
-			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);
-		}
-
-		if ($row === null)
-			return false;
-
-		$this->initFromRow($row);
-		$this->generatePropertyHashes();
-		return true;
 	}
 
 	// }}}

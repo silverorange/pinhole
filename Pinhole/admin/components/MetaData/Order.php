@@ -56,9 +56,12 @@ class PinholeMetaDataOrder extends AdminDBOrder
 	// {{{ protected function loadData()
 
 	protected function loadData()
-	{ 
-		$where_clause = sprintf('show = %s',
-			$this->app->db->quote($this->parent, 'boolean'));
+	{
+		$instance = $this->app->instance->getInstance();
+
+		$where_clause = sprintf('show = %s and instance = %s',
+			$this->app->db->quote($this->parent, 'boolean'),
+			$this->app->db->quote($instance->id, 'integer'));
 
 		$order_widget = $this->ui->getWidget('order');
 		$order_widget->addOptionsByArray(SwatDB::getOptionArray($this->app->db, 

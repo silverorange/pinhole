@@ -28,10 +28,10 @@ abstract class PinholeBrowserPage extends PinholePage
 	// }}}
 	// {{{ public function __construct()
 
-	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$tags = '')
+	public function __construct(SiteApplication $app, SiteLayout $layout)
 	{
 		parent::__construct($app, $layout);
+		$tags = SiteApplication::initVar('tags');
 		$this->createTagList($tags);
 	}
 
@@ -116,10 +116,10 @@ abstract class PinholeBrowserPage extends PinholePage
 
 				$options = $this->ui->getWidget('search_options');
 				if ($options->value == 'all') {
-					$this->app->relocate('tag/'.$keyword_tag);
+					$this->app->relocate('tag?'.$keyword_tag);
 				} else {
 					$this->tag_list->add($keyword_tag);
-					$this->app->relocate('tag/'.$this->tag_list->__toString());
+					$this->app->relocate('tag?'.$this->tag_list->__toString());
 				}
 			}
 		} catch (SwatWidgetNotFoundException $e) {

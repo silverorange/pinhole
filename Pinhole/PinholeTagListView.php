@@ -59,7 +59,7 @@ class PinholeTagListView extends SwatControl
 				$only_anchor_tag->title =
 					Pinhole::_('View all photos with this tag.');
 
-				$only_anchor_tag->href = $this->base.'/'.$tag->__toString();
+				$only_anchor_tag->href = $this->base.'?'.$tag->__toString();
 				$only_anchor_tag->setContent($tag->getTitle());
 				$only_anchor_tag->display();
 
@@ -69,7 +69,7 @@ class PinholeTagListView extends SwatControl
 					Pinhole::_('Remove this tag.');
 
 				$remove_anchor_tag->href =
-					$this->base.'/'.$remove_list->__toString();
+					$this->base.'?'.$remove_list->__toString();
 
 				$remove_anchor_tag->setContent('×');
 				$remove_anchor_tag->display();

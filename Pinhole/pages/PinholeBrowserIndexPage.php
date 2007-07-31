@@ -98,11 +98,11 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		if (count($this->tag_list) == 0)
 			$tag_path = '';
 		else
-			$tag_path = '/'.$this->tag_list->__toString();
+			$tag_path = $this->tag_list->__toString().'/';
 
-		$pagination->link = 'tag';
+		$pagination->link = 'tag?';
 		$pagination->link.= $tag_path;
-		$pagination->link.= '/page.number=%d';
+		$pagination->link.= 'page.number=%d';
 	}
 
 	// }}}
@@ -113,7 +113,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		if (count($this->tag_list) == 0) {
 			$tag_path = '';
 		} else {
-			$tag_path = '/'.$this->tag_list->__toString();
+			$tag_path = $this->tag_list->__toString();
 		}
 
 		$photos = $this->tag_list->getPhotos();
@@ -122,7 +122,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		foreach ($photos as $photo) {
 			$ds = new SwatDetailsStore();
-			$ds->path = $photo->id.$tag_path;
+			$ds->path = $photo->id.'?'.$tag_path;
 			$ds->photo = $photo;
 			$store->add($ds);
 		}

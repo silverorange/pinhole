@@ -95,17 +95,14 @@ class PinholePhotoCellRenderer extends SwatCellRenderer
 		}
 
 		$this->image_cell_renderer->image = $this->getUri();
-		$this->image_cell_renderer->width =
-			$this->photo->getDimension('thumb')->width;
+		$thumb = $this->photo->getDimension('thumb');
 
-		$this->image_cell_renderer->height =
-			$this->photo->getDimension('thumb')->height;
-
-		$this->image_cell_renderer->occupy_width =
-			$this->photo->getDimension('thumb')->dimension->max_width;
-
-		$this->image_cell_renderer->occupy_height =
-			$this->photo->getDimension('thumb')->dimension->max_height;
+		if ($thumb !== null) {
+			$this->image_cell_renderer->width = $thumb->width;
+			$this->image_cell_renderer->height = $thumb->height;
+			$this->image_cell_renderer->occupy_width = $thumb->dimension->max_width;
+			$this->image_cell_renderer->occupy_height = $thumb->dimension->max_height;
+		}
 
 		$this->image_cell_renderer->alt = Pinhole::_('Photo Thumbnail.'); 
 
@@ -132,7 +129,13 @@ class PinholePhotoCellRenderer extends SwatCellRenderer
 
 	protected function getUri()
 	{
-		return $this->photo->getDimension('thumb')->getURI();
+		$uri = null;
+		$photo_dimension = $this->photo->getDimension('thumb');
+
+		if ($photo_dimension !== null)
+			$uri = $photo_dimension->getURI();
+
+		return $uri;
 	}
 
 	// }}}

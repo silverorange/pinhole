@@ -11,6 +11,25 @@
 	border: 1px solid #555753;
 }
 
+.pinhole-photo-next-prev a.next,
+.pinhole-photo-next-prev a.prev,
+.pinhole-photo-next-prev span.next,
+.pinhole-photo-next-prev span.prev {
+	background-image: url(../images/next-prev-arrows.png);
+	background-repeat: no-repeat;
+}
+
+.pinhole-photo-next-prev a.prev,
+.pinhole-photo-next-prev span.prev {
+	background-position: left center;
+	padding-left: 20px;
+}
+
+.pinhole-photo-next-prev a.next,
+.pinhole-photo-next-prev span.next {
+	background-position: right center;
+	padding-right: 20px;
+}
 .pinhole-photo-next-prev span {
 	color: #888;
 }

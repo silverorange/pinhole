@@ -14,6 +14,10 @@ create table PinholePhoto (
 
 	photo_date timestamp,
 	photo_date_parts integer not null default 0,
+	-- The time in the photo_date field above is always in UTC.
+	-- The photo_time_zone field below specifies how to convert the time
+	-- in photo_date for output. It is the timezone the photo was taken in.
+	photo_time_zone varchar(50) not null default 'UTC',
 
 	publish_date timestamp,
 	status integer not null default 0,

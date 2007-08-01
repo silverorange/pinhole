@@ -108,15 +108,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 		$ul_tag->id = $this->id.'_list';
 		$ul_tag->class = 'pinhole-photo-tag-list';
 		$ul_tag->open();
-
-		if ($this->selected_tag_list !== null) {
-			foreach ($this->selected_tag_list as $tag) {
-				$li_tag = new SwatHtmlTag('li');
-				$li_tag->setContent($tag->getTitle());
-				$li_tag->display();
-			}
-		}
-
+		// List left blank. Values are filled in via javascript.
 		$ul_tag->close();
 
 		$div_tag->close();
@@ -247,6 +239,20 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	public function setTagList(PinholeTagList $tag_list)
 	{
 		$this->tag_list = $tag_list;
+	}
+
+	// }}}
+	// {{{ public function setSelectedTagList()
+
+	/**
+	 * Sets the list of tags that are pre-selected for this photo
+	 *
+	 * @param PinholeTagList $tag_list the list of tags that appear
+	 *                       pre-selected for this entry widget.
+ 	 */
+	public function setSelectedTagList(PinholeTagList $tag_list)
+	{
+		$this->selected_tag_list = $tag_list;
 	}
 
 	// }}}

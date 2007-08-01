@@ -43,6 +43,7 @@
 					<property name="title">Taken</property>
 					<object class="PinholeDateTagCellRenderer">
 						<property name="date" type="data">photo_date</property>
+						<property name="display_time_zone" type="data">photo_time_zone</property>
 					</object>
 				</object>
 				<object class="SwatDetailsViewField" id="publish_date">

@@ -127,6 +127,13 @@ class PinholePhoto extends PinholeInstanceDataObject
 	 */
 	public $status;
 
+	/**
+	 * Time-zone of the photo
+	 *
+	 * @var string
+	 */
+	 public $photo_time_zone;
+
 	// }}}
 	// {{{ private properties
 

@@ -159,14 +159,15 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		case 'date':
 			$date = new SwatDate($this->value);
 
-			// database content is always UTC
+			// only matching the date, time and time zone of reference
+			// date are irrelevant
 			$date->clearTime();
-			$date->toUTC();
 
 			// don't compare times
 			$where = sprintf(
-				'date_trunc(\'day\', PinholePhoto.photo_date) = '.
-					'date_trunc(\'day\', timestamp %s)',
+				'date_trunc(\'day\', convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) =
+					date_trunc(\'day\', timestamp %s)',
 				$this->db->quote($date, 'date'));
 
 			break;
@@ -208,7 +209,8 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		case 'year':
 		case 'month':
 		case 'day':
-			$where = sprintf('date_part(%s, PinholePhoto.photo_date) = %s',
+			$where = sprintf('date_part(%s, convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone)) = %s',
 				$this->db->quote($this->name, 'text'),
 				$this->db->quote($this->value, 'date'));
 

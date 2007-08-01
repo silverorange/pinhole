@@ -258,7 +258,8 @@ class PinholeDateTagBrowser extends SwatControl
 				$group_by_clause.= ', ';
 
 			$group_by_clause.= sprintf(
-				'date_part(%s, PinholePhoto.photo_date)',
+				'date_part(%s, convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone))',
 				$this->db->quote($part, 'text'));
 
 			$count++;
@@ -266,7 +267,8 @@ class PinholeDateTagBrowser extends SwatControl
 
 		$sql = 'select
 				count(PinholePhoto.id) as photo_count,
-				max(PinholePhoto.photo_date) as photo_date
+				max(convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone)) as photo_date
 			from PinholePhoto';
 
 		$join_clauses = implode(' ', $this->tag_list->getJoinClauses());

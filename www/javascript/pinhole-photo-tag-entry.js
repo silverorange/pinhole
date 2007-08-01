@@ -22,6 +22,7 @@ function PinholePhotoTagEntry(id, tag_list, initial_selected_tag_list)
 	this.id = id;
 	this.tag_list = tag_list;
 	this.initial_selected_tag_list = initial_selected_tag_list;
+
 	this.selected_tag_list = [];
 	this.input_element = document.getElementById(this.id + '_value');
 	this.data_store = new YAHOO.widget.DS_JSArray(this.tag_list);
@@ -61,8 +62,9 @@ PinholePhotoTagEntry.prototype.handleOnAvailable = function()
 		this.addTagFromAutoComplete, this, true);
 
 	// initialize values passed in
-	for (var i = 0; i < this.initial_selected_tag_list.length; i++)
+	for (var i = 0; i < this.initial_selected_tag_list.length; i++) {
 		this.addTag(this.initial_selected_tag_list[i]);
+	}
 }
 
 // }}}

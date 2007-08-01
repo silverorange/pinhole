@@ -50,9 +50,14 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->initStatuses();
 		$this->initPendingPhotos();
 
-		// setup tag list
+		// setup tag entry control
 		$tag_list = new PinholeTagList($this->app->db);
-		$sql = 'select PinholeTag.* from PinholeTag order by title';
+		$tag_list->setInstance($this->app->instance->getInstance());
+		$sql = sprintf('select * from PinholeTag
+			where instance = %s order by title',
+			$this->app->db->quote(
+				$this->app->instance->getInstance()->id, 'integer'));
+
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
 		
@@ -62,7 +67,9 @@ class PinholePhotoEdit extends AdminDBEdit
 		}
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
+		$this->ui->getWidget('tags')->setDatabase($this->app->db);
 
+		// add hidden pending field if photo status is pending
 		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
 			$this->ui->getWidget('edit_form')->addHiddenField(
 				'pending', true);
@@ -173,11 +180,13 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->setStatus($values['status']);
 		$this->photo->save();
 
-		$tags = $this->ui->getWidget('tags')->values;
+		$tag_list = $this->ui->getWidget('tags')->getSelectedTagList();
+		$tag_list = $tag_list->getByType('PinholeTag');
 		$tag_ids = array();
-		foreach ($tags as $tag)
+		foreach ($tag_list as $tag)
 			$tag_ids[] = $tag->id;
 
+		// TODO: this deletes bindings
 		SwatDB::updateBinding($this->app->db, 'PinholePhotoTagBinding',
 			'photo', $this->id, 'tag', $tag_ids,
 			'PinholeTag', 'id');

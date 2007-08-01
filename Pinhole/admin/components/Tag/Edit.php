@@ -82,12 +82,15 @@ class PinholeTagEdit extends AdminDBEdit
 	protected function validateShortname($name)
 	{
 		$sql = 'select name from PinholeTag
-			where name = %s and id %s %s';
+			where name = %s and id %s %s and instance = %s';
+
+		$instance = $this->app->instance->getInstance();
 
 		$sql = sprintf($sql,
 			$this->app->db->quote($name, 'text'),
 			SwatDB::equalityOperator($this->id, true),
-			$this->app->db->quote($this->id, 'integer'));
+			$this->app->db->quote($this->id, 'integer'),
+			$this->app->db->quote($instance->id, 'integer'));
 
 		$query = SwatDB::query($this->app->db, $sql);
 

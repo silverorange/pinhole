@@ -90,8 +90,6 @@ class PinholeTagDelete extends AdminDBDelete
 			'PinholeTag', 'integer:id', null, 'text:title', 'title',
 			$where_clause, AdminDependency::DELETE);
 
-		$this->getDependencies($dep, $item_list);
-
 		$message = $this->ui->getWidget('confirmation_message');
 		$message->content = $dep->getMessage();
 		$message->content_type = 'text/xml';
@@ -100,33 +98,6 @@ class PinholeTagDelete extends AdminDBDelete
 			$this->switchToCancelButton();
 
 		$this->buildNavBar();
-	}
-
-	// }}}
-	// {{{ protected function getDependencies()
-
-	protected function getDependencies($dep, $item_list)
-	{
-		$dep_subtags = new AdminListDependency();
-		$dep_subtags->setTitle(
-			Pinhole::_('sub-tag'), Pinhole::_('sub-tags'));
-
-		$dep_subtags->entries = AdminListDependency::queryEntries(
-			$this->app->db, 'PinholeTag', 'integer:id', 'integer:parent',
-			'title', 'title', 'parent in ('.$item_list.')',
-			AdminDependency::DELETE); 
-
-		$dep->addDependency($dep_subtags);
-
-		if (count($dep_subtags->entries)) {
-			$entries = array();
-			foreach ($dep_subtags->entries as $entry)
-				$entries[] = $this->app->db->quote($entry->id, 'integer');
-
-			$item_list = implode(',', $entries);
-
-			$this->getDependencies($dep_subtags, $item_list);
-		}
 	}
 
 	// }}}

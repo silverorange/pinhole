@@ -1,5 +1,197 @@
+2007-08-01  nick
+
+	* [r19004] pinhole/trunk/Pinhole/admin/components/Tag/index.xml:
+	  Add link for creating new tags
+	* [r19003] pinhole/trunk/Pinhole/admin/components/Tag/Delete.php:
+	  Tags no longer have "parent" set.
+	* [r19002] pinhole/trunk/Pinhole/admin/components/Tag/Edit.php:
+	  Make tags unique only by instance
+	* [r19001] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  Add instance check for metadata uniqueness.
+	* [r18996] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Add instance to photo index
+
+2007-08-01  steven
+
+	* [r18988] pinhole/trunk/www/images/next-prev-arrows.png:
+	  Forgot to commit image for next/prev arrows
+	* [r18987] pinhole/trunk/Pinhole/PinholePhotoNextPrev.php,
+	  pinhole/trunk/www/styles/pinhole-photo-next-prev.css:
+	  Add arrows to next/prev links
+
+2007-08-01  gauthierm
+
+	* [r18986] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Fix ticket #1170.
+	* [r18983] pinhole/trunk/Pinhole/admin/components/Tag/Delete.php:
+	  Remove sub-tag dependency.
+	* [r18981] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  order sub tags by title until the api allows arbitrary ordering.
+	* [r18980] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Only select tags belonging to the current instance. We should
+	  check again when we save the bindings.
+
+2007-07-31  gauthierm
+
+	* [r18979]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Add @throws doc tag.
+	* [r18978] pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Rewrite tag entry widget and make it work on photo index page.
+	* [r18977]
+	  pinhole/trunk/www/javascript/pinhole-photo-tag-entry.js:
+	  Fix comment.
+	* [r18976]
+	  pinhole/trunk/www/javascript/pinhole-photo-tag-entry.js:
+	  Major cleanups to tag entry JavaScript.
+	* [r18975] pinhole/trunk/www/styles/pinhole-photo-tag-entry.css:
+	  Clean up tag entry styles.
+	* [r18974] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Split tag list creatinon and initialization into two methods.
+	  This fixes a bug discovered by Dan.
+
+2007-07-31  nick
+
+	* [r18973] pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/details.xml:
+	  Removed "view on gallery" links for now. We'll need to know what
+	  the URL is for
+	  the gallery in order to do this.
+	* [r18968] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php:
+	  Toolbar is turned off for now.
+	* [r18967] pinhole/trunk/Pinhole/admin/components/Photo/edit.xml:
+	  The menu links need to be properly implemented. Removing them
+	  for now until we
+	  go live.
+	* [r18966]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeInstanceDataObject.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php:
+	  Fix deleting photos (ticket 1162)
+	* [r18965]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Better way to count photos in an object
+	* [r18964]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js:
+	  Add the upload text back
+
+2007-07-31  gauthierm
+
+	* [r18963] pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/default.php:
+	  Make page titles dynamic. Bam.
+
+2007-07-31  nick
+
+	* [r18962] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessorServer.php:
+	  
+	  Add instance to the photo factory
+
+2007-07-31  steven
+
+	* [r18961] pinhole/trunk/www/styles/pinhole-tag-list-view.css:
+	  add a bit of left-padding the photo count
+
+2007-07-31  nick
+
+	* [r18960]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php:
+	  Db should be passed.
+	* [r18959]
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js:
+	  Turn off the status text for now.
+	* [r18957]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatus.php:
+	  Add semi-colon for error feedback.
+	* [r18956]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatus.php,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-upload-page.js:
+	  Set arrays using different syntax.
+
+2007-07-31  steven
+
+	* [r18955] pinhole/trunk/www/styles/pinhole-tag-list-view.css:
+	  Format the photo count in the tag list
+
+2007-07-31  nick
+
+	* [r18954]
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatus.php:
+	  Small fixes.
+
+2007-07-31  steven
+
+	* [r18953] pinhole/trunk/www/styles/pinhole-photo-next-prev.css:
+	  Remove garbage in CSS
+	* [r18951] pinhole/trunk/www/styles/pinhole-tag-list-view.css:
+	  remove disabled styles
+
 2007-07-31  nrf
 
+	* [r18948] pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  set serial sequence
+
+2007-07-31  gauthierm
+
+	* [r18946] pinhole/trunk/Pinhole/pages/browser-details.xml:
+	  revert r18944 since it's done and commented in r18945.
+	* [r18945]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
+	  Set description content type to text/xml for now pending review
+	  in ticket #1159.
+
+2007-07-31  nick
+
+	* [r18944] pinhole/trunk/Pinhole/pages/browser-details.xml:
+	  Allow xhtml in the description.
+
+2007-07-31  nrf
+
+	* [r18941] pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  fix case
+
+2007-07-31  steven
+
+	* [r18940] pinhole/trunk/Pinhole/layouts/xhtml/default.php,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  Add link to Pinhole "website" in footer
+
+2007-07-31  gauthierm
+
+	* [r18939] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Show number of photos in the tag list in tag list view.
+
+2007-07-31  nick
+
+	* [r18937] pinhole/trunk/Pinhole/pages/PinholeRobotsPage.php:
+	  For now, exclude everything from robots
+
+2007-07-31  gauthierm
+
+	* [r18934] pinhole/trunk/Pinhole/tags/PinholeMetaTag.php:
+	  Make value matching case insensitive for meta data tags and
+	  check value in appliesToPhoto() method.
+	* [r18929] pinhole/trunk/Pinhole/PinholeTagFactory.php,
+	  pinhole/trunk/Pinhole/tags/PinholeAbstractMachineTag.php:
+	  Allow any value for machine tags.
+	* [r18928] pinhole/trunk/Pinhole/tags/PinholeMetaTag.php:
+	  Meta data tag.
+	* [r18926]
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObject.php:
+	  Fix folding.
+	* [r18925] pinhole/trunk/Pinhole/dataobjects/PinholeMetaData.php:
+	  Add PinholeMetaData::loadFromShortname()
+
+2007-07-31  nrf
+
+	* [r18920] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 0.0.2
 	* [r18918]
 	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php:
 	  URL encode machine tag values.

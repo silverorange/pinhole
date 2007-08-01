@@ -100,9 +100,13 @@ class PinholePhotoIndex extends AdminSearch
 	protected function getWhereClause()
 	{
 		if ($this->where_clause === null) {
-			$where = sprintf('PinholePhoto.status != %s',
+			$instance = $this->app->instance->getInstance();
+
+			$where = sprintf('PinholePhoto.status != %s
+				and PinholePhoto.instance = %s',
 				$this->app->db->quote(PinholePhoto::STATUS_PENDING,
-					'integer'));
+					'integer'),
+				$this->app->db->quote($instance->id, 'integer'));
 
 			// keywords are included in the where clause if fulltext searching
 			// is turned off

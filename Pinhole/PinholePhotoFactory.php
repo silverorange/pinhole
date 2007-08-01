@@ -347,8 +347,12 @@ class PinholePhotoFactory
 	 */
 	protected function saveMetaData(PinholePhoto $photo, $meta_data)
 	{
+		$where_clause = sprintf('PinholeMetaData.instance = %s',
+			$this->db->quote($this->instance->id, 'integer'));
+
 		$existing_meta_data = SwatDB::getOptionArray($this->db,
-			'PinholeMetaData', 'shortname', 'id');
+			'PinholeMetaData', 'shortname', 'id', null,
+			$where_clause);
 
 		foreach ($meta_data as $data) {
 			$shortname = substr($data->shortname, 0, 255);

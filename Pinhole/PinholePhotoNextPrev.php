@@ -63,6 +63,7 @@ class PinholePhotoNextPrev extends SwatControl
 	{
 		if ($photo === null) {
 			$span_tag = new SwatHtmlTag('span');
+			$span_tag->class = 'prev';
 			$span_tag->setContent(Pinhole::_('Prev'));
 			$span_tag->display();
 		} else {
@@ -100,6 +101,7 @@ class PinholePhotoNextPrev extends SwatControl
 	{
 		if ($photo === null) {
 			$span_tag = new SwatHtmlTag('span');
+			$span_tag->class = 'next';
 			$span_tag->setContent(Pinhole::_('Next'));
 			$span_tag->display();
 		} else {

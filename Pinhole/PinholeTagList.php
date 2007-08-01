@@ -921,6 +921,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$sql.= sprintf(' and PinholeTag.instance = %s',
 				$this->db->quote($this->instance->id, 'integer'));
 
+		// temp until ordering is possible
+		$sql.= ' order by PinholeTag.title asc';
+
 		if ($range !== null)
 			$this->db->setLimit($range->getLimit(), $range->getOffset());
 

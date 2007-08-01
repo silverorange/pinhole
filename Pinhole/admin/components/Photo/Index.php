@@ -39,9 +39,14 @@ class PinholePhotoIndex extends AdminSearch
 
 		$this->ui->loadFromXML($this->ui_xml);
 
-		// setup tag list
+		// setup tag entry control
 		$tag_list = new PinholeTagList($this->app->db);
-		$sql = 'select PinholeTag.* from PinholeTag order by title';
+		$tag_list->setInstance($this->app->instance->getInstance());
+		$sql = sprintf('select * from PinholeTag
+			where instance = %s order by title',
+			$this->app->db->quote(
+				$this->app->instance->getInstance()->id, 'integer'));
+
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
 		

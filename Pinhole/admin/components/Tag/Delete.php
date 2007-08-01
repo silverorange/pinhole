@@ -14,24 +14,12 @@ require_once 'Admin/AdminListDependency.php';
  */
 class PinholeTagDelete extends AdminDBDelete
 {
-	// {{{ private properties
-
-	// used for custom relocate
-	private $parent_id;
-
-	// }}}
-
 	// process phase
 	// {{{ protected function processDBData()
 
 	protected function processDBData()
 	{
 		parent::processDBData();
-
-		$sql = sprintf('select parent from PinholeTag where id = %s',
-			$this->app->db->quote($this->getFirstItem(), 'integer'));
-
-		$this->parent_id = SwatDB::queryOne($this->app->db, $sql);
 
 		$sql = 'delete from PinholeTag where id in (%s) and instance = %s';
 		$item_list = $this->getItemList('integer');
@@ -46,26 +34,6 @@ class PinholeTagDelete extends AdminDBDelete
 			$num), SwatString::numberFormat($num)), SwatMessage::NOTIFICATION);
 
 		$this->app->messages->add($message);
-	}
-
-	// }}}
-	// {{{ protected function relocate()
-
-	/**
-	 * Relocate after process
-	 */
-	protected function relocate()
-	{
-		if ($this->single_delete) {
-			if ($this->parent_id === null)
-				$this->app->relocate('Tag/Index');
-			else
-				$this->app->relocate(sprintf('Tag/Details?id=%s',
-					$this->parent_id));
-
-		} else {
-			parent::relocate();
-		}
 	}
 
 	// }}}

@@ -2,7 +2,6 @@
 
 require_once 'Pinhole/pages/PinholePage.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
 
 require_once 'Swat/SwatNavBar.php';
 require_once 'Swat/SwatString.php';

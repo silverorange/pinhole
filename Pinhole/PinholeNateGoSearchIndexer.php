@@ -120,7 +120,7 @@ abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 			NateGoSearchIndexer::getDefaultUnindexedWords());
 
 		$sql = sprintf('select PinholeTag.id, PinholeTag.title,
-				PinholeTag.shortname
+				PinholeTag.name
 			from PinholeTag
 			inner join NateGoSearchQueue
 				on PinholeTag.id = NateGoSearchQueue.document_id
@@ -183,14 +183,14 @@ abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 				$this->db, false, true);
 
 		$tag_indexer->addTerm(new NateGoSearchTerm('tag_title', 3));
-		$tag_indexer->addTerm(new NateGoSearchTerm('shortname'));
+		$tag_indexer->addTerm(new NateGoSearchTerm('tag_name'));
 		$tag_indexer->addUnindexedWords(
 			NateGoSearchIndexer::getDefaultUnindexedWords());
 
 		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title,
 				PinholePhoto.description,
 				PinholeTag.title as tag_title,
-				PinholeTag.shortname
+				PinholeTag.name as tag_name
 			from PinholePhoto
 				left outer join PinholePhotoTagBinding on
 					PinholePhotoTagBinding.photo = PinholePhoto.id

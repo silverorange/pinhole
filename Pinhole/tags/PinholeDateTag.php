@@ -296,15 +296,21 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			break;
 
 		case 'year':
-			$applies = ($photo->photo_date->getYear() == $this->value);
+			$local_photo_date = clone $photo->photo_date;
+			$local_photo_date->convertTZbyID($photo->photo_time_zone);
+			$applies = ($local_photo_date->getYear() == $this->value);
 			break;
 
 		case 'month':
-			$applies = ($photo->photo_date->getMonth() == $this->value);
+			$local_photo_date = clone $photo->photo_date;
+			$local_photo_date->convertTZbyID($photo->photo_time_zone);
+			$applies = ($local_photo_date->getMonth() == $this->value);
 			break;
 
 		case 'day':
-			$applies = ($photo->photo_date->getDay() == $this->value);
+			$local_photo_date = clone $photo->photo_date;
+			$local_photo_date->convertTZbyID($photo->photo_time_zone);
+			$applies = ($local_photo_date->getDay() == $this->value);
 			break;
 
 		default:

@@ -1,3 +1,22 @@
+2007-08-02  nrf
+
+	* [r19091] pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
+	  proper timezone
+	* [r19089] pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
+	  fix link
+
+2007-08-02  steven
+
+	* [r19083]
+	  pinhole/trunk/Pinhole/layouts/xhtml/common/htmlhead.php:
+	  Add RSS feed autodiscovery to header - this should be made
+	  smarter for various tag-endabled RSS feeds
+
+2007-08-02  nrf
+
+	* [r19078] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 0.0.6
+
 2007-08-02  nick
 
 	* [r19075] pinhole/trunk/Pinhole/layouts/xhtml/rss.php,

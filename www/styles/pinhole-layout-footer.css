@@ -4,3 +4,9 @@
 	margin-top: 2em;
 	padding: 10px 20px;
 }
+
+#ft a:link    { color: #555753; } 
+#ft a:visited { color: #555753; } 
+#ft a:hover   { color: #729fcf; }
+#ft a:active  { color: #729fcf; }
+

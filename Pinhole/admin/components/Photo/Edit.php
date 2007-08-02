@@ -51,12 +51,26 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->initPendingPhotos();
 
 		// setup tag entry control
+		$instance = $this->app->instance->getInstance();
 		$tag_list = new PinholeTagList($this->app->db);
-		$tag_list->setInstance($this->app->instance->getInstance());
+		$tag_list->setInstance($instance);
 		$sql = sprintf('select * from PinholeTag
-			where instance = %s order by title',
+			where instance = %s
+			order by title',
 			$this->app->db->quote(
-				$this->app->instance->getInstance()->id, 'integer'));
+				$instance->id, 'integer'));
+
+		/* TODO: use this once status is figured out
+		$sql = sprintf('select * from PinholeTag
+			where instance = %s
+				and (status = %s or id in
+					(select tag from PinholePhotoTagBinding
+					where photo = %s))
+			order by title',
+			$this->app->db->quote($instance->id, 'integer'),
+			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'),
+			$this->app->db->quote($this->photo->id, 'integer'));
+		*/
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
@@ -284,7 +298,13 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected function loadDBData()
 	{
 		$this->ui->setValues(get_object_vars($this->photo));
-		$this->ui->getWidget('tags')->values = $this->photo->tags;
+
+		$tag_list = new PinholeTagList($this->app->db);
+		$tag_list->setInstance($this->app->instance->getInstance());
+		foreach ($this->photo->tags as $tag)
+			$tag_list->add($tag);
+
+		$this->ui->getWidget('tags')->setSelectedTagList($tag_list);
 	}
 
 	// }}}

@@ -451,6 +451,28 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function removeAll()
+
+	/**
+	 * Removes all tags from this tag list
+	 *
+	 * @return PinholeTagList the removed tags of this list or a new empty tag
+	 *                          list if this list does not contain any tags.
+	 */
+	public function removeAll()
+	{
+		// returned tag list is just a copy of this tag list
+		$tag_list = clone $this;
+
+		// remove all tags from this list efficiently
+		$this->tags = array();
+		$this->tag_keys = array();
+		$this->tag_index = 0;
+
+		return $tag_list;
+	}
+
+	// }}}
 	// {{{ public function replace()
 
 	/**

@@ -9,6 +9,12 @@
 	background: url(../images/date-browser-background.png) bottom repeat-x;
 }
 
+* html .pinhole-date-tag-browser .years,
+* html .pinhole-date-tag-browser .months,
+* html .pinhole-date-tag-browser .days {
+	background-image: none; /* turn off background image for IE6 */
+}
+
 .pinhole-date-tag-browser .years {
 	background-color: #434745;
 	border-bottom: 1px solid #4f4f4c;

@@ -10,10 +10,14 @@
 	text-decoration: none;
 }
 
-.swat-tile a span {
+.swat-tile a span.title {
 	display: block;
-	height: 3em;
-	padding: 0 0.2em;
+	height: 2.5em;
+	padding: 0.2em 0;
+}
+
+* html .swat-tile a span.title {
+	cursor: pointer; /* for Ie6 */
 }
 
 .swat-tile label {
@@ -22,10 +26,6 @@
 	padding: 3px;
 	background: #eeeeec;
 	color: #888a85;
-}
-
-.swat-tile div, .swat-tile img {
-	padding: 4px;
 }
 
 .swat-tile label:hover {
@@ -49,4 +49,21 @@
 
 .swat-pagination {
 	clear: left;
+}
+
+.swat-tile .photo-wrapper {
+	height: 106px;
+	width: 116px;
+	display: table-cell;
+	vertical-align: middle;
+	position: relative;
+}
+
+* html .swat-tile .photo-wrapper {
+	display: block;
+}
+
+.swat-tile .photo-wrapper img {
+	display: block;
+	margin: 0 auto;
 }

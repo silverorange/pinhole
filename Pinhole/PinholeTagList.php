@@ -634,6 +634,24 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getEmptyCopy()
+
+	/**
+	 * Gets an empty copy of this tag list
+	 *
+	 * The new tag list has the same site instance, database connection and
+	 * photo filtering options as this tag list.
+	 *
+	 * @return PinholeTagList an empty copy of this tag list.
+	 */
+	public function getEmptyCopy()
+	{
+		$tag_list = clone $this;
+		$tag_list->removeAll();
+		return $tag_list;
+	}
+
+	// }}}
 	// {{{ public function getByType()
 
 	/**

@@ -1,3 +1,110 @@
+2007-08-02  steven
+
+	* [r19044] pinhole/trunk/www/styles/pinhole-date-tag-browser.css:
+	  Turn off the transparent background image for IE6
+
+2007-08-02  nrf
+
+	* [r19038] pinhole/trunk/Pinhole/PinholePhotoNextPrev.php:
+	  add folding
+	* [r19037] pinhole/trunk/Pinhole/PinholePhotoNextPrev.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  get rid of superfluous question marks in URLs and cleanup a bit
+	* [r19035] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  Query within the instance only... this fixes 1999 for nick.
+	* [r19034] pinhole/trunk/Pinhole/tags/PinholeDateTag.php:
+	  Handle time zones properly.
+
+2007-08-02  steven
+
+	* [r19033] pinhole/trunk/www/styles/pinhole-date-tag-browser.css:
+	  Fix alignment of tag-browser tabs
+	* [r19032] pinhole/trunk/www/styles/pinhole-date-browser.css,
+	  pinhole/trunk/www/styles/pinhole-layout.css:
+	  Remove redundant CSS
+
+2007-08-02  nick
+
+	* [r19031] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php:
+	  Fix for tag editing and some commented out code to handle tag
+	  status (I'm
+	  talking to mike about why that was removed)
+
+2007-08-02  nrf
+
+	* [r19030] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  convert photo date into the photo time zone for counting since
+	  that will be done on display
+
+2007-08-02  nick
+
+	* [r19029] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  nick: the order by clause for the front page of the gallery is
+	  set as:
+	  coalesce(PinholePhoto.photo_date, PinholePhoto.publish_date)
+	  desc, id desc
+	  
+	  do we really want to order by photo_date first? The current
+	  gallery only orders
+	  by publish_date so that it's the newest photos added that are
+	  displayed, not
+	  necessarily the date they were taken.
+	  
+	  steven: hrm... browsing by photo date makes the most sense, but
+	  for the home page, we'd
+	  probably want publish date
+	  
+	  nathan: if we do use photo_date, i'll add time zones to that...
+	  
+	  dan: If I add photos of me as a kid I would like them to show up
+	  on the top of the
+	  reverse chronological order, not automatically fall back to 1983
+	  
+	  steven: right
+	  
+	  nick: exactly.
+	  
+	  dan: agreed
+	  
+	  nick: we could have a link that was like "order chronologically"
+	  that would add site.orderby=photo-date or something.
+
+2007-08-02  nrf
+
+	* [r19028] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php:
+	  Sideways date browsing.
+
+2007-08-01  nrf
+
+	* [r19027] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php,
+	  pinhole/trunk/Pinhole/tags/PinholeDateTag.php,
+	  pinhole/trunk/sql/functions/convertTZ.sql:
+	  Use the new photo_time_zone field.
+	* [r19026] pinhole/trunk/Pinhole/pages/browser-details.xml:
+	  Output timezones
+	* [r19025] pinhole/trunk/Pinhole/pages/browser-details.xml:
+	  convert date to photo time zone for display
+	* [r19024] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Commit this from charles tree
+	* [r19023] pinhole/trunk/sql/tables/PinholePhoto.sql:
+	  Commit this even though charles is not done so that it gets
+	  created in the new db.
+
+2007-08-01  nick
+
+	* [r19021]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php,
+	  pinhole/trunk/www/javascript/pinhole-photo-tag-entry.js:
+	  Fixes issue of tags being deleted when editing a photo. Also
+	  fixes the problem
+	  of not display current tags on a photo edit page.
+
+2007-08-01  nrf
+
+	* [r19009] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 0.0.3
+
 2007-08-01  nick
 
 	* [r19004] pinhole/trunk/Pinhole/admin/components/Tag/index.xml:

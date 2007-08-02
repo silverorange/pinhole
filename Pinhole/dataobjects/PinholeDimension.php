@@ -11,6 +11,11 @@ require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
  */
 class PinholeDimension extends PinholeInstanceDataObject
 {
+	// {{{ public constants
+
+	const DIMENSION_ORIGINAL = 'original';
+
+	// }}}
 	// {{{ public properties
 
 	/**

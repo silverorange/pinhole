@@ -12,11 +12,19 @@ require_once 'Swat/SwatControl.php';
  */
 class PinholePhotoNextPrev extends SwatControl
 {
+	// {{{ public properties
+	
 	public $base = 'tag';
+
+	// }}}
+	// {{{ protected properties
 
 	protected $tag_list;
 
 	protected $photo;
+
+	// }}}
+	// {{{ public function __construct()
 
 	public function __construct($id = null)
 	{
@@ -26,6 +34,9 @@ class PinholePhotoNextPrev extends SwatControl
 			'packages/pinhole/styles/pinhole-photo-next-prev.css',
 			Pinhole::PACKAGE_ID);
 	}
+
+	// }}}
+	// {{{ public function display()
 
 	public function display()
 	{
@@ -49,15 +60,24 @@ class PinholePhotoNextPrev extends SwatControl
 		$div_tag->close();
 	}
 
+	// }}}
+	// {{{ public function setTagList()
+
 	public function setTagList(PinholeTagList $tag_list)
 	{
 		$this->tag_list = $tag_list;
 	}
 
+	// }}}
+	// {{{ public function setPhoto()
+
 	public function setPhoto(PinholePhoto $photo)
 	{
 		$this->photo = $photo;
 	}
+
+	// }}}
+	// {{{ protected function displayPrev()
 
 	protected function displayPrev(PinholePhoto $photo = null)
 	{
@@ -78,6 +98,9 @@ class PinholePhotoNextPrev extends SwatControl
 		}
 	}
 
+	// }}}
+	// {{{ protected function displayCurrent()
+
 	protected function displayCurrent(PinholePhoto $photo = null)
 	{
 		$a_tag = new SwatHtmlTag('a');
@@ -89,6 +112,9 @@ class PinholePhotoNextPrev extends SwatControl
 		$a_tag->display();
 		echo ' ';
 	}
+
+	// }}}
+	// {{{ protected function displayNext()
 
 	protected function displayNext(PinholePhoto $photo = null)
 	{
@@ -109,6 +135,9 @@ class PinholePhotoNextPrev extends SwatControl
 		}
 	}
 
+	// }}}
+	// {{{ private function appendTagPath()
+
 	private function appendTagPath($uri)
 	{
 		if (count($this->tag_list) > 0)
@@ -117,6 +146,7 @@ class PinholePhotoNextPrev extends SwatControl
 		return $uri;
 	}
 
+	// }}}
 }
 
 ?>

@@ -65,7 +65,7 @@
 .pinhole-date-tag-browser .selected {
 	font-weight: bold;
 	position: relative;
-	top: 1px;
+	top: 2px;
 }
 
 .pinhole-date-tag-browser .years .selected,

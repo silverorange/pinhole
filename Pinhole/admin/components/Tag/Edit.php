@@ -5,6 +5,7 @@ require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Pinhole/tags/PinholeTag.php';
+require_once 'Pinhole/pages/PinholeSearchPage.php';
 
 /**
  * Edit page for tags
@@ -113,17 +114,39 @@ class PinholeTagEdit extends AdminDBEdit
 		if ($this->id === null) {
 			$now = new SwatDate();
 			$this->tag->createdate = $now->getDate();
-			$this->tag->parent =
-				$this->ui->getWidget('edit_form')->getHiddenField('parent');
 		}
 
 		$this->tag->save();
+
+		$this->addToSearchQueue();
 
 		$message = new SwatMessage(sprintf(
 			Pinhole::_('“%s” has been saved.'),
 			$this->tag->title));
 
 		$this->app->messages->add($message);
+	}
+
+	// }}}
+	// {{{ protected function addToSearchQueue()
+
+	protected function addToSearchQueue()
+	{
+		$sql = sprintf('delete from NateGoSearchQueue
+			where document_id = %s and document_type = %s',
+			$this->app->db->quote($this->tag->id, 'integer'),
+			$this->app->db->quote(PinholeSearchPage::TYPE_TAGS,
+				'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
+
+		$sql = sprintf('insert into NateGoSearchQueue
+			(document_id, document_type) values (%s, %s)',
+			$this->app->db->quote($this->tag->id, 'integer'),
+			$this->app->db->quote(PinholeSearchPage::TYPE_TAGS,
+				'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
 	}
 
 	// }}}

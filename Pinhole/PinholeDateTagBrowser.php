@@ -95,7 +95,7 @@ class PinholeDateTagBrowser extends SwatControl
 
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
 
-		$photos = $this->getPhotoCountByDate('year');
+		$photos = $this->getPhotoCountByDate('year', $tag_list);
 		for ($i = $year_start; $i <= $year_end; $i++) {
 			$date->setYear($i);
 
@@ -109,12 +109,12 @@ class PinholeDateTagBrowser extends SwatControl
 					'one photo', '%s photos', $photos[$i]),
 					SwatString::numberFormat($photos[$i]));
 
+				$a_tag->href = 'tag?'.$tag_list->__toString();
+
 				if ($start_date->getYear() == $end_date->getYear() &&
 					$start_date->getYear() == $i) {
 					$a_tag->class = 'selected';
 				}
-
-				$a_tag->href = 'tag?'.$tag_list->__toString();
 
 				$a_tag->setContent($date->format('%Y'));
 				$a_tag->display();
@@ -143,7 +143,7 @@ class PinholeDateTagBrowser extends SwatControl
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
 		$tag_list->add(sprintf('date.year=%s', $date->format('%Y')));
 
-		$photos = $this->getPhotoCountByDate('month');
+		$photos = $this->getPhotoCountByDate('month', $tag_list);
 		for ($i = 1; $i <= 12; $i++) {
 			$date->setMonth($i);
 			$key = $date->format('%Y-%m');
@@ -190,8 +190,12 @@ class PinholeDateTagBrowser extends SwatControl
 		$div_tag->open();
 
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
+		$tag_list->add(sprintf('date.year=%s', $date->format('%Y')));
+		$tag_list->add(sprintf('date.month=%s', $date->format('%m')));
+		$photos = $this->getPhotoCountByDate('day', $tag_list);
+		// filter again to use to make the links
+		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
 
-		$photos = $this->getPhotoCountByDate('day');
 		for ($i = 1; $i <= $date->getDaysInMonth(); $i++) {
 			$date->setDay($i);
 			$key = $date->format('%Y-%m-%d');
@@ -226,8 +230,12 @@ class PinholeDateTagBrowser extends SwatControl
 		$div_tag->close();
 	}
 
-	protected function getPhotoCountByDate($date_part = 'day')
+	protected function getPhotoCountByDate($date_part = 'day',
+		$tag_list = null)
 	{
+		if ($tag_list === null)
+			$tag_list = $this->tag_list;
+
 		$group_by_parts = array();
 
 		switch ($date_part) {
@@ -271,11 +279,11 @@ class PinholeDateTagBrowser extends SwatControl
 				PinholePhoto.photo_time_zone)) as photo_date
 			from PinholePhoto';
 
-		$join_clauses = implode(' ', $this->tag_list->getJoinClauses());
+		$join_clauses = implode(' ', $tag_list->getJoinClauses());
 		if (strlen($join_clauses) > 0)
 			$sql.= ' '.$join_clauses.' ';
 
-		$where_clause = $this->tag_list->getWhereClause();
+		$where_clause = $tag_list->getWhereClause();
 		if (strlen($where_clause) > 0)
 			$sql.= ' where '.$where_clause;
 

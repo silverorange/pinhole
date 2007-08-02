@@ -86,9 +86,14 @@ class PinholeRssPage extends PinholePage
 			printf('<title>%s</title>',
 				SwatString::minimizeEntities($photo->title));
 
-			printf('<link>%sphoto/%s</link>',
+			$uri = sprintf('%sphoto/%s',
 				$this->app->getBaseHref(),
 				$photo->id);
+
+			if (count($this->tag_list) > 0)
+				$uri.= '?'.$this->tag_list->__toString();
+
+			printf('<link>%s</link>', $uri);
 
 			echo "<content:encoded><![CDATA[\n";
 			$this->displayContent($photo);

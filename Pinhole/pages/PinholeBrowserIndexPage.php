@@ -111,11 +111,10 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 	protected function getPhotoTableStore()
 	{
-		if (count($this->tag_list) == 0) {
+		if (count($this->tag_list) == 0)
 			$tag_path = '';
-		} else {
-			$tag_path = $this->tag_list->__toString();
-		}
+		else
+			$tag_path = '?'.$this->tag_list->__toString();
 
 		$photos = $this->tag_list->getPhotos();
 
@@ -123,7 +122,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		foreach ($photos as $photo) {
 			$ds = new SwatDetailsStore();
-			$ds->path = $photo->id.'?'.$tag_path;
+			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
 			$store->add($ds);
 		}

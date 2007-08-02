@@ -86,7 +86,7 @@ class PinholeRssPage extends PinholePage
 			printf('<title>%s</title>',
 				SwatString::minimizeEntities($photo->title));
 
-			printf('<link>%stag/photo/%s</link>',
+			printf('<link>%sphoto/%s</link>',
 				$this->app->getBaseHref(),
 				$photo->id);
 

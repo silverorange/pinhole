@@ -13,7 +13,7 @@ class PinholeDateTagBrowser extends SwatControl
 	public $base = 'tag';
 
 	protected $tag_list;
-
+	protected $instance;
 	protected $db;
 
 	public function __construct($id = null)
@@ -68,6 +68,11 @@ class PinholeDateTagBrowser extends SwatControl
 	public function setDatabase(MDB2_Driver_Common $db)
 	{
 		$this->db = $db;
+	}
+
+	public function setInstance(PinholeInstance $instance)
+	{
+		$this->instance = $instance;
 	}
 
 	protected function displayYears(SwatDate $start_date, SwatDate $end_date)
@@ -283,9 +288,12 @@ class PinholeDateTagBrowser extends SwatControl
 		if (strlen($join_clauses) > 0)
 			$sql.= ' '.$join_clauses.' ';
 
+		$sql.= sprintf(' where PinholePhoto.instance = %s',
+			$this->db->quote($this->instance->id, 'integer'));
+
 		$where_clause = $tag_list->getWhereClause();
 		if (strlen($where_clause) > 0)
-			$sql.= ' where '.$where_clause;
+			$sql.= ' and '.$where_clause;
 
 		if (strlen($group_by_clause) > 0)
 			$sql.= ' group by '.$group_by_clause;

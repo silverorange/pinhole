@@ -101,6 +101,9 @@ class PinholeRssPage extends PinholePage
 
 			$date = ($photo->photo_date === null) ? new SwatDate() :
 				$photo->photo_date;
+
+			$date->convertTZbyID($photo->photo_time_zone);
+
 			printf('<dc:date>%s</dc:date>',
 				$date->format('%Y-%m-%dT%H:%M:%S%O'));
 

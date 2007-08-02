@@ -100,15 +100,19 @@ class PinholePhotoCellRenderer extends SwatCellRenderer
 		if ($thumb !== null) {
 			$this->image_cell_renderer->width = $thumb->width;
 			$this->image_cell_renderer->height = $thumb->height;
-			$this->image_cell_renderer->occupy_width = $thumb->dimension->max_width;
-			$this->image_cell_renderer->occupy_height = $thumb->dimension->max_height;
 		}
 
 		$this->image_cell_renderer->alt = Pinhole::_('Photo Thumbnail.'); 
 
+		$photo_wrapper_tag = new SwatHtmlTag('span');
+		$photo_wrapper_tag->class = 'photo-wrapper';
+
+		$photo_wrapper_tag->open();
 		$this->image_cell_renderer->render();
+		$photo_wrapper_tag->close();
 
 		$span_tag = new SwatHtmlTag('span');
+		$span_tag->class = 'title';
 		if ($title === null)
 			$span_tag->setContent(''); // prevent self-closing span tag
 		else

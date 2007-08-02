@@ -135,6 +135,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		if (is_string($tag_list_string) && strlen($tag_list_string) > 0) {
 			$tag_strings = explode('/', $tag_list_string);
+
+			// remove duplicate tags
 			$tag_strings = array_unique($tag_strings);
 
 			// get all simple tag strings

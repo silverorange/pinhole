@@ -23,24 +23,39 @@
 	background: #33393a;
 }
 
-.pinhole-tile-view .swat-tile span {
+.pinhole-tile-view .swat-tile span.title {
 	display: block;
 	height: 2em;
 	padding: 0.2em 0;
 }
 
-* html .pinhole-tile-view .swat-tile span {
+* html .pinhole-tile-view .swat-tile span.title {
 	height: 2.4em;
 }
 
-.pinhole-tile-view .swat-tile a span {
+.pinhole-tile-view .swat-tile a span.title {
 	cursor: pointer; /* for Ie6 */
 }
 
-.pinhole-tile-view img {
+.pinhole-tile-view .swat-tile .photo-wrapper {
+	height: 106px;
+	width: 106px;
+	display: table-cell;
+	vertical-align: middle;
+	position: relative;
+}
+
+* html .pinhole-tile-view .swat-tile .photo-wrapper {
+	display: block;
+}
+
+.pinhole-tile-view .photo-wrapper img {
 	display: block;
 	margin: 0 auto;
 	padding: 2px;
 	border: 1px solid #888a85;
 	background: #555753;
+}
+
+* html .pinhole-tile-view .photo-wrapper img {
 }

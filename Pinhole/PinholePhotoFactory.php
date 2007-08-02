@@ -236,20 +236,28 @@ class PinholePhotoFactory
 					'be loaded.',
 					self::ERROR_LOADING_IMAGE);
 
-			$transformed = $this->processImage($transformer, $dimension);
-
-			if (PEAR::isError($transformed))
-				return $transformed; //TODO: return an exception
-
 			$dimension_binding = new PinholePhotoDimensionBinding();
 			$dimension_binding->photo = $photo;
 			$dimension_binding->dimension = $dimension;
 
-			$transformed->save($dimension_binding->getPath($this->path),
-				false, $this->getCompressionQuality());
+			if ($dimension->shortname === PinholeDimension::DIMENSION_ORIGINAL) {
+				copy($file, $dimension_binding->getPath($this->path));
 
-			$this->saveDimension($photo, $dimension,
-				$transformed->new_x, $transformed->new_y);
+				$this->saveDimension($photo, $dimension,
+					$transformer->img_x, $transformer->img_y);
+			} else {
+
+				$transformed = $this->processImage($transformer, $dimension);
+
+				if (PEAR::isError($transformed))
+					return $transformed; //TODO: return an exception
+
+				$transformed->save($dimension_binding->getPath($this->path),
+					false, $this->getCompressionQuality());
+
+				$this->saveDimension($photo, $dimension,
+					$transformed->new_x, $transformed->new_y);
+			}
 		}
 
 		return $transformations;

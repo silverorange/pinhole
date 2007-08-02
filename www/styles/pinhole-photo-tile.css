@@ -9,8 +9,8 @@
 	/* IE6 Hack
 	   set an unused color to be index color
 	   then remove this indexed color */
-	_border-color: tomato;
-	_filter:chroma(color=tomato);
+	_border-color: black;
+	_filter:chroma(color=black);
 }
 
 .pinhole-tile-view .swat-tile a {

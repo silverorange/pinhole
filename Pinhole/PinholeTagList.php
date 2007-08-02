@@ -538,7 +538,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function filter(array $filter_types, $filter_subclasses = true)
 	{
-		$tag_list = new PinholeTagList($this->db);
+		$tag_list = $this->getEmptyCopy();
 
 		foreach ($this as $tag) {
 			if ($filter_subclasses) {
@@ -600,7 +600,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function intersect(PinholeTagList $tag_list)
 	{
-		$new_tag_list = new PinholeTagList($this->db);
+		$new_tag_list = $this->getEmptyCopy();
 
 		foreach ($this as $tag)
 			if ($tag_list->contains($tag))
@@ -672,7 +672,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			throw new SwatInvalidClassException(
 				'$type must be a subclass of PinholeAbstractTag');
 
-		$tag_list = new PinholeTagList($this->db);
+		$tag_list = $this->getEmptyCopy();
 
 		foreach ($this as $tag)
 			if ($tag instanceof $type)
@@ -944,7 +944,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getSubTags(SwatDBRange $range = null)
 	{
-		$tag_list = new PinholeTagList($this->db);
+		$tag_list = $this->getEmptyCopy();
 
 		$photo_id_sql = 'select id from PinholePhoto';
 

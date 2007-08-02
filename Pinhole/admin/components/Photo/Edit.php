@@ -11,6 +11,7 @@ require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 require_once 'include/PinholePhotoTagEntry.php';
+require_once 'Pinhole/pages/PinholeSearchPage.php';
 
 /**
  * Page for viewing photo details and editing
@@ -195,21 +196,47 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->save();
 
 		$tag_list = $this->ui->getWidget('tags')->getSelectedTagList();
-		$tag_list = $tag_list->getByType('PinholeTag');
-		$tag_ids = array();
-		foreach ($tag_list as $tag)
-			$tag_ids[] = $tag->id;
 
-		// TODO: this deletes bindings
-		SwatDB::updateBinding($this->app->db, 'PinholePhotoTagBinding',
-			'photo', $this->id, 'tag', $tag_ids,
-			'PinholeTag', 'id');
+		if ($tag_list !== null) {
+			$tag_list = $tag_list->getByType('PinholeTag');
+			$tag_ids = array();
+			foreach ($tag_list as $tag)
+				$tag_ids[] = $tag->id;
+
+			SwatDB::updateBinding($this->app->db, 'PinholePhotoTagBinding',
+				'photo', $this->id, 'tag', $tag_ids,
+				'PinholeTag', 'id');
+		}
+
+		$this->addToSearchQueue();
 
 		$message = new SwatMessage(sprintf(
 			Pinhole::_('“%s” has been saved.'),
 			$this->photo->getTitle()));
 
 		$this->app->messages->add($message);
+	}
+
+	// }}}
+	// {{{ protected function addToSearchQueue()
+
+	protected function addToSearchQueue()
+	{
+		$sql = sprintf('delete from NateGoSearchQueue
+			where document_id = %s and document_type = %s',
+			$this->app->db->quote($this->photo->id, 'integer'),
+			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
+				'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
+
+		$sql = sprintf('insert into NateGoSearchQueue
+			(document_id, document_type) values (%s, %s)',
+			$this->app->db->quote($this->photo->id, 'integer'),
+			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
+				'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
 	}
 
 	// }}}

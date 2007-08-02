@@ -2,6 +2,7 @@
 
 require_once 'Admin/pages/AdminXMLRPCServer.php';
 require_once 'Pinhole/PinholePhotoFactory.php';
+require_once 'Pinhole/pages/PinholeSearchPage.php';
 
 /**
  * An XML-RPC server for upload processing
@@ -42,7 +43,31 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 		else
 			$response['processed_filename'] = $photo->filename;
 
+		$this->addToSearchQueue($photo);
+
 		return $response;
+	}
+
+	// }}}
+	// {{{ protected function addToSearchQueue()
+
+	protected function addToSearchQueue($photo)
+	{
+		$sql = sprintf('delete from NateGoSearchQueue
+			where document_id = %s and document_type = %s',
+			$this->app->db->quote($photo->id, 'integer'),
+			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
+				'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
+
+		$sql = sprintf('insert into NateGoSearchQueue
+			(document_id, document_type) values (%s, %s)',
+			$this->app->db->quote($photo->id, 'integer'),
+			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
+				'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
 	}
 
 	// }}}

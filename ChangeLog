@@ -1,3 +1,63 @@
+2007-08-02  nick
+
+	* [r19075] pinhole/trunk/Pinhole/layouts/xhtml/rss.php,
+	  pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
+	  Fix validation errors
+	* [r19072] pinhole/trunk/Pinhole/layouts/PinholeRssLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/rss.php,
+	  pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
+	  An Rss feed for the galleries that supports tag-list.
+	  i.e. rss/ (all photos) rss/nick/london (all photos of nick in
+	  london)
+	* [r19066] pinhole/trunk/Pinhole/admin/components/Tag/Edit.php:
+	  Add search indexing to tags
+	* [r19065] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessorServer.php:
+	  
+	  Add photo search index queue to photo editing
+
+2007-08-02  steven
+
+	* [r19061] pinhole/trunk/www/admin/styles/pinhole-photo-tile.css,
+	  pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  fix thumbnail sizes for admin
+	* [r19059] pinhole/trunk/Pinhole/PinholePhotoCellRenderer.php,
+	  pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Fix thumbnail occupy dimensions for Internet Explorer.
+	  Temporarily stop using occupy_width/occupy_height and fix the
+	  occupy dimensions in CSS.
+
+2007-08-02  nick
+
+	* [r19058] pinhole/trunk/Pinhole/PinholeNateGoSearchIndexer.php,
+	  pinhole/trunk/Pinhole/pages/PinholeSearchPage.php:
+	  Small fixes to get the dearch indexer working again.
+
+2007-08-02  nrf
+
+	* [r19056] pinhole/trunk/ChangeLog:
+	  prepare for release of 0.0.5
+	* [r19055] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 0.0.5
+	* [r19053]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoDimensionBinding.php:
+	  
+	  change path
+
+2007-08-02  steven
+
+	* [r19051] pinhole/trunk/www/styles/pinhole-layout-footer.css:
+	  Make the "Powered by Pinhole" link less prominent in the footer
+
+2007-08-02  nrf
+
+	* [r19050] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeDimension.php,
+	  pinhole/trunk/sql/tables/PinholeDimension.sql:
+	  save original images
+	* [r19046] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 0.0.4
+
 2007-08-02  steven
 
 	* [r19044] pinhole/trunk/www/styles/pinhole-date-tag-browser.css:

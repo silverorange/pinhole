@@ -99,8 +99,10 @@ class PinholeRssPage extends PinholePage
 				$this->app->getBaseHref(),
 				$photo->id);
 
+			$date = ($photo->photo_date === null) ? new SwatDate() :
+				$photo->photo_date;
 			printf('<dc:date>%s</dc:date>',
-				$photo->photo_date->format('%Y-%m-%dT%H:%M:%S%O'));
+				$date->format('%Y-%m-%dT%H:%M:%S%O'));
 
 			printf('<dc:creator>%s</dc:creator>',
 				''); //TODO: populate this with photographer

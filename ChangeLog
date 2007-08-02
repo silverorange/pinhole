@@ -1,5 +1,9 @@
 2007-08-02  nrf
 
+	* [r19093] pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
+	  Include tags in links
+	* [r19092] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.0
 	* [r19091] pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
 	  proper timezone
 	* [r19089] pinhole/trunk/Pinhole/pages/PinholeRssPage.php:

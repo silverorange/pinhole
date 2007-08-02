@@ -715,8 +715,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$returned_range = null;
 
 		$sql = 'select
-				max(PinholePhoto.photo_date) as last_photo_date,
-				min(PinholePhoto.photo_date) as first_photo_date
+				max(convertTZ(PinholePhoto.photo_date, 
+					PinholePhoto.photo_time_zone)) as last_photo_date,
+				min(convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) as first_photo_date
 			from PinholePhoto';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());

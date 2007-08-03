@@ -126,6 +126,9 @@ class PinholeRssPage extends PinholePage
 	{
 		$dimension = $photo->getDimension('large');
 
+		if ($dimension === null)
+			return;
+
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->open();
 

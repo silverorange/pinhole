@@ -42,6 +42,8 @@ class PinholePhotoFactory
 		'zip'  => 'application/x-zip',
 		);
 
+	protected $photo_id;
+
 	// }}}
 	// {{{ public function setDatabase()
 
@@ -183,6 +185,9 @@ class PinholePhotoFactory
 
 		// save photo
 		$photo->save();
+		
+		// set the id so that we can save the timezone
+		$this->photo_id = $photo->id;
 
 		$saved = $this->resizeFile($file, $photo, true);
 		if (PEAR::isError($saved)) {
@@ -261,6 +266,14 @@ class PinholePhotoFactory
 		}
 
 		return $transformations;
+	}
+
+	// }}}
+	// {{{ public function getPhotoId()
+
+	public function getPhotoId()
+	{
+		return $this->photo_id;
 	}
 
 	// }}}

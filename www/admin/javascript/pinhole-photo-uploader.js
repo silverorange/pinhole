@@ -131,6 +131,7 @@ PinholePhotoUploadClient = function(id, form_action, progress_bar)
 	this.form_action = form_action;
 	this.progress_bar = progress_bar;
 	this.uploaded_files = [];
+	this.i = 0;
 
 	this.progress_bar.pulse_step = 0.10;
 
@@ -185,10 +186,22 @@ PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error
 
 	this.uploaded_files = file_objects;
 
+	var hidden = document.createElement('input');
+	var button = document.getElementById('submit_timezones');
+	hidden.type = 'hidden';
+	hidden.name = 'number_of_photos';
+	hidden.value = total_photos;
+	button.parentNode.insertBefore(hidden, button);
+
 	if (error_array.length > 0)
 		this.uploadErrorEvent.fire(error_array);
-	else
+	else {
+		var button = document.getElementById('submit_timezones');
+		YAHOO.util.Dom.removeClass(button ,'swat-insensitive');
+		button.disabled = '';
 		this.processNextFile();
+	}
+	
 
 	PinholePhotoUploadManager.removeClient(this);
 }
@@ -268,6 +281,7 @@ PinholePhotoUploadClient.prototype.getUploadIdentifier = function()
 PinholePhotoUploadClient.prototype.processNextFile = function()
 {
 	var that = this;
+	var button   = document.getElementById('submit_timezones');
 
 	function callBack(response)
 	{
@@ -281,17 +295,27 @@ PinholePhotoUploadClient.prototype.processNextFile = function()
 		if (that.getObjectArrayLength(that.uploaded_files) == 0)
 			that.processingCompleteEvent.fire();
 
+		//  returns the id so that we can set the timezone correctly
+		var hidden = document.createElement('input');
+		hidden.type = 'hidden';
+		hidden.name = 'photo_id' + i;
+		hidden.value = response.id;
+		button.parentNode.insertBefore(hidden, button);
+
+			
 		// TODO: why doesn't the proper path work when it's first called?
 		PinholePhotoUploadManager.setProcessorClient('Photo/UploadProcessorServer');
 
 		that.processNextFile();
-
 	}
 
 	for (var file in this.uploaded_files) {
+		this.i ++;
+		var i = this.i;
 		PinholePhotoUploadManager.processor_client.callProcedure(
 			'processFile', callBack,
 			[file, this.uploaded_files[file]]);
+
 		return;
 	}
 }

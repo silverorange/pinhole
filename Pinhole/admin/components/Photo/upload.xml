@@ -11,6 +11,24 @@
 		<widget class="AdminNote">
 			<property name="content" translatable="yes">Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</property>
 		</widget>
-		<widget class="SwatDisplayableContainer" id="photo_container" />
+		<widget class="swatFormField">
+			<widget class="SwatDisplayableContainer" id="photo_container" />
+		</widget>
+		<widget class="SwatFooterFormField">
+			<widget class="SwatForm" id="timezone_field">
+				<property name="action">Photo/Upload</property>
+				<widget class="SwatFormField">
+					<property name="title">Timezone for Photo(s)</property>
+					<widget class="SwatTimeZoneEntry" id="photo_timezone" />
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title">Timezone for Camera</property>
+					<widget class="SwatTimeZoneEntry" id="camera_timezone" />
+				</widget>
+				<widget class="SwatButton" id="submit_timezones">
+					<property name="title" type="string">Set Timezones and Continue Publishing Photos</property>
+				</widget>
+			</widget>
+		</widget>
 	</widget>
 </swatml>

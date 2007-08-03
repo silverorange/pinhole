@@ -11,10 +11,18 @@ require_once 'Pinhole/PinholeTagList.php';
  */
 class PinholeTagListView extends SwatControl
 {
+	// {{{ public properties
+
 	public $base = 'tag';
+
+	// }}}
+	// {{{ protected properties
 
 	protected $tag_list;
 	
+	// }}}
+	// {{{ public function __construct()
+
 	public function __construct($id = null)
 	{
 		parent::__construct($id);
@@ -23,6 +31,9 @@ class PinholeTagListView extends SwatControl
 			'packages/pinhole/styles/pinhole-tag-list-view.css',
 			Pinhole::PACKAGE_ID);
 	}
+
+	// }}}
+	// {{{ public function display()
 
 	public function display()
 	{
@@ -108,10 +119,15 @@ class PinholeTagListView extends SwatControl
 		$div_tag->close();
 	}
 
+	// }}}
+	// {{{ public function setTagList()
+
 	public function setTagList(PinholeTagList $tag_list)
 	{
 		$this->tag_list = $tag_list;
 	}
+
+	// }}}
 }
 
 ?>

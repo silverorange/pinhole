@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Pinhole/dataobjects/PinholeMetaData.php';
+require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
 require_once 'SwatDB/SwatDBClassMap.php';
 
@@ -55,8 +56,8 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 		$parts = $this->getParts($string);
 		if (count($parts) > 0 &&
 			$this->isValid($parts['name'], $parts['value'])) {
-
-			$this->value = $parts['value'];
+			$this->value =
+				PinholePhotoMetaDataBinding::unescapeValue($parts['value']);
 
 			$valid = true;
 		} else {

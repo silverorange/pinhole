@@ -367,8 +367,8 @@ class PinholePhoto extends PinholeInstanceDataObject
 				where PinholePhotoDimensionBinding.photo = %s)',
 			$this->db->quote($this->id, 'integer'));
 
-		return SwatDB::query($this->db, $sql,
-			'PinholeDimensionBindingWrapper');
+		$wrapper_class = SwatDBClassMap::get('PinholeDimensionBindingWrapper');
+		return SwatDB::query($this->db, $sql, $wrapper_class);
 	}
 
 	// }}}

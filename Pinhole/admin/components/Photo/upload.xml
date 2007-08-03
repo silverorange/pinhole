@@ -15,18 +15,20 @@
 			<widget class="SwatDisplayableContainer" id="photo_container" />
 		</widget>
 		<widget class="SwatFooterFormField">
-			<widget class="SwatForm" id="timezone_field">
+			<widget class="SwatForm" id="time_zone_field">
 				<property name="action">Photo/Upload</property>
 				<widget class="SwatFormField">
-					<property name="title">Timezone for Photo(s)</property>
-					<widget class="SwatTimeZoneEntry" id="photo_timezone" />
+					<property name="title">Time Zone for Photo(s)</property>
+					<property name="note">This is the time zone of the location this photo/set was taken.</property>
+					<widget class="SwatTimeZoneEntry" id="photo_time_zone" />
 				</widget>
 				<widget class="SwatFormField">
-					<property name="title">Timezone for Camera</property>
-					<widget class="SwatTimeZoneEntry" id="camera_timezone" />
+					<property name="title">Time Zone for Camera</property>
+					<property name="note">This is the time zone of the camera when it took this photo/set.</property>
+					<widget class="SwatTimeZoneEntry" id="camera_time_zone" />
 				</widget>
-				<widget class="SwatButton" id="submit_timezones">
-					<property name="title" type="string">Set Timezones and Continue Publishing Photos</property>
+				<widget class="SwatButton" id="submit_time_zone">
+					<property name="title" type="string">Set Time Zones and Continue Publishing Photos</property>
 				</widget>
 			</widget>
 		</widget>

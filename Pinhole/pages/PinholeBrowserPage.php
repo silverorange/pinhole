@@ -277,7 +277,8 @@ abstract class PinholeBrowserPage extends PinholePage
 			'packages/pinhole/styles/pinhole-browser-page.css',
 			Pinhole::PACKAGE_ID));
 
-		$this->layout->data->rss_link = 'rss?'.$this->tag_list->__toString();
+		if (count($this->tag_list) > 0)
+			$this->layout->data->rss_link = 'rss?'.$this->tag_list->__toString();
 	}
 
 	// }}}

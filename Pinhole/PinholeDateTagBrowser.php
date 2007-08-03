@@ -79,7 +79,7 @@ class PinholeDateTagBrowser extends SwatControl
 	{
 		// create a new tag list with the same filters as the current tag
 		// list but containing no tags
-		$empty_tag_list = $this->tag_list->createEmptyCopy();
+		$empty_tag_list = $this->tag_list->getEmptyCopy();
 
 		// get date range of all photos with current tag list's filters
 		$global_date_range = $empty_tag_list->getPhotoDateRange();

@@ -1,5 +1,26 @@
 2007-08-03  nrf
 
+	* [r19145]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBinding.php,
+	  pinhole/trunk/Pinhole/tags/PinholeMetaTag.php:
+	  Escape meta data values.
+	  
+	  This could be cleaner if the
+	  PinholeBrowserDetailsPage::buildMetaData() method instantiated a
+	  MetaDataTag to generate a link instead of building the link
+	  itself.
+
+2007-08-03  gauthierm
+
+	* [r19144] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php:
+	  Fix typo that probably caused Steven to revert changes in r19101.
+	* [r19143] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php:
+	  Steven accidentally reverted this in r19103.
+
+2007-08-03  nrf
+
+	* [r19142] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.3
 	* [r19141]
 	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
 	  Remove uneeded intermediate variables, add comments, convert

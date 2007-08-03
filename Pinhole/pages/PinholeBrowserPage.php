@@ -276,6 +276,8 @@ abstract class PinholeBrowserPage extends PinholePage
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/styles/pinhole-browser-page.css',
 			Pinhole::PACKAGE_ID));
+
+		$this->layout->data->rss_link = 'rss?'.$this->tag_list->__toString();
 	}
 
 	// }}}

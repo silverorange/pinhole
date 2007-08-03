@@ -36,6 +36,7 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 		$photo = $photo_factory->processPhoto($file, $original_filename);
 
 		$response = array();
+		$response['id']       = $photo_factory->getPhotoId();
 		$response['filename'] = $filename;
 
 		if (PEAR::isError($photo))

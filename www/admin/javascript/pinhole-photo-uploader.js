@@ -187,7 +187,7 @@ PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error
 	this.uploaded_files = file_objects;
 
 	var hidden = document.createElement('input');
-	var button = document.getElementById('submit_time_zone');
+	var button = document.getElementById('submit_button');
 	hidden.type = 'hidden';
 	hidden.name = 'number_of_photos';
 	hidden.value = total_photos;
@@ -280,7 +280,7 @@ PinholePhotoUploadClient.prototype.getUploadIdentifier = function()
 PinholePhotoUploadClient.prototype.processNextFile = function()
 {
 	var that = this;
-	var button   = document.getElementById('submit_time_zone');
+	var button   = document.getElementById('submit_button');
 
 	function callBack(response)
 	{

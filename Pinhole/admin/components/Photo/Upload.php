@@ -43,41 +43,42 @@ class PinholePhotoUpload extends AdminPage
 		$form_field->process();
 
 		if ($form_field->isProcessed() && (isset($_POST['number_of_photos']))) {
-			$photo_timezone  = $this->ui->getWidget('photo_timezone');
-			$camera_timezone = $this->ui->getWidget('camera_timezone');
 			$number_of_photos = $_POST['number_of_photos'];
 			$counter = 0;
-
-			$photo_timezone_value  = $photo_timezone->value;
-			$camera_timezone_value = $camera_timezone->value;
 
 			if ($number_of_photos > 1){
 				while ($counter < $number_of_photos) {
 					$counter ++;
-					$id = $_POST['photo_id'.$counter];
-					$photo = new PinholePhoto();
-					$photo->setDatabase($this->app->db);
-					$photo->load(intval($id));
-	
-					$photo->photo_time_zone = $photo_timezone_value;
-					$photo->photo_date = new SwatDate($this->photo_date);
-					$photo->photo_date->setTZbyID($camera_timezone_value);
-					$photo->save();
+					$photo_id = $_POST['photo_id'.$counter];
+					$this->processTimeZone($photo_id);
 				}
 			} else {
-				$id = $_POST['photo_id1'];
-				$photo = new PinholePhoto();
-				$photo->setDatabase($this->app->db);
-				$photo->load(intval($id));
-
-				$photo->photo_time_zone = $photo_timezone_value;
-				$photo->photo_date = new SwatDate($photo->photo_date);
-				$photo->photo_date->setTZbyID($camera_timezone_value);
-				$photo->save();
+				$photo_id = $_POST['photo_id1'];
+				$this->processTimeZone($photo_id);
 			}
 			
 			$this->app->replacePage('Photo/Pending');
 		}
+	}
+
+	// }}}
+	// {{{ protected function processTimeZone()
+	
+	protected function processTimeZone($photo_id)
+	{
+		$photo_timezone  = $this->ui->getWidget('photo_timezone');
+		$camera_timezone = $this->ui->getWidget('camera_timezone');
+		$photo_timezone_value  = $photo_timezone->value;
+		$camera_timezone_value = $camera_timezone->value;
+
+		$photo = new PinholePhoto();
+		$photo->setDatabase($this->app->db);
+		$photo->load(intval($photo_id));
+
+		$photo->photo_time_zone = $photo_timezone_value;
+		$photo->photo_date = new SwatDate($photo->photo_date);
+		$photo->photo_date->setTZbyID($camera_timezone_value);
+		$photo->save();
 	}
 
 	// }}}

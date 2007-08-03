@@ -31,6 +31,7 @@ class PinholeLayout extends SiteLayout
 		$this->data->search_content = '';
 		$this->data->dates = '';
 		$this->data->content = '';
+		$this->data->rss_link = 'rss';
 
 		$this->initLayouts();
 		/*

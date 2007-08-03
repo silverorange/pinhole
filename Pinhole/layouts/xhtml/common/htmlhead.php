@@ -9,5 +9,5 @@
 	<meta name="ids" content="<?= $this->meta_keywords ?>" />
 	<? /* TODO: add meta keywords and description */ ?> 
 	<!-- Some icons by the Tango project http://www.Tango-Project.org -->
-	<link rel="alternate" type="application/rss+xml" title="RSS" href="rss" />
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="<?=$this->rss_link?>" />
 </head>

@@ -49,3 +49,15 @@
 	font-size: 85%;
 	margin-left: 0.5em;
 }
+
+img.rss {
+	vertical-align: middle;
+	margin: 0 0.3em;
+	opacity: .6;
+	filter: alpha(opacity=50); /* for IE */
+}
+
+a:hover .rss {
+	opacity: 1;
+	filter: alpha(opacity=100); /* for IE */
+}

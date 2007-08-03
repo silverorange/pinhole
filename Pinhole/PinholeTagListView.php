@@ -89,6 +89,27 @@ class PinholeTagListView extends SwatControl
 
 		$span_tag->display();
 
+		$rss_link_tag = new SwatHtmlTag('a');
+		$rss_link_tag->class = 'rss';
+
+		if (count($this->tag_list) > 0) {
+			$rss_link_tag->href = 'rss?'.$this->tag_list->__toString();
+			// set auto-discovery link in the layout too
+			$this->layout->rss_link = $rss_link_tag->href;
+		} else {
+			$rss_link_tag->href = 'rss';
+		}
+
+		$rss_image_tag = new SwatHtmlTag('img');
+		$rss_image_tag->class = 'rss';
+		$rss_image_tag->src = 'packages/pinhole/images/rss.png';
+		$rss_image_tag->alt = 'RSS';
+		$rss_image_tag->title = 'RSS feeds for this set of photos';
+
+		$rss_link_tag->open();
+		$rss_image_tag->display();
+		$rss_link_tag->close();
+
 		$div_tag->close();
 	}
 

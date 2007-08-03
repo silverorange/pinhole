@@ -1,5 +1,10 @@
 2007-08-03  nrf
 
+	* [r19147]
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
+	  escape % characters in tag path before giving it to sprintf()
+	* [r19146] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.4
 	* [r19145]
 	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBinding.php,
 	  pinhole/trunk/Pinhole/tags/PinholeMetaTag.php:

@@ -187,7 +187,7 @@ PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error
 	this.uploaded_files = file_objects;
 
 	var hidden = document.createElement('input');
-	var button = document.getElementById('submit_timezones');
+	var button = document.getElementById('submit_time_zone');
 	hidden.type = 'hidden';
 	hidden.name = 'number_of_photos';
 	hidden.value = total_photos;
@@ -196,7 +196,6 @@ PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error
 	if (error_array.length > 0)
 		this.uploadErrorEvent.fire(error_array);
 	else {
-		var button = document.getElementById('submit_timezones');
 		YAHOO.util.Dom.removeClass(button ,'swat-insensitive');
 		button.disabled = '';
 		this.processNextFile();
@@ -281,7 +280,7 @@ PinholePhotoUploadClient.prototype.getUploadIdentifier = function()
 PinholePhotoUploadClient.prototype.processNextFile = function()
 {
 	var that = this;
-	var button   = document.getElementById('submit_timezones');
+	var button   = document.getElementById('submit_time_zone');
 
 	function callBack(response)
 	{

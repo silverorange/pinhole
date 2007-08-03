@@ -28,7 +28,7 @@ class PinholePhotoUpload extends AdminPage
 	{
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
-		$submit_timezones = $this->ui->getWidget('submit_timezones');
+		$submit_timezones = $this->ui->getWidget('submit_time_zone');
 		$submit_timezones->sensitive = false;
 	}
 
@@ -39,7 +39,7 @@ class PinholePhotoUpload extends AdminPage
 
 	protected function processInternal()
 	{
-		$form_field = $this->ui->getWidget('timezone_field');
+		$form_field = $this->ui->getWidget('time_zone_field');
 		$form_field->process();
 
 		if ($form_field->isProcessed() && (isset($_POST['number_of_photos']))) {
@@ -62,8 +62,8 @@ class PinholePhotoUpload extends AdminPage
 	
 	protected function processTimeZone($photo_id)
 	{
-		$photo_timezone  = $this->ui->getWidget('photo_timezone');
-		$camera_timezone = $this->ui->getWidget('camera_timezone');
+		$photo_timezone  = $this->ui->getWidget('photo_time_zone');
+		$camera_timezone = $this->ui->getWidget('camera_time_zone');
 		$photo_timezone_value  = $photo_timezone->value;
 		$camera_timezone_value = $camera_timezone->value;
 

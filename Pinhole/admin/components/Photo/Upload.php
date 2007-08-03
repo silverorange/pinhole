@@ -60,6 +60,8 @@ class PinholePhotoUpload extends AdminPage
 					$photo->load(intval($id));
 	
 					$photo->photo_time_zone = $photo_timezone_value;
+					$photo->photo_date = new SwatDate($this->photo_date);
+					$photo->photo_date->setTZbyID($camera_timezone_value);
 					$photo->save();
 				}
 			} else {
@@ -69,6 +71,8 @@ class PinholePhotoUpload extends AdminPage
 				$photo->load(intval($id));
 
 				$photo->photo_time_zone = $photo_timezone_value;
+				$photo->photo_date = new SwatDate($photo->photo_date);
+				$photo->photo_date->setTZbyID($camera_timezone_value);
 				$photo->save();
 			}
 			

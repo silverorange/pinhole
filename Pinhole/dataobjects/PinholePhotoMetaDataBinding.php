@@ -60,7 +60,6 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 	public function getURI()
 	{
 		$value = self::escapeValue($this->value);
-		$value = rawurlencode($value);
 
 		$uri = sprintf('meta.%s=%s',
 			$this->shortname,
@@ -83,6 +82,7 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 	{
 		$string = str_replace('|', '||', $string);
 		$string = str_replace('/', '|s', $string);
+		$string = rawurlencode($string);
 
 		return $string;
 	}

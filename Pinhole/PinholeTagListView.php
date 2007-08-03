@@ -46,60 +46,75 @@ class PinholeTagListView extends SwatControl
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->class = 'pinhole-tag-list-view';
 		$div_tag->id = $this->id;
+
 		$div_tag->open();
+		if (count($this->tag_list) > 0)
+			$this->displayTagList();
 
-		if (count($this->tag_list) > 0) {
-			$count = 0;
-			foreach ($this->tag_list as $tag) {
-				$remove_list = clone $this->tag_list;
-				$remove_list->remove($tag);
+		$this->displayCount();
+		$this->displayRssLink();
+		$div_tag->close();
+	}
 
-				if ($count > 0) {
-					echo '<span class="pinhole-tag-list-view-operator">+',
-						'</span>';
-				}
+	// }}}
+	// {{{ protected function displayTagList()
 
-				echo '<span class="pinhole-tag-list-view-tag-wrapper">';
+	protected function displayTagList()
+	{
+		$count = 0;
+		foreach ($this->tag_list as $tag) {
+			$only_anchor_tag = new SwatHtmlTag('a');
+			$only_anchor_tag->class = 'pinhole-tag-list-view-tag';
+			$only_anchor_tag->rel = 'tag';
+			$only_anchor_tag->href = $this->base.'?'.$tag->__toString();
+			$only_anchor_tag->setContent($tag->getTitle());
+			$only_anchor_tag->title =
+				Pinhole::_('View all photos with this tag.');
 
-				$only_anchor_tag = new SwatHtmlTag('a');
-				$only_anchor_tag->class = 'pinhole-tag-list-view-tag';
-				$only_anchor_tag->rel = 'tag';
-				$only_anchor_tag->title =
-					Pinhole::_('View all photos with this tag.');
+			$remove_list = clone $this->tag_list;
+			$remove_list->remove($tag);
+			$remove_anchor_tag = new SwatHtmlTag('a');
+			$remove_anchor_tag->class = 'pinhole-tag-list-view-remove';
+			$remove_anchor_tag->title = Pinhole::_('Remove this tag.');
+			$remove_anchor_tag->setContent('×');
+			$remove_anchor_tag->href =
+				$this->base.'?'.$remove_list->__toString();
 
-				$only_anchor_tag->href = $this->base.'?'.$tag->__toString();
-				$only_anchor_tag->setContent($tag->getTitle());
-				$only_anchor_tag->display();
+			unset($remove_list);
 
-				$remove_anchor_tag = new SwatHtmlTag('a');
-				$remove_anchor_tag->class = 'pinhole-tag-list-view-remove';
-				$remove_anchor_tag->title =
-					Pinhole::_('Remove this tag.');
+			if ($count > 0)
+				echo '<span class="pinhole-tag-list-view-operator">+</span>';
 
-				$remove_anchor_tag->href =
-					$this->base.'?'.$remove_list->__toString();
+			echo '<span class="pinhole-tag-list-view-tag-wrapper">';
+			$only_anchor_tag->display();
+			$remove_anchor_tag->display();
+			echo '</span>';
 
-				$remove_anchor_tag->setContent('×');
-				$remove_anchor_tag->display();
-
-				echo '</span>';
-
-				unset($remove_list);
-
-				$count++;
-			}
+			$count++;
 		}
+	}
 
+	// }}}
+	// {{{ protected function displayCount()
+
+	protected function displayCount()
+	{
 		// show a count of photos in the tag list
 		$photo_count = $this->tag_list->getPhotoCount();
 		$span_tag = new SwatHtmlTag('span');
 		$span_tag->class = 'photo-count';
-		$span_tag->setContent(sprintf(Pinhole::ngettext(
-			'(%s Photo)', '(%s Photos)',
+		$span_tag->setContent(
+			sprintf(Pinhole::ngettext('(%s Photo)', '(%s Photos)',
 			$photo_count), SwatString::numberFormat($photo_count)));
 
 		$span_tag->display();
+	}
 
+	// }}}
+	// {{{ protected function displayRssLink()
+
+	protected function displayRssLink()
+	{
 		$rss_link_tag = new SwatHtmlTag('a');
 		$rss_link_tag->class = 'rss';
 		$rss_link_tag->href = 'rss';
@@ -115,8 +130,6 @@ class PinholeTagListView extends SwatControl
 		$rss_link_tag->open();
 		$rss_image_tag->display();
 		$rss_link_tag->close();
-
-		$div_tag->close();
 	}
 
 	// }}}

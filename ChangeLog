@@ -1,5 +1,46 @@
+2007-08-03  nrf
+
+	* [r19108] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Down with superfulous question marks!
+	* [r19107] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Split into multiple methods and cleanup
+	* [r19106] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Add folding
+	* [r19105] pinhole/trunk/Pinhole/PinholeTagListView.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
+	  Fix rss auto-discovery link
+	* [r19104] pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
+	  Handle bad cases better (missing dimensions for existing photos)
+
+2007-08-03  steven
+
+	* [r19103] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php,
+	  pinhole/trunk/Pinhole/PinholeTagListView.php,
+	  pinhole/trunk/Pinhole/layouts/PinholeLayout.php,
+	  pinhole/trunk/Pinhole/layouts/xhtml/common/htmlhead.php,
+	  pinhole/trunk/www/images/rss.png,
+	  pinhole/trunk/www/styles/pinhole-tag-list-view.css:
+	  Add tag list specific RSS feed links to tag list and header
+	* [r19102] pinhole/trunk/www/styles/pinhole-photo-tile.css:
+	  Fix width of photo tiles (they were a few pixels too wide)
+
+2007-08-02  gauthierm
+
+	* [r19101] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php:
+	  Create empty list using new method.
+	* [r19100] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Use new method internally.
+	* [r19099] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add PinholeTagList::getEmptyCopy().
+	* [r19098] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add removeAll() method to PinholeTagList.
+	* [r19097] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Add comment.
+
 2007-08-02  nrf
 
+	* [r19094] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.1
 	* [r19093] pinhole/trunk/Pinhole/pages/PinholeRssPage.php:
 	  Include tags in links
 	* [r19092] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:

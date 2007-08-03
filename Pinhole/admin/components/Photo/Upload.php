@@ -46,14 +46,10 @@ class PinholePhotoUpload extends AdminPage
 			$number_of_photos = $_POST['number_of_photos'];
 			$counter = 0;
 
-			if ($number_of_photos > 1){
-				while ($counter < $number_of_photos) {
-					$counter ++;
-					$photo_id = $_POST['photo_id'.$counter];
-					$this->processTimeZone($photo_id);
-				}
-			} else {
-				$photo_id = $_POST['photo_id1'];
+			while ($counter < $number_of_photos) {
+				$counter ++;
+				$field_name = sprintf('photo_id%s', $counter);
+				$photo_id = $_POST[$field_name];
 				$this->processTimeZone($photo_id);
 			}
 			

@@ -37,6 +37,23 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 	private $meta_data;
 
 	// }}}
+	// {{{ public function __toString()
+
+	/**
+	 * Gets a string representation of this machine tag
+	 *
+	 * The string representation is typically 'namespace.name=value'.
+	 *
+	 * @return string a string representation (tag string) of this machine tag.
+	 */
+	public function __toString()
+	{
+		return sprintf('%s.%s=%s',
+			$this->getNamespace(), $this->getName(),
+			PinholePhotoMetaDataBinding::escapeValue($this->getValue()));
+	}
+
+	// }}}
 	// {{{ public function parse()
 
 	/**

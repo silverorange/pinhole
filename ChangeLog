@@ -1,5 +1,69 @@
 2007-08-03  nrf
 
+	* [r19141]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  Remove uneeded intermediate variables, add comments, convert
+	  resulting date to UTC.
+	* [r19140]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  Set default timezones. This partially works, i think there is a
+	  Swat bug.
+
+2007-08-03  gauthierm
+
+	* [r19139] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php:
+	  Use SwatDBClassMap.
+
+2007-08-03  nrf
+
+	* [r19138]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Naming, and move form outside of form fields
+	* [r19137]
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoMetaDataBinding.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserDetailsPage.php,
+	  pinhole/trunk/Pinhole/tags/PinholeMetaTag.php:
+	  #1183 slashes in metadata values need to escaped and unescaped
+
+2007-08-03  charles
+
+	* [r19136]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Naming convention and notes so the user know why we are asking
+	  them for two different time zones.
+
+2007-08-03  nrf
+
+	* [r19134]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  Simplify
+
+2007-08-03  charles
+
+	* [r19133]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  created a new method instead of using the same 8 lines of code
+	  twice.
+	* [r19131]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  Part of ticket #1158, the we now convert the time using the
+	  whatever time zone the camera it set to.
+	* [r19111] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessorServer.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml,
+	  pinhole/trunk/www/admin/javascript/pinhole-photo-uploader.js:
+	  Ticket #1158, the user can now set the timezone used for their
+	  photos after they have uploaded them them.
+
+2007-08-03  nrf
+
+	* [r19110] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.2
 	* [r19108] pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php:
 	  Down with superfulous question marks!
 	* [r19107] pinhole/trunk/Pinhole/PinholeTagListView.php:

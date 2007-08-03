@@ -68,18 +68,19 @@ class PinholePhotoUpload extends AdminPage
 	
 	protected function processTimeZone($photo_id)
 	{
-		$photo_timezone  = $this->ui->getWidget('photo_time_zone');
-		$camera_timezone = $this->ui->getWidget('camera_time_zone');
-		$photo_timezone_value  = $photo_timezone->value;
-		$camera_timezone_value = $camera_timezone->value;
-
 		$photo = new PinholePhoto();
 		$photo->setDatabase($this->app->db);
 		$photo->load(intval($photo_id));
 
-		$photo->photo_time_zone = $photo_timezone_value;
+		// save the photo time zone
+		$photo->photo_time_zone = $this->ui->getWidget('photo_time_zone')->value;
+
+		// convert the photo date to UTC using the camera time zone
 		$photo->photo_date = new SwatDate($photo->photo_date);
-		$photo->photo_date->setTZbyID($camera_timezone_value);
+		$camera_time_zone = $this->ui->getWidget('camera_time_zone')->value;
+		$photo->photo_date->setTZbyID($camera_time_zone);
+		$photo->photo_date->toUTC();
+
 		$photo->save();
 	}
 

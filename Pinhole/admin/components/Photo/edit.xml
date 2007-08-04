@@ -41,6 +41,7 @@
 				<property name="title" translatable="yes">Status</property>
 				<widget class="SwatRadioList" id="status" />
 			</widget>
+			<widget class="SwatContentBlock" id="status_info" />
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
 					<property name="title" translatable="yes">Update</property>
@@ -50,7 +51,6 @@
 					<property name="visible" type="boolean">false</property>
 				</widget>
 			</widget>
-			<widget class="SwatContentBlock" id="status_info" />
 		</widget>
 	</widget>
 </swatml>

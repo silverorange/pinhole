@@ -48,6 +48,7 @@ class PinholePhotoActionsProcessor
 			$this->page->app->getPage()->setItems($view->getSelection());
 			break;
 
+		case 'publish':
 		case 'status_action':
 			$num = count($view->getSelection());
 

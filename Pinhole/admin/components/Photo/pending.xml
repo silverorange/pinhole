@@ -28,7 +28,8 @@
 					<property name="title" translatable="yes">delete…</property>
 				</widget>
 				<widget class="SwatActionItem" id="tags_action">
-					<property name="title" translatable="yes">add tag…</property>
+					<property name="title" translatable="yes">add tags…</property>
+					<widget class="PinholePhotoTagEntry" id="tags" />
 				</widget>
 				<widget class="SwatActionItem" id="status_action">
 					<property name="title" translatable="yes">publish</property>

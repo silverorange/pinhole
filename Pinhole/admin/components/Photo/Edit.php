@@ -32,6 +32,11 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected $photo;
 
 	/**
+	 * @var boolean
+	 */
+	protected $pending_photo = false;
+
+	/**
 	 * @var array
 	 */
 	protected $pending_photo_ids = array();
@@ -49,7 +54,9 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$this->initPhoto();
 		$this->initStatuses();
-		$this->initPendingPhotos();
+
+		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
+			$this->pending_photo = true;
 
 		// setup tag entry control
 		$instance = $this->app->instance->getInstance();
@@ -83,11 +90,6 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
 		$this->ui->getWidget('tags')->setDatabase($this->app->db);
-
-		// add hidden pending field if photo status is pending
-		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
-			$this->ui->getWidget('edit_form')->addHiddenField(
-				'pending', true);
 	}
 
 	// }}}
@@ -137,10 +139,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function initPendingPhotos()
 	{
-		$pending = $this->ui->getWidget('edit_form')->getHiddenField('pending');
-		if ($pending === null &&
-			$this->photo->status != PinholePhoto::STATUS_PENDING)
-			return;
+		$this->pending_pending = true;
 
 		$instance = $this->app->instance->getInstance();
 
@@ -173,6 +172,83 @@ class PinholePhotoEdit extends AdminDBEdit
 					count($this->pending_photo_ids)),
 					count($this->pending_photo_ids));
 		}
+	}
+
+	// }}}
+	// {{{ protected function pendingPhotoCount()
+
+	protected function pendingPhotoCount()
+	{
+		$pending_photos = $this->getPendingPhotos();
+
+		return ($pending_photos === null) ? 0 :
+			count($pending_photos);
+	}
+
+	// }}}
+	// {{{ protected function upcomingPendingPhotoCount()
+
+	protected function upcomingPendingPhotoCount()
+	{
+		$pending_photos = $this->getPendingPhotos();
+
+		if ($pending_photos === null)
+			return 0;
+
+		$count = 0;
+		$found = false;
+		foreach ($pending_photos as $photo) {
+			if ($photo->id == $this->photo->id)
+				$found = true;
+			elseif ($found)
+				$count++;
+		}
+
+		return $count;
+	}
+
+	// }}}
+	// {{{ protected function nextPendingPhoto()
+
+	protected function nextPendingPhoto()
+	{
+		$pending_photos = $this->getPendingPhotos();
+
+		if ($pending_photos === null)
+			return false;
+
+		$found = false;
+		foreach ($pending_photos as $photo) {
+			if ($photo->id == $this->photo->id)
+				$found = true;
+			elseif ($found)
+				return $photo;
+		}
+	}
+
+	// }}}
+	// {{{ protected function getPendingPhotos()
+
+	protected function getPendingPhotos()
+	{
+		static $pending_photos;
+
+		if ($pending_photos === null) {
+			$instance = $this->app->instance->getInstance();
+
+			$sql = sprintf('select id, title
+				from PinholePhoto
+				where PinholePhoto.status = %s and PinholePhoto.instance = %s
+				order by PinholePhoto.upload_date, PinholePhoto.id',
+				$this->app->db->quote(PinholePhoto::STATUS_PENDING,
+					'integer'),
+				$this->app->db->quote($instance->id, 'integer'));
+
+			$pending_photos =
+				SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
+		}
+
+		return $pending_photos;
 	}
 
 	// }}}
@@ -244,20 +320,25 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function relocate()
 	{
-		$pending = $this->ui->getWidget('edit_form')->getHiddenField('pending');
-		$published = ($pending !== null && $this->photo->status ==
-			PinholePhoto::STATUS_PUBLISHED);
-
-		if ($this->ui->getWidget('proceed_button')->hasBeenClicked()) {
-			$this->app->relocate('Photo/Edit?id='.
-				current($this->pending_photo_ids));
-		} elseif ($pending !== null && count($this->pending_photo_ids) > 0) {
-			$this->app->relocate('Photo/Pending');
-		} elseif ($this->published) {
-			$this->app->relocate('Photo');
-		} else {
+		if ($this->pending_photo)
+			$this->relocatePendingPhoto();
+		else
 			parent::relocate();
-		}
+	}
+
+	// }}}
+	// {{{ protected function relocatePendingPhoto()
+
+	protected function relocatePendingPhoto()
+	{
+		if ($this->ui->getWidget('proceed_button')->hasBeenClicked() &&
+			$this->nextPendingPhoto() !== false)
+			$this->app->relocate('Photo/Edit?id='.
+				$this->nextPendingPhoto()->id);
+		elseif ($this->pendingPhotoCount() > 0)
+			$this->app->relocate('Photo/Pending');
+		else
+			$this->app->relocate('Photo');
 	}
 
 	// }}}
@@ -268,14 +349,6 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected function buildInternal()
 	{
 		parent::buildInternal();
-
-		/*
-		$image = $this->ui->getWidget('image');
-		$dimension = $this->photo->getDimension('large');
-		$image->image = '../'.$dimension->getUri();
-		$image->width = $dimension->width;
-		$image->height = $dimension->height;
-		*/
 
 		$thumb_dimension = $this->photo->getDimension('thumb');
 		$large_dimension = $this->photo->getDimension('large');
@@ -291,24 +364,16 @@ class PinholePhotoEdit extends AdminDBEdit
 		$toolbar = $this->ui->getWidget('edit_toolbar');
 		$toolbar->setToolLinkValues($this->photo->id);
 		*/
-	}
 
-	// }}}
-	// {{{ protected function buildButton()
-
-	protected function buildButton()
-	{
-		$button = $this->ui->getWidget('submit_button');
-
-		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
+		if ($this->upcomingPendingPhotoCount() > 0) {
 			$this->ui->getWidget('proceed_button')->visible = true;
-	}
-
-	// }}}
-	// {{{ protected function buildFrame()
-
-	protected function buildFrame()
-	{
+			$this->ui->getWidget('status_info')->content = 
+				sprintf(Pinhole::ngettext(
+					'%d pending photo left.',
+					'%d pending photos left.',
+					$this->upcomingPendingPhotoCount()),
+					$this->upcomingPendingPhotoCount());
+		}
 	}
 
 	// }}}

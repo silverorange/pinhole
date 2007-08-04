@@ -7,6 +7,7 @@ require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'include/PinholeAdminPhotoCellRenderer.php';
 require_once 'include/PinholePhotoActionsProcessor.php';
+require_once 'include/PinholePhotoTagEntry.php';
 
 /**
  * Pending photos page
@@ -31,6 +32,25 @@ class PinholePhotoPending extends AdminIndex
 	{
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
+
+		// setup tag entry control
+		$tag_list = new PinholeTagList($this->app->db);
+		$tag_list->setInstance($this->app->instance->getInstance());
+		$sql = sprintf('select * from PinholeTag
+			where instance = %s order by title',
+			$this->app->db->quote(
+				$this->app->instance->getInstance()->id, 'integer'));
+
+		$tags = SwatDB::query($this->app->db, $sql,
+			'PinholeTagDataObjectWrapper');
+		
+		foreach ($tags as $data_object) {
+			$tag = new PinholeTag($data_object);
+			$tag_list->add($tag);
+		}
+
+		$this->ui->getWidget('tags')->setTagList($tag_list);
+		$this->ui->getWidget('tags')->setDatabase($this->app->db);
 	}
 
 	// }}}

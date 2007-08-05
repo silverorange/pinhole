@@ -1,5 +1,23 @@
+2007-08-04  nick
+
+	* [r19150]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  Implement tag chooser for the pending photos page and make the
+	  publish action
+	  work.
+	* [r19149] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml:
+	  A more robust way to handle pending photo next/count/relocate.
+	  This should
+	  solve any problems with broken relocates to the next unpublished
+	  photo.
+
 2007-08-03  nrf
 
+	* [r19148] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.5
 	* [r19147]
 	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php:
 	  escape % characters in tag path before giving it to sprintf()

@@ -77,13 +77,13 @@ class PinholeTagListView extends SwatControl
 			$only_anchor_tag->href = $this->base.'?'.$tag->__toString();
 			$only_anchor_tag->setContent($tag->getTitle());
 			$only_anchor_tag->title =
-				Pinhole::_('View all photos with this tag.');
+				Pinhole::_('View all photos with this tag');
 
 			$remove_list = clone $this->tag_list;
 			$remove_list->remove($tag);
 			$remove_anchor_tag = new SwatHtmlTag('a');
 			$remove_anchor_tag->class = 'pinhole-tag-list-view-remove';
-			$remove_anchor_tag->title = Pinhole::_('Remove this tag.');
+			$remove_anchor_tag->title = Pinhole::_('Remove this tag');
 			$remove_anchor_tag->setContent('×');
 			$remove_anchor_tag->href =
 				$this->base.'?'.$remove_list->__toString();
@@ -132,8 +132,8 @@ class PinholeTagListView extends SwatControl
 		$rss_image_tag = new SwatHtmlTag('img');
 		$rss_image_tag->class = 'rss';
 		$rss_image_tag->src = 'packages/pinhole/images/rss.png';
-		$rss_image_tag->alt = 'RSS';
-		$rss_image_tag->title = 'RSS feeds for this set of photos';
+		$rss_image_tag->alt = Pinhole::_('RSS');
+		$rss_image_tag->title = Pinhole::_('RSS feed for this set of photos');
 
 		$rss_link_tag->open();
 		$rss_image_tag->display();

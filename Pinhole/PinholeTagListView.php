@@ -57,6 +57,14 @@ class PinholeTagListView extends SwatControl
 	}
 
 	// }}}
+	// {{{ public function setTagList()
+
+	public function setTagList(PinholeTagList $tag_list)
+	{
+		$this->tag_list = $tag_list;
+	}
+
+	// }}}
 	// {{{ protected function displayTagList()
 
 	protected function displayTagList()
@@ -130,14 +138,6 @@ class PinholeTagListView extends SwatControl
 		$rss_link_tag->open();
 		$rss_image_tag->display();
 		$rss_link_tag->close();
-	}
-
-	// }}}
-	// {{{ public function setTagList()
-
-	public function setTagList(PinholeTagList $tag_list)
-	{
-		$this->tag_list = $tag_list;
 	}
 
 	// }}}

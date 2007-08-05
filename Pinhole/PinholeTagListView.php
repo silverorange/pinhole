@@ -19,7 +19,7 @@ class PinholeTagListView extends SwatControl
 	// {{{ protected properties
 
 	protected $tag_list;
-	
+
 	// }}}
 	// {{{ public function __construct()
 
@@ -42,17 +42,18 @@ class PinholeTagListView extends SwatControl
 
 		if ($this->tag_list === null)
 			return;
-		
+
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->class = 'pinhole-tag-list-view';
 		$div_tag->id = $this->id;
-
 		$div_tag->open();
+
 		if (count($this->tag_list) > 0)
 			$this->displayTagList();
 
 		$this->displayCount();
 		$this->displayRssLink();
+
 		$div_tag->close();
 	}
 
@@ -72,7 +73,7 @@ class PinholeTagListView extends SwatControl
 		$count = 0;
 		foreach ($this->tag_list as $tag) {
 			$only_anchor_tag = new SwatHtmlTag('a');
-			$only_anchor_tag->class = 'pinhole-tag-list-view-tag';
+			$only_anchor_tag->class = 'tag';
 			$only_anchor_tag->rel = 'tag';
 			$only_anchor_tag->href = $this->base.'?'.$tag->__toString();
 			$only_anchor_tag->setContent($tag->getTitle());
@@ -82,7 +83,7 @@ class PinholeTagListView extends SwatControl
 			$remove_list = clone $this->tag_list;
 			$remove_list->remove($tag);
 			$remove_anchor_tag = new SwatHtmlTag('a');
-			$remove_anchor_tag->class = 'pinhole-tag-list-view-remove';
+			$remove_anchor_tag->class = 'remove';
 			$remove_anchor_tag->title = Pinhole::_('Remove this tag');
 			$remove_anchor_tag->setContent('×');
 			$remove_anchor_tag->href =
@@ -91,9 +92,9 @@ class PinholeTagListView extends SwatControl
 			unset($remove_list);
 
 			if ($count > 0)
-				echo '<span class="pinhole-tag-list-view-operator">+</span>';
+				echo '<span class="operator">+</span>';
 
-			echo '<span class="pinhole-tag-list-view-tag-wrapper">';
+			echo '<span class="tag-wrapper">';
 			$only_anchor_tag->display();
 			$remove_anchor_tag->display();
 			echo '</span>';

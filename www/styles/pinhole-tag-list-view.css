@@ -3,30 +3,30 @@
 	float: left;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-operator{
+.pinhole-tag-list-view span.operator{
 	font-weight: bold;
 	margin: 0 0.5em 0 0;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper {
+.pinhole-tag-list-view span.tag-wrapper {
 	border-style: solid;
 	border-width: 0;
 	border-color: transparent;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper:hover {
+.pinhole-tag-list-view span.tag-wrapper:hover {
 	border-color: #666;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper a.pinhole-tag-list-view-tag {
+.pinhole-tag-list-view span.tag-wrapper a.tag {
 	padding: 2px;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper:hover a.pinhole-tag-list-view-tag {
+.pinhole-tag-list-view span.tag-wrapper:hover a.tag {
 	border-color: #666;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper a.pinhole-tag-list-view-remove {
+.pinhole-tag-list-view span.tag-wrapper a.remove {
 	visibility: hidden;
 	text-decoration: none;
 	color: #888a85;
@@ -36,11 +36,11 @@
 	padding: 2px 0;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper:hover a.pinhole-tag-list-view-remove {
+.pinhole-tag-list-view span.tag-wrapper:hover a.remove {
 	visibility: visible;
 }
 
-.pinhole-tag-list-view span.pinhole-tag-list-view-tag-wrapper a.pinhole-tag-list-view-remove:hover {
+.pinhole-tag-list-view span.tag-wrapper a.remove:hover {
 	color: #666;
 }
 
@@ -50,14 +50,14 @@
 	margin-left: 0.5em;
 }
 
-img.rss {
+.pinhole-tag-list-view img.rss {
 	vertical-align: middle;
 	margin: 0 0.3em;
 	opacity: .6;
 	filter: alpha(opacity=50); /* for IE */
 }
 
-a:hover .rss {
+.pinhole-tag-list-view a:hover .rss {
 	opacity: 1;
 	filter: alpha(opacity=100); /* for IE */
 }

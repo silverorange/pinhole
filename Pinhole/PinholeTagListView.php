@@ -72,12 +72,12 @@ class PinholeTagListView extends SwatControl
 	{
 		$count = 0;
 		foreach ($this->tag_list as $tag) {
-			$only_anchor_tag = new SwatHtmlTag('a');
-			$only_anchor_tag->class = 'tag';
-			$only_anchor_tag->rel = 'tag';
-			$only_anchor_tag->href = $this->base.'?'.$tag->__toString();
-			$only_anchor_tag->setContent($tag->getTitle());
-			$only_anchor_tag->title =
+			$tag_anchor_tag = new SwatHtmlTag('a');
+			$tag_anchor_tag->class = 'tag';
+			$tag_anchor_tag->rel = 'tag';
+			$tag_anchor_tag->href = $this->base.'?'.$tag->__toString();
+			$tag_anchor_tag->setContent($tag->getTitle());
+			$tag_anchor_tag->title =
 				Pinhole::_('View all photos with this tag');
 
 			$remove_list = clone $this->tag_list;

@@ -40,8 +40,9 @@ class PinholePhotoIndex extends AdminSearch
 		$this->ui->loadFromXML($this->ui_xml);
 
 		// setup tag entry control
-		$tag_list = new PinholeTagList($this->app->db);
-		$tag_list->setInstance($this->app->instance->getInstance());
+		$tag_list = new PinholeTagList($this->app->db,
+			$this->app->instance->getInstance());
+
 		$sql = sprintf('select * from PinholeTag
 			where instance = %s order by title',
 			$this->app->db->quote(

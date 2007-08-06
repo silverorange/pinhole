@@ -51,32 +51,29 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	/**
 	 * Loads a tag data-object by its name
 	 *
-	 * If this object is associeted with an instance through the
-	 * {@link PinholeInstanceDataObject::setInstance()} method, loadFromName()
-	 * will only load rows matching the specified instance.
+	 * An instance is required to load this object by name since tag names are
+	 * not required to be unique across site instances.
 	 *
 	 * @param string $name the name of the tag data-object to load.
+	 * @param PinholeInstance $instance the site instance of the tag data-object
+	 *                                   to load.
 	 *
 	 * @return boolean true if this tag data-object was loaded and false if it
 	 *                  could not be loaded.
 	 */
-	public function loadFromName($name)
+	public function loadFromName($name, PinholeInstance $instance)
 	{
+		$this->setInstance($instance);
+
 		$row = null;
 		$loaded = false;
 
 		if ($this->table !== null) {
-			if ($this->instance === null) {
-				$sql = sprintf('select * from %s where name = %s',
-					$this->table,
-					$this->db->quote($name, 'text'));
-			} else {
-				$sql = sprintf('select * from %s where name = %s
-					and instance = %s',
-					$this->table,
-					$this->db->quote($name, 'text'),
-					$this->db->quote($this->instance->id, 'integer'));
-			}
+			$sql = sprintf('select * from %s where name = %s
+				and instance = %s',
+				$this->table,
+				$this->db->quote($name, 'text'),
+				$this->db->quote($this->instance->id, 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);
 			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);

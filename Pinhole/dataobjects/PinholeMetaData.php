@@ -54,33 +54,30 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	/**
 	 * Loads a meta-data data-object by its shortname
 	 *
-	 * If this object is associeted with an instance through the
-	 * {@link PinholeInstanceDataObject::setInstance()} method,
-	 * loadFromShortname() will only load rows matching the specified instance.
+	 * An instance is required to load this object by shortname since meta-data
+	 * shortnames are not required to be unique across site instances.
 	 *
 	 * @param string $shortname the shortname of the meta-data data-object to
 	 *                           load.
+	 * @param PinholeInstance $instance the site instance of the meta-data
+	 *                                   data-object to load.
 	 *
 	 * @return boolean true if this meta-data data-object was loaded and false
 	 *                  if it could not be loaded.
 	 */
-	public function loadFromShortname($shortname)
+	public function loadFromShortname($shortname, PinholeInstance $instance)
 	{
+		$this->setInstance($instance);
+
 		$row = null;
 		$loaded = false;
 
 		if ($this->table !== null) {
-			if ($this->instance === null) {
-				$sql = sprintf('select * from %s where shortname = %s',
-					$this->table,
-					$this->db->quote($shortname, 'text'));
-			} else {
-				$sql = sprintf('select * from %s where shortname = %s
-					and instance = %s',
-					$this->table,
-					$this->db->quote($shortname, 'text'),
-					$this->db->quote($this->instance->id, 'integer'));
-			}
+			$sql = sprintf('select * from %s where shortname = %s
+				and instance = %s',
+				$this->table,
+				$this->db->quote($shortname, 'text'),
+				$this->db->quote($this->instance->id, 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);
 			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);

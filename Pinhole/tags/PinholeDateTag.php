@@ -61,13 +61,16 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	 * @param string $string the tag string to parse. 
 	 * @param MDB2_Driver_Common $db the database connection used to parse the
 	 *                            tag string.
+	 * @param PinholeInstance the site instance used to parse the tag string.
 	 *
 	 * @return boolean true if the tag string could be parsed and false if the
 	 *                  tag string could not be parsed.
 	 */
-	public function parse($string, MDB2_Driver_Common $db)
+	public function parse($string, MDB2_Driver_Common $db,
+		PinholeInstance $instance)
 	{
 		$this->setDatabase($db);
+		$this->setInstance($instance);
 
 		$parts = $this->getParts($string);
 		if (count($parts) > 0 &&
@@ -373,7 +376,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		if ($value !== null) {
 			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
 			$tag = new PinholeDateTag();
-			if ($tag->parse($string, $this->db) !== false) {
+			if ($tag->parse($string, $this->db, $this->instance) !== false) {
 				$returned_tag = $tag;
 			}
 		}
@@ -433,7 +436,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		if ($value !== null) {
 			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
 			$tag = new PinholeDateTag();
-			if ($tag->parse($string, $this->db) !== false) {
+			if ($tag->parse($string, $this->db, $this->instance) !== false) {
 				$returned_tag = $tag;
 			}
 		}

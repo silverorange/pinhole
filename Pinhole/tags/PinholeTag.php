@@ -87,6 +87,8 @@ class PinholeTag extends PinholeAbstractTag
 			$this->name        = $this->data_object->name;
 			$this->title       = $this->data_object->title;
 			$this->createdate  = $this->data_object->createdate;
+			if ($this->data_object->instance !== null)
+				$this->setInstance($this->data_object->instance);
 		}
 	}
 
@@ -101,21 +103,26 @@ class PinholeTag extends PinholeAbstractTag
 	 * @param string $string the tag string to parse. 
 	 * @param MDB2_Driver_Common $db the database connection used to parse the
 	 *                                tag string.
+	 * @param PinholeInstance the site instance used to parse the tag string.
 	 *
 	 * @return boolean true if the tag string could be parsed and false if the
 	 *                  tag string could not be parsed.
 	 */
-	public function parse($string, MDB2_Driver_Common $db)
+	public function parse($string, MDB2_Driver_Common $db,
+		PinholeInstance $instance)
 	{
 		$valid = false;
 
 		$this->data_object = new PinholeTagDataObject();
 
 		$this->setDatabase($db);
+		$this->setInstance($instance);
+
 		$this->name = $string;
 
 		if (preg_match('/^[a-z0-9]+$/i', $string) == 1) {
-			if ($this->data_object->loadFromName($this->name)) {
+			if ($this->data_object->loadFromName($this->name,
+				$this->instance)) {
 				$this->id         = $this->data_object->id;
 				$this->title      = $this->data_object->title;
 				$this->createdate = $this->data_object->createdate;
@@ -270,12 +277,15 @@ class PinholeTag extends PinholeAbstractTag
 	// {{{ public function setInstance()
 
 	/**
-	 * Sets the instance for this data object
+	 * Sets the site instance used by this tag
 	 *
-	 * @param PinholeInstance $instance The instance for this dataobject.
+	 * Also sets the intance for the internal tag data-object of this tag.
+	 *
+	 * @param PinholeInstance $instance the site instance to use for this tag.
 	 */
 	public function setInstance(PinholeInstance $instance)
 	{
+		parent::setInstance($instance);
 		$this->data_object->setInstance($instance);
 	}
 

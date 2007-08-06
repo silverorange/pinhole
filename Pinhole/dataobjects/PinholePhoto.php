@@ -330,16 +330,20 @@ class PinholePhoto extends PinholeInstanceDataObject
 		require_once 'Pinhole/PinholeTagList.php';
 		require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 
-		$sql = sprintf('select * from PinholeTag where id in (
-			select tag from PinholePhotoTagBinding where photo = %s)',
-			$this->db->quote($this->id, 'integer'));
+		$tag_list = null;
 
-		$data_objects = SwatDB::query($this->db, $sql,
-			'PinholeTagDataObjectWrapper');
-		
-		$tag_list = new PinholeTagList($this->db);
-		foreach ($data_objects as $object)
-			$tag_list->add(new PinholeTag($object));
+		if ($this->instance instanceof PinholeInstance) {
+			$sql = sprintf('select * from PinholeTag where id in (
+				select tag from PinholePhotoTagBinding where photo = %s)',
+				$this->db->quote($this->id, 'integer'));
+
+			$data_objects = SwatDB::query($this->db, $sql,
+				'PinholeTagDataObjectWrapper');
+			
+			$tag_list = new PinholeTagList($this->db, $this->instance);
+			foreach ($data_objects as $object)
+				$tag_list->add(new PinholeTag($object));
+		}
 
 		return $tag_list;
 	}

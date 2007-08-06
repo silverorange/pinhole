@@ -35,7 +35,8 @@ class PinholeRssPage extends PinholePage
 
 	protected function createTagList($tags)
 	{
-		$this->tag_list = new PinholeTagList($this->app->db, $tags);
+		$this->tag_list = new PinholeTagList($this->app->db,
+			$this->app->instance->getInstance(), $tags);
 	}
 
 	// }}}
@@ -47,7 +48,6 @@ class PinholeRssPage extends PinholePage
 	{
 		parent::init();
 
-		$this->tag_list->setInstance($this->app->instance->getInstance());
 		$this->tag_list->setPhotoRange(new SwatDBRange(50));
 
 		$this->tag_list->setPhotoWhereClause(sprintf(

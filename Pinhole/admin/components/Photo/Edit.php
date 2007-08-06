@@ -60,8 +60,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		// setup tag entry control
 		$instance = $this->app->instance->getInstance();
-		$tag_list = new PinholeTagList($this->app->db);
-		$tag_list->setInstance($instance);
+		$tag_list = new PinholeTagList($this->app->db, $instance);
 		$sql = sprintf('select * from PinholeTag
 			where instance = %s
 			order by title',
@@ -391,8 +390,9 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		$this->ui->setValues(get_object_vars($this->photo));
 
-		$tag_list = new PinholeTagList($this->app->db);
-		$tag_list->setInstance($this->app->instance->getInstance());
+		$tag_list = new PinholeTagList($this->app->db,
+			$this->app->instance->getInstance());
+
 		foreach ($this->photo->tags as $tag)
 			$tag_list->add($tag);
 

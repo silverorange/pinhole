@@ -81,10 +81,22 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private $db;
 
 	/**
+	 * Site instance used by this tag list
+	 *
+	 * Only photos and tags belonging to the site instance can be loaded by
+	 * this tag list.
+	 *
+	 * @var PinholeInstance
+	 */
+	private $instance;
+
+	/**
 	 * Additional where clause to apply to photos in this tag list
 	 *
 	 * This where clause is applied in addition to where clauses specified by
 	 * tags in this tag list.
+	 *
+	 * @var string
 	 *
 	 * @see PinholeTagList::setPhotoWhereClause()
 	 * @see PinholeTagList::getWhereClause()
@@ -94,6 +106,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	/**
 	 * Order by clause to apply to photos in this tag list
 	 *
+	 * @var string
+	 *
 	 * @see PinholeTagList::setPhotoOrderByClause()
 	 */
 	private $photo_order_by_clause = null;
@@ -101,19 +115,12 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	/**
 	 * Range to apply to photos in this tag list
 	 *
+	 * @var SwatDBRange 
+	 *
 	 * @see PinholeTagList::setPhotoRange()
 	 * @see PinholeTagList::getRange()
 	 */
 	private $photo_range = null;
-
-	/**
-	 * Site instance to apply to photos and tags in this tag list
-	 *
-	 * @see PinholeTagList::setInstance()
-	 *
-	 * @var PinholeInstance
-	 */
-	private $instance = null;
 
 	// }}}
 	// {{{ public function __construct()
@@ -121,16 +128,21 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	/**
 	 * Creates a new tag list
 	 *
-	 * @param MDB2_Driver_Common $db The database connection to use for this
+	 * @param MDB2_Driver_Common $db the database connection to use for this
 	 *                                tag list.
+	 * @param PinholeInstance $instance the site intsance to use for this tag
+	 *                                   list.
 	 * @param string $tag_list_string optional. A list of tag strings separated
 	 *                                 by '/' characters that are added to this
 	 *                                 list when the list is created. Duplicate
 	 *                                 tag strings are ignored.
 	 */
-	public function __construct(MDB2_Driver_Common $db, $tag_list_string = null)
+	public function __construct(MDB2_Driver_Common $db,
+		PinholeInstance $instance, $tag_list_string = null)
 	{
 		$this->setDatabase($db);
+		$this->instance = $instance;
+
 		$db->loadModule('Datatype', null, true);
 
 		if (is_string($tag_list_string) && strlen($tag_list_string) > 0) {
@@ -145,8 +157,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				$db->datatype->implodeArray($simple_tag_strings, 'text');
 
 			// load all simple tags in one query
-			$sql = sprintf('select * from PinholeTag where name in (%s)',
-				$quoted_tag_strings);
+			$sql = sprintf('select * from PinholeTag '.
+				'where name in (%s) and instance = %s',
+				$quoted_tag_strings,
+				$db->quote($instance->id, 'integer'));
 
 			$tag_data_objects =
 				SwatDB::query($db, $sql, 'PinholeTagDataObjectWrapper');
@@ -155,7 +169,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				// check if we've already loaded a simple tag for this string
 				$data_object = $tag_data_objects->getByIndex($tag_string);
 				if ($data_object === null) {
-					$tag = PinholeTagFactory::get($tag_string, $db);
+					$tag = PinholeTagFactory::get($tag_string, $db, $instance);
 					if ($tag instanceof PinholeAbstractTag) {
 						$this->add($tag);
 					}
@@ -385,7 +399,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$added_tag = null;
 
 		if (is_string($tag)) {
-			$tag = PinholeTagFactory::get($tag, $this->db);
+			$tag = PinholeTagFactory::get($tag, $this->db, $this->instance);
 		} elseif (!($tag instanceof PinholeAbstractTag)) {
 			throw new SwatInvalidClassException(
 				'$tag must be either a string or a PinholeAbstractTag',
@@ -901,25 +915,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function setPhotoRange(SwatDBRange $range)
 	{
 		$this->photo_range = $range;
-	}
-
-	// }}}
-	// {{{ public function setInstance()
-
-	/**
-	 * Sets the site instance to apply to photos and tags in this tag list
-	 *
-	 * If no site instance is set for this tag list, all photos and tags are
-	 * included in results from this list. If an instance is set, only photos
-	 * and tags belonging to the specified instance are included in results
-	 * from this list.
-	 *
-	 * @param PinholeInstance $instance the site instance to apply to photos
-	 *                                   and tags in this tag list.
-	 */
-	public function setInstance(PinholeInstance $instance)
-	{
-		$this->instance = $instance;
 	}
 
 	// }}}

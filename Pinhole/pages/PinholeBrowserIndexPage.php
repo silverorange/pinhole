@@ -84,7 +84,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$date_tag_browser = $this->ui->getWidget('date_tag_browser');
 		$date_tag_browser->setTagList($this->tag_list);
 		$date_tag_browser->setDatabase($this->app->db);
-		$date_tag_browser->setInstance($this->app->instance->getInstance());
 	}
 
 	// }}}

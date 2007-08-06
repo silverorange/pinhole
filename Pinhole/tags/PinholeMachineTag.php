@@ -86,6 +86,8 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 			$this->name        = $this->data_object->name;
 			$this->value       = $this->data_object->value;
 			$this->createdate  = $this->data_object->createdate;
+			if ($this->data_object->instance !== null)
+				$this->setInstance($this->data_object->instance);
 		}
 	}
 
@@ -101,15 +103,19 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	 * @param string $string the tag string to parse. 
 	 * @param MDB2_Driver_Common the database connection used to parse the tag
 	 *                            string.
+	 * @param PinholeInstance the site instance used to parse the tag string.
 	 *
 	 * @return boolean true if the tag string could be parsed and false if the
 	 *                  tag string could not be parsed.
 	 */
-	public function parse($string, MDB2_Driver_Common $db)
+	public function parse($string, MDB2_Driver_Common $db,
+		PinholeInstance $instance)
 	{
 		$this->data_object = new PinholeMachineTagDataObject();
 
 		$this->setDatabase($db);
+		$this->setInstance($instance);
+
 		$parts = $this->getParts($string);
 
 		if (count($parts) > 0) {
@@ -117,7 +123,7 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 			$this->name      = $parts['name'];
 			$this->value     = $parts['value'];
 			if ($this->data_object->loadFromFields($this->namespace,
-				$this->name, $this->value)) {
+				$this->name, $this->value, $this->instance)) {
 				$this->id         = $this->data_object->id;
 				$this->createdate = $this->data_object->createdate;
 			}
@@ -259,6 +265,22 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	}
 
 	// }}}
+	// {{{ public function setInstance()
+
+	/**
+	 * Sets the site instance used by this tag
+	 *
+	 * Also sets the intance for the internal tag data-object of this tag.
+	 *
+	 * @param PinholeInstance $instance the site instance to use for this tag.
+	 */
+	public function setInstance(PinholeInstance $instance)
+	{
+		parent::setInstance($instance);
+		$this->data_object->setInstance($instance);
+	}
+
+	// }}}
 	// {{{ public function save()
 
 	/**
@@ -286,11 +308,11 @@ class PinholeMachineTag extends PinholeAbstractMachineTag
 	 * @return boolean true if this tag was loaded and false if this tag was
 	 *                  not loaded.
 	 */
-	public function load($name)
+	public function load($id)
 	{
 		$loaded = false;
 
-		if ($this->data_object->load($name)) {
+		if ($this->data_object->load($id)) {
 			$this->id         = $this->data_object->id;
 			$this->namespace  = $this->data_object->namespace;
 			$this->name       = $this->data_object->name;

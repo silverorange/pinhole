@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Pinhole/tags/PinholeAbstractTag.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
+require_once 'Pinhole/dataobjects/PinholeInstance.php';
 require_once 'MDB2.php';
 
 /**
@@ -20,6 +20,8 @@ require_once 'MDB2.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ * @todo      Add a caching mechanism so getting the same tag multiple times
+ *            does not create multiple objects.
  */
 class PinholeTagFactory
 {
@@ -41,6 +43,15 @@ class PinholeTagFactory
 	 */
 	private static $default_database;
 
+	/**
+	 * Default site instance to use when creating new tag objects
+	 *
+	 * @var PinholeInstance
+	 *
+	 * @see PinholeTagFactory::setDefaultInstance()
+	 */
+	private static $default_instance;
+
 	// }}}
 	// {{{ public static function get()
 
@@ -52,15 +63,25 @@ class PinholeTagFactory
 	 *                                for the parsed tag. If not specified,
 	 *                                the default database specified by the
 	 *                                tag factory is used.
+	 * @param PinholeInstance $instance optional. The site instance to use for
+	 *                                   the parsed tag. If not specified, the
+	 *                                   default instance specified by the tag
+	 *                                   factory is used.
 	 *
 	 * @return PinholeAbstractTag the parsed tag object or null if the given
 	 *                             string could not be parsed.
 	 */
-	public static function get($string, MDB2_Driver_Common $db = null)
+	public static function get($string, MDB2_Driver_Common $db = null,
+		PinholeInstance $instance = null)
 	{
 		if ($db === null &&
 			self::$default_database instanceof MDB2_Driver_Common) {
 			$db = self::$default_database;
+		}
+
+		if ($instance === null &&
+			self::$default_instance instanceof PinholeInstance) {
+			$instance = self::$default_instance;
 		}
 
 		// get tag string namespace
@@ -76,9 +97,23 @@ class PinholeTagFactory
 
 		// create and parse tag
 		$tag = new $tag_class();
-		$valid = $tag->parse($string, $db);
+		$valid = $tag->parse($string, $db, $instance);
 
 		return ($valid) ? $tag : null;
+	}
+
+	// }}}
+	// {{{ public static function setDefaultInstance()
+
+	/**
+	 * Sets the default site instance used by the tag factory
+	 *
+	 * @param PinholeInstance $instance the default site instance used by the
+	 *                                   tag factory.
+	 */
+	public static function setDefaultInstance(PinholeInstance $instance)
+	{
+		self::$default_instance = $instance;
 	}
 
 	// }}}

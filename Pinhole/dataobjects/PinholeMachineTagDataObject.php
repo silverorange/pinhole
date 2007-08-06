@@ -57,41 +57,37 @@ class PinholeMachineTagDataObject extends PinholeInstanceDataObject
 	/**
 	 * Loads a machine tag data-object from fields 
 	 *
-	 * If this object is associeted with an instance through the
-	 * {@link PinholeInstanceDataObject::setInstance()} method, loadFromFields()
-	 * will only load rows matching the specified instance.
+	 * An instance is required to load this object by name since machine tag
+	 * (namespace, name, value) triplets are not required to be unique across
+	 * site instances.
 	 *
 	 * @param string $namespace the namespace of the machine tag data-object to
 	 *                           load.
 	 * @param string $name the name of the machine tag data-object to load.
 	 * @param string $value the value of the machine tag data-object to load.
+	 * @param PinholeInstance $instance the site instance of the machine tag
+	 *                                   data-object to load.
 	 *
 	 * @return boolean true if this machine tag data-object was loaded and
 	 *                  false if it could not be loaded.
 	 */
-	public function loadFromFields($namespace, $name, $value)
+	public function loadFromFields($namespace, $name, $value,
+		PinholeInstance $instance)
 	{
+		$this->setInstance($instance);
+
 		$row = null;
 		$loaded = false;
 
 		if ($this->table !== null) {
-			if ($this->instance === null) {
-				$sql = sprintf('select * from %s
-					where namespace = %s and name = %s and value = %s',
-					$this->table,
-					$this->db->quote($namespace, 'text'),
-					$this->db->quote($name, 'text'),
-					$this->db->quote($value, 'text'));
-			} else {
-				$sql = sprintf('select * from %s
-					where namespace = %s and name = %s and value = %s
-						and instance = %s',
-					$this->table,
-					$this->db->quote($namespace, 'text'),
-					$this->db->quote($name, 'text'),
-					$this->db->quote($value, 'text'),
-					$this->db->quote($this->instance->id, 'integer'));
-			}
+			$sql = sprintf('select * from %s
+				where namespace = %s and name = %s and value = %s
+					and instance = %s',
+				$this->table,
+				$this->db->quote($namespace, 'text'),
+				$this->db->quote($name, 'text'),
+				$this->db->quote($value, 'text'),
+				$this->db->quote($this->instance->id, 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);
 			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);

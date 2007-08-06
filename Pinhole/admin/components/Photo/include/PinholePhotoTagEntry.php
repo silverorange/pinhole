@@ -141,7 +141,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 		if (isset($data[$this->id]) && is_array($data[$this->id])) {
 			$tag_strings = $data[$this->id];
 
-			$this->selected_tag_list = new PinholeTagList($this->db);
+			$this->selected_tag_list = $this->tag_list->getEmptyCopy();
 
 			// make sure entered tags are in the original tag list
 			foreach ($tag_strings as $tag_string)

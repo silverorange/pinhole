@@ -1,3 +1,54 @@
+2007-08-06  gauthierm
+
+	* [r19160] pinhole/trunk/Pinhole/PinholeTagFactory.php,
+	  pinhole/trunk/Pinhole/PinholeTagList.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMachineTagDataObject.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeMetaData.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeTagDataObject.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserIndexPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeBrowserPage.php,
+	  pinhole/trunk/Pinhole/pages/PinholeRssPage.php,
+	  pinhole/trunk/Pinhole/tags/PinholeAbstractTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeDateTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeMachineTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeMetaTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholePageTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeSearchTag.php,
+	  pinhole/trunk/Pinhole/tags/PinholeTag.php:
+	  Fix ticket #1171. The entire tag system needs to be instance
+	  aware because tag strings alone do not uniquely identify tags.
+
+2007-08-05  gauthierm
+
+	* [r19159] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Passing the tag list to the displayTagList() method will make it
+	  easier to support complex tag expressions in the future.
+	* [r19158] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Rename variable.
+	* [r19157] pinhole/trunk/Pinhole/PinholeTagFactory.php:
+	  Revert change committed accidentally. This isn't done yet.
+	* [r19156] pinhole/trunk/Pinhole/PinholeTagFactory.php:
+	  Fix folding.
+	* [r19155] pinhole/trunk/Pinhole/PinholeTagListView.php,
+	  pinhole/trunk/www/styles/pinhole-tag-list-view.css:
+	  Simplify CSS classes for tag list view.
+	* [r19154] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Consitify punctuation and translate strings.
+	* [r19153] pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Public before protected methods.
+	* [r19152] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php:
+	  Cleanup, folding and documentation for date tag browser. I like
+	  the new sideways browsing function Nathan.
+
+2007-08-05  nrf
+
+	* [r19151] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.6
+
 2007-08-04  nick
 
 	* [r19150]

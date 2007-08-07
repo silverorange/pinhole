@@ -1,3 +1,25 @@
+2007-08-07  gauthierm
+
+	* [r19173] pinhole/trunk/Pinhole/PinholeTagList.php:
+	  Don't use iterator interface internally so we don't break
+	  current iterations of the list that may be happening outside
+	  these methods.
+	* [r19172] pinhole/trunk/Pinhole/dataobjects/PinholePhoto.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholePhotoWrapper.php:
+	  Fix Nick's carelessness. Shame.
+
+2007-08-06  gauthierm
+
+	* [r19171]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Get empty tag list from original tag list.
+
+2007-08-06  nrf
+
+	* [r19161] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.7
+
 2007-08-06  gauthierm
 
 	* [r19160] pinhole/trunk/Pinhole/PinholeTagFactory.php,

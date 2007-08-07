@@ -196,7 +196,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function __toString()
 	{
 		$string = '';
-		foreach ($this as $tag)
+		foreach ($this->tags as $tag)
 			$string.= '/'.$tag->__toString();
 
 		// strip leading slash
@@ -217,7 +217,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function getJoinClauses()
 	{
 		$join_clauses = array();
-		foreach ($this as $tag)
+		foreach ($this->tags as $tag)
 			$join_clauses = array_merge($tag->getJoinClauses(), $join_clauses);
 
 		// normalize
@@ -250,7 +250,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		$where_clauses = array();
 
-		foreach ($this as $tag) {
+		foreach ($this->tags as $tag) {
 			$tag_where_clause = $tag->getWhereClause();
 			if (strlen($tag_where_clause) > 0)
 				$where_clauses[] = '('.$tag_where_clause.')';
@@ -288,7 +288,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$range = $this->photo_range;
 
-		foreach ($this as $tag) {
+		foreach ($this->tags as $tag) {
 			$tag_range = $tag->getRange();
 			if ($tag_range !== null) {
 				if ($range === null) {
@@ -554,7 +554,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$tag_list = $this->getEmptyCopy();
 
-		foreach ($this as $tag) {
+		foreach ($this->tags as $tag) {
 			if ($filter_subclasses) {
 				$filtered = false;
 				foreach ($filter_types as $type) {
@@ -616,7 +616,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$new_tag_list = $this->getEmptyCopy();
 
-		foreach ($this as $tag)
+		foreach ($this->tags as $tag)
 			if ($tag_list->contains($tag))
 				$new_tag_list->add($tag);
 
@@ -688,7 +688,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		$tag_list = $this->getEmptyCopy();
 
-		foreach ($this as $tag)
+		foreach ($this->tags as $tag)
 			if ($tag instanceof $type)
 				$tag_list->add($tag);
 
@@ -990,7 +990,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function setDatabase(MDB2_Driver_Common $db)
 	{
 		$this->db = $db;
-		foreach ($this as $tag)
+		foreach ($this->tags as $tag)
 			$tag->setDatabase($db);
 	}
 
@@ -1004,7 +1004,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function save()
 	{
-		foreach ($this as $tag)
+		foreach ($this->tags as $tag)
 			$tag->save();
 	}
 
@@ -1041,7 +1041,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function delete()
 	{
-		foreach ($this as $tag)
+		foreach ($this->tags as $tag)
 			$tag->delete();
 	}
 
@@ -1059,7 +1059,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function isModified()
 	{
 		$modified = false;
-		foreach ($this as $tag) {
+		foreach ($this->tags as $tag) {
 			if ($tag->isModified()) {
 				$modified = true;
 				break;

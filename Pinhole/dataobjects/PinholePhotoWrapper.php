@@ -89,7 +89,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 
 		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
 			$photo = new $photo_class($row, true);
-			$photo->setDataBase($db);
+			$photo->setDatabase($db);
 
 			$instance = new $instance_class();
 			$instance->id = $row->instance;

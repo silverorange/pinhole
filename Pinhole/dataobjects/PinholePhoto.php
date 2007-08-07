@@ -187,7 +187,7 @@ class PinholePhoto extends PinholeInstanceDataObject
 		$dimension = SwatDB::query($this->db, $sql,
 			'PinholePhotoDimensionBindingWrapper');
 
-		if ($dimension->getCount() > 0) {
+		if (count($dimension) > 0) {
 			$this->setDimension($shortname, $dimension->getFirst());
 			return $dimension->getFirst();
 		}

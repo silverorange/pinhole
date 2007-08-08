@@ -4,6 +4,7 @@ require_once 'Swat/Swat.php';
 require_once 'Site/pages/SitePage.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Pinhole/PinholePhotoFactory.php';
+require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
 /**
  * Page for indicating when an upload is complete
@@ -44,7 +45,7 @@ class PinholePhotoUploadStatus extends SitePage
 	 */
 	public function init()
 	{
-		if (!isset($_FILES))
+		if (!isset($_FILES) || count($_FILES) == 0)
 			throw new AdminNotFoundException(Pinhole::_('Page not found.'));
 	}
 
@@ -57,14 +58,20 @@ class PinholePhotoUploadStatus extends SitePage
 		$photo_factory->setPath(realpath('../'));
 
 		foreach ($_FILES as $id => $file) {
-			$saved = $photo_factory->saveUploadedFile('file');
+			// catch any exception, log it, and then added it to a
+			// queue of error messages that will be displayed to
+			// the user via javascript.
 
-			if (PEAR::isError($saved))
+			try {
+				$saved = $photo_factory->saveUploadedFile('file');
+				$this->files = array_merge($saved, $this->files);
+			} catch (Exception $e) {
+				$e->log();
+
 				$this->errors[] = sprintf(
 					Pinhole::_('Error uploading file: %s'),
 					$_FILES[$id]['name']);
-			else
-				$this->files = array_merge($saved, $this->files);
+			}
 		}
 	}
 
@@ -110,6 +117,8 @@ class PinholePhotoUploadStatus extends SitePage
 		foreach ($this->errors as $filename)
 			$javascript.= sprintf("upload_errors.push('%s');\n",
 				$filename);
+
+		//$javascript.= 'window.alert(upload_errors.length);';
 
 		foreach ($_FILES as $id => $file)
 			$javascript.= sprintf("window.parent.%s_obj.uploadComplete(".

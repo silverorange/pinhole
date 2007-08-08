@@ -1,12 +1,14 @@
 <?php
 
+require_once 'MDB2.php';
 require_once 'Image/Transform.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
-require_once 'MDB2.php';
+require_once 'Pinhole/exceptions/PinholeUploadException.php';
+require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
 /**
  * Photo factory
@@ -21,15 +23,6 @@ require_once 'MDB2.php';
  */
 class PinholePhotoFactory
 {
-	// {{{ constants
-
-	const ERROR_LOADING_IMAGE = 1;
-	const ERROR_OPENING_ARCHIVE = 2;
-	const ERROR_OPENING_PHOTO = 3;
-	const ERROR_PARSING_FILE = 4;
-	const ERROR_INSTANSIATING_FACTORY = 5;
-
-	// }}}
 	// {{{ protected properties
 
 	protected $temp_path = '../temp';
@@ -101,7 +94,8 @@ class PinholePhotoFactory
 	public function saveUploadedFile($name)
 	{
 		if (!isset($_FILES[$name]))
-			return; //TODO: throw error
+			throw new PinholeUploadException(
+				'File input name not found.');
 
 		$file = $_FILES[$name];
 
@@ -136,8 +130,8 @@ class PinholePhotoFactory
 	public function parseFile($file, $original_filename = null)
 	{
 		if (!file_exists($file))
-			return PEAR::raiseError('File could not be found.',
-				self::ERROR_PARSING_FILE);
+			throw new PinholeProcessingException(
+				'File could not be found.');
 
 		$finfo = finfo_open(FILEINFO_MIME);
 		$mime_type = finfo_file($finfo, $file);
@@ -157,14 +151,13 @@ class PinholePhotoFactory
 	public function processPhoto($file, $original_filename = null)
 	{
 		if (!file_exists($file))
-			return PEAR::raiseError('Error loading photo. The photo 
-				file could not be found.',
-				self::ERROR_OPENING_PHOTO);
+			throw new PinholeProcessingException(
+				'File could not be found.');
 
 		if ($this->db === null)
-			return PEAR::raiseError('Database must be set before '. 
-				'creating a data-object. See: setDatabase().',
-				self::ERROR_CREATING_DATA_OBJECT);
+			throw new PinholeProcessingException(
+				'Database must be set before creating a data-object. '.
+				'See: PinholePhotoFactory::setDatabase().');
 
 		$this->db->beginTransaction();
 
@@ -192,7 +185,7 @@ class PinholePhotoFactory
 		$saved = $this->resizeFile($file, $photo, true);
 		if (PEAR::isError($saved)) {
 			$this->db->rollback();
-			return $saved;
+			throw new PinholeProcessingException($saved);
 		}
 
 		if (isset($meta_data['createdate']))
@@ -223,9 +216,7 @@ class PinholePhotoFactory
 
 		$transformer = Image_Transform::factory('Imagick2');
 		if (PEAR::isError($transformer))
-			return PEAR::raiseError('Error instansiating ImageTransform '.
-				'factory Imagick2.',
-				self::ERROR_INSTANSIATING_FACTORY);
+			throw new PinholeProcessingException($tranformer);
 
 		$transformations = array();
 
@@ -237,9 +228,7 @@ class PinholePhotoFactory
 			$loaded = $transformer->load($file);
 
 			if (PEAR::isError($loaded))
-				return PEAR::raiseError('Image file can not '.
-					'be loaded.',
-					self::ERROR_LOADING_IMAGE);
+				throw new PinholeProcessingException($loaded);
 
 			$dimension_binding = new PinholePhotoDimensionBinding();
 			$dimension_binding->photo = $photo;
@@ -255,7 +244,7 @@ class PinholePhotoFactory
 				$transformed = $this->processImage($transformer, $dimension);
 
 				if (PEAR::isError($transformed))
-					return $transformed; //TODO: return an exception
+					throw new PinholeProcessingException($transformed);
 
 				$transformed->save($dimension_binding->getPath($this->path),
 					false, $this->getCompressionQuality());
@@ -288,8 +277,8 @@ class PinholePhotoFactory
 		$opened = $za->open($file);
 
 		if ($opened !== true)
-			return PEAR::raiseError('Error opening file archive ',
-				self::ERROR_OPENING_ARCHIVE);
+			throw new PinholeProcessingException(
+				'Error opening file archive');
 
 		$file_path = sprintf('%s/%s',
 			$this->path, $this->temp_path);

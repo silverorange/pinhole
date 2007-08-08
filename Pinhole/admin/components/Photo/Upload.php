@@ -30,12 +30,12 @@ class PinholePhotoUpload extends AdminPage
 		$this->ui->loadFromXML($this->ui_xml);
 		$button = $this->ui->getWidget('submit_button');
 		$button->sensitive = false;
-
+/*
 		$this->ui->getWidget('photo_time_zone')->value =
 			$this->app->default_time_zone->getID();
 
 		$this->ui->getWidget('camera_time_zone')->value =
-			$this->app->default_time_zone->getID();
+			$this->app->default_time_zone->getID();*/
 	}
 
 	// }}}

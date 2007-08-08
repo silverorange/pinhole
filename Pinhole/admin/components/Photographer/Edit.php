@@ -43,8 +43,7 @@ class PinholePhotographerEdit extends AdminDBEdit
 		$this->photographer->setDatabase($this->app->db);
 		$this->photographer->setInstance($this->app->instance->getInstance());
 
-		if ($this->id === null) {
-		} else {
+		if ($this->id !== null) {
 			if (!$this->photographer->load($this->id))
 				throw new AdminNotFoundException(
 					sprintf(Pinhole::_('Photographer with id “%s” not found.'),

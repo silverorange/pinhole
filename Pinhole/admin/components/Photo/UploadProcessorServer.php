@@ -27,24 +27,30 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 	 */
 	public function processFile($filename, $original_filename)
 	{
-		$photo_factory = new PinholePhotoFactory();
-		$photo_factory->setPath(realpath('../'));
-		$photo_factory->setDatabase($this->app->db);
-		$photo_factory->setInstance($this->app->instance->getInstance());
-
-		$file = realpath('../../temp/'.$filename);
-		$photo = $photo_factory->processPhoto($file, $original_filename);
-
 		$response = array();
-		$response['id']       = $photo_factory->getPhotoId();
 		$response['filename'] = $filename;
 
-		if (PEAR::isError($photo))
-			$response['error'] = 'Error processing '.$original_filename;
-		else
+		try {
+			$photo_factory = new PinholePhotoFactory();
+			$photo_factory->setPath(realpath('../'));
+			$photo_factory->setDatabase($this->app->db);
+			$photo_factory->setInstance($this->app->instance->getInstance());
+
+			$file = realpath('../../temp/'.$filename);
+			$photo = $photo_factory->processPhoto($file, $original_filename);
+
+			$response['id']       = $photo_factory->getPhotoId();
 			$response['processed_filename'] = $photo->filename;
 
-		$this->addToSearchQueue($photo);
+			$this->addToSearchQueue($photo);
+
+		} catch (Exception $e) {
+			$e->log();
+
+			$response['filename'] = $filename;
+			$response['error'] = 'Error processing '.$original_filename;
+		}
+
 
 		return $response;
 	}

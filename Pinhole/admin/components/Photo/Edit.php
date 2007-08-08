@@ -39,6 +39,11 @@ class PinholePhotoEdit extends AdminDBEdit
 	/**
 	 * @var array
 	 */
+	protected $pending_photos = array();
+
+	/**
+	 * @var array
+	 */
 	protected $pending_photo_ids = array();
 
 	// }}}
@@ -55,8 +60,10 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->initPhoto();
 		$this->initStatuses();
 
-		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
+		if ($this->photo->status == PinholePhoto::STATUS_PENDING) {
 			$this->pending_photo = true;
+			$this->pending_photos = $this->getPendingPhotos();
+		}
 
 		// setup tag entry control
 		$instance = $this->app->instance->getInstance();
@@ -134,54 +141,11 @@ class PinholePhotoEdit extends AdminDBEdit
 	}
 
 	// }}}
-	// {{{ protected function initPendingPhotos()
-
-	protected function initPendingPhotos()
-	{
-		$this->pending_pending = true;
-
-		$instance = $this->app->instance->getInstance();
-
-		$sql = sprintf('select id, title
-			from PinholePhoto
-			where PinholePhoto.status = %s and PinholePhoto.instance = %s
-			order by PinholePhoto.upload_date, PinholePhoto.id',
-			$this->app->db->quote(PinholePhoto::STATUS_PENDING,
-				'integer'),
-			$this->app->db->quote($instance->id, 'integer'));
-
-		$rs = SwatDB::query($this->app->db, $sql, null);
-
-		$found = false;
-		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
-			if ($row->id == $this->photo->id)
-				$found = true;
-			elseif ($found)
-				$this->pending_photo_ids[] = $row->id;
-		}
-
-		reset($this->pending_photo_ids);
-
-		if (count($this->pending_photo_ids) > 0) {
-			$this->ui->getWidget('proceed_button')->visible = true;
-			$this->ui->getWidget('status_info')->content = 
-				sprintf(Pinhole::ngettext(
-					'%d pending photo left',
-					'%d pending photos left',
-					count($this->pending_photo_ids)),
-					count($this->pending_photo_ids));
-		}
-	}
-
-	// }}}
 	// {{{ protected function pendingPhotoCount()
 
 	protected function pendingPhotoCount()
 	{
-		$pending_photos = $this->getPendingPhotos();
-
-		return ($pending_photos === null) ? 0 :
-			count($pending_photos);
+		return (count($this->pending_photos));
 	}
 
 	// }}}
@@ -189,14 +153,9 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function upcomingPendingPhotoCount()
 	{
-		$pending_photos = $this->getPendingPhotos();
-
-		if ($pending_photos === null)
-			return 0;
-
 		$count = 0;
 		$found = false;
-		foreach ($pending_photos as $photo) {
+		foreach ($this->pending_photos as $photo) {
 			if ($photo->id == $this->photo->id)
 				$found = true;
 			elseif ($found)
@@ -211,18 +170,17 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function nextPendingPhoto()
 	{
-		$pending_photos = $this->getPendingPhotos();
-
-		if ($pending_photos === null)
-			return false;
-
 		$found = false;
-		foreach ($pending_photos as $photo) {
+
+		foreach ($this->pending_photos as $photo) {
+			echo $photo->id.'<br />';
 			if ($photo->id == $this->photo->id)
 				$found = true;
 			elseif ($found)
 				return $photo;
 		}
+
+		return false;
 	}
 
 	// }}}
@@ -230,24 +188,17 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function getPendingPhotos()
 	{
-		static $pending_photos;
+		$instance = $this->app->instance->getInstance();
 
-		if ($pending_photos === null) {
-			$instance = $this->app->instance->getInstance();
+		$sql = sprintf('select id, title
+			from PinholePhoto
+			where PinholePhoto.status = %s and PinholePhoto.instance = %s
+			order by PinholePhoto.upload_date, PinholePhoto.id',
+			$this->app->db->quote(PinholePhoto::STATUS_PENDING,
+				'integer'),
+			$this->app->db->quote($instance->id, 'integer'));
 
-			$sql = sprintf('select id, title
-				from PinholePhoto
-				where PinholePhoto.status = %s and PinholePhoto.instance = %s
-				order by PinholePhoto.upload_date, PinholePhoto.id',
-				$this->app->db->quote(PinholePhoto::STATUS_PENDING,
-					'integer'),
-				$this->app->db->quote($instance->id, 'integer'));
-
-			$pending_photos =
-				SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
-		}
-
-		return $pending_photos;
+		return SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
 	}
 
 	// }}}

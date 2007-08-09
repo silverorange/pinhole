@@ -15,23 +15,31 @@ class PinholeAdminUser extends AdminUser
 	// {{{ public function isAuthenticated()
 
 	/**
-	 * Checks if a user is authenticated
+	 * Checks if a user is authenticated for an admin application
 	 *
 	 * After a user's username and password have been verified, perform
 	 * additional hecks on the user's authentification. This method is run
 	 * on every page load, not just at login, to ensure the user has
 	 * permission to access the admin.
 	 *
-	 * @return boolean True if the user has authenticated access to the
-	 *                 admin. 
+	 * Pinhole checks whether or not this user belongs to the current site
+	 * instance as well as performing all regular checks.
+	 *
+	 * @param AdminApplication $app the application to authenticate this user
+	 *                               against.
+	 *
+	 * @return boolean True if this user has authenticated access to the
+	 *                 admin and false if this user does not.
 	 */
 	public function isAuthenticated(AdminApplication $app)
 	{
 		$authenticated = parent::isAuthenticated($app);
 
-		return ($authenticated &&
-			in_array($app->instance->getInstance(),
-				$this->instances->getArray()));
+		if ($authenticated &&
+			!isset($this->instances[$app->instance->getInstance()->id]))
+			$authenticated = false;
+
+		return $authenticated;
 	}
 
 	// }}}
@@ -40,7 +48,7 @@ class PinholeAdminUser extends AdminUser
 	/**
 	 * Load the PinholeInstances that this user has access to
 	 *
-	 * @return PinholeInstanceWrapper Accessible instances.
+	 * @return PinholeInstanceWrapper the site instances this user belongs to.
 	 */
 	protected function loadInstances()
 	{

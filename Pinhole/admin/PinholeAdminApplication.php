@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Pinhole/PinholeMultipleInstanceModule.php';
+require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
 require_once 'Admin/AdminApplication.php';
 
 /**

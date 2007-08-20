@@ -170,6 +170,9 @@ class PinholePhotoFactory
 		$photo->filename = sha1(uniqid(rand(), true));
 		$photo->original_filename = $original_filename;
 		$photo->upload_date = new SwatDate();
+		if (isset($meta_data['createdate']))
+			$photo->photo_date = $this->parseMetaDataDate(
+				$meta_data['createdate']->value);
 
 		// error suppression is needed here because there are several
 		// ways unavoidable warnings can occur despite the file being
@@ -187,10 +190,6 @@ class PinholePhotoFactory
 			$this->db->rollback();
 			throw new PinholeProcessingException($saved);
 		}
-
-		if (isset($meta_data['createdate']))
-			$photo->photo_date = $this->parseMetaDataDate(
-				$meta_data['createdate']->value);
 
 		$this->saveMetaData($photo, $meta_data);
 

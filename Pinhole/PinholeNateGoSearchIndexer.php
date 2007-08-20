@@ -260,7 +260,21 @@ abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	 * @return integer the NateGo document type that corresponds to the content
 	 *                  search type or null if no document type exists.
 	 */
-	abstract protected function getDocumentType($search_type);
+	protected function getDocumentType($search_type)
+	{
+		$type = null;
+
+		switch ($search_type) {
+		case PinholeSearchPage::TYPE_PHOTOS:
+			$type = Pinhole::SEARCH_PHOTO;
+			break;
+		case PinholeSearchPage::TYPE_TAGS:
+			$type = Pinhole::SEARCH_TAG;
+			break;
+		}
+
+		return $type;
+	}
 
 	// }}}
 }

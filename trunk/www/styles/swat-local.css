@@ -1,0 +1,65 @@
+/* SwatForm */
+
+.swat-form label {
+	color: #eeeeec;
+}
+
+
+/* SwatPagination */
+
+.swat-pagination {
+	clear: left;
+}
+
+.swat-pagination a,
+.swat-pagination span {
+	border-color: #555753;
+}
+
+.swat-pagination span.swat-pagination-current {
+	border-color: #888a85;
+	background-color: #555753;
+}
+
+.swat-pagination a:hover {
+	background-color: #555753;
+	border-color: #888a85;
+}
+
+
+/* SwatDetailsView */
+table.swat-details-view td,
+table.swat-details-view th {
+	padding: 0.2em;
+	width: auto;
+}
+
+table.swat-details-view th {
+	text-align: right;
+	color: #babdb6;
+}
+
+
+/* SwatDisclosure */
+
+.swat-disclosure span.swat-disclosure-span,
+.swat-disclosure a.swat-disclosure-anchor {
+	background: #2e3436;
+}
+
+.swat-disclosure .swat-disclosure-container {
+	border-color: #555753;
+}
+
+
+/* SwatFieldset */
+
+.swat-fieldset,
+.swat-grouping-form-field-fieldset {
+	border-color: #555753;
+}
+
+.swat-fieldset legend, 
+.swat-grouping-form-field legend {
+	color: #eeeeec;
+}

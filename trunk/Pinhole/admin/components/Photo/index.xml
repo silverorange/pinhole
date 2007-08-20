@@ -1,0 +1,71 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame" id="search_disclosure">
+		<property name="title" translatable="yes">Search Photos</property>
+		<widget class="SwatForm" id="search_form">
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Keywords</property>
+				<widget class="SwatEntry" id="search_keywords" />
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Taken On or After</property>
+				<widget class="SwatDateEntry" id="search_start_date">
+					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Taken Before</property>
+				<widget class="SwatDateEntry" id="search_end_date">
+					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+				</widget>
+			</widget>
+			<widget class="SwatFooterFormField">
+				<widget class="SwatButton" id="submit_button">
+					<property name="title" translatable="yes">Search</property>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+	<widget class="SwatFrame" id="results_frame">
+		<property name="title" translatable="yes">Photos</property>
+		<property name="visible" type="boolean">false</property>
+		<widget class="SwatContentBlock" id="results_message" />
+
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTileView" id="index_view">
+				<object class="SwatTile">
+					<object class="PinholeAdminPhotoCellRenderer">
+						<property name="photo" type="data">photo</property>
+						<property name="link">Photo/Edit?id=%s</property>
+						<property name="link_value" type="data">id</property>
+					</object>
+					<object class="SwatCheckboxCellRenderer" id="items">
+						<property name="value" type="data">photo.id</property>
+						<property name="title" translatable="yes">select photo</property>
+					</object>
+				</object>
+			</widget>
+			<widget class="AdminPagination" id="pager">
+				<property name="link">Photo</property>
+				<property name="page_size" type="integer">100</property>
+			</widget>
+			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="delete">
+					<property name="title" translatable="yes">delete…</property>
+				</widget>
+				<widget class="SwatActionItem" id="tags_action">
+					<property name="title" translatable="yes">add tags…</property>
+					<widget class="PinholePhotoTagEntry" id="tags" />
+				</widget>
+				<widget class="SwatActionItem" id="status_action">
+					<property name="title" translatable="yes">change status…</property>
+					<widget class="SwatFlydown" id="status_flydown">
+						<property name="show_blank" type="boolean">false</property>
+					</widget>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

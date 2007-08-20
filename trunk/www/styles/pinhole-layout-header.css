@@ -1,0 +1,69 @@
+#hd {
+	background-color: #4b4e4b;
+	position: relative;
+}
+
+#hd h1 {
+	margin: 0;
+	font-weight: bold;
+	font-size: 167%;
+	background-color: #555753;
+	border-bottom: 1px solid #666;
+	padding: 0.4em 20px;
+}
+
+
+/* Header Search */
+
+#hd form#search_form {
+	position: absolute;
+	top: 1em;
+	right: 20px;
+	font-size: 85%;
+}
+
+#hd form#search_form.swat-form label {
+	margin-right: 0.5em;
+	margin-left: 0.2em;
+	color: #eeeeec;
+}
+
+#hd form#search_form.swat-form label:hover {
+	color: #fff;
+}
+
+#hd form#search_form.swat-form input {
+	vertical-align: middle;
+} 
+
+#hd form#search_form.swat-form input.swat-button {
+	margin-left: 0.3em;
+}
+
+#hd form#search_form ul#search_options,
+#hd form#search_form ul#search_options li,
+#hd form#search_form .swat-form-field,
+#hd form#search_form .swat-form-field-contents {
+	display: inline;
+}
+
+
+/* Sub-Header (tag intersection and next/prev links) */
+
+#hd #sub_hd {
+	position: relative;
+	border-bottom: 1px solid #555;
+	margin: 0;
+	padding: 0.4em 20px;
+}
+
+/* Tag Intersection */
+
+.intersecting-tag-list {
+	font-size: 136%;
+	float: left;
+}
+
+.intersecting-tag-list span.plus {
+	font-weight: bold;
+}

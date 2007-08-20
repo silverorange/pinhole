@@ -1,0 +1,22 @@
+h2#page_title {
+	font-size: 136%;
+	margin-bottom: 0.2em;
+}
+
+/*
+ * Clearfix hack:
+ * Remove this when the clearfix style is applied to the #sub_hd element
+ * properly.
+ */
+#sub_hd:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+#sub_hd {display:inline-block;}
+/* Hide from IE Mac \*/
+#sub_hd {display:block;}
+/* End hide from IE Mac */
+

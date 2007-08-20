@@ -1,0 +1,22 @@
+#sidebar {
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+#sidebar ul.tag-list li {
+	margin: 0.4em 0;
+}
+
+#sidebar ul.tag-list li a.view-all {
+	white-space: nowrap;
+}
+
+#sidebar ul.tag-list:hover li a.view-all:link,
+#sidebar ul.tag-list:hover li a.view-all:visited {
+	color: #888a85;
+}
+
+#sidebar ul.tag-list li a.view-all:link    { color: #555753; text-decoration: none; }
+#sidebar ul.tag-list li a.view-all:visited { color: #555753; text-decoration: none; }
+#sidebar ul.tag-list li a.view-all:hover   { color: #babdb6; text-decoration: underline; }
+#sidebar ul.tag-list li a.view-all:active  { color: #555753; }

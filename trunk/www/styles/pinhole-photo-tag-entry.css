@@ -1,0 +1,70 @@
+/*
+ * Styles for Pinhole tag auto-complete control
+ *
+ * Many of these styles are dictated by YUI and required for the auto-complete
+ * to function in all browsers. See
+ * http://developer.yahoo.com/yui/examples/autocomplete/states_jsarray.html
+ * before making radical changes to this CSS.
+ */
+
+.pinhole-photo-tag-entry { /* set width of widget here*/
+	position: relative;
+	width: 20em;
+	margin-bottom: 1em;
+}
+.pinhole-photo-tag-entry { /* for IE z-index of absolute divs inside relative divs issue */
+	z-index: 9000
+} 
+
+.pinhole-photo-tag-entry input { /* abs for ie quirks */
+	_position: absolute;
+	width: 100%;
+	z-index: 0;
+} 
+
+.pinhole-photo-tag-container {
+	position: absolute;
+	top: 1.7em;
+	width: 100%
+}
+
+.pinhole-photo-tag-container .yui-ac-content {
+	position: absolute;
+	width: 100%;
+	border: 1px solid #888;
+	background: #fff;
+	overflow: hidden;
+	z-index: 9050;
+}
+
+.pinhole-photo-tag-container ul {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.pinhole-photo-tag-container li {
+	padding: 2px 5px;
+	cursor: default;
+	white-space: nowrap;
+}
+
+li.pinhole-photo-tag-highlight {
+	background: #B5D5FF;
+}
+
+li.pinhole-photo-tag-prehighlight {
+	background: #FFFFCC;
+}
+
+.pinhole-photo-tag-list {
+	padding: 0;
+	margin: 0.5em 0 0 0;
+	list-style-type: none;
+	width: 20em;
+}
+
+.pinhole-photo-tag-list li {
+	margin: 0 0 0 0.5em;
+	padding: 2px;
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame">
+		<property name="title" translatable="yes">Upload Photos</property>
+		<widget class="PinholePhotoUploader" id="file">
+			<property name="action">Photo/Upload</property>
+			<property name="target_action">Photo/UploadStatus</property>
+		</widget>
+		<widget class="AdminNote">
+			<property name="content" translatable="yes">Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</property>
+		</widget>
+		<widget class="SwatFormField">
+			<widget class="SwatDisplayableContainer" id="photo_container" />
+		</widget>
+		<widget class="SwatForm" id="time_zone_form">
+			<property name="action">Photo/Upload</property>
+			<widget class="SwatFormField">
+				<widget class="SwatFormField">
+					<property name="title">Time Zone for Photo(s)</property>
+					<property name="note">This is the time zone of the location this photo/set was taken. Photos time will be displayed using this time zone.</property>
+					<widget class="SwatTimeZoneEntry" id="photo_time_zone" />
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title">Time Zone for Camera</property>
+					<property name="note">This is the time zone the camera when it took this photo/set. Often the same as above, unless the camera was set to the wrong time zone.</property>
+					<widget class="SwatTimeZoneEntry" id="camera_time_zone" />
+				</widget>
+			</widget>
+			<widget class="SwatFooterFormField">
+				<widget class="SwatButton" id="submit_button">
+					<property name="title" type="string">Continue Publishing Photos</property>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

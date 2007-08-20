@@ -1,0 +1,40 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame" id="index_frame">
+		<property name="title" translatable="yes">Pending Photos</property>
+		<widget class="SwatContentBlock" id="results_message" />
+
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTileView" id="index_view">
+				<object class="SwatTile">
+					<object class="PinholeAdminPhotoCellRenderer">
+						<property name="photo" type="data">photo</property>
+						<property name="link">Photo/Edit?id=%s</property>
+						<property name="link_value" type="data">id</property>
+					</object>
+					<object class="SwatCheckboxCellRenderer" id="items">
+						<property name="value" type="data">photo.id</property>
+					</object>
+				</object>
+			</widget>
+			<widget class="AdminPagination" id="pager">
+				<property name="link">Photo/Pending</property>
+				<property name="page_size" type="integer">100</property>
+			</widget>
+			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="delete">
+					<property name="title" translatable="yes">delete…</property>
+				</widget>
+				<widget class="SwatActionItem" id="tags_action">
+					<property name="title" translatable="yes">add tags…</property>
+					<widget class="PinholePhotoTagEntry" id="tags" />
+				</widget>
+				<widget class="SwatActionItem" id="status_action">
+					<property name="title" translatable="yes">publish</property>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

@@ -1,0 +1,68 @@
+a.pinhole-calendar-year, div.pinhole-calendar-year {
+	display: block;
+	clear: left;
+	border-top: 1px solid #555753;
+	margin-bottom: 2px;
+	padding: 3px;
+}
+
+table.pinhole-calendar {
+	float: left;
+	margin: 0 0.5em 1em 0.5em;
+}
+
+table.pinhole-calendar caption {
+	padding-bottom: 0.2em;
+	margin: 0 0.5em;
+}
+
+table.pinhole-calendar caption a {
+	color: #eeeeec;
+}
+
+table.pinhole-calendar thead th {
+	font-size: 85%;
+	color: #babdb6;
+	padding: 0 1px;
+}
+
+table.pinhole-calendar th,
+table.pinhole-calendar td {
+	text-align: center;
+	padding: 0 0 0 1px;
+	border-bottom: 1px solid #555753;
+}
+
+table.pinhole-calendar tbody a {
+	display: block;
+	text-decoration: none;
+	padding: 1px;
+	border: 1px transparent;
+}
+
+table.pinhole-calendar tbody a:hover {
+	background: #555753;
+}
+
+table.pinhole-calendar tr.selected {
+	background: #555753;
+	border: 1px solid #fff;
+}
+
+table.pinhole-calendar.selected {
+	border: 1px solid #fff;
+}
+
+table.pinhole-calendar td a {
+	color: #666;
+}
+
+table.pinhole-calendar td.selected a {
+	color: #fff;
+	background: #555753;
+}
+
+table.pinhole-calendar td.highlight a {
+	border: 1px #888a85 solid;
+	color: #fff;
+}

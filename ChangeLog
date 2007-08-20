@@ -1,3 +1,46 @@
+2007-08-20  nrf
+
+	* [r19484] pinhole/trunk/package.php:
+	  prepare for release of 1.0.10
+	* [r19482] pinhole/trunk/package.php:
+	  prepare for release of 1.0.9
+	* [r19480] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.9
+	* [r19479] pinhole/trunk/demo/pear:
+	  make symlink generic
+	* [r19478] pinhole/trunk/demo, pinhole/trunk/demo/demo.ini,
+	  pinhole/trunk/demo/include,
+	  pinhole/trunk/demo/include/Application.php,
+	  pinhole/trunk/demo/include/Gallery.php,
+	  pinhole/trunk/demo/include/PageFactory.php,
+	  pinhole/trunk/demo/pear, pinhole/trunk/demo/sql,
+	  pinhole/trunk/demo/sql/create.php,
+	  pinhole/trunk/demo/sql/create.sh,
+	  pinhole/trunk/demo/sql/demo-users.sql, pinhole/trunk/demo/www,
+	  pinhole/trunk/demo/www/admin,
+	  pinhole/trunk/demo/www/admin/index.php,
+	  pinhole/trunk/demo/www/admin/packages,
+	  pinhole/trunk/demo/www/admin/packages/admin,
+	  pinhole/trunk/demo/www/admin/packages/pinhole,
+	  pinhole/trunk/demo/www/admin/packages/swat,
+	  pinhole/trunk/demo/www/admin/packages/xml-rpc-ajax,
+	  pinhole/trunk/demo/www/admin/packages/yui,
+	  pinhole/trunk/demo/www/images, pinhole/trunk/demo/www/index.php,
+	  pinhole/trunk/demo/www/packages,
+	  pinhole/trunk/demo/www/packages/pinhole,
+	  pinhole/trunk/demo/www/packages/swat,
+	  pinhole/trunk/demo/www/packages/yui, pinhole/trunk/package.php:
+	  Add a demo site.
+	* [r19477] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Constants are now in pinhole and always use fulltext
+	* [r19476] pinhole/trunk/Pinhole/Pinhole.php:
+	  Move the search constants into Pinhole
+	* [r19475] pinhole/trunk/sql/tables/AdminUserInstanceBinding.sql:
+	  Add instance bindings
+	* [r19474]
+	  pinhole/trunk/Pinhole/admin/PinholeAdminApplication.php:
+	  hard code until we have module deps
+
 2007-08-20  nick
 
 	* [r19473] pinhole/trunk/Pinhole/dataobjects/PinholeAdminUser.php:

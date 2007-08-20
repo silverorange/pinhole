@@ -23,8 +23,21 @@ class PinholeAdminApplication extends AdminApplication
 	 */
 	protected function getDefaultModuleList()
 	{
+		// hard coded until module dependencies are automatic
+		$modules = array(
+			'cookie'   => 'SiteCookieModule',
+			'database' => 'SiteDatabaseModule',
+			'instance' => 'PinholeMultipleInstanceModule',
+			'session'  => 'AdminSessionModule',
+			'messages' => 'SiteMessagesModule',
+			'config'   => 'SiteConfigModule',
+		);
+
+		/*
 		$modules = parent::getDefaultModuleList();
 		$modules['instance'] = 'PinholeMultipleInstanceModule'; 
+		*/
+
 		return $modules;
 	}
 

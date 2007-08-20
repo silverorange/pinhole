@@ -171,7 +171,7 @@ class PinholePhotoIndex extends AdminSearch
 	protected function searchPhotos()
 	{
 		$keywords = $this->ui->getWidget('search_keywords')->value;
-		if (strlen(trim($keywords))) > 0 {
+		if (strlen(trim($keywords)) > 0) {
 
 			$query = new NateGoSearchQuery($this->app->db);
 			$query->addDocumentType(Pinhole::SEARCH_PHOTO);

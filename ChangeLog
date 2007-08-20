@@ -1,5 +1,58 @@
 2007-08-20  nrf
 
+	* [r19526] pinhole/trunk/package.php:
+	  prepare for release of 1.0.18
+	* [r19525] pinhole/trunk/demo/sql/demo-users.sql:
+	  setup user group bindings
+	* [r19523] pinhole/trunk/package.php:
+	  prepare for release of 1.0.17
+
+2007-08-20  charles
+
+	* [r19522] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php:
+	  The time zones in photo edit will now be formatted to the time
+	  zone on the photo and no UTC.
+
+2007-08-20  nrf
+
+	* [r19521] pinhole/trunk/demo/sql/create.sh:
+	  make more generic
+	* [r19520] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  Better fix of syntax error
+	* [r19519] pinhole/trunk/Pinhole/admin/components/Photo/Index.php:
+	  fix syntax error
+	* [r19510] pinhole/trunk/package.php:
+	  prepare for release of 1.0.16
+	* [r19508] pinhole/trunk/package.php:
+	  prepare for release of 1.0.15
+
+2007-08-20  charles
+
+	* [r19503] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  Moved the setting of the photo_date to before the data object is
+	  saved. It will now be set to the date in the exif data.
+
+2007-08-20  nrf
+
+	* [r19501] pinhole/trunk/package.php:
+	  prepare for release of 1.0.14
+	* [r19500] pinhole/trunk/demo/pear:
+	  make more generic
+	* [r19498] pinhole/trunk/package.php:
+	  prepare for release of 1.0.13
+	* [r19497] pinhole/trunk/demo/demo.ini:
+	  make generic
+	* [r19493] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.12
+	* [r19492] pinhole/trunk/demo/www/admin/packages/admin,
+	  pinhole/trunk/demo/www/admin/packages/pinhole,
+	  pinhole/trunk/demo/www/admin/packages/swat,
+	  pinhole/trunk/demo/www/admin/packages/xml-rpc-ajax,
+	  pinhole/trunk/demo/www/admin/packages/yui,
+	  pinhole/trunk/demo/www/packages/pinhole,
+	  pinhole/trunk/demo/www/packages/swat,
+	  pinhole/trunk/demo/www/packages/yui:
+	  remove symlinks
 	* [r19488] pinhole/trunk/package.php:
 	  prepare for release of 1.0.11
 	* [r19486] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:

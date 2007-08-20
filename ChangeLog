@@ -1,5 +1,9 @@
 2007-08-20  nrf
 
+	* [r19488] pinhole/trunk/package.php:
+	  prepare for release of 1.0.11
+	* [r19486] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.11
 	* [r19484] pinhole/trunk/package.php:
 	  prepare for release of 1.0.10
 	* [r19482] pinhole/trunk/package.php:

@@ -2,7 +2,7 @@
 
 require_once 'PEAR/PackageFileManager2.php';
 
-$version = '1.0.16';
+$version = '1.0.17';
 $notes = <<<EOT
 see ChangeLog
 EOT;
@@ -56,6 +56,7 @@ $package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com',
 $package->addPackageDepWithChannel('required', 'Date', 'pear.silverorange.com', '1.4.7so1');
 $package->addPackageDepWithChannel('required', 'MDB2', 'pear.php.net', '2.2.2');
 $package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.4');
+$package->addPackageDepWithChannel('required', 'Image_Transform', 'pear.silverorange.com', '0.9.0so7');
 $package->generateContents();
 
 if (isset($_GET['make']) || (isset($_SERVER['argv']) && @$_SERVER['argv'][1] == 'make')) {

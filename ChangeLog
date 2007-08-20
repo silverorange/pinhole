@@ -1,3 +1,86 @@
+2007-08-20  nick
+
+	* [r19473] pinhole/trunk/Pinhole/dataobjects/PinholeAdminUser.php:
+	  I'm not sure why we were checking the array key. This definetly
+	  works like
+	  this.
+
+2007-08-09  gauthierm
+
+	* [r19289] pinhole/trunk/Pinhole/dataobjects/PinholeAdminUser.php:
+	  More doc cleanups.
+	* [r19288] pinhole/trunk/Pinhole/dataobjects/PinholeAdminUser.php:
+	  Documentation cleanups and use a hash key lookup rather than an
+	  in_array() check for checking authentication. set->toArray()
+	  should be used as little as possible since most things you can
+	  do with an array you can already do directly with the set.
+
+2007-08-09  nick
+
+	* [r19284] pinhole/trunk/Pinhole/PinholeSubTagListView.php:
+	  Added folding
+	* [r19283] pinhole/trunk/Pinhole/Pinhole.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeAdminUser.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeInstanceWrapper.php:
+	  New dataobjects to allow the authentication of PinholeAdminUser
+	* [r19282]
+	  pinhole/trunk/Pinhole/admin/PinholeAdminApplication.php:
+	  Include PinholeAdminUser early so that the class can be loaded
+	  from the
+	  session.
+	* [r19280] pinhole/trunk/Pinhole/admin/components/AdminUser,
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/edit.xml:
+	  Add option to select instances for a user. This might have to
+	  reworked once we
+	  have lots of instances, but will work for now.
+	* [r19276] pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml:
+	  100 is a better default page size I think
+
+2007-08-08  nick
+
+	* [r19271] pinhole/trunk/sql/tables/AdminUserInstanceBinding.sql:
+	  Binding table to enforce admin user security.
+	* [r19269] pinhole/trunk/Pinhole/PinholePhotoFactory.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadProcessorServer.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/UploadStatus.php,
+	  pinhole/trunk/Pinhole/exceptions/PinholeProcessingException.php,
+	  pinhole/trunk/Pinhole/exceptions/PinholeUploadException.php:
+	  Replace Pear errors with exceptions that are handled. Completes
+	  ticket 1222.
+	* [r19255] pinhole/trunk/Pinhole/exceptions/PinholeException.php:
+	  Fix package info
+	* [r19252] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php:
+	  Clean up pending photo stuff and fix error when a photo is
+	  published (ticket
+	  1206).
+
+2007-08-08  nrf
+
+	* [r19248]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  revert 19236
+
+2007-08-08  gauthierm
+
+	* [r19246]
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Edit.php:
+	  Fix crappy syntax.
+
+2007-08-08  charles
+
+	* [r19236]
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php:
+	  This will remove the error caused by trying to default the
+	  timezones and can be un commented when the problem with
+	  SwatTimeZoneEntry is fixed.
+
+2007-08-07  nrf
+
+	* [r19174] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.8
+
 2007-08-07  gauthierm
 
 	* [r19173] pinhole/trunk/Pinhole/PinholeTagList.php:

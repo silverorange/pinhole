@@ -14,7 +14,7 @@ require_once 'Pinhole/pages/PinholeSearchPage.php';
  * @copyright 2006-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
+class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 {
 	// {{{ public function queue()
 	
@@ -249,7 +249,7 @@ abstract class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	}
 
 	// }}}
-	// {{{ abstract protected function getDocumentType()
+	// {{{ protected function getDocumentType()
 
 	/**
 	 * Gets the NateGo document type based on a content search type

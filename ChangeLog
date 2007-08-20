@@ -1,5 +1,15 @@
 2007-08-20  nrf
 
+	* [r19539] pinhole/trunk/package.php:
+	  prepare for release of 1.0.21
+	* [r19538] pinhole/trunk/Pinhole/PinholeNateGoSearchIndexer.php:
+	  No longer abstract
+	* [r19536] pinhole/trunk/package.php:
+	  prepare for release of 1.0.20
+	* [r19533] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.19
+	* [r19532] pinhole/trunk/Pinhole/PinholeNateGoSearchIndexer.php:
+	  Push SEARCH_ constants up to Pinhole
 	* [r19526] pinhole/trunk/package.php:
 	  prepare for release of 1.0.18
 	* [r19525] pinhole/trunk/demo/sql/demo-users.sql:

@@ -28,6 +28,16 @@ class Pinhole
 	 */
 	const GETTEXT_DOMAIN = 'pinhole';
 
+	/**
+	 * Fulltext search document type for photos
+	 */
+	const SEARCH_PHOTO = 1;
+
+	/**
+	 * Fulltext search document type for tags 
+	 */
+	const SEARCH_TAG = 2;
+
 	// }}}
 	// {{{ public static function _()
 

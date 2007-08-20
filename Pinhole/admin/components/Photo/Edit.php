@@ -215,9 +215,14 @@ class PinholePhotoEdit extends AdminDBEdit
 			'status',
 		));
 
+		// turns the date back into UTC
+		$photo_date = new SwatDate($values['photo_date']);
+		$photo_date->setTZbyID($this->photo->photo_time_zone);
+		$photo_date->toUTC();
+
 		$this->photo->title     = $values['title'];
 		$this->photo->description  = $values['description'];
-		$this->photo->photo_date = $values['photo_date'];
+		$this->photo->photo_date = $photo_date;
 		$this->photo->setStatus($values['status']);
 		$this->photo->save();
 
@@ -324,6 +329,7 @@ class PinholePhotoEdit extends AdminDBEdit
 					$this->upcomingPendingPhotoCount()),
 					$this->upcomingPendingPhotoCount());
 		}
+
 	}
 
 	// }}}
@@ -348,6 +354,12 @@ class PinholePhotoEdit extends AdminDBEdit
 			$tag_list->add($tag);
 
 		$this->ui->getWidget('tags')->setSelectedTagList($tag_list);
+
+		// sets the date to the set timezone
+		$converted_date = $this->photo->photo_date;
+		$converted_date->convertTZbyID($this->photo->photo_time_zone);
+		$this->ui->getWidget('photo_date')->value = $converted_date;
+
 	}
 
 	// }}}

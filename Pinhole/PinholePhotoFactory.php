@@ -215,7 +215,7 @@ class PinholePhotoFactory
 
 		$transformer = Image_Transform::factory('Imagick2');
 		if (PEAR::isError($transformer))
-			throw new PinholeProcessingException($tranformer);
+			throw new PinholeProcessingException($transformer);
 
 		$transformations = array();
 

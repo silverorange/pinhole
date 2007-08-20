@@ -1,0 +1,69 @@
+.swat-tile {
+	height: auto;
+	border: 1px solid #ccc;
+	padding: 0;
+	font-size: 85%;
+	width: 116px;
+}
+
+.swat-tile a {
+	text-decoration: none;
+}
+
+.swat-tile a span.title {
+	display: block;
+	height: 2.5em;
+	padding: 0.2em 0;
+}
+
+* html .swat-tile a span.title {
+	cursor: pointer; /* for Ie6 */
+}
+
+.swat-tile label {
+	display: block;
+	font-weight: normal;
+	padding: 3px;
+	background: #eeeeec;
+	color: #888a85;
+}
+
+.swat-tile label:hover {
+	background: #d3d7cf;
+	color: #555753;
+}
+
+.swat-tile label input {
+	vertical-align: middle;
+}
+
+.swat-tile label input {
+	margin-right: 4px;
+}
+
+.swat-tile div {
+	display: block;
+	height: 3em;
+	padding: 4px;
+}
+
+.swat-pagination {
+	clear: left;
+}
+
+.swat-tile .photo-wrapper {
+	height: 106px;
+	width: 116px;
+	display: table-cell;
+	vertical-align: middle;
+	position: relative;
+}
+
+* html .swat-tile .photo-wrapper {
+	display: block;
+}
+
+.swat-tile .photo-wrapper img {
+	display: block;
+	margin: 0 auto;
+}

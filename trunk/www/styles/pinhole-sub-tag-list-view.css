@@ -1,0 +1,7 @@
+.pinhole-sub-tag-list-view ul li {
+	margin: 0.4em 0;
+}
+
+.pinhole-sub-tag-list-view ul li a.view-all {
+	white-space: nowrap;
+}

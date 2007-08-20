@@ -1,0 +1,64 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame" id="index_frame">
+		<property name="title" translatable="yes">MetaData</property>
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTableView" id="index_view">
+                <object class="SwatTableViewGroup">
+					<property name="id">show</property>
+					<property name="group_by">show</property>
+					<object class="SwatTextCellRenderer">
+						<property name="text" type="data">group_title</property>
+					</object>
+					<object class="AdminGroupLinkCellRenderer">
+						<property name="text" translatable="yes">Change Order</property>
+						<property name="link">MetaData/Order?parent=%s</property>
+						<property name="link_value" type="data">show</property>
+					</object>
+				</object>
+				<object class="SwatTableViewCheckboxColumn" id="checkbox">
+					<object class="SwatCheckboxCellRenderer" id="items">
+						<property name="value" type="data">id</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="title">
+					<property name="title" translatable="yes">Title</property>
+					<object class="AdminTitleLinkCellRenderer">
+						<property name="text" type="data">title</property>
+						<property name="link">MetaData/Edit?id=%s</property>
+						<property name="link_value" type="data">id</property>
+						<property name="stock_id">edit</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn">
+					<property name="title" translatable="yes">Display in Photo Details</property>
+					<object class="SwatBooleanCellRenderer">
+						<property name="value" type="data">show</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn">
+					<property name="title" translatable="yes">Display Machine Tag</property>
+					<object class="SwatBooleanCellRenderer">
+						<property name="value" type="data">machine_tag</property>
+					</object>
+				</object>
+			</widget>
+			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="show_details">
+					<property name="title" translatable="yes">display in photo details</property>
+				</widget>
+				<widget class="SwatActionItem" id="dont_show_details">
+					<property name="title" translatable="yes">don't display in photo details</property>
+				</widget>
+				<widget class="SwatActionItem" id="show_machine">
+					<property name="title" translatable="yes">display machine tag</property>
+				</widget>
+				<widget class="SwatActionItem" id="dont_show_machine">
+					<property name="title" translatable="yes">don't display machine tag</property>
+				</widget>
+			</widget>	
+		</widget>
+	</widget>
+</swatml>

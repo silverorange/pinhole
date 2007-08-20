@@ -1,0 +1,56 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame" id="index_frame">
+		<property name="title" translatable="yes">Photographers</property>
+		<widget class="SwatToolbar" id="toolbar">
+			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">New Photographer</property>
+				<property name="link">Photographer/Edit</property>
+				<property name="stock_id">create</property>
+			</widget>
+		</widget>
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTableView" id="index_view">
+				<object class="SwatTableViewCheckboxColumn" id="checkbox">
+					<object class="SwatCheckboxCellRenderer" id="items">
+						<property name="value" type="data">id</property>
+					</object>
+				</object>
+				<object class="AdminTableViewOrderableColumn" id="fullname">
+					<property name="title" translatable="yes">Full Name</property>
+					<object class="AdminTitleLinkCellRenderer">
+						<property name="text" type="data">fullname</property>
+						<property name="link">Photographer/Edit?id=%s</property>
+						<property name="link_value" type="data">id</property>
+						<property name="stock_id">edit</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn">
+					<property name="title" translatable="yes">Description</property>
+					<object class="SwatTextCellRenderer">
+						<property name="text" type="data">description</property>
+					</object>
+				</object>
+				<object class="AdminTableViewOrderableColumn">
+					<property name="title" translatable="yes">Status</property>
+					<object class="SwatTextCellRenderer">
+						<property name="text" type="data">status_title</property>
+					</object>
+				</object>
+			</widget>
+			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="delete">
+					<property name="title" translatable="yes">delete…</property>
+				</widget>
+				<widget class="SwatActionItem" id="status_action">
+					<property name="title" translatable="yes">change status…</property>
+					<widget class="SwatFlydown" id="status_flydown">
+						<property name="show_blank" type="boolean">false</property>
+					</widget>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

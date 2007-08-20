@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatForm" id="search_form">
+		<property name="action">search</property>
+		<widget class="SwatRadioList" id="search_options" />
+		<widget class="SwatFormField">
+			<property name="access_key" type="string">4</property>
+			<widget class="SwatEntry" id="keywords">
+				<property name="size" type="integer">30</property>
+				<property name="maxlength" type="integer">255</property>
+			</widget>
+			<widget class="SwatButton">
+				<property name="title">Search</property>
+				<property name="classes[]">compact-button</property>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

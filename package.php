@@ -2,7 +2,7 @@
 
 require_once 'PEAR/PackageFileManager2.php';
 
-$version = '1.0.11';
+$version = '1.0.12';
 $notes = <<<EOT
 see ChangeLog
 EOT;
@@ -42,7 +42,6 @@ $package->setAPIStability('stable');
 $package->setNotes($notes);
 
 $package->addIgnore('package.php');
-$package->addIgnore('packages/');
 
 $package->addMaintainer('lead', 'nrf', 'Nathan Fredrickson', 'nathan@silverorange.com');
 $package->addMaintainer('lead', 'gauthierm', 'Mike Gauthier', 'mike@silverorange.com');

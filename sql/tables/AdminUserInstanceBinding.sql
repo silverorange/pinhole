@@ -3,3 +3,5 @@ create table AdminUserInstanceBinding (
 	instance int not null references PinholeInstance(id) on delete cascade,
 	primary key (usernum, instance)
 );
+
+insert into AdminUserInstanceBinding (usernum, instance) select id, 1 from AdminUser;

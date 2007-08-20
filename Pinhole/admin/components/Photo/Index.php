@@ -109,28 +109,6 @@ class PinholePhotoIndex extends AdminSearch
 					'integer'),
 				$this->app->db->quote($instance->id, 'integer'));
 
-			// keywords are included in the where clause if fulltext searching
-			// is turned off
-			if ($this->getPhotoSearchType() === null) {
-				$keyword_where = '';
-
-				$clause = new AdminSearchClause('title');
-				$clause->table = 'PinholePhoto';
-				$clause->value = $this->ui->getWidget('search_keywords')->value;
-				$clause->operator = AdminSearchClause::OP_CONTAINS;
-				$keyword_where.= $clause->getClause($this->app->db, '');
-
-				$clause = new AdminSearchClause('description');
-				$clause->table = 'PinholePhoto';
-				$clause->value = $this->ui->getWidget('search_keywords')->value;
-				$clause->operator = AdminSearchClause::OP_CONTAINS;
-				$keyword_where.= $clause->getClause($this->app->db, 'or');
-
-				if ($keyword_where != '')
-					$where.= sprintf(' and (%s) ',
-						$keyword_where);
-			}
-
 			$clause = new AdminSearchClause('date:photo_date');
 			$clause->table = 'PinholePhoto';
 			$clause->value = $this->ui->getWidget('search_start_date')->value;
@@ -193,11 +171,10 @@ class PinholePhotoIndex extends AdminSearch
 	protected function searchPhotos()
 	{
 		$keywords = $this->ui->getWidget('search_keywords')->value;
-		if (strlen(trim($keywords)) > 0 &&
-			$this->getPhotoSearchType() !== null) {
+		if (strlen(trim($keywords)) > 0 {
 
 			$query = new NateGoSearchQuery($this->app->db);
-			$query->addDocumentType($this->getPhotoSearchType());
+			$query->addDocumentType(Pinhole::SEARCH_PHOTO);
 			$query->addBlockedWords(
 				NateGoSearchQuery::getDefaultBlockedWords());
 
@@ -209,7 +186,7 @@ class PinholePhotoIndex extends AdminSearch
 					%1$s.unique_id = %2$s and %1$s.document_type = %3$s',
 				$result->getResultTable(),
 				$this->app->db->quote($result->getUniqueId(), 'text'),
-				$this->app->db->quote($this->getPhotoSearchType(),
+				$this->app->db->quote(Pinhole::SEARCH_PHOTO,
 					'integer'));
 
 			$this->order_by_clause =
@@ -219,21 +196,6 @@ class PinholePhotoIndex extends AdminSearch
 			$this->join_clause = '';
 			$this->order_by_clause = 'PinholePhoto.title';
 		}
-	}
-
-	// }}}
-	// {{{ protected function getPhotoSearchType()
-
-	/**
-	 * Gets the search type for photos for this web-application
-	 *
-	 * @return integer the search type for photos for this web-application or
-	 *                  null if fulltext searching is not implemented for the
-	 *                  current application.
-	 */
-	protected function getPhotoSearchType()
-	{
-		return null;
 	}
 
 	// }}}

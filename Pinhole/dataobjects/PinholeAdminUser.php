@@ -35,13 +35,9 @@ class PinholeAdminUser extends AdminUser
 	{
 		$authenticated = parent::isAuthenticated($app);
 
-		if ($authenticated) {
+		if ($authenticated &&
+			!isset($this->instances[$app->instance->getInstance()->id]))
 			$authenticated = false;
-
-			foreach ($this->instances as $instance)
-				if ($instance->id == $app->instance->getInstance()->id)
-					$authenticated = true;
-		}
 
 		return $authenticated;
 	}

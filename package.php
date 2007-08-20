@@ -22,6 +22,9 @@ $result = $package->setOptions(
 		'packagedirectory'  => './',
 		'dir_roles'         => array(
 			'Pinhole' => 'php'
+			'demo' => 'data'
+			'sql' => 'data'
+			'www' => 'data'
 		),
 	)
 );

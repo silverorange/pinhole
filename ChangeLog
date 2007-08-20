@@ -1,5 +1,17 @@
 2007-08-20  nrf
 
+	* [r19544] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.22
+
+2007-08-20  gauthierm
+
+	* [r19541] pinhole/trunk/Pinhole/dataobjects/PinholeAdminUser.php,
+	  pinhole/trunk/Pinhole/dataobjects/PinholeInstanceWrapper.php:
+	  Use array index lookup again and index the instance recordset
+	  wrapper so lookups by id actually work.
+
+2007-08-20  nrf
+
 	* [r19539] pinhole/trunk/package.php:
 	  prepare for release of 1.0.21
 	* [r19538] pinhole/trunk/Pinhole/PinholeNateGoSearchIndexer.php:

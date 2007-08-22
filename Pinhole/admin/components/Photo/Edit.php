@@ -24,7 +24,7 @@ class PinholePhotoEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/admin-photo-edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Photo/edit.xml';
 
 	/**
 	 * @var PinholePhoto

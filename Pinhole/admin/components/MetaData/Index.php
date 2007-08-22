@@ -16,7 +16,7 @@ class PinholeMetaDataIndex extends AdminIndex
 	// {{{ protected properties 
 
 	protected $ui_xml =
-		'Pinhole/admin/components/MetaData/admin-metadata-index.xml';
+		'Pinhole/admin/components/MetaData/index.xml';
 
 	// }}}
 	

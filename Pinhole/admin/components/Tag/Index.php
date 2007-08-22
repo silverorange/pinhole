@@ -31,7 +31,7 @@ class PinholeTagIndex extends AdminSearch
 		parent::initInternal();
 
 		$this->ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
-		$this->ui->loadFromXML(dirname(__FILE__).'/index.xml');
+		$this->ui->loadFromXML(dirname(__FILE__).'/admin-tag-index.xml');
 	}
 
 	// }}}

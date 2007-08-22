@@ -15,28 +15,22 @@ class PinholeLayoutEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Layout/admin-layout-edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Layout/edit.xml';
 
 	/**
 	 * @var PinholeLayout
 	 */
 	protected $edit_layout;
 
-	protected $pagewidth_options = array(
-									'0' => '750px',
-									'1' => '950px', 
-									'2' => '100%');
+	protected $pagewidth_options = array('0' => '750px','1' => '950px', 
+											'2' => '100%');
 
-	protected $sidebarposition_options = array(
-									'0' => 'left', 
-									'1' => 'right',
-									'2' => 'bottom',
-									'3' => 'none');
+	protected $sidebarposition_options = array('0' => 'left', '1' => 'right',
+									 		'2' => 'bottom', '3' => 'none');
 
-	protected $sidebarwidth_options = array(
-									'0' => '160px',
-									'1' => '180px',
-									'2' => '300px');
+	protected $sidebarwidth_options = array('0' => '160px', '1' => '180px',
+												'2' => '300px');
+
 
 	// }}}
 

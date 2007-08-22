@@ -15,7 +15,7 @@ class PinholeAdminUserEdit extends AdminAdminUserEdit
 
 	protected function initInternal()
 	{
-		$this->ui_xml = dirname(__FILE__).'/edit.xml';
+		$this->ui_xml = dirname(__FILE__).'/admin-user-edit.xml';
 
 		parent::initInternal();
 

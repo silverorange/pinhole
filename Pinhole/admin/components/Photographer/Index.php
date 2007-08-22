@@ -16,7 +16,7 @@ class PinholePhotographerIndex extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Photographer/index.xml';
+		'Pinhole/admin/components/Photographer/admin-photographer-index.xml';
 
 	// }}}
 

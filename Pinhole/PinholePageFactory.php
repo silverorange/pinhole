@@ -40,7 +40,7 @@ abstract class PinholePageFactory extends SitePageFactory
 				array_unshift($regs, $layout);
 				array_unshift($regs, $app);
 
-				$page = $this->instantiatePage($class, $regs);
+				$page = $this->instantiatePage($app, $class, $regs);
 				break;
 			}
 		}

@@ -1,5 +1,144 @@
+2007-09-04  gauthierm
+
+	* [r19834]
+	  pinhole/trunk/Pinhole/PinholeMultipleInstanceModule.php:
+	  Add PinholeMultipleInstanceModule => SiteDatabaseModule
+	  dependency for r19831.
+
+2007-08-26  gauthierm
+
+	* [r19703] pinhole/trunk/www/styles/swat-local.css:
+	  Only overwrite background-color in local CSS.
+
+2007-08-25  steven
+
+	* [r19675] pinhole/trunk/resources,
+	  pinhole/trunk/resources/mockups,
+	  pinhole/trunk/resources/mockups/pinhole-calendar-browser-screenshot.png,
+	  pinhole/trunk/resources/mockups/pinhole-calendar-browser.svgz:
+	  Add some date-browser mockups I had on my desktop before I lose
+	  them
+
+2007-08-22  gauthierm
+
+	* [r19582]
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/admin-user-edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Layout/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Layout/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Layout/admin-layout-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Layout/admin-layout-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Layout/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Layout/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/admin-metadata-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/MetaData/admin-metadata-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-delete.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-index.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-pending.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-upload.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/delete.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/admin-photographer-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photographer/admin-photographer-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/admin-tag-details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/admin-tag-edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/admin-tag-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/index.xml:
+	  Undo r19575.
+
+2007-08-22  charles
+
+	* [r19575]
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/admin-user-edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/AdminUser/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Layout/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Layout/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Layout/admin-layout-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Layout/admin-layout-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Layout/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Layout/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/admin-metadata-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/MetaData/admin-metadata-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/MetaData/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Delete.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Pending.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/Upload.php,
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-delete.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-index.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-pending.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photo/admin-photo-upload.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/delete.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/pending.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photo/upload.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/admin-photographer-edit.xml,
+	  
+	  pinhole/trunk/Pinhole/admin/components/Photographer/admin-photographer-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Photographer/index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Details.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Edit.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/Index.php,
+	  pinhole/trunk/Pinhole/admin/components/Tag/admin-tag-details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/admin-tag-edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/admin-tag-index.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/details.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/edit.xml,
+	  pinhole/trunk/Pinhole/admin/components/Tag/index.xml:
+	  Changed the naming scheme for the xml.
+
 2007-08-20  nrf
 
+	* [r19547] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.23
+	* [r19546] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  fix typo
 	* [r19544] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
 	  prepare for release of 1.0.22
 

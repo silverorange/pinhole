@@ -13,26 +13,6 @@ require_once 'SwatDB/SwatDBClassMap.php';
  */
 class PinholeMultipleInstanceModule extends SiteMultipleInstanceModule
 {
-	// {{{ public function __construct()
-
-	/**
-	 * Creates a new multiple instance module for a Pinhole application 
-	 *
-	 * @param SiteApplication $app the application this module belongs to.
-	 *
-	 * @throws SiteException if there is no database module loaded.
-	 */
-	public function __construct(SiteApplication $app)
-	{
-		if (!(isset($app->database) &&
-			$app->database instanceof SiteDatabaseModule))
-			throw new SiteException('The PinholeMultipleInstanceModule '.
-				'requires a SiteDatabaseModule to be loaded first.');
-
-		parent::__construct($app);
-	}
-
-	// }}}
 	// {{{ public function init()
 
 	/**
@@ -53,6 +33,22 @@ class PinholeMultipleInstanceModule extends SiteMultipleInstanceModule
 		$this->instance->shortname = 'default';
 		$this->instance->title     = Pinhole::_('Photo Gallery');
 		$this->instance->enabled   = true;
+	}
+
+	// }}}
+	// {{{ public function depends()
+
+	/**
+	 * Gets the module features this module depends on
+	 *
+	 * The pinhole multiple instance module depends on the SiteDatabaseModule
+	 * feature.
+	 *
+	 * @return array an array of features this module depends on.
+	 */
+	public function depends()
+	{
+		return array('SiteDatabaseModule');
 	}
 
 	// }}}

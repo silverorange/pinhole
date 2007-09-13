@@ -105,26 +105,14 @@ class PinholeLayout extends SiteLayout
 
 	// }}}
 
-	// build phase
-	// {{{ public function build()
-
-	public function build()
-	{
-		parent::build();
-
-		$this->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
-			'packages/pinhole/styles/pinhole-layout.css',
-			Pinhole::PACKAGE_ID));
-	}
-
-	// }}}
-
 	// finalize phase
 	// {{{ public function finalize()
 
 	public function finalize()
 	{
-		parent::finalize();
+		$this->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/styles/pinhole-layout.css',
+			Pinhole::PACKAGE_ID));
 
 		// build html title (goes in html head)
 		$instance_title = $this->app->instance->getInstance()->title;
@@ -137,6 +125,8 @@ class PinholeLayout extends SiteLayout
 
 		// build displayed title (top of page)
 		$this->data->instance_title = $instance_title;
+
+		parent::finalize();
 	}
 
 	// }}}

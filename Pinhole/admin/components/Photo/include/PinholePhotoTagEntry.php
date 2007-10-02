@@ -49,7 +49,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	// {{{ public function __construct()
 
 	/**
-	 * Creates a new tag entry control 
+	 * Creates a new tag entry control
 	 *
 	 * @param string $id a non-visible unique id for this widget.
 	 *
@@ -77,7 +77,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	// {{{ public function display()
 
 	/**
-	 * Displays this tag entry control 
+	 * Displays this tag entry control
 	 */
 	public function display()
 	{
@@ -177,7 +177,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	// {{{ public function setState()
 
 	/**
-	 * Sets the current state of this tag entry control 
+	 * Sets the current state of this tag entry control
 	 *
 	 * @param PinholeTagList $state the new state of this tag entry control.
 	 *
@@ -278,7 +278,7 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	// {{{ protected function getInlineJavaScript()
 
 	/**
-	 * Gets the inline JavaScript for this tag entry control 
+	 * Gets the inline JavaScript for this tag entry control
 	 *
 	 * @return string the inline JavaScript for this tag entry control.
 	 */

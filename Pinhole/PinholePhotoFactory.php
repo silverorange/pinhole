@@ -177,7 +177,9 @@ class PinholePhotoFactory
 		// error suppression is needed here because there are several
 		// ways unavoidable warnings can occur despite the file being
 		// properly read.
-		$photo->serialized_exif = serialize(@exif_read_data($file));
+		$exif = @exif_read_data($file);
+		if ($exif !== null)
+			$photo->serialized_exif = base64_encode(serialize($exif));
 
 		// save photo
 		$photo->save();

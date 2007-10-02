@@ -357,7 +357,9 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		// sets the date to the set timezone
 		$converted_date = $this->photo->photo_date;
-		$converted_date->convertTZbyID($this->photo->photo_time_zone);
+		if ($converted_date !== null)
+			$converted_date->convertTZbyID($this->photo->photo_time_zone);
+
 		$this->ui->getWidget('photo_date')->value = $converted_date;
 
 	}

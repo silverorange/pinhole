@@ -84,6 +84,8 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 		if (!$this->visible)
 			return;
 
+		SwatWidget::display();
+
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->class = 'pinhole-photo-tag-entry';
 		$div_tag->id = $this->id;

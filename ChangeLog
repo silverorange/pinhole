@@ -1,3 +1,43 @@
+2007-10-02  nick
+
+	* [r20782] pinhole/trunk/Pinhole/PinholePhotoFactory.php:
+	  base64-encode exif data. I've already converted all of the
+	  existing data in
+	  both stage and live databases.
+	* [r20767] pinhole/trunk/Pinhole/admin/components/Photo/Edit.php:
+	  Only convert the time zone if the Date is an object. This was
+	  broken on some
+	  photos that have null dates.
+
+2007-10-02  gauthierm
+
+	* [r20766]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Whitespace
+
+2007-10-02  nick
+
+	* [r20765]
+	  pinhole/trunk/Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php:
+	  
+	  Add SwatWidget::display() so that isDisplayed() === true
+
+2007-09-13  gauthierm
+
+	* [r20240] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:
+	  Fix pinhole layout so head entries are gathered after UI's are
+	  displayed.
+
+2007-09-04  nrf
+
+	* [r19866] pinhole/trunk/package.php:
+	  prepare for release of 1.0.25
+	* [r19865] pinhole/trunk/Pinhole/PinholePageFactory.php:
+	  Reflect change to Site API
+	* [r19863] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.24
+
 2007-09-04  gauthierm
 
 	* [r19834]

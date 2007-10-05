@@ -1,3 +1,13 @@
+2007-10-05  gauthierm
+
+	* [r21146] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:
+	  Update Pinhole layouts for r21142.
+
+2007-10-05  nrf
+
+	* [r21140] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.28
+
 2007-10-05  nick
 
 	* [r21139] pinhole/trunk/Pinhole/PinholePhotoNextPrev.php:

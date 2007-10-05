@@ -46,6 +46,8 @@ class PinholePhotoNextPrev extends SwatControl
 		if ($this->tag_list === null || $this->photo === null)
 			return;
 
+		parent::display();
+
 		$photos = $this->tag_list->getNextPrevPhotos($this->photo);
 
 		$div_tag = new SwatHtmlTag('div');

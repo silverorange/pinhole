@@ -40,7 +40,7 @@ class PinholeLayout extends SiteLayout
 		 *  - 100% fluid page width (doc3)
 		 * For more options, see: http://developer.yahoo.com/yui/grids/
 		 */
-		$this->initYUIGrid();			
+		$this->initYUIGrid();
 	}
 
 	// }}}

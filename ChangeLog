@@ -1,5 +1,15 @@
 2007-10-05  nick
 
+	* [r21139] pinhole/trunk/Pinhole/PinholePhotoNextPrev.php:
+	  Another control missing parent::display();
+
+2007-10-05  nrf
+
+	* [r21135] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.27
+
+2007-10-05  nick
+
 	* [r21134] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php,
 	  pinhole/trunk/Pinhole/PinholeSubTagListView.php,
 	  pinhole/trunk/Pinhole/PinholeTagListView.php:

@@ -39,7 +39,7 @@ class PinholeDateTagCellRenderer extends SwatDateCellRenderer
 			// match internationalized order
 
 			$a_tag = new SwatHtmlTag('a');
-			
+
 			$a_tag->setContent($date->format('%B'));
 			$a_tag->href = sprintf('tag?date.month=%s/date.year=%s',
 				$date->getMonth(),

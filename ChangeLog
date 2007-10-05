@@ -1,3 +1,21 @@
+2007-10-05  nick
+
+	* [r21134] pinhole/trunk/Pinhole/PinholeDateTagBrowser.php,
+	  pinhole/trunk/Pinhole/PinholeSubTagListView.php,
+	  pinhole/trunk/Pinhole/PinholeTagListView.php:
+	  Add parent::display() to bring these controls up to rev 20209
+	  (fixes the
+	  inclusion of css for these classes)
+	* [r21133] pinhole/trunk/Pinhole/PinholeDateTagCellRenderer.php:
+	  ws
+	* [r21085] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:
+	  ws
+
+2007-10-02  nrf
+
+	* [r20786] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.26
+
 2007-10-02  nick
 
 	* [r20782] pinhole/trunk/Pinhole/PinholePhotoFactory.php:

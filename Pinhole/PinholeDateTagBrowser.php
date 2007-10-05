@@ -83,6 +83,8 @@ class PinholeDateTagBrowser extends SwatControl
 		if ($this->tag_list === null)
 			return;
 
+		parent::display();
+
 		$date_range = $this->tag_list->getPhotoDateRange();
 		$start_date = $date_range['start'];
 		$end_date   = $date_range['end'];

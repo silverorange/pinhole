@@ -32,6 +32,10 @@ class PinholeSubTagListView extends SwatControl
 		$this->addStyleSheet(
 			'packages/pinhole/styles/pinhole-sub-tag-list-view.css',
 			Pinhole::PACKAGE_ID);
+
+		$this->addJavaScript(
+			'packages/pinhole/javascript/pinhole-sortable-tag-list.js',
+			Pinhole::PACKAGE_ID);
 	}
 
 	// }}}
@@ -48,6 +52,7 @@ class PinholeSubTagListView extends SwatControl
 		if ($this->sub_tag_list === null || count($this->sub_tag_list) == 0)
 			return;
 
+		parent::display();
 
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->class = 'pinhole-sub-tag-list-view';
@@ -58,13 +63,19 @@ class PinholeSubTagListView extends SwatControl
 		$header_tag->setContent(Pinhole::_('Tags'));
 		$header_tag->display();
 
-		echo '<ul>';
+		$ul_tag = new SwatHtmlTag('ul');
+		$ul_tag->id = $this->id.'_list';
+		$ul_tag->open();
+
+		$li_tag = new SwatHtmlTag('li');
 
 		foreach ($this->sub_tag_list as $tag) {
 			$add_list = clone $this->tag_list;
 			$add_list->add($tag);
 
-			echo '<li>';
+			$li_tag->id = sprintf('%s.%s.%s',
+				$tag->name, '1', '2');
+			$li_tag->open();
 
 			$add_anchor_tag = new SwatHtmlTag('a');
 			$add_anchor_tag->class = 'pinhole-tag-list-view-tag';
@@ -76,14 +87,16 @@ class PinholeSubTagListView extends SwatControl
 			$add_anchor_tag->setContent($tag->getTitle());
 			$add_anchor_tag->display();
 
-			echo '</li>';
+			$li_tag->close();
 
 			unset($add_list);
 		}
 
-		echo '</ul>';
+		$ul_tag->close();
 
 		$div_tag->close();
+
+		Swat::displayInlineJavaScript($this->getInlineJavaScript());
 	}
 
 	// }}}
@@ -100,6 +113,20 @@ class PinholeSubTagListView extends SwatControl
 	public function setSubTagList(PinholeTagList $tag_list)
 	{
 		$this->sub_tag_list = $tag_list;
+	}
+
+	// }}}
+	// {{{ protected function getInlineJavaScript()
+
+	/**
+	 * Gets the inline JavaScript for this textarea widget
+	 *
+	 * @return string the inline JavaScript for this textarea widget.
+	 */
+	protected function getInlineJavaScript()
+	{
+		return sprintf("var %s_obj = new PinholeSortableTagList('%s', '%s');",
+			$this->id, $this->id.'_list', $this->id);
 	}
 
 	// }}}

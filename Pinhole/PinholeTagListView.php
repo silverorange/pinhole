@@ -43,6 +43,8 @@ class PinholeTagListView extends SwatControl
 		if ($this->tag_list === null)
 			return;
 
+		parent::display();
+
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->class = 'pinhole-tag-list-view';
 		$div_tag->id = $this->id;

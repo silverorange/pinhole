@@ -2,7 +2,7 @@
 
 require_once 'PEAR/PackageFileManager2.php';
 
-$version = '1.0.29';
+$version = '1.0.30';
 $notes = <<<EOT
 see ChangeLog
 EOT;
@@ -46,14 +46,15 @@ $package->addIgnore('package.php');
 
 $package->addMaintainer('lead', 'nrf', 'Nathan Fredrickson', 'nathan@silverorange.com');
 $package->addMaintainer('lead', 'gauthierm', 'Mike Gauthier', 'mike@silverorange.com');
+$package->addMaintainer('lead', 'nick', 'Nick Burka', 'nick@silverorange.com');
 
 $package->addReplacement('Pinhole/Pinhole.php', 'pear-config', '@DATA-DIR@', 'data_dir');
 
 $package->setPhpDep('5.1.5');
 $package->setPearinstallerDep('1.4.0');
-$package->addPackageDepWithChannel('required', 'Swat', 'pear.silverorange.com', '1.2.31');
-$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.1.1');
-$package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com', '1.1.21');
+$package->addPackageDepWithChannel('required', 'Swat', 'pear.silverorange.com', '1.2.34');
+$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.1.8');
+$package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com', '1.1.23');
 $package->addPackageDepWithChannel('required', 'Date', 'pear.silverorange.com', '1.4.7so1');
 $package->addPackageDepWithChannel('required', 'MDB2', 'pear.php.net', '2.2.2');
 $package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.4');

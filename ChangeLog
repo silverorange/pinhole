@@ -1,3 +1,8 @@
+2007-10-05  nrf
+
+	* [r21149] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.29
+
 2007-10-05  gauthierm
 
 	* [r21146] pinhole/trunk/Pinhole/layouts/PinholeLayout.php:

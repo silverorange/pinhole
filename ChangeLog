@@ -1,3 +1,13 @@
+2007-10-10  steven
+
+	* [r21217] pinhole/trunk/www/admin/styles/pinhole-photo-tile.css:
+	  Fix broken photo tiles in admin
+
+2007-10-09  nick
+
+	* [r21200] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:
+	  prepare for release of 1.0.30
+
 2007-10-05  nrf
 
 	* [r21149] pinhole/trunk/ChangeLog, pinhole/trunk/package.php:

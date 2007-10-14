@@ -160,7 +160,12 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	{
 		switch ($this->name) {
 		case 'date':
-			$date = new SwatDate($this->value);
+			$date = new SwatDate();
+			list($year, $month, $day) =
+				sscanf($this->value, "%d-%d-%d");
+			$date->setYear($year);
+			$date->setMonth($month);
+			$date->setDay($day);
 
 			// only matching the date, time and time zone of reference
 			// date are irrelevant

@@ -6,7 +6,7 @@
 	<title><?= $this->html_title ?></title>
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<meta name="description" content="<?= $this->meta_description ?>" />
-	<meta name="ids" content="<?= $this->meta_keywords ?>" />
+	<meta name="keywords" content="<?= $this->meta_keywords ?>" />
 	<? /* TODO: add meta keywords and description */ ?> 
 	<!-- Some icons by the Tango project http://www.Tango-Project.org -->
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="<?=$this->rss_link?>" />

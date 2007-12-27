@@ -13,7 +13,7 @@ require_once 'Admin/AdminListDependency.php';
 class PinholePhotographerDelete extends AdminDBDelete
 {
 	// process phase
-	// {{{ protected function processDBData
+	// {{{ protected function processDBData()
 
 	protected function processDBData()
 	{

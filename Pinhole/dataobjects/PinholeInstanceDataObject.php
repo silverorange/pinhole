@@ -1,7 +1,7 @@
 <?php
 
 require_once 'SwatDB/SwatDBDataObject.php';
-require_once 'PinholeInstance.php';
+require_once 'Site/dataobjects/SiteInstance.php';
 
 /**
  * A specialized data-object for objects that are instance-specific
@@ -9,7 +9,7 @@ require_once 'PinholeInstance.php';
  * @package   Pinhole
  * @copyright 2005-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       PinholeInstance
+ * @see       SiteInstance
  */
 class PinholeInstanceDataObject extends SwatDBDataObject
 {
@@ -18,7 +18,7 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 	protected function init()
 	{
 		$this->registerInternalProperty('instance',
-			SwatDBClassMap::get('PinholeInstance'));
+			SwatDBClassMap::get('SiteInstance'));
 	}
 
 	// }}}
@@ -33,9 +33,9 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 	 * {@link PinholeInstanceDataObject::load()} will only load if this object
 	 * belongs to the specified instance.
 	 *
-	 * @param PinholeInstance $instance the instance for this data-object.
+	 * @param SiteInstance $instance the instance for this data-object.
 	 */
-	public function setInstance(PinholeInstance $instance)
+	public function setInstance(SiteInstance $instance)
 	{
 		$this->instance = $instance;
 	}

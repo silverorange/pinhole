@@ -4,6 +4,7 @@ require_once 'MDB2.php';
 require_once 'Image/Transform.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatFileNotFoundException.php';
+require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
@@ -55,12 +56,12 @@ class PinholePhotoFactory
 	// {{{ public function setInstance()
 
 	/**
-	 * Sets the instance for this factory 
+	 * Sets the instance for this factory
 	 *
-	 * @param PinholeInstance $instance The PinholeInstance this file
+	 * @param Instance $instance The Instance this file
 	 *                        belongs to.
 	 */
-	public function setInstance(PinholeInstance $instance)
+	public function setInstance(SiteInstance $instance)
 	{
 		$this->instance = $instance;
 	}

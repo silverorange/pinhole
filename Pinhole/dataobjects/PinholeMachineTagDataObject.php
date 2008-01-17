@@ -65,14 +65,14 @@ class PinholeMachineTagDataObject extends PinholeInstanceDataObject
 	 *                           load.
 	 * @param string $name the name of the machine tag data-object to load.
 	 * @param string $value the value of the machine tag data-object to load.
-	 * @param PinholeInstance $instance the site instance of the machine tag
+	 * @param SiteInstance $instance the site instance of the machine tag
 	 *                                   data-object to load.
 	 *
 	 * @return boolean true if this machine tag data-object was loaded and
 	 *                  false if it could not be loaded.
 	 */
 	public function loadFromFields($namespace, $name, $value,
-		PinholeInstance $instance)
+		SiteInstance $instance)
 	{
 		$this->setInstance($instance);
 

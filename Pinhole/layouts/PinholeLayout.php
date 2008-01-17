@@ -117,7 +117,7 @@ class PinholeLayout extends SiteLayout
 			Pinhole::PACKAGE_ID));
 
 		// build html title (goes in html head)
-		$instance_title = $this->app->instance->getInstance()->title;
+		$instance_title = $this->app->config->site->title;
 		$page_title = $this->data->title;
 
 		if (strlen($page_title) > 0)

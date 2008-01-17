@@ -1,10 +1,10 @@
 <?php
 
 require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
-require_once 'Pinhole/dataobjects/PinholeInstance.php';
 require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
+require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 
@@ -332,14 +332,14 @@ class PinholePhoto extends PinholeInstanceDataObject
 
 		$tag_list = null;
 
-		if ($this->instance instanceof PinholeInstance) {
+		if ($this->instance instanceof SiteInstance) {
 			$sql = sprintf('select * from PinholeTag where id in (
 				select tag from PinholePhotoTagBinding where photo = %s)',
 				$this->db->quote($this->id, 'integer'));
 
 			$data_objects = SwatDB::query($this->db, $sql,
 				'PinholeTagDataObjectWrapper');
-			
+
 			$tag_list = new PinholeTagList($this->db, $this->instance);
 			foreach ($data_objects as $object)
 				$tag_list->add(new PinholeTag($object));

@@ -1,10 +1,16 @@
 <?php
 
+require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/layouts/PinholeLayout.php';
-require_once 'Pinhole/PinholeMultipleInstanceModule.php';
+require_once 'Site/SiteMultipleInstanceModule.php';
 require_once 'Site/SiteWebApplication.php';
 require_once 'Site/SiteConfigModule.php';
 require_once 'Site/SiteDatabaseModule.php';
+require_once 'Site/SiteErrorLogger.php';
+require_once 'Site/SiteExceptionLogger.php';
+require_once 'Swat/exceptions/SwatException.php';
+require_once 'Swat/SwatError.php';
+require_once 'Swat/SwatForm.php';
 require_once 'SwatDB/SwatDBClassMap.php';
 
 SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
@@ -47,27 +53,27 @@ class Application extends SiteWebApplication
 			$tag = $path[0];
 
 		switch ($tag) {
-			case 'httperror':
-				require_once 'Site/pages/SiteHttpErrorPage.php';
-				$layout = new PinholeLayout($this,
-					'Pinhole/layouts/xhtml/default.php');
+		case 'httperror':
+			require_once 'Site/pages/SiteHttpErrorPage.php';
+			$layout = new PinholeLayout($this,
+				'Pinhole/layouts/xhtml/default.php');
 
-				$page = new SiteHttpErrorPage($this, $layout);
-				break;
+			$page = new SiteHttpErrorPage($this, $layout);
+			break;
 
-			case 'exception':
-				require_once 'Pinhole/pages/PinholeExceptionPage.php';
-				$layout = new PinholeLayout($this,
-					'Pinhole/layouts/xhtml/default.php');
+		case 'exception':
+			require_once 'Pinhole/pages/PinholeExceptionPage.php';
+			$layout = new PinholeLayout($this,
+				'Pinhole/layouts/xhtml/default.php');
 
-				$page = new PinholeExceptionPage($this, $layout);
-				break;
-				
-			default:
-				require_once '../include/PageFactory.php';
-				$factory = PageFactory::instance();
-				$page = $factory->resolvePage($this, $source);
-				break;
+			$page = new PinholeExceptionPage($this, $layout);
+			break;
+			
+		default:
+			require_once '../include/PageFactory.php';
+			$factory = PageFactory::instance();
+			$page = $factory->resolvePage($this, $source);
+			break;
 		}
 
 		$page->setSource($source);
@@ -82,8 +88,42 @@ class Application extends SiteWebApplication
 		return array(
 			'config'   => 'SiteConfigModule',
 			'database' => 'SiteDatabaseModule',
-			'instance' => 'PinholeMultipleInstanceModule',
+			'instance' => 'SiteMultipleInstanceModule',
 		);
+	}
+
+	// }}}
+	// {{{ protected function configure()
+
+	/**
+	 * Configures modules of this application before they are initialized
+	 *
+	 * @param SiteConfigModule $config the config module of this application to
+	 *                                  use for configuration other modules.
+	 */
+	protected function configure(SiteConfigModule $config)
+	{
+		parent::configure($config);
+
+		if (isset($config->exceptions->log_location))
+			SwatException::setLogger(new SiteExceptionLogger(
+				$config->exceptions->log_location,
+				$config->exceptions->base_uri,
+				$config->email->logging_address));
+
+		if (isset($config->errors->log_location))
+			SwatError::setLogger(new SiteErrorLogger(
+				$config->errors->log_location,
+				$config->errors->base_uri,
+				$config->email->logging_address));
+
+		SwatForm::$default_salt = $config->swat->form_salt;
+
+		$this->database->dsn = $config->database->dsn;
+		$this->setBaseUri($config->uri->base);
+		$this->setSecureBaseUri($config->uri->secure_base);
+		$this->default_time_zone =
+			new Date_TimeZone($config->date->time_zone);
 	}
 
 	// }}}

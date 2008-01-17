@@ -1,6 +1,6 @@
 create table PinholeTag (
 	id serial,
-	instance integer not null references PinholeInstance(id),
+	instance integer null references Instance(id),
 	name varchar(255),
 	title varchar(255),
 	createdate timestamp,

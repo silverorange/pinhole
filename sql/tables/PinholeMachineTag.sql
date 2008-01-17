@@ -1,7 +1,7 @@
 create table PinholeMachineTag (
 	id serial,
 
-	instance integer not null references PinholeInstance(id),
+	instance integer null references Instance(id),
 
 	namespace varchar(255),
 	name varchar(255),

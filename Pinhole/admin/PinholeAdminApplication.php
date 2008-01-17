@@ -1,8 +1,8 @@
 <?php
 
-require_once 'Pinhole/PinholeMultipleInstanceModule.php';
-require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
+require_once 'Site/SiteMultipleInstanceModule.php';
 require_once 'Admin/AdminApplication.php';
+require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
 
 /**
  * Web application class for an administering Pinhole
@@ -23,20 +23,8 @@ class PinholeAdminApplication extends AdminApplication
 	 */
 	protected function getDefaultModuleList()
 	{
-		// hard coded until module dependencies are automatic
-		$modules = array(
-			'cookie'   => 'SiteCookieModule',
-			'database' => 'SiteDatabaseModule',
-			'instance' => 'PinholeMultipleInstanceModule',
-			'session'  => 'AdminSessionModule',
-			'messages' => 'SiteMessagesModule',
-			'config'   => 'SiteConfigModule',
-		);
-
-		/*
 		$modules = parent::getDefaultModuleList();
-		$modules['instance'] = 'PinholeMultipleInstanceModule'; 
-		*/
+		$modules['instance'] = 'SiteMultipleInstanceModule';
 
 		return $modules;
 	}

@@ -6,10 +6,10 @@ require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBRange.php';
 require_once 'SwatDB/SwatDBRecordable.php';
 require_once 'Swat/exceptions/SwatInvalidClassException.php';
+require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Pinhole/PinholeTagFactory.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeInstance.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 
 /**
@@ -86,7 +86,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 * Only photos and tags belonging to the site instance can be loaded by
 	 * this tag list.
 	 *
-	 * @var PinholeInstance
+	 * @var SiteInstance
 	 */
 	private $instance;
 
@@ -130,15 +130,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @param MDB2_Driver_Common $db the database connection to use for this
 	 *                                tag list.
-	 * @param PinholeInstance $instance the site intsance to use for this tag
-	 *                                   list.
+	 * @param SiteInstance $instance the site instance to use for this tag list.
 	 * @param string $tag_list_string optional. A list of tag strings separated
 	 *                                 by '/' characters that are added to this
 	 *                                 list when the list is created. Duplicate
 	 *                                 tag strings are ignored.
 	 */
 	public function __construct(MDB2_Driver_Common $db,
-		PinholeInstance $instance, $tag_list_string = null)
+		SiteInstance $instance, $tag_list_string = null)
 	{
 		$this->setDatabase($db);
 		$this->instance = $instance;

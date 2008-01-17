@@ -5,7 +5,7 @@ require_once 'SwatDB/SwatDB.php';
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBRange.php';
 require_once 'SwatDB/SwatDBRecordable.php';
-require_once 'Pinhole/dataobjects/PinholeInstance.php';
+require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
@@ -39,7 +39,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	/**
 	 * The site instance used by this tag
 	 *
-	 * @var PinholeInstance
+	 * @var SiteInstance
 	 *
 	 * @see PinholeAbstractTag::setInstance()
 	 */
@@ -84,13 +84,13 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 * @param string $string the tag string to parse.
 	 * @param MDB2_Driver_Common the database connection used to parse the tag
 	 *                            string.
-	 * @param PinholeInstance the site instance used to parse the tag string.
+	 * @param SiteInstance the site instance used to parse the tag string.
 	 *
 	 * @return boolean true if the tag string could be parsed and false if the
 	 *                  tag string could not be parsed.
 	 */
 	abstract public function parse($string, MDB2_Driver_Common $db,
-		PinholeInstance $instance);
+		SiteInstance $instance);
 
 	// }}}
 	// {{{ abstract public function getTitle()
@@ -270,9 +270,9 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	/**
 	 * Sets the site instance used by this tag
 	 *
-	 * @param PinholeInstance $instance the site instance to use for this tag.
+	 * @param SiteInstance $instance the site instance to use for this tag.
 	 */
-	public function setInstance(PinholeInstance $instance)
+	public function setInstance(SiteInstance $instance)
 	{
 		$this->instance = $instance;
 	}

@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Pinhole/tags/PinholeAbstractTag.php';
-require_once 'Pinhole/dataobjects/PinholeInstance.php';
+require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'MDB2.php';
 
 /**
@@ -46,7 +46,7 @@ class PinholeTagFactory
 	/**
 	 * Default site instance to use when creating new tag objects
 	 *
-	 * @var PinholeInstance
+	 * @var SiteInstance
 	 *
 	 * @see PinholeTagFactory::setDefaultInstance()
 	 */
@@ -63,16 +63,16 @@ class PinholeTagFactory
 	 *                                for the parsed tag. If not specified,
 	 *                                the default database specified by the
 	 *                                tag factory is used.
-	 * @param PinholeInstance $instance optional. The site instance to use for
-	 *                                   the parsed tag. If not specified, the
-	 *                                   default instance specified by the tag
-	 *                                   factory is used.
+	 * @param SiteInstance $instance optional. The site instance to use for the
+	 *                                the parsed tag. If not specified, the
+	 *                                default instance specified by the tag
+	 *                                factory is used.
 	 *
 	 * @return PinholeAbstractTag the parsed tag object or null if the given
 	 *                             string could not be parsed.
 	 */
 	public static function get($string, MDB2_Driver_Common $db = null,
-		PinholeInstance $instance = null)
+		SiteInstance $instance = null)
 	{
 		if ($db === null &&
 			self::$default_database instanceof MDB2_Driver_Common) {
@@ -80,7 +80,7 @@ class PinholeTagFactory
 		}
 
 		if ($instance === null &&
-			self::$default_instance instanceof PinholeInstance) {
+			self::$default_instance instanceof SiteInstance) {
 			$instance = self::$default_instance;
 		}
 
@@ -108,10 +108,10 @@ class PinholeTagFactory
 	/**
 	 * Sets the default site instance used by the tag factory
 	 *
-	 * @param PinholeInstance $instance the default site instance used by the
-	 *                                   tag factory.
+	 * @param SiteInstance $instance the default site instance used by the tag
+	 *                                factory.
 	 */
-	public static function setDefaultInstance(PinholeInstance $instance)
+	public static function setDefaultInstance(SiteInstance $instance)
 	{
 		self::$default_instance = $instance;
 	}

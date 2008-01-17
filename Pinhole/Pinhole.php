@@ -126,6 +126,27 @@ class Pinhole
 	}
 
 	// }}}
+	// {{{ public static function getConfigDefinitions()
+
+	/**
+	 * Gets configuration definitions used by the Site package
+	 *
+	 * Applications should add these definitions to their config module before
+	 * loading the application configuration.
+	 *
+	 * @return array the configuration definitions used by the Site package.
+	 *
+	 * @see SiteConfigModule::addDefinitions()
+	 */
+	public static function getConfigDefinitions()
+	{
+		return array(
+			// Whether or not site is enabled
+			'site.enabled' => '1',
+		);
+	}
+
+	// }}}
 }
 
 Pinhole::setupGettext();

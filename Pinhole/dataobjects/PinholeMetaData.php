@@ -59,13 +59,13 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	 *
 	 * @param string $shortname the shortname of the meta-data data-object to
 	 *                           load.
-	 * @param PinholeInstance $instance the site instance of the meta-data
+	 * @param SiteInstance $instance the site instance of the meta-data
 	 *                                   data-object to load.
 	 *
 	 * @return boolean true if this meta-data data-object was loaded and false
 	 *                  if it could not be loaded.
 	 */
-	public function loadFromShortname($shortname, PinholeInstance $instance)
+	public function loadFromShortname($shortname, SiteInstance $instance)
 	{
 		$this->setInstance($instance);
 

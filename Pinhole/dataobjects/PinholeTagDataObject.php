@@ -55,13 +55,13 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	 * not required to be unique across site instances.
 	 *
 	 * @param string $name the name of the tag data-object to load.
-	 * @param PinholeInstance $instance the site instance of the tag data-object
+	 * @param SiteInstance $instance the site instance of the tag data-object
 	 *                                   to load.
 	 *
 	 * @return boolean true if this tag data-object was loaded and false if it
 	 *                  could not be loaded.
 	 */
-	public function loadFromName($name, PinholeInstance $instance)
+	public function loadFromName($name, SiteInstance $instance)
 	{
 		$this->setInstance($instance);
 

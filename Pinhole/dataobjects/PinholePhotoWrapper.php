@@ -2,10 +2,10 @@
 
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBRecordsetWrapper.php';
+require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'PinholePhoto.php';
 require_once 'PinholePhotoDimensionBinding.php';
 require_once 'PinholeDimension.php';
-require_once 'PinholeInstance.php';
 
 /**
  * A recordset wrapper class for PinholePhoto objects
@@ -79,7 +79,7 @@ class PinholePhotoWrapper extends SwatDBRecordsetWrapper
 			SwatDBClassMap::get('PinholePhoto');
 
 		$instance_class =
-			SwatDBClassMap::get('PinholeInstance');
+			SwatDBClassMap::get('SiteInstance');
 
 		$dimension_class =
 			SwatDBClassMap::get('PinholeDimension');

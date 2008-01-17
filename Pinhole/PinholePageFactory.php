@@ -2,6 +2,7 @@
 
 require_once 'Site/SitePageFactory.php';
 require_once 'Pinhole/pages/PinholePage.php';
+require_once 'Pinhole/layouts/PinholeLayout.php';
 
 /**
  * Resolves and creates pages
@@ -10,8 +11,22 @@ require_once 'Pinhole/pages/PinholePage.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class PinholePageFactory extends SitePageFactory
+class PinholePageFactory extends SitePageFactory
 {
+	// {{{ public static function instance()
+
+	public static function instance()
+	{
+		static $instance = null;
+
+		if ($instance === null) {
+			$instance = new self();
+		}
+
+		return $instance;
+	}
+
+	// }}}
 	// {{{ public function resolvePage()
 
 	/**
@@ -49,6 +64,29 @@ abstract class PinholePageFactory extends SitePageFactory
 			throw new SiteNotFoundException();
 
 		return $page;
+	}
+
+	// }}}
+	// {{{ protected function getPageMap()
+
+	protected function getPageMap()
+	{
+		return array(
+			'^(photo)/([0-9]+)$'              => 'PinholeBrowserDetailsPage',
+			'^(tag)$'                         => 'PinholeBrowserIndexPage',
+			'^(rss)$'                         => 'PinholeRssPage',
+			'^(loadphoto)/(.+)/(.+).jpg$'     => 'PinholePhotoLoaderPage',
+			'^robots.txt$'                    => 'PinholeRobotsPage',
+		);
+	}
+
+	// }}}
+	// {{{ protected function resolveLayout()
+
+	protected function resolveLayout(SiteWebApplication $app, $source)
+	{
+		$layout = new PinholeLayout($app, 'Pinhole/layouts/xhtml/default.php');
+		return $layout;
 	}
 
 	// }}}

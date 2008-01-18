@@ -5,7 +5,6 @@ if (class_exists('PackageConfig')) {
 	PackageConfig::addPackage('swat');
 	PackageConfig::addPackage('site');
 	PackageConfig::addPackage('admin');
-	PackageConfig::addPackage('yui');
 	PackageConfig::addPackage('pinhole');
 }
 

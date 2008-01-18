@@ -152,5 +152,5 @@ class Pinhole
 Pinhole::setupGettext();
 
 SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
-SwatDBClassMap::add('AdminUser', 'PinholeAdminUser');
+
 ?>

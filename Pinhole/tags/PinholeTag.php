@@ -286,7 +286,7 @@ class PinholeTag extends PinholeAbstractTag
 	public function setInstance(SiteInstance $instance)
 	{
 		parent::setInstance($instance);
-		$this->data_object->setInstance($instance);
+		$this->data_object->instance = $instance;
 	}
 
 	// }}}

@@ -137,10 +137,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *                                 tag strings are ignored.
 	 */
 	public function __construct(MDB2_Driver_Common $db,
-		SiteInstance $instance, $tag_list_string = null)
+		SiteInstance $instance = null, $tag_list_string = null)
 	{
 		$this->setDatabase($db);
 		$this->instance = $instance;
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
 
 		$db->loadModule('Datatype', null, true);
 
@@ -156,11 +157,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				$db->datatype->implodeArray($simple_tag_strings, 'text');
 
 			// load all simple tags in one query
-			$sql = sprintf('select * from PinholeTag '.
-				'where name in (%s) and instance %s %s',
+			$sql = sprintf('select * from PinholeTag
+				where name in (%s) and instance %s %s',
 				$quoted_tag_strings,
-				$db->equalityOperator($instance->getId()),
-				$db->quote($instance->getId(), 'integer'));
+				SwatDB::equalityOperator($instance_id),
+				$db->quote($instance_id, 'integer'));
 
 			$tag_data_objects =
 				SwatDB::query($db, $sql, 'PinholeTagDataObjectWrapper');

@@ -39,7 +39,7 @@ class PinholePhotoPending extends AdminIndex
 
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s order by title',
-			$this->app->db->equalityOperator($this->app->instance->getId()),
+			SwatDB::equalityOperator($this->app->instance->getId()),
 			$this->app->db->quote($this->app->instance->getId(), 'integer'));
 
 		$tags = SwatDB::query($this->app->db, $sql,
@@ -122,7 +122,7 @@ class PinholePhotoPending extends AdminIndex
 		return sprintf('PinholePhoto.status = %s
 			and PinholePhoto.instance %s %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
-			$this->app->db->equalityOperator($this->app->instance->getId()),
+			SwatDB::equalityOperator($this->app->instance->getId()),
 			$this->app->db->quote($this->app->instance->getId(), 'integer')
 			);
 	}

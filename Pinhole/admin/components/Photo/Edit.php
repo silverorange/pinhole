@@ -69,19 +69,20 @@ class PinholePhotoEdit extends AdminDBEdit
 		$instance = $this->app->instance->getInstance();
 		$tag_list = new PinholeTagList($this->app->db, $instance);
 		$sql = sprintf('select * from PinholeTag
-			where instance = %s
+			where instance %s %s
 			order by title',
-			$this->app->db->quote(
-				$instance->id, 'integer'));
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'));
 
 		/* TODO: use this once status is figured out
 		$sql = sprintf('select * from PinholeTag
-			where instance = %s
+			where instance %s %s
 				and (status = %s or id in
 					(select tag from PinholePhotoTagBinding
 					where photo = %s))
 			order by title',
-			$this->app->db->quote($instance->id, 'integer'),
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'),
 			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'),
 			$this->app->db->quote($this->photo->id, 'integer'));
 		*/
@@ -192,11 +193,11 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$sql = sprintf('select id, title
 			from PinholePhoto
-			where PinholePhoto.status = %s and PinholePhoto.instance = %s
+			where PinholePhoto.status = %s and PinholePhoto.instance %s %s
 			order by PinholePhoto.upload_date, PinholePhoto.id',
-			$this->app->db->quote(PinholePhoto::STATUS_PENDING,
-				'integer'),
-			$this->app->db->quote($instance->id, 'integer'));
+			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'));
 
 		return SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
 	}

@@ -34,13 +34,13 @@ class PinholeRssLayout extends SiteLayout
 		parent::finalize();
 
 		// build html title (used as rss feed title)
-		$instance_title = $this->app->instance->getInstance()->title;
+		$site_title = $this->app->config->site->title;
 		$feed_title = $this->data->title;
 
 		if (strlen($feed_title) > 0)
-			$this->data->feed_title = $feed_title.' - '.$instance_title;
+			$this->data->feed_title = $feed_title.' - '.$site_title;
 		else
-			$this->data->feed_title = $instance_title;
+			$this->data->feed_title = $site_title;
 	}
 
 	// }}}

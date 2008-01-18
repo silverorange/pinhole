@@ -98,8 +98,9 @@ class PinholeTagIndex extends AdminSearch
 		if ($this->where_clause === null) {
 			$instance = $this->app->instance->getInstance();
 
-			$this->where_clause = sprintf('PinholeTag.instance = %s',
-				$this->app->db->quote($instance->id, 'integer'));
+			$this->where_clause = sprintf('PinholeTag.instance %s %s',
+				$this->app->db->equalityOperator($instance->getId()),
+				$this->app->db->quote($instance->getId(), 'integer'));
 
 			$clause = new AdminSearchClause('title');
 			$clause->table = 'PinholeTag';

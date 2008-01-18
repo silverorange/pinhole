@@ -41,7 +41,7 @@ class PinholeMetaDataEdit extends AdminDBEdit
 	{
 		$this->metadata = new PinholeMetaData();
 		$this->metadata->setDatabase($this->app->db);
-		$this->metadata->setInstance($this->app->instance->getInstance());
+		$this->metadata->instance = $this->app->instance->getInstance();
 
 		if ($this->id === null) {
 		} else {

@@ -48,9 +48,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->photo->setDatabase($this->app->db);
 		if ($this->photo->load($photo_id)) {
 			// ensure we are loading a photo in the current site instance
-			$current_instance = $this->app->instance->getInstance();
+			$current_instance_id = $this->app->instance->getId();
 			$photo_instance_id = $this->photo->getInternalValue('instance');
-			if ($photo_instance_id != $current_instance->id) {
+			if ($photo_instance_id != $current_instance_id) {
+				// TODO: make exception nicer when instance is null
 				throw new SiteNotFoundException(sprintf(
 					'Photo does not belong to the current instance: %s.',
 					$current_instance->shortname));

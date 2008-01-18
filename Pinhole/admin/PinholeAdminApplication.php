@@ -3,7 +3,6 @@
 require_once 'Site/SiteMultipleInstanceModule.php';
 require_once 'Admin/AdminApplication.php';
 require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
 
 /**
  * Web application class for an administering Pinhole

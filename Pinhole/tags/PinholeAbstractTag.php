@@ -272,7 +272,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 *
 	 * @param SiteInstance $instance the site instance to use for this tag.
 	 */
-	public function setInstance(SiteInstance $instance)
+	public function setInstance(SiteInstance $instance = null)
 	{
 		$this->instance = $instance;
 	}

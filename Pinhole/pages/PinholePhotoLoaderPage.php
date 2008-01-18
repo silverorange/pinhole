@@ -36,13 +36,13 @@ class PinholePhotoLoaderPage extends PinholePage
 
 	protected function getPhoto($filename, $dimension)
 	{
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 		$where_clause = sprintf(
 			'PinholePhoto.filename = %s and '.
 			'PinholePhoto.instance %s %s',
 			$this->app->db->quote($filename, 'text'),
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, $dimension, $where_clause);
@@ -51,7 +51,7 @@ class PinholePhotoLoaderPage extends PinholePage
 			// TODO: make this exception work better with null instances
 			throw new SiteNotFoundException(sprintf("Photo with ".
 				"filename '%s' does not exist in the instance '%s'.",
-				$filename, $instance->shortname));
+				$filename, $this->app->instance-getInstance()->shortname));
 		}
 
 		return $photos->getFirst();

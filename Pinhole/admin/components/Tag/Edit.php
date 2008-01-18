@@ -85,14 +85,14 @@ class PinholeTagEdit extends AdminDBEdit
 		$sql = 'select name from PinholeTag
 			where name = %s and id %s %s and instance %s %s';
 
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 
 		$sql = sprintf($sql,
 			$this->app->db->quote($name, 'text'),
 			SwatDB::equalityOperator($this->id, true),
 			$this->app->db->quote($this->id, 'integer'),
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_Id,
+			$this->app->db->quote($instance_Id, 'integer'));
 
 		$query = SwatDB::query($this->app->db, $sql);
 

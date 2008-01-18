@@ -33,14 +33,16 @@ class PinholePhotoPending extends AdminIndex
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
 
+		$instance_id = $this->app->instance->getId();
+
 		// setup tag entry control
 		$tag_list = new PinholeTagList($this->app->db,
 			$this->app->instance->getInstance());
 
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s order by title',
-			SwatDB::equalityOperator($this->app->instance->getId()),
-			$this->app->db->quote($this->app->instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
@@ -119,11 +121,13 @@ class PinholePhotoPending extends AdminIndex
 
 	protected function getWhereClause()
 	{
+		$instance_id = $this->app->instance->getId();
+
 		return sprintf('PinholePhoto.status = %s
 			and PinholePhoto.instance %s %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
-			SwatDB::equalityOperator($this->app->instance->getId()),
-			$this->app->db->quote($this->app->instance->getId(), 'integer')
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer')
 			);
 	}
 

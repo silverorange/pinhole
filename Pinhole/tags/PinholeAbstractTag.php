@@ -90,7 +90,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 *                  tag string could not be parsed.
 	 */
 	abstract public function parse($string, MDB2_Driver_Common $db,
-		SiteInstance $instance);
+		SiteInstance $instance = null);
 
 	// }}}
 	// {{{ abstract public function getTitle()

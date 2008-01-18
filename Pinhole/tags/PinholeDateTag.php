@@ -67,7 +67,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 	 *                  tag string could not be parsed.
 	 */
 	public function parse($string, MDB2_Driver_Common $db,
-		SiteInstance $instance)
+		SiteInstance $instance = null)
 	{
 		$this->setDatabase($db);
 		$this->setInstance($instance);

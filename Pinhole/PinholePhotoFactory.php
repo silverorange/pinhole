@@ -61,7 +61,7 @@ class PinholePhotoFactory
 	 * @param Instance $instance The Instance this file
 	 *                        belongs to.
 	 */
-	public function setInstance(SiteInstance $instance)
+	public function setInstance(SiteInstance $instance = null)
 	{
 		$this->instance = $instance;
 	}

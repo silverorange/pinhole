@@ -65,7 +65,7 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	 * @return boolean true if this meta-data data-object was loaded and false
 	 *                  if it could not be loaded.
 	 */
-	public function loadFromShortname($shortname, SiteInstance $instance)
+	public function loadFromShortname($shortname, SiteInstance $instance = null)
 	{
 		$this->instance = $instance;
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;

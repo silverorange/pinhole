@@ -61,7 +61,7 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	 * @return boolean true if this tag data-object was loaded and false if it
 	 *                  could not be loaded.
 	 */
-	public function loadFromName($name, SiteInstance $instance)
+	public function loadFromName($name, SiteInstance $instance = null)
 	{
 		$this->instance = $instance;
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;

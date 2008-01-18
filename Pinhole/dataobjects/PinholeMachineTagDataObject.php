@@ -72,7 +72,7 @@ class PinholeMachineTagDataObject extends PinholeInstanceDataObject
 	 *                  false if it could not be loaded.
 	 */
 	public function loadFromFields($namespace, $name, $value,
-		SiteInstance $instance)
+		SiteInstance $instance = null)
 	{
 		$this->instance = $instance;
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;

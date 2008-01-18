@@ -44,7 +44,7 @@ class PinholeTagEdit extends AdminDBEdit
 	{
 		$this->tag = new PinholeTag();
 		$this->tag->setDatabase($this->app->db);
-		$this->tag->setInstance($this->app->instance->getInstance());
+		$this->tag->instance = $this->app->instance->getInstance();
 
 		if ($this->id !== null && !$this->tag->load($this->id)) {
 			throw new AdminNotFoundException(
@@ -83,7 +83,7 @@ class PinholeTagEdit extends AdminDBEdit
 	protected function validateShortname($name)
 	{
 		$sql = 'select name from PinholeTag
-			where name = %s and id %s %s and instance = %s';
+			where name = %s and id %s %s and instance %s %s';
 
 		$instance = $this->app->instance->getInstance();
 
@@ -91,7 +91,8 @@ class PinholeTagEdit extends AdminDBEdit
 			$this->app->db->quote($name, 'text'),
 			SwatDB::equalityOperator($this->id, true),
 			$this->app->db->quote($this->id, 'integer'),
-			$this->app->db->quote($instance->id, 'integer'));
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$query = SwatDB::query($this->app->db, $sql);
 

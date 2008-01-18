@@ -21,11 +21,12 @@ class PinholeTagDelete extends AdminDBDelete
 	{
 		parent::processDBData();
 
-		$sql = 'delete from PinholeTag where id in (%s) and instance = %s';
+		$sql = 'delete from PinholeTag where id in (%s) and instance %s %s';
 		$item_list = $this->getItemList('integer');
 		$instance = $this->app->instance->getInstance();
 		$sql = sprintf($sql, $item_list,
-			$this->app->db->quote($instance->id, 'integer'));
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$num = SwatDB::exec($this->app->db, $sql);
 
@@ -48,9 +49,10 @@ class PinholeTagDelete extends AdminDBDelete
 		$item_list = $this->getItemList('integer');
 		$instance = $this->app->instance->getInstance();
 
-		$where_clause = sprintf('id in (%s) and instance = %s',
+		$where_clause = sprintf('id in (%s) and instance %s %s',
 			$item_list,
-			$this->app->db->quote($instance->id, 'integer'));
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'));
 		
 		$dep = new AdminListDependency();
 		$dep->setTitle(Pinhole::_('tag'), Pinhole::_('tags'));

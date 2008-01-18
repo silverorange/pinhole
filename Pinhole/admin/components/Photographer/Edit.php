@@ -41,7 +41,7 @@ class PinholePhotographerEdit extends AdminDBEdit
 	{
 		$this->photographer = new PinholePhotographer();
 		$this->photographer->setDatabase($this->app->db);
-		$this->photographer->setInstance($this->app->instance->getInstance());
+		$this->photographer->instance = $this->app->instance->getInstance();
 
 		if ($this->id !== null) {
 			if (!$this->photographer->load($this->id))

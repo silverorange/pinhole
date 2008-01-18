@@ -91,19 +91,21 @@ class PinholePhotographerIndex extends AdminIndex
 	protected function getTableModel(SwatView $view)
 	{
 		$sql = 'select * from PinholePhotographer
-			where instance = %s
+			where instance %s %s
 			order by %s';
 
 		$instance = $this->app->instance->getInstance();
 
 		$sql = sprintf($sql,
-			$this->app->db->quote($instance->id, 'integer'),
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'),
 			$this->getOrderByClause($view, 'id'));
 		
 		$rs = SwatDB::query($this->app->db, $sql);
 
 		foreach ($rs as $row)
-			$row->status_title = PinholePhotographer::getStatusTitle($row->status);
+			$row->status_title =
+				PinholePhotographer::getStatusTitle($row->status);
 
 		return $rs;
 	}

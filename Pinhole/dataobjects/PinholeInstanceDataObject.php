@@ -24,23 +24,6 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 	// }}}
 
 	// database loading and saving
-	// {{{ public function setInstance()
-
-	/**
-	 * Sets the instance for this data-object
-	 *
-	 * If this data-object has an instance set, subsequent calls to
-	 * {@link PinholeInstanceDataObject::load()} will only load if this object
-	 * belongs to the specified instance.
-	 *
-	 * @param SiteInstance $instance the instance for this data-object.
-	 */
-	public function setInstance(SiteInstance $instance)
-	{
-		$this->instance = $instance;
-	}
-
-	// }}}
 	// {{{ protected function loadInternal()
 
 	/**
@@ -81,27 +64,6 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 	}
 
 	// }}}
-	// {{{ protected function saveInternal()
-
-	/**
-	 * Saves this object to the database
-	 *
-	 * Only modified properties are updated.
-	 */
-	protected function saveInternal()
-	{
-		if ($this->instance === null) {
-			trigger_error(
-				sprintf('No instance defined for %s', get_class($this)),
-				E_USER_NOTICE);
-
-			return;
-		}
-
-		parent::saveInternal();
-	}
-
-	// }}}
 	// {{{ protected function deleteInternal()
 
 	/**
@@ -109,13 +71,8 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 	 */
 	protected function deleteInternal()
 	{
-		if ($this->instance === null) {
-			trigger_error(
-				sprintf('No instance defined for %s', get_class($this)),
-				E_USER_NOTICE);
-
-			return;
-		}
+		if ($this->instance === null)
+			parent::deleteInternal();
 
 		if ($this->table === null || $this->id_field === null)
 			return;

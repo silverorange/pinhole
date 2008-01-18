@@ -38,9 +38,10 @@ class PinholePhotoDelete extends AdminDBDelete
 		$instance = $this->app->instance->getInstance();
 
 		$where_clause = sprintf('PinholePhoto.id in (%s)
-			and PinholePhoto.instance = %s',
+			and PinholePhoto.instance %s %s',
 			$item_list,
-			$this->app->db->quote($instance->id, 'integer'));
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'));
 
 		return PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, 'thumb', $where_clause);

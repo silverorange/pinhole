@@ -63,17 +63,18 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	 */
 	public function loadFromName($name, SiteInstance $instance)
 	{
-		$this->setInstance($instance);
+		$this->instance = $instance;
 
 		$row = null;
 		$loaded = false;
 
 		if ($this->table !== null) {
 			$sql = sprintf('select * from %s where name = %s
-				and instance = %s',
+				and instance %s %s',
 				$this->table,
 				$this->db->quote($name, 'text'),
-				$this->db->quote($this->instance->id, 'integer'));
+				$this->db->equalityOperator($instance->getId()),
+				$this->db->quote($instance->getId(), 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);
 			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);

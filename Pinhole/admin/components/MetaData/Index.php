@@ -105,13 +105,14 @@ class PinholeMetaDataIndex extends AdminIndex
 	protected function getTableModel(SwatView $view)
 	{
 		$sql = 'select * from PinholeMetaData
-			where PinholeMetaData.instance = %s
+			where PinholeMetaData.instance %s %s
 			order by %s';
 
 		$instance = $this->app->instance->getInstance();
 
 		$sql = sprintf($sql,
-			$this->app->db->quote($instance->id, 'integer'),
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'),
 			$this->getOrderByClause($view, 'show desc, displayorder, title'));
 		
 		$metadata = SwatDB::query($this->app->db, $sql);

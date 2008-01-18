@@ -39,14 +39,16 @@ class PinholePhotoLoaderPage extends PinholePage
 		$instance = $this->app->instance->getInstance();
 		$where_clause = sprintf(
 			'PinholePhoto.filename = %s and '.
-			'PinholePhoto.instance = %s',
+			'PinholePhoto.instance %s %s',
 			$this->app->db->quote($filename, 'text'),
-			$this->app->db->quote($instance->id, 'integer'));
+			$this->app->db->equalityOperator($instance->getId()),
+			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, $dimension, $where_clause);
 
 		if (count($photos) == 0) {
+			// TODO: make this exception work better with null instances
 			throw new SiteNotFoundException(sprintf("Photo with ".
 				"filename '%s' does not exist in the instance '%s'.",
 				$filename, $instance->shortname));

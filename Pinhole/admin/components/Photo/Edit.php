@@ -67,7 +67,9 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		// setup tag entry control
 		$instance_id = $this->app->instance->getId();
-		$tag_list = new PinholeTagList($this->app->db, $instance);
+		$tag_list = new PinholeTagList($this->app->db,
+			$this->app->instance->getInstance());
+
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s
 			order by title',
@@ -106,7 +108,7 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		$this->photo = new PinholePhoto();
 		$this->photo->setDatabase($this->app->db);
-		$this->photo->setInstance($this->app->instance->getInstance());
+		$this->photo->instance = $this->app->instance->getInstance();
 
 		if ($this->id === null) {
 			throw new AdminNoAccessException(

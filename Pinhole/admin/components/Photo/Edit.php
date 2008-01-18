@@ -66,13 +66,13 @@ class PinholePhotoEdit extends AdminDBEdit
 		}
 
 		// setup tag entry control
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 		$tag_list = new PinholeTagList($this->app->db, $instance);
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s
 			order by title',
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		/* TODO: use this once status is figured out
 		$sql = sprintf('select * from PinholeTag
@@ -81,8 +81,8 @@ class PinholePhotoEdit extends AdminDBEdit
 					(select tag from PinholePhotoTagBinding
 					where photo = %s))
 			order by title',
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'),
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'),
 			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'),
 			$this->app->db->quote($this->photo->id, 'integer'));
 		*/
@@ -189,15 +189,15 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function getPendingPhotos()
 	{
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 
 		$sql = sprintf('select id, title
 			from PinholePhoto
 			where PinholePhoto.status = %s and PinholePhoto.instance %s %s
 			order by PinholePhoto.upload_date, PinholePhoto.id',
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		return SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
 	}

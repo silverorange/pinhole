@@ -94,11 +94,11 @@ class PinholePhotographerIndex extends AdminIndex
 			where instance %s %s
 			order by %s';
 
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 
 		$sql = sprintf($sql,
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'),
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'),
 			$this->getOrderByClause($view, 'id'));
 		
 		$rs = SwatDB::query($this->app->db, $sql);

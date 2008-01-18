@@ -210,11 +210,13 @@ class PinholePhotoFactory
 	{
 		static $dimensions;
 
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+
 		if ($dimensions === null)
 			$dimensions = SwatDB::query($this->db,
 				sprintf('select * from PinholeDimension where instance %s %s',
-					SwatDB::equalityOperator($this->instance->getId()),
-					$this->db->quote($this->instance->getId(), 'integer')),
+					SwatDB::equalityOperator($instance_id),
+					$this->db->quote($instance_id, 'integer')),
 				'PinholeDimensionWrapper');
 
 		$transformer = Image_Transform::factory('Imagick2');
@@ -360,9 +362,11 @@ class PinholePhotoFactory
 	 */
 	protected function saveMetaData(PinholePhoto $photo, $meta_data)
 	{
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+
 		$where_clause = sprintf('PinholeMetaData.instance %s %s',
-			SwatDB::equalityOperator($this->instance->getId()),
-			$this->db->quote($this->instance->getId, 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->db->quote($instance_id, 'integer'));
 
 		$existing_meta_data = SwatDB::getOptionArray($this->db,
 			'PinholeMetaData', 'shortname', 'id', null,
@@ -380,7 +384,7 @@ class PinholePhotoFactory
 						'integer:instance'),
 					array('shortname' => $shortname,
 						'title' => $title,
-						'instance' => $this->instance->getId()),
+						'instance' => $instance_id),
 					'id');
 			} else {
 				$meta_data_id = array_search($shortname,

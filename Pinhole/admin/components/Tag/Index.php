@@ -96,11 +96,11 @@ class PinholeTagIndex extends AdminSearch
 	protected function getWhereClause()
 	{
 		if ($this->where_clause === null) {
-			$instance = $this->app->instance->getInstance();
+			$instance_id = $this->app->instance->getId();
 
 			$this->where_clause = sprintf('PinholeTag.instance %s %s',
-				SwatDB::equalityOperator($instance->getId()),
-				$this->app->db->quote($instance->getId(), 'integer'));
+				SwatDB::equalityOperator($instance_id),
+				$this->app->db->quote($instance_id, 'integer'));
 
 			$clause = new AdminSearchClause('title');
 			$clause->table = 'PinholeTag';

@@ -39,14 +39,16 @@ class PinholePhotoIndex extends AdminSearch
 
 		$this->ui->loadFromXML($this->ui_xml);
 
+		$instance_id = $this->app->instance->getId();
+
 		// setup tag entry control
 		$tag_list = new PinholeTagList($this->app->db,
 			$this->app->instance->getInstance());
 
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s order by title',
-			SwatDB::equalityOperator($this->app->instance->getId()),
-			$this->app->db->quote($this->app->instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
@@ -101,13 +103,13 @@ class PinholePhotoIndex extends AdminSearch
 	protected function getWhereClause()
 	{
 		if ($this->where_clause === null) {
-			$instance = $this->app->instance->getInstance();
+			$instance_id = $this->app->instance->getId();
 
 			$where = sprintf('PinholePhoto.status != %s
 				and PinholePhoto.instance %s %s',
 				$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
-				SwatDB::equalityOperator($instance->getId()),
-				$this->app->db->quote($instance->getId(), 'integer'));
+				SwatDB::equalityOperator($instance_id),
+				$this->app->db->quote($instance_id, 'integer'));
 
 			$clause = new AdminSearchClause('date:photo_date');
 			$clause->table = 'PinholePhoto';

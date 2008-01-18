@@ -19,15 +19,15 @@ class PinholePhotographerDelete extends AdminDBDelete
 	{
 		parent::processDBData();
 
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 
 		$sql = 'delete from PinholePhotographer where id in (%s)
 			and instance %s %s';
 
 		$item_list = $this->getItemList('integer');
 		$sql = sprintf($sql, $item_list,
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		$num = SwatDB::exec($this->app->db, $sql);
 
@@ -50,12 +50,12 @@ class PinholePhotographerDelete extends AdminDBDelete
 		parent::buildInternal();
 
 		$item_list = $this->getItemList('integer');
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 
 		$where_clause = sprintf('id in (%s) and instance %s %s',
 			$item_list,
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		$dep = new AdminListDependency();
 		$dep->setTitle(Admin::_('pinhole photographer'), Admin::_('pinhole photographers'));

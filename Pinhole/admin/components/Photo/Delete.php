@@ -35,13 +35,13 @@ class PinholePhotoDelete extends AdminDBDelete
 	protected function getPhotos()
 	{
 		$item_list = $this->getItemList('integer');
-		$instance = $this->app->instance->getInstance();
+		$instance_id = $this->app->instance->getId();
 
 		$where_clause = sprintf('PinholePhoto.id in (%s)
 			and PinholePhoto.instance %s %s',
 			$item_list,
-			SwatDB::equalityOperator($instance->getId()),
-			$this->app->db->quote($instance->getId(), 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		return PinholePhotoWrapper::loadSetFromDBWithDimension(
 			$this->app->db, 'thumb', $where_clause);

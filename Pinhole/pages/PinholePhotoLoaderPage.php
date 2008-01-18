@@ -41,7 +41,7 @@ class PinholePhotoLoaderPage extends PinholePage
 			'PinholePhoto.filename = %s and '.
 			'PinholePhoto.instance %s %s',
 			$this->app->db->quote($filename, 'text'),
-			$this->app->db->equalityOperator($instance->getId()),
+			SwatDB::equalityOperator($instance->getId()),
 			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(

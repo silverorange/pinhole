@@ -91,7 +91,7 @@ class PinholeTagEdit extends AdminDBEdit
 			$this->app->db->quote($name, 'text'),
 			SwatDB::equalityOperator($this->id, true),
 			$this->app->db->quote($this->id, 'integer'),
-			$this->app->db->equalityOperator($instance->getId()),
+			SwatDB::equalityOperator($instance->getId()),
 			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$query = SwatDB::query($this->app->db, $sql);

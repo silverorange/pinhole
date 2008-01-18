@@ -213,7 +213,7 @@ class PinholePhotoFactory
 		if ($dimensions === null)
 			$dimensions = SwatDB::query($this->db,
 				sprintf('select * from PinholeDimension where instance %s %s',
-					$this->db->equalityOperator($this->instance->getId()),
+					SwatDB::equalityOperator($this->instance->getId()),
 					$this->db->quote($this->instance->getId(), 'integer')),
 				'PinholeDimensionWrapper');
 
@@ -361,7 +361,7 @@ class PinholePhotoFactory
 	protected function saveMetaData(PinholePhoto $photo, $meta_data)
 	{
 		$where_clause = sprintf('PinholeMetaData.instance %s %s',
-			$this->db->equalityOperator($this->instance->getId()),
+			SwatDB::equalityOperator($this->instance->getId()),
 			$this->db->quote($this->instance->getId, 'integer'));
 
 		$existing_meta_data = SwatDB::getOptionArray($this->db,

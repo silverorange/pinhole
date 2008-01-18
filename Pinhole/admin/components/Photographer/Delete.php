@@ -26,7 +26,7 @@ class PinholePhotographerDelete extends AdminDBDelete
 
 		$item_list = $this->getItemList('integer');
 		$sql = sprintf($sql, $item_list,
-			$this->app->db->equalityOperator($instance->getId()),
+			SwatDB::equalityOperator($instance->getId()),
 			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$num = SwatDB::exec($this->app->db, $sql);
@@ -54,7 +54,7 @@ class PinholePhotographerDelete extends AdminDBDelete
 
 		$where_clause = sprintf('id in (%s) and instance %s %s',
 			$item_list,
-			$this->app->db->equalityOperator($instance->getId()),
+			SwatDB::equalityOperator($instance->getId()),
 			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$dep = new AdminListDependency();

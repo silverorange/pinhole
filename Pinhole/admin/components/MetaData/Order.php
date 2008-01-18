@@ -61,7 +61,7 @@ class PinholeMetaDataOrder extends AdminDBOrder
 
 		$where_clause = sprintf('show = %s and instance %s %s',
 			$this->app->db->quote($this->parent, 'boolean'),
-			$this->app->db->equalityOperator($instance->getId()),
+			SwatDB::equalityOperator($instance->getId()),
 			$this->app->db->quote($instance->getId(), 'integer'));
 
 		$order_widget = $this->ui->getWidget('order');

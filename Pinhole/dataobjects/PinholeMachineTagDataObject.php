@@ -87,7 +87,7 @@ class PinholeMachineTagDataObject extends PinholeInstanceDataObject
 				$this->db->quote($namespace, 'text'),
 				$this->db->quote($name, 'text'),
 				$this->db->quote($value, 'text'),
-				$this->db->equalityOperator($instance->getId()),
+				SwatDB::equalityOperator($instance->getId()),
 				$this->db->quote($instance->getId(), 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);

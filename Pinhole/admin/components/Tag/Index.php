@@ -99,7 +99,7 @@ class PinholeTagIndex extends AdminSearch
 			$instance = $this->app->instance->getInstance();
 
 			$this->where_clause = sprintf('PinholeTag.instance %s %s',
-				$this->app->db->equalityOperator($instance->getId()),
+				SwatDB::equalityOperator($instance->getId()),
 				$this->app->db->quote($instance->getId(), 'integer'));
 
 			$clause = new AdminSearchClause('title');

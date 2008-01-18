@@ -68,6 +68,7 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	public function loadFromShortname($shortname, SiteInstance $instance)
 	{
 		$this->instance = $instance;
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
 
 		$row = null;
 		$loaded = false;
@@ -77,8 +78,8 @@ class PinholeMetaData extends PinholeInstanceDataObject
 				and instance %s %s',
 				$this->table,
 				$this->db->quote($shortname, 'text'),
-				SwatDB::equalityOperator($instance->getId()),
-				$this->db->quote($instance->getId(), 'integer'));
+				SwatDB::equalityOperator($instance_id),
+				$this->db->quote($instance_id, 'integer'));
 
 			$rs = SwatDB::query($this->db, $sql, null);
 			$row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);

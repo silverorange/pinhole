@@ -70,7 +70,7 @@ class PinholeTagEdit extends AdminDBEdit
 
 		} elseif (!$this->validateShortname($name)) {
 			$message = new SwatMessage(
-				Pinhole::_('Tag name already exists and must be unique.'), 
+				Pinhole::_('Tag name already exists and must be unique.'),
 				SwatMessage::ERROR);
 
 			$this->ui->getWidget('name')->addMessage($message);
@@ -91,8 +91,8 @@ class PinholeTagEdit extends AdminDBEdit
 			$this->app->db->quote($name, 'text'),
 			SwatDB::equalityOperator($this->id, true),
 			$this->app->db->quote($this->id, 'integer'),
-			SwatDB::equalityOperator($instance_Id),
-			$this->app->db->quote($instance_Id, 'integer'));
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
 
 		$query = SwatDB::query($this->app->db, $sql);
 

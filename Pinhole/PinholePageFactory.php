@@ -13,17 +13,15 @@ require_once 'Pinhole/layouts/PinholeLayout.php';
  */
 class PinholePageFactory extends SitePageFactory
 {
-	// {{{ public static function instance()
+	// {{{ public function __construct()
 
-	public static function instance()
+	/**
+	 * Creates a PinholePageFactory
+	 */
+	public function __construct()
 	{
-		static $instance = null;
-
-		if ($instance === null) {
-			$instance = new self();
-		}
-
-		return $instance;
+		// set location to load Pinhole page classes from
+		$this->class_map['Pinhole'] = 'Pinhole/pages';
 	}
 
 	// }}}
@@ -87,20 +85,6 @@ class PinholePageFactory extends SitePageFactory
 	{
 		$layout = new PinholeLayout($app, 'Pinhole/layouts/xhtml/default.php');
 		return $layout;
-	}
-
-	// }}}
-	// {{{ protected function __construct()
-
-	/**
-	 * Creates a PinholePageFactory
-	 */
-	protected function __construct()
-	{
-		parent::__construct();
-
-		// set location to load Pinhole page classes from
-		$this->class_map['Pinhole'] = 'Pinhole/pages';
 	}
 
 	// }}}

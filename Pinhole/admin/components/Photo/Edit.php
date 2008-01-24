@@ -4,14 +4,15 @@ require_once 'Swat/SwatString.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Admin/exceptions/AdminNoAccessException.php';
 require_once 'Admin/pages/AdminDBEdit.php';
+require_once 'NateGoSearch/NateGoSearch.php';
 require_once 'Pinhole/dataobjects/PinholePhotographer.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
-require_once 'include/PinholePhotoTagEntry.php';
 require_once 'Pinhole/pages/PinholeSearchPage.php';
+require_once 'include/PinholePhotoTagEntry.php';
 
 /**
  * Page for viewing photo details and editing
@@ -91,11 +92,9 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
-		
-		foreach ($tags as $data_object) {
-			$tag = new PinholeTag($data_object);
-			$tag_list->add($tag);
-		}
+
+		foreach ($tags as $data_object)
+			$tag_list->add(new PinholeTag($data_object));
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
 		$this->ui->getWidget('tags')->setDatabase($this->app->db);
@@ -108,16 +107,21 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		$this->photo = new PinholePhoto();
 		$this->photo->setDatabase($this->app->db);
-		$this->photo->instance = $this->app->instance->getInstance();
 
 		if ($this->id === null) {
 			throw new AdminNoAccessException(
 				Pinhole::_('A Photo id is required.'));
-
 		} else {
+			$instance_id = $this->app->instance->getId();
+
 			if (!$this->photo->load($this->id))
 				throw new AdminNotFoundException(
 					sprintf(Pinhole::_('Photo with id “%s” not found.'),
+					$this->id));
+			elseif ($this->photo->image_set->instance->id != $instance_id)
+				throw new AdminNotFoundException(
+					sprintf(Pinhole::_('Photo with id “%s” loaded '.
+						'in the wrong instance.'),
 					$this->id));
 		}
 	}
@@ -139,7 +143,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$status->addOption(PinholePhoto::STATUS_UNPUBLISHED,
 			PinholePhoto::getStatusTitle(PinholePhoto::STATUS_UNPUBLISHED));
 
-		$this->ui->getWidget('status_field')->title = 
+		$this->ui->getWidget('status_field')->title =
 			Pinhole::_('Change Status to');
 	}
 
@@ -193,9 +197,10 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		$instance_id = $this->app->instance->getId();
 
-		$sql = sprintf('select id, title
+		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title
 			from PinholePhoto
-			where PinholePhoto.status = %s and PinholePhoto.instance %s %s
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			where PinholePhoto.status = %s and ImageSet.instance %s %s
 			order by PinholePhoto.upload_date, PinholePhoto.id',
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
 			SwatDB::equalityOperator($instance_id),
@@ -256,19 +261,19 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function addToSearchQueue()
 	{
+		$type = NateGoSearch::getDocumentType($this->app->db, 'photo');
+
 		$sql = sprintf('delete from NateGoSearchQueue
 			where document_id = %s and document_type = %s',
 			$this->app->db->quote($this->photo->id, 'integer'),
-			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
-				'integer'));
+			$this->app->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->app->db, $sql);
 
 		$sql = sprintf('insert into NateGoSearchQueue
 			(document_id, document_type) values (%s, %s)',
 			$this->app->db->quote($this->photo->id, 'integer'),
-			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
-				'integer'));
+			$this->app->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->app->db, $sql);
 	}
@@ -308,15 +313,13 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		parent::buildInternal();
 
-		$thumb_dimension = $this->photo->getDimension('thumb');
-		$large_dimension = $this->photo->getDimension('large');
 		$thumbnail = $this->ui->getWidget('thumbnail');
-		$thumbnail->image = '../'.$thumb_dimension->getUri();
-		$thumbnail->width = $thumb_dimension->width;
-		$thumbnail->height = $thumb_dimension->height;
-		$thumbnail->preview_image = '../'.$large_dimension->getUri();
-		$thumbnail->preview_width = $large_dimension->width;
-		$thumbnail->preview_height = $large_dimension->height;
+		$thumbnail->image = $this->photo->getUri('thumb', '../');
+		$thumbnail->width = $this->photo->getWidth('thumb');
+		$thumbnail->height = $this->photo->getHeight('thumb');
+		$thumbnail->preview_image = $this->photo->getUri('large', '../');
+		$thumbnail->preview_width = $this->photo->getWidth('large');
+		$thumbnail->preview_height = $this->photo->getHeight('large');
 
 		/*
 		$toolbar = $this->ui->getWidget('edit_toolbar');
@@ -325,7 +328,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		if ($this->upcomingPendingPhotoCount() > 0) {
 			$this->ui->getWidget('proceed_button')->visible = true;
-			$this->ui->getWidget('status_info')->content = 
+			$this->ui->getWidget('status_info')->content =
 				sprintf(Pinhole::ngettext(
 					'%d pending photo left.',
 					'%d pending photos left.',
@@ -340,7 +343,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function buildNavBar()
 	{
-		$this->navbar->createEntry(Pinhole::_('Edit'));
+		//$this->navbar->createEntry(Pinhole::_('Edit'));
 	}
 
 	// }}}

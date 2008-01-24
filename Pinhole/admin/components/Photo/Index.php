@@ -9,7 +9,6 @@ require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'include/PinholePhotoTagEntry.php';
-require_once 'include/PinholeAdminPhotoCellRenderer.php';
 require_once 'include/PinholePhotoActionsProcessor.php';
 
 /**
@@ -52,11 +51,9 @@ class PinholePhotoIndex extends AdminSearch
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
-		
-		foreach ($tags as $data_object) {
-			$tag = new PinholeTag($data_object);
-			$tag_list->add($tag);
-		}
+
+		foreach ($tags as $data_object)
+			$tag_list->add(new PinholeTag($data_object));
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
 		$this->ui->getWidget('tags')->setDatabase($this->app->db);
@@ -106,7 +103,7 @@ class PinholePhotoIndex extends AdminSearch
 			$instance_id = $this->app->instance->getId();
 
 			$where = sprintf('PinholePhoto.status != %s
-				and PinholePhoto.instance %s %s',
+				and ImageSet.instance %s %s',
 				$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
 				SwatDB::equalityOperator($instance_id),
 				$this->app->db->quote($instance_id, 'integer'));
@@ -136,17 +133,27 @@ class PinholePhotoIndex extends AdminSearch
 	{
 		$this->searchPhotos();
 
-		$sql = sprintf('select count(id) from PinholePhoto %s where %s',
+		$sql = sprintf('select count(PinholePhoto.id)
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			%s where %s',
 			$this->join_clause,
 			$this->getWhereClause());
 
 		$pager = $this->ui->getWidget('pager');
 		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
 
-		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
-			$this->app->db, 'thumb', $this->getWhereClause(),
-			$this->join_clause, null,
-			$pager->page_size, $pager->current_record);
+		$sql = sprintf('select PinholePhoto.* from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			%s where %s order by %s',
+			$this->join_clause,
+			$this->getWhereClause(),
+			$this->order_by_clause);
+
+		$this->app->db->setLimit($pager->page_size, $pager->current_record);
+
+		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
+		$photos = SwatDB::query($this->app->db, $sql, $wrapper_class);
 
 		$this->ui->getWidget('results_frame')->visible = true;
 
@@ -154,11 +161,11 @@ class PinholePhotoIndex extends AdminSearch
 
 		if (count($photos) != 0) {
 			$this->ui->getWidget('results_message')->content =
-				$pager->getResultsMessage(Pinhole::_('result'), 
+				$pager->getResultsMessage(Pinhole::_('result'),
 					Pinhole::_('results'));
 
 			foreach ($photos as $photo) {
-				$ds = new SwatDetailsStore($photo);
+				$ds = new SwatDetailsStore();
 				$ds->photo = $photo;
 				$store->add($ds);
 			}
@@ -173,14 +180,19 @@ class PinholePhotoIndex extends AdminSearch
 	protected function searchPhotos()
 	{
 		$keywords = $this->ui->getWidget('search_keywords')->value;
-		if (strlen(trim($keywords)) > 0) {
 
+		$this->join_clause = '';
+		$this->order_by_clause = 'PinholePhoto.publish_date desc,
+			PinholePhoto.photo_date desc, PinholePhoto.id';
+
+		if (strlen(trim($keywords)) > 0) {
 			$query = new NateGoSearchQuery($this->app->db);
-			$query->addDocumentType(Pinhole::SEARCH_PHOTO);
+			$query->addDocumentType('photo');
 			$query->addBlockedWords(
 				NateGoSearchQuery::getDefaultBlockedWords());
 
 			$result = $query->query($keywords);
+			$type = NateGoSearch::getDocumentType($this->app->db, 'photo');
 
 			$this->join_clause = sprintf(
 				'inner join %1$s on
@@ -188,15 +200,12 @@ class PinholePhotoIndex extends AdminSearch
 					%1$s.unique_id = %2$s and %1$s.document_type = %3$s',
 				$result->getResultTable(),
 				$this->app->db->quote($result->getUniqueId(), 'text'),
-				$this->app->db->quote(Pinhole::SEARCH_PHOTO,
-					'integer'));
+				$this->app->db->quote($type, 'integer'));
 
 			$this->order_by_clause =
-				sprintf('%1$s.displayorder1, %1$s.displayorder2, PinholePhoto.title',
-					$result->getResultTable());
-		} else {
-			$this->join_clause = '';
-			$this->order_by_clause = 'PinholePhoto.title';
+				sprintf('%1$s.displayorder1, %1$s.displayorder2, %2$s',
+					$result->getResultTable(),
+					$this->order_by_clause);
 		}
 	}
 

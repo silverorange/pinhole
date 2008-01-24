@@ -5,7 +5,6 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatTableStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'include/PinholeAdminPhotoCellRenderer.php';
 require_once 'include/PinholePhotoActionsProcessor.php';
 require_once 'include/PinholePhotoTagEntry.php';
 
@@ -46,11 +45,9 @@ class PinholePhotoPending extends AdminIndex
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
-		
-		foreach ($tags as $data_object) {
-			$tag = new PinholeTag($data_object);
-			$tag_list->add($tag);
-		}
+
+		foreach ($tags as $data_object)
+			$tag_list->add(new PinholeTag($data_object));
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
 		$this->ui->getWidget('tags')->setDatabase($this->app->db);
@@ -92,22 +89,30 @@ class PinholePhotoPending extends AdminIndex
 
 	protected function getTableModel(SwatView $view)
 	{
-		$sql = sprintf('select count(id) from PinholePhoto where %s',
+		$sql = sprintf('select count(PinholePhoto.id) from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			where %s',
 			$this->getWhereClause());
 
 		$pager = $this->ui->getWidget('pager');
 		$pager->total_records = SwatDB::queryOne($this->app->db, $sql);
 
-		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
-			$this->app->db, 'thumb', $this->getWhereClause(),
-			'', 'PinholePhoto.upload_date, PinholePhoto.id',
-			$pager->page_size, $pager->current_record);
+		$sql = sprintf('select PinholePhoto.* from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			where %s
+			order by PinholePhoto.upload_date desc, PinholePhoto.id',
+			$this->getWhereClause());
+
+		$this->app->db->setLimit($pager->page_size, $pager->current_record);
+
+		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
+		$photos = SwatDB::query($this->app->db, $sql, $wrapper_class);
 
 		$store = new SwatTableStore();
 
 		if (count($photos) != 0) {
 			foreach ($photos as $photo) {
-				$ds = new SwatDetailsStore($photo);
+				$ds = new SwatDetailsStore();
 				$ds->photo = $photo;
 				$store->add($ds);
 			}
@@ -124,11 +129,10 @@ class PinholePhotoPending extends AdminIndex
 		$instance_id = $this->app->instance->getId();
 
 		return sprintf('PinholePhoto.status = %s
-			and PinholePhoto.instance %s %s',
+			and ImageSet.instance %s %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
 			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer')
-			);
+			$this->app->db->quote($instance_id, 'integer'));
 	}
 
 	// }}}

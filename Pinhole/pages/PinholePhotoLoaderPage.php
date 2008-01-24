@@ -27,34 +27,35 @@ class PinholePhotoLoaderPage extends PinholePage
 	{
 		parent::__construct($app, $layout);
 
-		$this->photo = $this->getPhoto($photo_id, $dimension_shortname);
+		$this->photo = $this->getPhoto($photo_id);
 		$this->dimension_shortname = $dimension_shortname;
 	}
 
 	// }}}
 	// {{{ protected function getPhoto()
 
-	protected function getPhoto($filename, $dimension)
+	protected function getPhoto($filename)
 	{
-		$instance_id = $this->app->instance->getId();
-		$where_clause = sprintf(
-			'PinholePhoto.filename = %s and '.
-			'PinholePhoto.instance %s %s',
+		$sql = sprintf('select PinholePhoto.*
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			where PinholePhoto.filename = %s and ImageSet.instance %s %s',
 			$this->app->db->quote($filename, 'text'),
-			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer'));
+			SwatDB::equalityOperator($this->app->instance->getId()),
+			$this->app->db->quote($this->app->instance->getId(), 'integer'));
 
-		$photos = PinholePhotoWrapper::loadSetFromDBWithDimension(
-			$this->app->db, $dimension, $where_clause);
+		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
+		$photos = SwatDB::query($this->app->db, $sql, $wrapper_class);
 
-		if (count($photos) == 0) {
-			// TODO: make this exception work better with null instances
+		// TODO: make this exception work better with null instances
+		if (count($photos) == 0)
 			throw new SiteNotFoundException(sprintf("Photo with ".
 				"filename '%s' does not exist in the instance '%s'.",
 				$filename, $this->app->instance-getInstance()->shortname));
-		}
 
-		return $photos->getFirst();
+		$photo = $photos->getFirst();
+		$photo->setFileBase('../photos');
+		return $photo;
 	}
 
 	// }}}
@@ -66,10 +67,9 @@ class PinholePhotoLoaderPage extends PinholePage
 	{
 		parent::build();
 
-		$mime_type = 'image/jpeg';
-		header('Content-Type: '.$mime_type);
-		readfile($this->photo->getDimension(
-			$this->dimension_shortname)->getPath());
+		header('Content-Type: '.$this->photo->getMimeType(
+			$this->dimension_shortname));
+		readfile($this->photo->getFilePath($this->dimension_shortname));
 
 		exit();
 	}

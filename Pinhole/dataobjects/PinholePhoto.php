@@ -1,12 +1,11 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
-require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
-require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
+require_once 'Site/dataobjects/SiteImage.php';
+require_once 'Pinhole/dataobjects/PinholeImageSet.php';
+require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
+require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
 
 /**
  * A dataobject class for photos
@@ -15,7 +14,7 @@ require_once 'Swat/exceptions/SwatException.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhoto extends PinholeInstanceDataObject
+class PinholePhoto extends SiteImage
 {
 	// {{{ constants
 
@@ -32,27 +31,6 @@ class PinholePhoto extends PinholeInstanceDataObject
 	// {{{ public properties
 
 	/**
-	 * Unique identifier
-	 *
-	 * @var integer
-	 */
-	public $id;
-
-	/**
-	 * User visible title
-	 *
-	 * @var string
-	 */
-	public $title;
-
-	/**
-	 * Photo description
-	 *
-	 * @var string
-	 */
-	public $description;
-
-	/**
 	 * Upload date
 	 *
 	 * The date the photo was uploaded
@@ -60,22 +38,6 @@ class PinholePhoto extends PinholeInstanceDataObject
 	 * @var Date
 	 */
 	public $upload_date;
-
-	/**
-	 * Filename
-	 *
-	 * A unique filename stored without an extension.
-	 *
-	 * @var string
-	 */
-	public $filename;
-
-	/**
-	 * Original filename
-	 *
-	 * @var string
-	 */
-	public $original_filename;
 
 	/**
 	 * Raw exif data
@@ -135,11 +97,6 @@ class PinholePhoto extends PinholeInstanceDataObject
 	 public $photo_time_zone;
 
 	// }}}
-	// {{{ private properties
-
-	private $dimensions = array();
-
-	// }}}
 	// {{{ public function publish()
 
 	/**
@@ -158,39 +115,40 @@ class PinholePhoto extends PinholeInstanceDataObject
 	}
 
 	// }}}
-	// {{{ public function setDimension()
+	// {{{ public function getUri()
 
-	public function setDimension($shortname,
-		PinholePhotoDimensionBinding $dimension)
+	public function getUri($shortname, $prefix = null)
 	{
-		$dimension->photo = $this;
-		$this->dimensions[$shortname] = $dimension;
+		$dimension = $this->image_set->getDimensionByShortname(
+			$shortname);
+
+		if ($dimension->publicly_accessible) {
+			return parent::getUri($shortname, $prefix);
+		} else {
+			$uri = sprintf('loadphoto/%s/%s',
+				$dimension->shortname,
+				$this->getFilename($dimension));
+
+			if ($prefix !== null)
+				$uri = $prefix.$uri;
+
+			return $uri;
+		}
 	}
 
 	// }}}
-	// {{{ public function getDimension()
+	// {{{ public function getFilePath()
 
-	public function getDimension($shortname)
+	public function getFilePath($shortname)
 	{
-		if (isset($this->dimensions[$shortname]))
-			return $this->dimensions[$shortname];
+		$dimension = $this->image_set->getDimensionByShortname(
+			$shortname);
 
-		$sql = sprintf('select PinholePhotoDimensionBinding.*
-			from PinholePhotoDimensionBinding
-			inner join PinholeDimension on
-				PinholePhotoDimensionBinding.dimension = PinholeDimension.id
-			where PinholePhotoDimensionBinding.photo = %s
-				and PinholeDimension.shortname = %s',
-			$this->db->quote($this->id, 'integer'),
-			$this->db->quote($shortname, 'text'));
-
-		$dimension = SwatDB::query($this->db, $sql,
-			'PinholePhotoDimensionBindingWrapper');
-
-		if (count($dimension) > 0) {
-			$this->setDimension($shortname, $dimension->getFirst());
-			return $dimension->getFirst();
-		}
+		return sprintf('%s/%s/%s/%s',
+			$this->getFileBase(),
+			($dimension->publicly_accessible) ? 'public' : 'private',
+			$dimension->shortname,
+			$this->getFilename($dimension));
 	}
 
 	// }}}
@@ -296,7 +254,10 @@ class PinholePhoto extends PinholeInstanceDataObject
 		parent::init();
 
 		$this->table = 'PinholePhoto';
-		$this->id_field = 'integer:id';
+		$this->image_set_shortname = 'photos';
+
+		$this->registerInternalProperty('image_set',
+			SwatDBClassMap::get('PinholeImageSet'));
 
 		$this->registerInternalProperty('photographer',
 			SwatDBClassMap::get('PinholePhotographer'));
@@ -307,20 +268,54 @@ class PinholePhoto extends PinholeInstanceDataObject
 	}
 
 	// }}}
-	// {{{ protected function getFilename()
 
-	protected function getFilename()
+	// loader methods
+	// {{{ protected function loadDimensionBindings()
+
+	/**
+	 * Loads the dimension bindings for this image
+	 *
+	 * @return PinholePhotoDimensionBindingWrapper a recordset of dimension
+	 *                                           bindings.
+	 */
+	protected function loadDimensionBindings()
 	{
-		if ($this->filename === null)
-			throw new SwatException('Filename must be set
-				on the dataobject');
+		$sql = 'select * from PinholePhotoDimensionBinding
+				where PinholePhotoDimensionBinding.photo = %s';
 
-		return $this->filename;
+		$sql = sprintf($sql,
+			$this->db->quote($this->id, 'integer'));
+
+		$wrapper = SwatDBClassMap::get('PinholePhotoDimensionBindingWrapper');
+		return SwatDB::query($this->db, $sql, $wrapper);
 	}
 
 	// }}}
+	// {{{ protected function saveDimensionBinding()
 
-	// loader methods
+	/**
+	 * Saves an image dimension binding
+	 *
+	 * @param Imagick $imagick the imagick instance to work with.
+	 * @param SiteImageDimension $dimension the image's dimension.
+	 */
+	protected function saveDimensionBinding(Imagick $imagick,
+		SiteImageDimension $dimension)
+	{
+		$class_name = SwatDBClassMap::get('PinholePhotoDimensionBinding');
+		$binding = new $class_name();
+		$binding->setDatabase($this->db);
+		$binding->photo = $this->id;
+		$binding->dimension = $dimension->id;
+		$binding->image_type = $dimension->default_type->id;
+		$binding->width = $imagick->getImageWidth();
+		$binding->height = $imagick->getImageHeight();
+		$binding->save();
+
+		$this->dimension_bindings->add($binding);
+	}
+
+	// }}}
 	// {{{ protected function loadTags()
 
 	protected function loadTags()
@@ -339,7 +334,7 @@ class PinholePhoto extends PinholeInstanceDataObject
 		$data_objects = SwatDB::query($this->db, $sql,
 			'PinholeTagDataObjectWrapper');
 
-		$tag_list = new PinholeTagList($this->db, $this->instance);
+		$tag_list = new PinholeTagList($this->db, $this->image_set->instance);
 		foreach ($data_objects as $object)
 			$tag_list->add(new PinholeTag($object));
 
@@ -353,41 +348,6 @@ class PinholePhoto extends PinholeInstanceDataObject
 	{
 		return PinholePhotoMetaDataBindingWrapper::loadSetFromDB(
 			$this->db, $this->id);
-	}
-
-	// }}}
-	// {{{ protected function loadDimensions()
-
-	protected function loadDimensions()
-	{
-		$sql = sprintf('select PinholePhotoDimensionBinding.*,
-				PinholeDimension.width, PinholeDimension.height,
-				PinholeDimension.publicly_accessible
-				from PinholePhotoDimensionBinding
-				inner join PinholeDimension on
-					PinholeDimension.id = PinholePhotoDimensionBinding.dimension
-				where PinholePhotoDimensionBinding.photo = %s)',
-			$this->db->quote($this->id, 'integer'));
-
-		$wrapper_class = SwatDBClassMap::get('PinholeDimensionBindingWrapper');
-		return SwatDB::query($this->db, $sql, $wrapper_class);
-	}
-
-	// }}}
-
-	// database loading and saving
-	// {{{ protected function deleteInternal()
-
-	/**
-	 * Deletes this object from the database
-	 */
-	protected function deleteInternal()
-	{
-		foreach ($this->dimensions as $dimension)
-			if (file_exists($dimension->getPath()))
-				unlink($dimension->getPath());
-
-		parent::deleteInternal();
 	}
 
 	// }}}

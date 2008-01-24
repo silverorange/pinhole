@@ -17,12 +17,14 @@ require_once 'Pinhole/pages/PinholeSearchPage.php';
 class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 {
 	// {{{ public function queue()
-	
+
 	/**
 	 * Repopulates the entire search queue
 	 */
 	public function queue()
 	{
+		parent::queue();
+
 		$this->queueTags();
 		$this->queuePhotos();
 	}
@@ -38,6 +40,8 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	 */
 	protected function index()
 	{
+		parent::index();
+
 		$this->indexTags();
 		$this->indexPhotos();
 	}
@@ -53,19 +57,19 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		$this->output(Pinhole::_('Repopulating tag search queue ... '),
 			self::VERBOSITY_ALL);
 
+		$type = NateGoSearch::getDocumentType($this->db, 'tag');
+
 		// clear queue 
 		$sql = sprintf('delete from NateGoSearchQueue
 			where document_type = %s',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_TAGS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->db, $sql);
 
 		// fill queue
 		$sql = sprintf('insert into NateGoSearchQueue
 			(document_type, document_id) select %s, id from PinholeTag',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_TAGS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->db, $sql);
 
@@ -83,19 +87,19 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		$this->output(Pinhole::_('Repopulating photo search queue ... '),
 			self::VERBOSITY_ALL);
 
+		$type = NateGoSearch::getDocumentType($this->db, 'photo');
+
 		// clear queue 
 		$sql = sprintf('delete from NateGoSearchQueue
 			where document_type = %s',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_PHOTOS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->db, $sql);
 
 		// fill queue 
 		$sql = sprintf('insert into NateGoSearchQueue
 			(document_type, document_id) select %s, id from PinholePhoto',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_PHOTOS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->db, $sql);
 
@@ -110,14 +114,18 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	 */
 	protected function indexTags()
 	{
-		$indexer = new NateGoSearchIndexer(
-			$this->getDocumentType(PinholeSearchPage::TYPE_TAGS),
-				$this->db);
+		$spell_checker = new NateGoSearchPSpellSpellChecker('en');
+		$spell_checker->setCustomWordList($this->getCustomWordList());
+		$spell_checker->loadCustomContent();
+
+		$indexer = new NateGoSearchIndexer('tag', $this->db);
 
 		$indexer->addTerm(new NateGoSearchTerm('title'));
 		$indexer->setMaximumWordLength(32);
 		$indexer->addUnindexedWords(
 			NateGoSearchIndexer::getDefaultUnindexedWords());
+
+		$type = NateGoSearch::getDocumentType($this->db, 'tag');
 
 		$sql = sprintf('select PinholeTag.id, PinholeTag.title,
 				PinholeTag.name
@@ -125,8 +133,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 			inner join NateGoSearchQueue
 				on PinholeTag.id = NateGoSearchQueue.document_id
 				and NateGoSearchQueue.document_type = %s',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_TAGS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		$this->output(Pinhole::_('Indexing tags ... ').'   ',
 			self::VERBOSITY_ALL);
@@ -156,8 +163,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		unset($indexer);
 
 		$sql = sprintf('delete from NateGoSearchQueue where document_type = %s',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_TAGS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->db, $sql);
 	}
@@ -167,9 +173,12 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 	protected function indexPhotos()
 	{
-		$photo_indexer = new NateGoSearchIndexer(
-			$this->getDocumentType(PinholeSearchPage::TYPE_PHOTOS),
-				$this->db);
+		$spell_checker = new NateGoSearchPSpellSpellChecker('en');
+		$spell_checker->setCustomWordList($this->getCustomWordList());
+		$spell_checker->loadCustomContent();
+
+		$photo_indexer = new NateGoSearchIndexer('photo', $this->db);
+		$photo_indexer->setSpellChecker($spell_checker);
 
 		$photo_indexer->addTerm(new NateGoSearchTerm('title', 5));
 		$photo_indexer->addTerm(new NateGoSearchTerm('description'));
@@ -177,15 +186,15 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		$photo_indexer->addUnindexedWords(
 			NateGoSearchIndexer::getDefaultUnindexedWords());
 
-		// the item indexer appends, it gets called after the photo indexer
-		$tag_indexer = new NateGoSearchIndexer(
-			$this->getDocumentType(PinholeSearchPage::TYPE_PHOTOS),
-				$this->db, false, true);
+		// the tag indexer appends, it gets called after the photo indexer
+		$tag_indexer = new NateGoSearchIndexer('tag', $this->db, false, true);
 
 		$tag_indexer->addTerm(new NateGoSearchTerm('tag_title', 3));
 		$tag_indexer->addTerm(new NateGoSearchTerm('tag_name'));
 		$tag_indexer->addUnindexedWords(
 			NateGoSearchIndexer::getDefaultUnindexedWords());
+
+		$type = NateGoSearch::getDocumentType($this->db, 'photo');
 
 		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title,
 				PinholePhoto.description,
@@ -200,8 +209,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 					on PinholePhoto.id = NateGoSearchQueue.document_id
 					and NateGoSearchQueue.document_type = %s
 			order by PinholePhoto.id',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_PHOTOS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		$this->output(Pinhole::_('Indexing photos ... ').'   ',
 			self::VERBOSITY_ALL);
@@ -242,38 +250,9 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		unset($tag_indexer);
 
 		$sql = sprintf('delete from NateGoSearchQueue where document_type = %s',
-			$this->db->quote($this->getDocumentType(
-				PinholeSearchPage::TYPE_PHOTOS), 'integer'));
+			$this->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->db, $sql);
-	}
-
-	// }}}
-	// {{{ protected function getDocumentType()
-
-	/**
-	 * Gets the NateGo document type based on a content search type
-	 *
-	 * @param string $search_type the type of content to search. One of the
-	 *                             PinholeSearchPage::TYPE_* constants.
-	 *
-	 * @return integer the NateGo document type that corresponds to the content
-	 *                  search type or null if no document type exists.
-	 */
-	protected function getDocumentType($search_type)
-	{
-		$type = null;
-
-		switch ($search_type) {
-		case PinholeSearchPage::TYPE_PHOTOS:
-			$type = Pinhole::SEARCH_PHOTO;
-			break;
-		case PinholeSearchPage::TYPE_TAGS:
-			$type = Pinhole::SEARCH_TAG;
-			break;
-		}
-
-		return $type;
 	}
 
 	// }}}

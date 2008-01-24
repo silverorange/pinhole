@@ -124,19 +124,12 @@ class PinholeRssPage extends PinholePage
 
 	protected function displayContent($photo)
 	{
-		$dimension = $photo->getDimension('large');
-
-		if ($dimension === null)
-			return;
-
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->open();
 
-		$image = new SwatImageDisplay();
-		$image->image  = $this->app->getBaseHref().$dimension->getUri();
-		$image->width  = $dimension->width;
-		$image->height = $dimension->height;
-		$image->display();
+		$img = $photo->getImgTag('large');
+		$img->src = $this->app->getBaseHref().$img->src;
+		$img->display();
 
 		if ($photo->description !== null) {
 			$div_tag = new SwatHtmlTag('div');

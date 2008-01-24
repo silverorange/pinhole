@@ -58,19 +58,21 @@ class PinholePhotoUpload extends AdminPage
 				$photo_id = $_POST[$field_name];
 				$this->processTimeZone($photo_id);
 			}
-			
+
 			$this->app->replacePage('Photo/Pending');
 		}
 	}
 
 	// }}}
 	// {{{ protected function processTimeZone()
-	
+
 	protected function processTimeZone($photo_id)
 	{
 		$photo = new PinholePhoto();
 		$photo->setDatabase($this->app->db);
-		$photo->load(intval($photo_id));
+		$photo->load($photo_id);
+
+		// TODO maybe check PinholePhoto instance here
 
 		// save the photo time zone
 		$photo->photo_time_zone = $this->ui->getWidget('photo_time_zone')->value;

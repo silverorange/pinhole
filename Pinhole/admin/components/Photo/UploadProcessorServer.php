@@ -15,10 +15,10 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 {
 	// {{{ public function processFile()
 
-	/** 
+	/**
 	 * Process a given image file
 	 *
-	 * @param string $file The file path to the image file 
+	 * @param string $file The file path to the image file
 	 * @param string $original_filename The original name of the file
 	 *
 	 * @return array An associative array entries 'filename' = the
@@ -31,16 +31,14 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 		$response['filename'] = $filename;
 
 		try {
-			$photo_factory = new PinholePhotoFactory();
-			$photo_factory->setPath(realpath('../'));
-			$photo_factory->setDatabase($this->app->db);
-			$photo_factory->setInstance($this->app->instance->getInstance());
+			$photo = new RawkAlbumImage();
+			$photo->setDatabase($this->app->db);
+			$photo->setFileBase('../images');
+			$photo->original_filename = $original_filename;
+			$photo->process('../../temp/'.$filename);
 
-			$file = realpath('../../temp/'.$filename);
-			$photo = $photo_factory->processPhoto($file, $original_filename);
-
-			$response['id']       = $photo_factory->getPhotoId();
-			$response['processed_filename'] = $photo->filename;
+			$response['id'] = $photo->id;
+			$response['processed_filename'] = $photo->;
 
 			$this->addToSearchQueue($photo);
 
@@ -60,19 +58,19 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 
 	protected function addToSearchQueue($photo)
 	{
+		$type = NateGoSearch::getDocumentType($this->app->db, 'photo');
+
 		$sql = sprintf('delete from NateGoSearchQueue
 			where document_id = %s and document_type = %s',
 			$this->app->db->quote($photo->id, 'integer'),
-			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
-				'integer'));
+			$this->app->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->app->db, $sql);
 
 		$sql = sprintf('insert into NateGoSearchQueue
 			(document_id, document_type) values (%s, %s)',
 			$this->app->db->quote($photo->id, 'integer'),
-			$this->app->db->quote(PinholeSearchPage::TYPE_PHOTOS,
-				'integer'));
+			$this->app->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->app->db, $sql);
 	}

@@ -7,8 +7,10 @@
 				<widget class="SwatContentBlock" id="confirmation_message" />
 				<widget class="SwatTileView" id="delete_view">
 					<object class="SwatTile">
-						<object class="PinholeAdminPhotoCellRenderer">
-							<property name="photo" type="data">photo</property>
+						<object class="SiteImageCellRenderer">
+							<property name="image" type="data">photo</property>
+							<property name="image_dimension">thumb</property>
+							<property name="path_prefix">../</property>
 						</object>
 					</object>
 				</widget>

@@ -1,7 +1,7 @@
 <?php
 
 require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'SwatDB/SwatDBRecordsetWrapper.php';
+require_once 'Site/dataobjects/SiteImageDimensionBindingWrapper.php';
 require_once 'PinholePhotoDimensionBinding.php';
 
 /**
@@ -12,7 +12,8 @@ require_once 'PinholePhotoDimensionBinding.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @see       PinholePhotoDimensionBinding
  */
-class PinholePhotoDimensionBindingWrapper extends SwatDBRecordsetWrapper
+class PinholePhotoDimensionBindingWrapper extends
+	SiteImageDimensionBindingWrapper
 {
 	// {{{ protected function init()
 

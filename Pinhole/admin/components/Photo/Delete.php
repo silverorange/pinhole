@@ -6,7 +6,6 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Admin/AdminListDependency.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'include/PinholeAdminPhotoCellRenderer.php';
 
 /**
  * Delete confirmation page for Photos
@@ -37,14 +36,15 @@ class PinholePhotoDelete extends AdminDBDelete
 		$item_list = $this->getItemList('integer');
 		$instance_id = $this->app->instance->getId();
 
-		$where_clause = sprintf('PinholePhoto.id in (%s)
-			and PinholePhoto.instance %s %s',
-			$item_list,
-			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer'));
+		$sql = sprintf('select PinholePhoto.* from PinholePhoto
+				inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+				where PinholePhoto.id in (%s) and ImageSet.instance %s %s',
+				$item_list,
+				SwatDB::equalityOperator($instance_id),
+				$this->app->db->quote($instance_id, 'integer'));
 
-		return PinholePhotoWrapper::loadSetFromDBWithDimension(
-			$this->app->db, 'thumb', $where_clause);
+		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
+		return SwatDB::query($this->app->db, $sql, $wrapper_class);
 	}
 
 	// }}}
@@ -59,8 +59,10 @@ class PinholePhotoDelete extends AdminDBDelete
 		$photos = $this->getPhotos();
 		$num = count($photos);
 
-		foreach ($photos as $photo)
+		foreach ($photos as $photo) {
+			$photo->setFileBase('../../photos');
 			$photo->delete();
+		}
 
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
 			'One photo has been deleted.', '%d photos have been deleted.',
@@ -84,7 +86,7 @@ class PinholePhotoDelete extends AdminDBDelete
 		$store = new SwatTableStore();
 
 		foreach ($this->getPhotos() as $photo) {
-			$ds = new SwatDetailsStore($photo);
+			$ds = new SwatDetailsStore();
 			$ds->photo = $photo;
 			$store->add($ds);
 		}

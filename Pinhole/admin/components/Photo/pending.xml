@@ -9,10 +9,12 @@
 		<widget class="SwatForm" id="index_form">
 			<widget class="SwatTileView" id="index_view">
 				<object class="SwatTile">
-					<object class="PinholeAdminPhotoCellRenderer">
-						<property name="photo" type="data">photo</property>
+					<object class="SiteImageCellRenderer">
+						<property name="image" type="data">photo</property>
+						<property name="image_dimension">thumb</property>
 						<property name="link">Photo/Edit?id=%s</property>
-						<property name="link_value" type="data">id</property>
+						<property name="link_value" type="data">photo.id</property>
+						<property name="path_prefix">../</property>
 					</object>
 					<object class="SwatCheckboxCellRenderer" id="items">
 						<property name="value" type="data">photo.id</property>

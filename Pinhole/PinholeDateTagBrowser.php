@@ -442,7 +442,8 @@ class PinholeDateTagBrowser extends SwatControl
 				count(PinholePhoto.id) as photo_count,
 				max(convertTZ(PinholePhoto.photo_date,
 				PinholePhoto.photo_time_zone)) as photo_date
-			from PinholePhoto';
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $tag_list->getJoinClauses());
 		if (strlen($join_clauses) > 0)

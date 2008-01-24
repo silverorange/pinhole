@@ -49,7 +49,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		if ($this->photo->load($photo_id)) {
 			// ensure we are loading a photo in the current site instance
 			$current_instance_id = $this->app->instance->getId();
-			$photo_instance_id = $this->photo->getInternalValue('instance');
+			$photo_instance_id = $this->photo->image_set->instance->id;
 			if ($photo_instance_id != $current_instance_id) {
 				// TODO: make exception nicer when instance is null
 				throw new SiteNotFoundException(sprintf(
@@ -142,8 +142,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function getPhotoDetailsStore()
 	{
-		$store = new SwatDetailsStore($this->photo);
-		return $store;
+		return new SwatDetailsStore($this->photo);
 	}
 
 	// }}}
@@ -159,15 +158,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function displayPhoto()
 	{
-		$img_tag = new SwatHtmlTag('img');
-		$large = $this->photo->getDimension('large');
-		if ($large !== null) {
-			$img_tag->src = $large->getUri();
-			$img_tag->width = $large->width;
-			$img_tag->height = $large->height;
-		}
-
-		$img_tag->alt = $this->photo->title;
+		$img_tag = $this->photo->getImgTag('large');
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
 	}

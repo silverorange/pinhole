@@ -30,49 +30,17 @@ class PinholePhotoFactory
 
 	protected $path;
 
-	protected $db;
-
 	protected $archive_mime_types = array(
 		'zip'  => 'application/x-zip',
 		);
-
-	protected $photo_id;
-
-	// }}}
-	// {{{ public function setDatabase()
-
-	/**
-	 * Sets the database for this factory 
-	 *
-	 * @param MDB2_Driver_Common $db optional. The database connection to use
-	 *                                for creating dataobjects.
-	 */
-	public function setDatabase(MDB2_Driver_Common $db)
-	{
-		$this->db = $db;
-	}
-
-	// }}}
-	// {{{ public function setInstance()
-
-	/**
-	 * Sets the instance for this factory
-	 *
-	 * @param Instance $instance The Instance this file
-	 *                        belongs to.
-	 */
-	public function setInstance(SiteInstance $instance = null)
-	{
-		$this->instance = $instance;
-	}
 
 	// }}}
 	// {{{ public function setPath()
 
 	/**
-	 * Sets the path to the web root 
+	 * Sets the path to the web root
 	 *
-	 * @param $path Path to the web root. 
+	 * @param $path Path to the web root.
 	 */
 	public function setPath($path)
 	{
@@ -144,6 +112,197 @@ class PinholePhotoFactory
 			$files = array(basename($file) => $original_filename);
 
 		return $files;
+	}
+
+	// }}}
+	// {{{ protected function getArchivedFiles()
+
+	/**
+	 * Processes an array of files
+	 */
+	protected function getArchivedFiles($file, $type)
+	{
+		$za = new ZipArchive();
+		$opened = $za->open($file);
+
+		if ($opened !== true)
+			throw new PinholeProcessingException(
+				'Error opening file archive');
+
+		$file_path = sprintf('%s/%s',
+			$this->path, $this->temp_path);
+
+		for ($i = 0; $i < $za->numFiles; $i++) {
+			$stat = $za->statIndex($i);
+
+			$ext = strtolower(end(explode('.', $stat['name'])));
+
+			// TODO: we probably need a better way to keep from
+			// extracting sub-dirs (mac archive files contain
+			// sub-dirs with system files)
+			if ($stat['size'] == 0 || strpos($stat['name'], '/') !== false)
+				continue;
+
+			$filename = uniqid('file').'.'.$ext;
+			$files[$filename] = $stat['name'];
+
+			$za->renameIndex($i, $filename);
+			$za->extractTo($file_path, $filename);
+			chmod($file_path.'/'.$filename, 0666);
+		}
+
+		$za->close();
+
+		unlink($file);
+
+		return $files;
+	}
+
+	// }}}
+
+// need to move to PinholePhoto
+	// {{{ protected function getMetaDataFromFile()
+
+	/**
+	 * Get the meta data from a photo
+	 *
+	 * @param string $filename
+	 *
+	 * @return array An array of PinholePhotoMetaDataBinding data objects
+	 *               with $shortname as the key of the array.
+	 */
+	protected function getMetaDataFromFile($file)
+	{
+		exec("exiftool -t $file", $tag_names);
+		exec("exiftool -t -s $file", $values);
+
+		$data_objects = array();
+
+		for ($i = 0; $i < count($tag_names); $i++) {
+			$ret = explode("\t", $values[$i]);
+			if (!isset($ret[1]))
+				continue;
+
+			$meta_data = new PinholePhotoMetaDataBinding();
+			$meta_data->shortname = strtolower($ret[0]);
+			$meta_data->value = $ret[1];
+
+			$ret = explode("\t", $tag_names[$i]);
+			$meta_data->title = $ret[0];
+
+			$data_objects[$meta_data->shortname] = $meta_data;
+		}
+
+		return $data_objects;
+	}
+
+	// }}}
+	// {{{ protected function saveMetaData()
+
+	/**
+	 * Get the meta data from a photo
+	 *
+	 * @param string $filename
+	 * @return array An array of PinholeMetaData dataobjects
+	 */
+	protected function saveMetaData(PinholePhoto $photo, $meta_data)
+	{
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+
+		$where_clause = sprintf('PinholeMetaData.instance %s %s',
+			SwatDB::equalityOperator($instance_id),
+			$this->db->quote($instance_id, 'integer'));
+
+		$existing_meta_data = SwatDB::getOptionArray($this->db,
+			'PinholeMetaData', 'shortname', 'id', null,
+			$where_clause);
+
+		foreach ($meta_data as $data) {
+			$shortname = substr($data->shortname, 0, 255);
+			$title = substr($data->title, 0, 255);
+			$value = substr($data->value, 0, 255);
+
+			if (!in_array($shortname, $existing_meta_data)) {
+				$meta_data_id = SwatDB::insertRow($this->db,
+					'PinholeMetaData',
+					array('text:shortname', 'text:title',
+						'integer:instance'),
+					array('shortname' => $shortname,
+						'title' => $title,
+						'instance' => $instance_id),
+					'id');
+			} else {
+				$meta_data_id = array_search($shortname,
+					$existing_meta_data);
+			}
+
+			SwatDB::insertRow($this->db, 'PinholePhotoMetaDataBinding',
+				array('integer:photo',
+					'integer:meta_data',
+					'text:value'),
+				array('photo' => $photo->id,
+					'meta_data' => $meta_data_id,
+					'value' => $value));
+		}
+	}
+
+	// }}}
+	// {{{ private function parseMetaDataDate()
+
+	private function parseMetaDataDate($date)
+	{
+		list($year, $month, $day, $hour, $minute, $second) =
+			sscanf($date, "%d:%d:%d %d:%d:%d");
+
+		if ($second === null)
+			return null;
+
+		$date = new SwatDate();
+		$date->setYear($year);
+		$date->setMonth($month);
+		$date->setDay($day);
+		$date->setHour($hour);
+		$date->setMinute($minute);
+		$date->setSecond($second);
+
+		return $date;
+	}
+
+	// }}}
+
+// unused?
+	// {{{ protected properties
+
+	protected $db;
+
+	protected $photo_id;
+
+	// }}}
+	// {{{ public function setDatabase()
+
+	/**
+	 * Sets the database for this factory
+	 *
+	 * @param MDB2_Driver_Common $db optional. The database connection to use
+	 *                                for creating dataobjects.
+	 */
+	public function setDatabase(MDB2_Driver_Common $db)
+	{
+		$this->db = $db;
+	}
+
+	// }}}
+	// {{{ public function setInstance()
+
+	/**
+	 * Sets the instance for this factory
+	 *
+	 * @param Instance $instance The Instance this file
+	 *                        belongs to.
+	 */
+	public function setInstance(SiteInstance $instance = null)
+	{
+		$this->instance = $instance;
 	}
 
 	// }}}
@@ -271,137 +430,6 @@ class PinholePhotoFactory
 	}
 
 	// }}}
-	// {{{ protected function getArchivedFiles()
-
-	/**
-	 * Processes an array of files
-	 */
-	protected function getArchivedFiles($file, $type)
-	{
-		$za = new ZipArchive();
-		$opened = $za->open($file);
-
-		if ($opened !== true)
-			throw new PinholeProcessingException(
-				'Error opening file archive');
-
-		$file_path = sprintf('%s/%s',
-			$this->path, $this->temp_path);
-
-		for ($i = 0; $i < $za->numFiles; $i++) {
-			$stat = $za->statIndex($i);
-
-			$ext = strtolower(end(explode('.', $stat['name'])));
-
-			// TODO: we probably need a better way to keep from
-			// extracting sub-dirs (mac archive files contain
-			// sub-dirs with system files)
-			if ($stat['size'] == 0 ||
-				strpos($stat['name'], '/') !== false)
-				continue;
-
-			$filename = uniqid('file').'.'.$ext;
-			$files[$filename] = $stat['name'];
-
-			$za->renameIndex($i, $filename);
-			$za->extractTo($file_path, $filename);
-			chmod($file_path.'/'.$filename, 0666);
-		}
-
-		$za->close();
-
-		unlink($file);
-
-		return $files;
-	}
-
-	// }}}
-	// {{{ protected function getMetaDataFromFile()
-
-	/**
-	 * Get the meta data from a photo
-	 *
-	 * @param string $filename
-	 *
-	 * @return array An array of PinholePhotoMetaDataBinding data objects
-	 *               with $shortname as the key of the array.
-	 */
-	protected function getMetaDataFromFile($file)
-	{
-		exec("exiftool -t $file", $tag_names);
-		exec("exiftool -t -s $file", $values);
-
-		$data_objects = array();
-
-		for ($i = 0; $i < count($tag_names); $i++) {
-			$ret = explode("\t", $values[$i]);
-			if (!isset($ret[1]))
-				continue;
-
-			$meta_data = new PinholePhotoMetaDataBinding();
-			$meta_data->shortname = strtolower($ret[0]);
-			$meta_data->value = $ret[1];
-
-			$ret = explode("\t", $tag_names[$i]);
-			$meta_data->title = $ret[0];
-
-			$data_objects[$meta_data->shortname] = $meta_data;
-		}
-
-		return $data_objects;
-	}
-
-	// }}}
-	// {{{ protected function saveMetaData()
-
-	/**
-	 * Get the meta data from a photo
-	 *
-	 * @param string $filename 
-	 * @return array An array of PinholeMetaData dataobjects 
-	 */
-	protected function saveMetaData(PinholePhoto $photo, $meta_data)
-	{
-		$instance_id = ($this->instance === null) ? null : $this->instance->id;
-
-		$where_clause = sprintf('PinholeMetaData.instance %s %s',
-			SwatDB::equalityOperator($instance_id),
-			$this->db->quote($instance_id, 'integer'));
-
-		$existing_meta_data = SwatDB::getOptionArray($this->db,
-			'PinholeMetaData', 'shortname', 'id', null,
-			$where_clause);
-
-		foreach ($meta_data as $data) {
-			$shortname = substr($data->shortname, 0, 255);
-			$title = substr($data->title, 0, 255);
-			$value = substr($data->value, 0, 255);
-
-			if (!in_array($shortname, $existing_meta_data)) {
-				$meta_data_id = SwatDB::insertRow($this->db,
-					'PinholeMetaData',
-					array('text:shortname', 'text:title',
-						'integer:instance'),
-					array('shortname' => $shortname,
-						'title' => $title,
-						'instance' => $instance_id),
-					'id');
-			} else {
-				$meta_data_id = array_search($shortname,
-					$existing_meta_data);
-			}
-
-			SwatDB::insertRow($this->db, 'PinholePhotoMetaDataBinding',
-				array('integer:photo',
-					'integer:meta_data',
-					'text:value'),
-				array('photo' => $photo->id,
-					'meta_data' => $meta_data_id,
-					'value' => $value));
-		}
-	}
-
-	// }}}
 	// {{{ protected function saveDimension()
 
 	protected function saveDimension(PinholePhoto $photo,
@@ -524,28 +552,6 @@ class PinholePhotoFactory
 
 			$transformer->crop($max_x, $max_y, $offset_x, $offset_y);
 		}
-	}
-
-	// }}}
-	// {{{ private function parseMetaDataDate()
-
-	private function parseMetaDataDate($date)
-	{
-		list($year, $month, $day, $hour, $minute, $second) =
-			sscanf($date, "%d:%d:%d %d:%d:%d");
-
-		if ($second === null)
-			return null;
-
-		$date = new SwatDate();
-		$date->setYear($year);
-		$date->setMonth($month);
-		$date->setDay($day);
-		$date->setHour($hour);
-		$date->setMinute($minute);
-		$date->setSecond($second);
-
-		return $date;
 	}
 
 	// }}}

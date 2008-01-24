@@ -197,7 +197,7 @@ class PinholePhotoUploader extends SwatFileEntry
 	 * Creates all internal widgets required for this uploader
 	 */
 	private function createEmbeddedWidgets()
-	{ 
+	{
 		if (!$this->widgets_created) {
 			$this->progress_bar =
 				new SwatProgressBar($this->id.'_progress_bar');

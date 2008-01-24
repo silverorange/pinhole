@@ -261,7 +261,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$where_clauses[] = '('.$this->photo_where_clause.')';
 
 		if ($this->instance !== null)
-			$where_clauses[] = sprintf('(PinholePhoto.instance = %s)',
+			$where_clauses[] = sprintf('(ImageSet.instance = %s)',
 				$this->db->quote($this->instance->id, 'integer'));
 
 		$where_clause = implode(' '.$operator.' ', $where_clauses);
@@ -709,7 +709,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getPhotos()
 	{
-		$sql = 'select PinholePhoto.* from PinholePhoto';
+		$sql = 'select PinholePhoto.* from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
 		if (strlen($join_clauses) > 0)
@@ -743,7 +744,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getPhotoCount()
 	{
-		$sql = 'select count(PinholePhoto.id) from PinholePhoto';
+		$sql = 'select count(PinholePhoto.id) from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
 		if (strlen($join_clauses) > 0)
@@ -772,11 +774,12 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$returned_range = null;
 
 		$sql = 'select
-				max(convertTZ(PinholePhoto.photo_date, 
+				max(convertTZ(PinholePhoto.photo_date,
 					PinholePhoto.photo_time_zone)) as last_photo_date,
 				min(convertTZ(PinholePhoto.photo_date,
 					PinholePhoto.photo_time_zone)) as first_photo_date
-			from PinholePhoto';
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
 		if (strlen($join_clauses) > 0)
@@ -823,7 +826,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			'prev' => null,
 		);
 
-		$sql = 'select PinholePhoto.id from PinholePhoto';
+		$sql = 'select PinholePhoto.id from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
 		if (strlen($join_clauses) > 0)
@@ -942,7 +946,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$tag_list = $this->getEmptyCopy();
 
-		$photo_id_sql = 'select id from PinholePhoto';
+		$photo_id_sql = 'select PinholePhoto.id from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
 		if (strlen($join_clauses) > 0)

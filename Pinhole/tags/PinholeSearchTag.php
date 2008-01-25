@@ -1,5 +1,6 @@
 <?php
 
+require_once 'NateGoSearch/NateGoSearch.php';
 require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
@@ -120,6 +121,8 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	 */
 	public function getWhereClause()
 	{
+		$where_clause = '';
+
 		switch ($this->name) {
 		case 'keywords':
 			// If NateGoSearch is not enabled, do a simple string match on the
@@ -128,17 +131,11 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 				$where_clause = sprintf('PinholePhoto.title like %1$s or
 					PinholePhoto.description like %1$s',
 					$this->db->quote('%'.$this->title.'%', 'text'));
-			} else {
-				$where_clause = $this->db->quote(true, 'boolean');
 			}
 
 			break;
-
-		default:
-			$where_clause = '';
-			break;
 		}
-		
+
 		return $where_clause;
 	}
 
@@ -170,13 +167,14 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 					NateGoSearchQuery::getDefaultBlockedWords());
 
 				$result = $query->query($this->value);
+				$type = NateGoSearch::getDocumentType($this->db, 'photo');
 
 				$join_clauses[] = sprintf('inner join %1$s as %4$s on
 						%4$s.document_id = PinholePhoto.id and
 						%4$s.unique_id = %2$s and %4$s.document_type = %3$s',
 					$result->getResultTable(),
 					$this->db->quote($result->getUniqueId(), 'text'),
-					$this->db->quote($this->getPhotoSearchType(), 'integer'),
+					$this->db->quote($type, 'integer'),
 					$result->getResultTable().$results_table_id);
 			}
 
@@ -296,9 +294,7 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 
 	protected function getPhotoSearchType()
 	{
-		// TODO: this should be over-ridden by the site and use a
-		// constant
-		return 1;
+		return 'photo';
 	}
 
 	// }}}

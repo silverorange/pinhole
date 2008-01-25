@@ -43,6 +43,9 @@ class PinholePageFactory extends SitePageFactory
 		if ($layout === null)
 			$layout = $this->resolveLayout($app, $source);
 
+		if (strlen($source) == 0)
+			$source = 'tag';
+
 		$article_path = $source;
 
 		$page = null;

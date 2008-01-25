@@ -36,9 +36,11 @@ class PinholePageFactory extends SitePageFactory
 	 *
 	 * @return SitePage the page for the given source string.
 	 */
-	public function resolvePage(SiteWebApplication $app, $source)
+	public function resolvePage(SiteWebApplication $app, $source, $layout = null)
 	{
-		$layout = $this->resolveLayout($app, $source);
+		if ($layout === null)
+			$layout = $this->resolveLayout($app, $source);
+
 		$article_path = $source;
 
 		$page = null;

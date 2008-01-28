@@ -11,11 +11,11 @@ require_once 'Pinhole/dataobjects/PinholeMetaData.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeMetaDataEdit extends AdminDBEdit
+class PinholePinholeMetaDataEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/MetaData/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/PinholeMetaData/edit.xml';
 
 	/**
 	 * @var PinholeMetaData

@@ -10,7 +10,7 @@ require_once 'SwatDB/SwatDB.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  */
-class PinholeMetaDataOrder extends AdminDBOrder
+class PinholePinholeMetaDataOrder extends AdminDBOrder
 {
 	// {{{ private properties
 
@@ -37,7 +37,7 @@ class PinholeMetaDataOrder extends AdminDBOrder
 
 	protected function saveIndex($id, $index)
 	{
-		SwatDB::updateColumn($this->app->db, 'PinholeMetaData', 
+		SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
 			'integer:displayorder', $index, 'integer:id', array($id));
 	}
 
@@ -65,8 +65,8 @@ class PinholeMetaDataOrder extends AdminDBOrder
 			$this->app->db->quote($instance_id, 'integer'));
 
 		$order_widget = $this->ui->getWidget('order');
-		$order_widget->addOptionsByArray(SwatDB::getOptionArray($this->app->db, 
-			'PinholeMetaData', 'title', 'id', 'displayorder, title', 
+		$order_widget->addOptionsByArray(SwatDB::getOptionArray($this->app->db,
+			'PinholeMetaData', 'title', 'id', 'displayorder, title',
 			$where_clause));
 
 		$sql = 'select sum(displayorder) from PinholeMetaData where '.

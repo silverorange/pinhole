@@ -11,15 +11,15 @@ require_once 'Swat/SwatDetailsView.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeMetaDataIndex extends AdminIndex
+class PinholePinholeMetaDataIndex extends AdminIndex
 {
-	// {{{ protected properties 
+	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/MetaData/index.xml';
+		'Pinhole/admin/components/PinholeMetaData/index.xml';
 
 	// }}}
-	
+
 	// init phase
 	// {{{ public function init()
 
@@ -38,14 +38,14 @@ class PinholeMetaDataIndex extends AdminIndex
 	{
 		$num = count($view->getSelection());
 		$message = null;
-		
+
 		switch ($actions->selected->id) {
 			case 'show_details':
 				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
 					'boolean:show', true, 'id', $view->getSelection());
 
 				$message = new SwatMessage(sprintf(Admin::ngettext(
-					"%d detail has been enabled.", 
+					"%d detail has been enabled.",
 					"%d details have been enabled.", $num),
 					SwatString::numberFormat($num)));
 
@@ -53,11 +53,11 @@ class PinholeMetaDataIndex extends AdminIndex
 
 			case 'dont_show_details':
 				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
-					'boolean:show', false, 'id', 
+					'boolean:show', false, 'id',
 					$view->getSelection());
 
 				$message = new SwatMessage(sprintf(Admin::ngettext(
-					"%d detail has been disabled.", 
+					"%d detail has been disabled.",
 					"%d details have been disabled.", $num),
 					SwatString::numberFormat($num)));
 
@@ -68,7 +68,7 @@ class PinholeMetaDataIndex extends AdminIndex
 					'boolean:machine_tag', true, 'id', $view->getSelection());
 
 				$message = new SwatMessage(sprintf(Admin::ngettext(
-					"%d machine tag has been enabled.", 
+					"%d machine tag has been enabled.",
 					"%d machine tags have been enabled.", $num),
 					SwatString::numberFormat($num)));
 
@@ -114,9 +114,9 @@ class PinholeMetaDataIndex extends AdminIndex
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'),
 			$this->getOrderByClause($view, 'show desc, displayorder, title'));
-		
+
 		$metadata = SwatDB::query($this->app->db, $sql);
-		
+
 		$store = new SwatTableStore();
 
 		foreach ($metadata as $data) {

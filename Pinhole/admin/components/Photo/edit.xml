@@ -6,12 +6,12 @@
 		<!--widget class="SwatToolbar" id="edit_toolbar">
 			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">Edit Meta-Data</property>
-				<property name="link">PinholePhoto/MetaData?id=%s</property>
+				<property name="link">Photo/MetaData?id=%s</property>
 				<property name="stock_id">edit</property>
 			</widget>
 			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">Delete Photo</property>
-				<property name="link">PinholePhoto/Delete?id=%s</property>
+				<property name="link">Photo/Delete?id=%s</property>
 				<property name="stock_id">delete</property>
 			</widget>
 		</widget-->

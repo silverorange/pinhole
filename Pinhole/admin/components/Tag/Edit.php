@@ -19,7 +19,7 @@ class PinholeTagEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/PinholeTag/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Tag/edit.xml';
 
 	/**
 	 * @var PinholeTag
@@ -43,7 +43,8 @@ class PinholeTagEdit extends AdminDBEdit
 
 	protected function initTag()
 	{
-		$this->tag = new PinholeTag();
+		$class_name = SwatDBClassMap::get('PinholeTag');
+		$this->tag = new $class_name();
 		$this->tag->setDatabase($this->app->db);
 		$this->tag->setInstance($this->app->instance->getInstance());
 

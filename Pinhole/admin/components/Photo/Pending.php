@@ -20,7 +20,7 @@ class PinholePhotoPending extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/PinholePhoto/pending.xml';
+		'Pinhole/admin/components/Photo/pending.xml';
 
 	// }}}
 

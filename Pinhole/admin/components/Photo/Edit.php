@@ -25,7 +25,7 @@ class PinholePhotoEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/PinholePhoto/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Photo/edit.xml';
 
 	/**
 	 * @var PinholePhoto
@@ -105,7 +105,8 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function initPhoto()
 	{
-		$this->photo = new PinholePhoto();
+		$class_name = SwatDBClassMap::get('PinholePhoto');
+		$this->photo = new $class_name();
 		$this->photo->setDatabase($this->app->db);
 
 		if ($this->id === null) {
@@ -206,7 +207,8 @@ class PinholePhotoEdit extends AdminDBEdit
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
 
-		return SwatDB::query($this->app->db, $sql, 'PinholePhotoWrapper');
+		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
+		return SwatDB::query($this->app->db, $sql, $wrapper_class);
 	}
 
 	// }}}
@@ -296,12 +298,12 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		if ($this->ui->getWidget('proceed_button')->hasBeenClicked() &&
 			$this->nextPendingPhoto() !== false)
-			$this->app->relocate('PinholePhoto/Edit?id='.
+			$this->app->relocate('Photo/Edit?id='.
 				$this->nextPendingPhoto()->id);
 		elseif ($this->pendingPhotoCount() > 0)
-			$this->app->relocate('PinholePhoto/Pending');
+			$this->app->relocate('Photo/Pending');
 		else
-			$this->app->relocate('PinholePhoto');
+			$this->app->relocate('Photo');
 	}
 
 	// }}}

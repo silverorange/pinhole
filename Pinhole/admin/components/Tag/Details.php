@@ -19,7 +19,7 @@ class PinholeTagDetails extends AdminPage
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/PinholeTag/details.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Tag/details.xml';
 	protected $id;
 
 	// }}}
@@ -50,7 +50,8 @@ class PinholeTagDetails extends AdminPage
 
 	private function initTag()
 	{
-		$this->tag = new PinholeTag();
+		$class_name = SwatDBClassMap::get('PinholeTag');
+		$this->tag = new $class_name();
 		$this->tag->setDatabase($this->app->db);
 		$this->tag->setInstance($this->app->instance->getInstance());
 

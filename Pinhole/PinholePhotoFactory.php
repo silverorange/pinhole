@@ -7,7 +7,6 @@ require_once 'Swat/exceptions/SwatFileNotFoundException.php';
 require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
-require_once 'Pinhole/dataobjects/PinholeDimensionWrapper.php';
 require_once 'Pinhole/exceptions/PinholeUploadException.php';
 require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
@@ -70,6 +69,7 @@ class PinholePhotoFactory
 
 		$ext = strtolower(end(explode('.', $file['name'])));
 
+		// TODO: use tempnam() here instead
 		$filename = uniqid('file').'.'.$ext;
 		$file_path = sprintf('%s/%s/%s',
 			$this->path, $this->temp_path, $filename);

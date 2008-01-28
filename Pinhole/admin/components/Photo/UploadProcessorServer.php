@@ -1,7 +1,9 @@
 <?php
 
 require_once 'Admin/pages/AdminXMLRPCServer.php';
+require_once 'NateGoSearch/NateGoSearch.php';
 require_once 'Pinhole/PinholePhotoFactory.php';
+require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/pages/PinholeSearchPage.php';
 
 /**
@@ -31,14 +33,16 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 		$response['filename'] = $filename;
 
 		try {
-			$photo = new RawkAlbumImage();
+			$class_name = SwatDBClassMap::get('PinholePhoto');
+			$photo = new $class_name();
 			$photo->setDatabase($this->app->db);
-			$photo->setFileBase('../images');
+			$photo->setInstance($this->app->instance->getInstance());
+			$photo->setFileBase('../../photos');
 			$photo->original_filename = $original_filename;
 			$photo->process('../../temp/'.$filename);
 
 			$response['id'] = $photo->id;
-			$response['processed_filename'] = $photo->;
+			$response['processed_filename'] = $photo->filename;
 
 			$this->addToSearchQueue($photo);
 

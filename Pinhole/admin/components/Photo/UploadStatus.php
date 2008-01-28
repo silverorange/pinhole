@@ -3,7 +3,7 @@
 require_once 'Swat/Swat.php';
 require_once 'Site/pages/SitePage.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Pinhole/PinholePhotoFactory.php';
+require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
 /**
@@ -54,16 +54,13 @@ class PinholePhotoUploadStatus extends SitePage
 
 	public function process()
 	{
-		$photo_factory = new PinholePhotoFactory();
-		$photo_factory->setPath(realpath('../'));
-
 		foreach ($_FILES as $id => $file) {
 			// catch any exception, log it, and then added it to a
 			// queue of error messages that will be displayed to
 			// the user via javascript.
 
 			try {
-				$saved = $photo_factory->saveUploadedFile('file');
+				$saved = PinholePhoto::saveUploadedFile('file');
 				$this->files = array_merge($saved, $this->files);
 			} catch (Exception $e) {
 				$e->log();

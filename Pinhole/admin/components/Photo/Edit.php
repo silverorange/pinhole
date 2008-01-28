@@ -228,9 +228,9 @@ class PinholePhotoEdit extends AdminDBEdit
 		$photo_date->setTZbyID($this->photo->photo_time_zone);
 		$photo_date->toUTC();
 
-		$this->photo->title     = $values['title'];
-		$this->photo->description  = $values['description'];
-		$this->photo->photo_date = $photo_date;
+		$this->photo->title       = $values['title'];
+		$this->photo->description = $values['description'];
+		$this->photo->photo_date  = $photo_date;
 		$this->photo->setStatus($values['status']);
 		$this->photo->save();
 

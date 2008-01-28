@@ -15,9 +15,11 @@ require_once 'Pinhole/tags/PinholeTag.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeTagIndex extends AdminSearch
+class PinholePinholeTagIndex extends AdminSearch
 {
 	// {{{ protected properties
+
+	protected $ui_xml = 'Pinhole/admin/components/PinholeTag/index.xml';
 
 	protected $where_clause;
 
@@ -31,7 +33,7 @@ class PinholeTagIndex extends AdminSearch
 		parent::initInternal();
 
 		$this->ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
-		$this->ui->loadFromXML(dirname(__FILE__).'/index.xml');
+		$this->ui->loadFromXML($this->ui_xml);
 	}
 
 	// }}}
@@ -66,7 +68,7 @@ class PinholeTagIndex extends AdminSearch
 	{
 		switch ($actions->selected->id) {
 		case 'delete':
-			$this->app->replacePage('Tag/Delete');
+			$this->app->replacePage('PinholeTag/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
 		case 'status_action':

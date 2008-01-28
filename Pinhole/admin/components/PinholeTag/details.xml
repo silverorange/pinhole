@@ -6,12 +6,12 @@
 		<widget class="SwatToolbar" id="details_toolbar">
 			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">Edit Tag</property>
-				<property name="link">Tag/Edit?id=%s</property>
+				<property name="link">PinholeTag/Edit?id=%s</property>
 				<property name="stock_id">edit</property>
 			</widget>
 			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">Delete Tag</property>
-				<property name="link">Tag/Delete?id=%s</property>
+				<property name="link">PinholeTag/Delete?id=%s</property>
 				<property name="stock_id">delete</property>
 			</widget>
 			<!--widget class="SwatToolLink" id="view_in_gallery">

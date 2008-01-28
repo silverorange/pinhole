@@ -12,7 +12,7 @@ require_once 'Admin/AdminListDependency.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeTagDelete extends AdminDBDelete
+class PinholePinholeTagDelete extends AdminDBDelete
 {
 	// process phase
 	// {{{ protected function processDBData()
@@ -53,7 +53,7 @@ class PinholeTagDelete extends AdminDBDelete
 			$item_list,
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
-		
+
 		$dep = new AdminListDependency();
 		$dep->setTitle(Pinhole::_('tag'), Pinhole::_('tags'));
 		$dep->entries = AdminListDependency::queryEntries($this->app->db,
@@ -78,7 +78,7 @@ class PinholeTagDelete extends AdminDBDelete
 		$this->navbar->popEntry();
 
 		if ($this->single_delete) {
-			$navbar_rs = SwatDB::executePinholedProc($this->app->db, 
+			$navbar_rs = SwatDB::executePinholedProc($this->app->db,
 				'getPinholeTagNavBar', array($this->getFirstItem()));
 
 			foreach ($navbar_rs as $elem)

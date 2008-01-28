@@ -19,7 +19,7 @@ class PinholeTagDetails extends AdminPage
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Tag/details.xml';
+	protected $ui_xml = 'Pinhole/admin/components/PinholeTag/details.xml';
 	protected $id;
 
 	// }}}

@@ -15,11 +15,11 @@ require_once 'Pinhole/pages/PinholeSearchPage.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeTagEdit extends AdminDBEdit
+class PinholePinholeTagEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Tag/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/PinholeTag/edit.xml';
 
 	/**
 	 * @var PinholeTag

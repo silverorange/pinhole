@@ -7,7 +7,7 @@
 		<widget class="SwatToolbar">
 			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">New Tag</property>
-				<property name="link">Tag/Edit</property>
+				<property name="link">PinholeTag/Edit</property>
 				<property name="stock_id">create</property>
 			</widget>
 		</widget>
@@ -40,7 +40,7 @@
 					<property name="title" translatable="yes">Title</property>
 					<object class="AdminTitleLinkCellRenderer">
 						<property name="text" type="data">title</property>
-						<property name="link">Tag/Details?id=%s</property>
+						<property name="link">PinholeTag/Details?id=%s</property>
 						<property name="link_value" type="data">id</property>
 					</object>
 				</object>
@@ -52,7 +52,7 @@
 				</object>
 			</widget>
 			<widget class="AdminPagination" id="pager">
-				<property name="link">Tag</property>
+				<property name="link">PinholeTag</property>
 			</widget>
 			<widget class="SwatActions" id="index_actions">
 				<widget class="SwatActionItem" id="delete">

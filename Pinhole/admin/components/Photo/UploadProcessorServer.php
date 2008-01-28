@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Swat/exceptions/SwatException.php';
 require_once 'Admin/pages/AdminXMLRPCServer.php';
 require_once 'NateGoSearch/NateGoSearch.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
@@ -42,20 +43,18 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 			unlink(sys_get_temp_dir().'/'.$filename);
 
 			$response['id'] = $photo->id;
-			$response['processed_filename'] = $photo->filename;
+			$response['processed_filename'] = $photo->getFilename('thumb');
 
 			$this->addToSearchQueue($photo);
 
 		} catch (SwatException $e) {
 			$e->process();
 
-			$response['filename'] = $filename;
 			$response['error'] = 'Error processing '.$original_filename;
 		} catch (Exception $e) {
 			$e = new SwatException($e);
 			$e->process();
 
-			$response['filename'] = $filename;
 			$response['error'] = 'Error processing '.$original_filename;
 		}
 

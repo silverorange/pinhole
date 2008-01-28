@@ -35,7 +35,7 @@ PinholePhotoUploadPage.processed_text = 'Finished Processing!';
 PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 {
 	this.current_photo_path =
-		PinholePhotoUploadPage.path + '/' + args[0] + '.jpg';
+		PinholePhotoUploadPage.path + '/' + args[0];
 
 	this.spacer_div.style.width = '0';
 	this.spacer_div.style.height =

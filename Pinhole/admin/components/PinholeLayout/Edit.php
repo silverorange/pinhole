@@ -11,18 +11,18 @@ require_once 'Pinhole/dataobjects/PinholeLayouts.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeLayoutEdit extends AdminDBEdit
+class PinholePinholeLayoutEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Layout/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/PinholeLayout/edit.xml';
 
 	/**
 	 * @var PinholeLayout
 	 */
 	protected $edit_layout;
 
-	protected $pagewidth_options = array('0' => '750px','1' => '950px', 
+	protected $pagewidth_options = array('0' => '750px','1' => '950px',
 											'2' => '100%');
 
 	protected $sidebarposition_options = array('0' => 'left', '1' => 'right',

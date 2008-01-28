@@ -200,7 +200,7 @@ PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error
 		button.disabled = '';
 		this.processNextFile();
 	}
-	
+
 
 	PinholePhotoUploadManager.removeClient(this);
 }
@@ -301,7 +301,6 @@ PinholePhotoUploadClient.prototype.processNextFile = function()
 		hidden.value = response.id;
 		button.parentNode.insertBefore(hidden, button);
 
-			
 		// TODO: why doesn't the proper path work when it's first called?
 		PinholePhotoUploadManager.setProcessorClient('Photo/UploadProcessorServer');
 

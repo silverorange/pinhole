@@ -97,12 +97,22 @@ class PinholePhoto extends SiteImage
 	 public $photo_time_zone;
 
 	// }}}
+	// {{{ private properties
+
+	/**
+	 * The instance for this photo - only used for processing.
+	 *
+	 * @var SiteInstance
+	 */
+	private $instance;
+
+	// }}}
 	// {{{ public function publish()
 
 	/**
 	 * Publishes this photo
 	 *
-	 * @param boolean $set_publish_date 
+	 * @param boolean $set_publish_date
 	 */
 	public function publish($set_publish_date = true)
 	{
@@ -168,6 +178,21 @@ class PinholePhoto extends SiteImage
 			$title = $this->original_filename;
 
 		return $title;
+	}
+
+	// }}}
+	// {{{ public function setInstance()
+
+	/**
+	 * Sets the instance for this photo
+	 *
+	 * Not for reading, only used for processing.
+	 *
+	 * param SiteInstance $instance The instance for this photo
+	 */
+	public function setInstance(SiteInstance $instance = null)
+	{
+		$this->instance = $instance;
 	}
 
 	// }}}
@@ -268,26 +293,25 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
+	// {{{ protected function getImageSet()
 
-	// loader methods
-	// {{{ protected function loadDimensionBindings()
-
-	/**
-	 * Loads the dimension bindings for this image
-	 *
-	 * @return PinholePhotoDimensionBindingWrapper a recordset of dimension
-	 *                                           bindings.
-	 */
-	protected function loadDimensionBindings()
+	protected function getImageSet()
 	{
-		$sql = 'select * from PinholePhotoDimensionBinding
-				where PinholePhotoDimensionBinding.photo = %s';
+		if ($this->image_set_shortname === null)
+			throw new SwatException('To process images, an image type '.
+				'shortname must be defined in the image dataobject.');
 
-		$sql = sprintf($sql,
-			$this->db->quote($this->id, 'integer'));
+		$class_name = SwatDBClassMap::get('PinholeImageSet');
+		$image_set = new $class_name();
+		$image_set->setDatabase($this->db);
+		$image_set->instance = $this->instance;
+		$found = $image_set->loadByShortname($this->image_set_shortname);
 
-		$wrapper = SwatDBClassMap::get('PinholePhotoDimensionBindingWrapper');
-		return SwatDB::query($this->db, $sql, $wrapper);
+		if (!$found)
+			throw new SwatException(sprintf('Image set “%s” does not exist.',
+				$this->image_set_shortname));
+
+		return $image_set;
 	}
 
 	// }}}
@@ -313,6 +337,29 @@ class PinholePhoto extends SiteImage
 		$binding->save();
 
 		$this->dimension_bindings->add($binding);
+	}
+
+	// }}}
+
+	// loader methods
+	// {{{ protected function loadDimensionBindings()
+
+	/**
+	 * Loads the dimension bindings for this image
+	 *
+	 * @return PinholePhotoDimensionBindingWrapper a recordset of dimension
+	 *                                           bindings.
+	 */
+	protected function loadDimensionBindings()
+	{
+		$sql = 'select * from PinholePhotoDimensionBinding
+				where PinholePhotoDimensionBinding.photo = %s';
+
+		$sql = sprintf($sql,
+			$this->db->quote($this->id, 'integer'));
+
+		$wrapper = SwatDBClassMap::get('PinholePhotoDimensionBindingWrapper');
+		return SwatDB::query($this->db, $sql, $wrapper);
 	}
 
 	// }}}

@@ -34,7 +34,7 @@ select id, instance, title, filename, original_filename, description,
 	photo_time_zone, publish_date, status
 from PinholePhotoOld;
 
-SELECT setval('pinholephoto_id_seq', max(id)) FROM PinholePhoto;
+SELECT setval('pinholephoto_id_seq1', max(id)) FROM PinholePhoto;
 
 -- image dimensions
 

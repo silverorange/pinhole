@@ -50,7 +50,7 @@ PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 
 	var animation = new YAHOO.util.Anim(this.spacer_div,
 		{ width: { to:
-			PinholePhotoUploadPage.thumbnail_width + 
+			PinholePhotoUploadPage.thumbnail_width +
 			PinholePhotoUploadPage.thumbnail_margin * 2 +
 			PinholePhotoUploadPage.thumbnail_padding * 2 } },
 		1, YAHOO.util.Easing.easeOutStrong);
@@ -111,7 +111,7 @@ PinholePhotoUploadPage.prototype.fadeInPhoto = function()
 	throbber_div.appendChild(div);
 
 	this.photo_container.replaceChild(throbber_div, this.spacer_div);
-	var animation = new YAHOO.util.Anim(div, {opacity: { to:  1} }, 
+	var animation = new YAHOO.util.Anim(div, {opacity: { to:  1} },
 		PinholePhotoUploadPage.fade_duration, YAHOO.util.Easing.easeInStrong);
 
 	animation.animate();

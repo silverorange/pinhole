@@ -139,7 +139,7 @@ class PinholePhoto extends SiteImage
 		} else {
 			$uri = sprintf('loadphoto/%s/%s',
 				$dimension->shortname,
-				$this->getFilename($dimension));
+				$this->getFilename($shortname));
 
 			if ($prefix !== null)
 				$uri = $prefix.$uri;
@@ -160,7 +160,7 @@ class PinholePhoto extends SiteImage
 			$this->getFileBase(),
 			($dimension->publicly_accessible) ? 'public' : 'private',
 			$dimension->shortname,
-			$this->getFilename($dimension));
+			$this->getFilename($shortname));
 	}
 
 	// }}}

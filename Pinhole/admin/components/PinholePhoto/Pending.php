@@ -15,12 +15,12 @@ require_once 'include/PinholePhotoTagEntry.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoPending extends AdminIndex
+class PinholePinholePhotoPending extends AdminIndex
 {
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Photo/pending.xml';
+		'Pinhole/admin/components/PinholePhoto/pending.xml';
 
 	// }}}
 

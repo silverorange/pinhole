@@ -44,7 +44,7 @@ class PinholePhotoActionsProcessor
 
 		switch ($actions->selected->id) {
 		case 'delete':
-			$this->page->app->replacePage('Photo/Delete');
+			$this->page->app->replacePage('PinholePhoto/Delete');
 			$this->page->app->getPage()->setItems($view->getSelection());
 			break;
 

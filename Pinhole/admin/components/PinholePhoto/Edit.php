@@ -21,11 +21,11 @@ require_once 'include/PinholePhotoTagEntry.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoEdit extends AdminDBEdit
+class PinholePinholePhotoEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/PinholePhoto/edit.xml';
 
 	/**
 	 * @var PinholePhoto
@@ -228,9 +228,9 @@ class PinholePhotoEdit extends AdminDBEdit
 		$photo_date->setTZbyID($this->photo->photo_time_zone);
 		$photo_date->toUTC();
 
-		$this->photo->title       = $values['title'];
+		$this->photo->title = $values['title'];
 		$this->photo->description = $values['description'];
-		$this->photo->photo_date  = $photo_date;
+		$this->photo->photo_date = $photo_date;
 		$this->photo->setStatus($values['status']);
 		$this->photo->save();
 
@@ -296,12 +296,12 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		if ($this->ui->getWidget('proceed_button')->hasBeenClicked() &&
 			$this->nextPendingPhoto() !== false)
-			$this->app->relocate('Photo/Edit?id='.
+			$this->app->relocate('PinholePhoto/Edit?id='.
 				$this->nextPendingPhoto()->id);
 		elseif ($this->pendingPhotoCount() > 0)
-			$this->app->relocate('Photo/Pending');
+			$this->app->relocate('PinholePhoto/Pending');
 		else
-			$this->app->relocate('Photo');
+			$this->app->relocate('PinholePhoto');
 	}
 
 	// }}}

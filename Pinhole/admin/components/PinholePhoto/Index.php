@@ -18,11 +18,11 @@ require_once 'include/PinholePhotoActionsProcessor.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoIndex extends AdminSearch
+class PinholePinholePhotoIndex extends AdminSearch
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/index.xml';
+	protected $ui_xml = 'Pinhole/admin/components/PinholePhoto/index.xml';
 	protected $where_clause;
 	protected $join_clause;
 	protected $order_by_clause;

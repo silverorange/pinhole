@@ -39,7 +39,7 @@
 					<object class="SiteImageCellRenderer">
 						<property name="image" type="data">photo</property>
 						<property name="image_dimension">thumb</property>
-						<property name="link">Photo/Edit?id=%s</property>
+						<property name="link">PinholePhoto/Edit?id=%s</property>
 						<property name="link_value" type="data">photo.id</property>
 						<property name="path_prefix">../</property>
 					</object>
@@ -50,7 +50,7 @@
 				</object>
 			</widget>
 			<widget class="AdminPagination" id="pager">
-				<property name="link">Photo</property>
+				<property name="link">PinholePhoto</property>
 				<property name="page_size" type="integer">100</property>
 			</widget>
 			<widget class="SwatActions" id="index_actions">

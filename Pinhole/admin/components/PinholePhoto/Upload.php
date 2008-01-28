@@ -13,11 +13,11 @@ require_once 'include/PinholePhotoUploader.php';
  * @todo      When there is no JavaScript, this page is responsible for
  *            processing photos. It should use UploadProcessor to achieve this.
  */
-class PinholePhotoUpload extends AdminPage
+class PinholePinholePhotoUpload extends AdminPage
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/upload.xml';
+	protected $ui_xml = 'Pinhole/admin/components/PinholePhoto/upload.xml';
 
 	// }}}
 
@@ -59,7 +59,7 @@ class PinholePhotoUpload extends AdminPage
 				$this->processTimeZone($photo_id);
 			}
 
-			$this->app->replacePage('Photo/Pending');
+			$this->app->replacePage('PinholePhoto/Pending');
 		}
 	}
 

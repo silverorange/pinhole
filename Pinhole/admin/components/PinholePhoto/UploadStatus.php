@@ -16,7 +16,7 @@ require_once 'Pinhole/exceptions/PinholeProcessingException.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholePhotoUploadStatus extends SitePage
+class PinholePhotoUploadStatus extends SitePage
 {
 	// {{{ protected properties
 

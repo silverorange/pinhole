@@ -15,7 +15,7 @@ require_once 'include/PinholePhotoTagEntry.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholePhotoPending extends AdminIndex
+class PinholePhotoPending extends AdminIndex
 {
 	// {{{ protected properties
 

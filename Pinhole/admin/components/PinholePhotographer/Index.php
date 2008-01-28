@@ -11,7 +11,7 @@ require_once 'Pinhole/dataobjects/PinholePhotographer.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholePhotographerIndex extends AdminIndex
+class PinholePhotographerIndex extends AdminIndex
 {
 	// {{{ protected properties
 

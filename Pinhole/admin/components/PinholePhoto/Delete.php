@@ -14,7 +14,7 @@ require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholePhotoDelete extends AdminDBDelete
+class PinholePhotoDelete extends AdminDBDelete
 {
 	// init phase
 	// {{{ protected function initInternal()

@@ -11,7 +11,7 @@ require_once 'Swat/SwatDetailsView.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholeMetaDataIndex extends AdminIndex
+class PinholeMetaDataIndex extends AdminIndex
 {
 	// {{{ protected properties
 

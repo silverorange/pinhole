@@ -12,7 +12,7 @@ require_once 'Admin/AdminListDependency.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholeTagDelete extends AdminDBDelete
+class PinholeTagDelete extends AdminDBDelete
 {
 	// process phase
 	// {{{ protected function processDBData()

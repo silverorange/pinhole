@@ -17,7 +17,7 @@ class PinholePhotoUpload extends AdminPage
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/PinholePhoto/upload.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Photo/upload.xml';
 
 	// }}}
 
@@ -59,7 +59,7 @@ class PinholePhotoUpload extends AdminPage
 				$this->processTimeZone($photo_id);
 			}
 
-			$this->app->replacePage('PinholePhoto/Pending');
+			$this->app->replacePage('Photo/Pending');
 		}
 	}
 
@@ -68,7 +68,8 @@ class PinholePhotoUpload extends AdminPage
 
 	protected function processTimeZone($photo_id)
 	{
-		$photo = new PinholePhoto();
+		$class_name = SwatDBClassMap::get('PinholePhoto');
+		$photo = new $class_name();
 		$photo->setDatabase($this->app->db);
 		$photo->load($photo_id);
 

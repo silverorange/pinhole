@@ -19,7 +19,7 @@ class PinholeTagIndex extends AdminSearch
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/PinholeTag/index.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Tag/index.xml';
 
 	protected $where_clause;
 
@@ -68,7 +68,7 @@ class PinholeTagIndex extends AdminSearch
 	{
 		switch ($actions->selected->id) {
 		case 'delete':
-			$this->app->replacePage('PinholeTag/Delete');
+			$this->app->replacePage('Tag/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
 		case 'status_action':
@@ -136,17 +136,19 @@ class PinholeTagIndex extends AdminSearch
 
 		$sql.= ' order by '.$this->getOrderByClause($view, 'PinholeTag.title');
 		$this->app->db->setLimit($pager->page_size, $pager->current_record);
-		$data_objects = SwatDB::query($this->app->db, $sql,
-			'PinholeTagDataObjectWrapper');
+
+		$wrapper_class = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
+		$data_objects = SwatDB::query($this->app->db, $sql, $wrapper_class);
 
 		if (count($data_objects) > 0) {
 			$this->ui->getWidget('results_frame')->visible = true;
 			$this->ui->getWidget('results_message')->content =
-				$pager->getResultsMessage(Pinhole::_('result'), 
+				$pager->getResultsMessage(Pinhole::_('result'),
 					Pinhole::_('results'));
 
+			$class_name = SwatDBClassMap::get('PinholeTag');
 			foreach ($data_objects as $data_object) {
-				$tag = new PinholeTag($data_object);
+				$tag = new $class_name($data_object);
 				$store->add($tag);
 			}
 		}

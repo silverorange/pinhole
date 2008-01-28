@@ -15,7 +15,7 @@ class PinholeLayoutEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/PinholeLayout/edit.xml';
+	protected $ui_xml = 'Pinhole/admin/components/Layout/edit.xml';
 
 	/**
 	 * @var PinholeLayout

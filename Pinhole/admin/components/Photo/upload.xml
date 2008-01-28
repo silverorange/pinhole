@@ -5,8 +5,8 @@
 	<widget class="SwatFrame">
 		<property name="title" translatable="yes">Upload Photos</property>
 		<widget class="PinholePhotoUploader" id="file">
-			<property name="action">PinholePhoto/Upload</property>
-			<property name="target_action">PinholePhoto/UploadStatus</property>
+			<property name="action">Photo/Upload</property>
+			<property name="target_action">Photo/UploadStatus</property>
 		</widget>
 		<widget class="AdminNote">
 			<property name="content" translatable="yes">Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</property>
@@ -15,7 +15,7 @@
 			<widget class="SwatDisplayableContainer" id="photo_container" />
 		</widget>
 		<widget class="SwatForm" id="time_zone_form">
-			<property name="action">PinholePhoto/Upload</property>
+			<property name="action">Photo/Upload</property>
 			<widget class="SwatFormField">
 				<widget class="SwatFormField">
 					<property name="title">Time Zone for Photo(s)</property>

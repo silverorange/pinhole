@@ -14,7 +14,7 @@ class PinholeLayoutIndex extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/PinholeLayout/index.xml';
+		'Pinhole/admin/components/Layout/index.xml';
 
 	// }}}
 

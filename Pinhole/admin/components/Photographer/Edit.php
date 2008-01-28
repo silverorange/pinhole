@@ -16,7 +16,7 @@ class PinholePhotographerEdit extends AdminDBEdit
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/PinholePhotographer/edit.xml';
+		'Pinhole/admin/components/Photographer/edit.xml';
 
 	/**
 	 * @var PinholePhotographer
@@ -40,7 +40,8 @@ class PinholePhotographerEdit extends AdminDBEdit
 
 	protected function initPhotographer()
 	{
-		$this->photographer = new PinholePhotographer();
+		$class_name = SwatDBClassMap::get('PinholePhotographer');
+		$this->photographer = new $class_name();
 		$this->photographer->setDatabase($this->app->db);
 		$this->photographer->instance = $this->app->instance->getInstance();
 

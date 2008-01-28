@@ -9,15 +9,15 @@ require_once 'Admin/pages/AdminIndex.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeLayoutIndex extends AdminIndex
+class PinholePinholeLayoutIndex extends AdminIndex
 {
-	// {{{ protected properties 
+	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Layout/index.xml';
+		'Pinhole/admin/components/PinholeLayout/index.xml';
 
 	// }}}
-	
+
 	// init phase
 	// {{{ public function init()
 
@@ -44,7 +44,7 @@ class PinholeLayoutIndex extends AdminIndex
 
 		$sql = sprintf($sql,
 			$this->getOrderByClause($view, 'title'));
-		
+
 		$rs = SwatDB::query($this->app->db, $sql);
 
 		return $rs;

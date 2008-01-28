@@ -7,7 +7,7 @@
 		<widget class="SwatToolbar" id="toolbar">
 			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">New Photographer</property>
-				<property name="link">Photographer/Edit</property>
+				<property name="link">PinholePhotographer/Edit</property>
 				<property name="stock_id">create</property>
 			</widget>
 		</widget>
@@ -22,7 +22,7 @@
 					<property name="title" translatable="yes">Full Name</property>
 					<object class="AdminTitleLinkCellRenderer">
 						<property name="text" type="data">fullname</property>
-						<property name="link">Photographer/Edit?id=%s</property>
+						<property name="link">PinholePhotographer/Edit?id=%s</property>
 						<property name="link_value" type="data">id</property>
 						<property name="stock_id">edit</property>
 					</object>

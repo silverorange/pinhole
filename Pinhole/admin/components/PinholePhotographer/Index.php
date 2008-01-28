@@ -11,12 +11,12 @@ require_once 'Pinhole/dataobjects/PinholePhotographer.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotographerIndex extends AdminIndex
+class PinholePinholePhotographerIndex extends AdminIndex
 {
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Photographer/index.xml';
+		'Pinhole/admin/components/PinholePhotographer/index.xml';
 
 	// }}}
 
@@ -45,7 +45,7 @@ class PinholePhotographerIndex extends AdminIndex
 	{
 		switch ($actions->selected->id) {
 		case 'delete':
-			$this->app->replacePage('Photographer/Delete');
+			$this->app->replacePage('PinholePhotographer/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
 		case 'status_action':
@@ -100,7 +100,7 @@ class PinholePhotographerIndex extends AdminIndex
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'),
 			$this->getOrderByClause($view, 'id'));
-		
+
 		$rs = SwatDB::query($this->app->db, $sql);
 
 		foreach ($rs as $row)

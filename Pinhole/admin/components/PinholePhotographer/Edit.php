@@ -11,11 +11,12 @@ require_once 'Pinhole/dataobjects/PinholePhotographer.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotographerEdit extends AdminDBEdit
+class PinholePinholePhotographerEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photographer/edit.xml';
+	protected $ui_xml =
+		'Pinhole/admin/components/PinholePhotographer/edit.xml';
 
 	/**
 	 * @var PinholePhotographer

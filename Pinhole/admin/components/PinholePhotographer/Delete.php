@@ -10,7 +10,7 @@ require_once 'Admin/AdminListDependency.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  */
-class PinholePhotographerDelete extends AdminDBDelete
+class PinholePinholePhotographerDelete extends AdminDBDelete
 {
 	// process phase
 	// {{{ protected function processDBData()

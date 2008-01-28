@@ -11,7 +11,7 @@ require_once 'Pinhole/dataobjects/PinholePhotographer.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholePhotographerEdit extends AdminDBEdit
+class PinholePhotographerEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 

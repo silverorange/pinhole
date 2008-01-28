@@ -15,7 +15,7 @@ require_once 'Pinhole/tags/PinholeTag.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholeTagIndex extends AdminSearch
+class PinholeTagIndex extends AdminSearch
 {
 	// {{{ protected properties
 

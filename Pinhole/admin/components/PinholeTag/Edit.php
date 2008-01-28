@@ -15,7 +15,7 @@ require_once 'Pinhole/pages/PinholeSearchPage.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholeTagEdit extends AdminDBEdit
+class PinholeTagEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 

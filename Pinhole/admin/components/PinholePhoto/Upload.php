@@ -13,7 +13,7 @@ require_once 'include/PinholePhotoUploader.php';
  * @todo      When there is no JavaScript, this page is responsible for
  *            processing photos. It should use UploadProcessor to achieve this.
  */
-class PinholePinholePhotoUpload extends AdminPage
+class PinholePhotoUpload extends AdminPage
 {
 	// {{{ protected properties
 

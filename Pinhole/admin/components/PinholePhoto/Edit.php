@@ -21,7 +21,7 @@ require_once 'include/PinholePhotoTagEntry.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholePhotoEdit extends AdminDBEdit
+class PinholePhotoEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 

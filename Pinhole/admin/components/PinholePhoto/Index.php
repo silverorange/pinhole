@@ -18,7 +18,7 @@ require_once 'include/PinholePhotoActionsProcessor.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePinholePhotoIndex extends AdminSearch
+class PinholePhotoIndex extends AdminSearch
 {
 	// {{{ protected properties
 

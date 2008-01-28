@@ -46,13 +46,18 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 
 			$this->addToSearchQueue($photo);
 
+		} catch (SwatException $e) {
+			$e->process();
+
+			$response['filename'] = $filename;
+			$response['error'] = 'Error processing '.$original_filename;
 		} catch (Exception $e) {
-			$e->log();
+			$e = new SwatException($e);
+			$e->process();
 
 			$response['filename'] = $filename;
 			$response['error'] = 'Error processing '.$original_filename;
 		}
-
 
 		return $response;
 	}

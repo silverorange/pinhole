@@ -6,6 +6,8 @@ require_once 'Site/dataobjects/SiteImage.php';
 require_once 'Pinhole/dataobjects/PinholeImageSet.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
+require_once 'Pinhole/exceptions/PinholeUploadException.php';
+require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
 /**
  * A dataobject class for photos
@@ -337,6 +339,256 @@ class PinholePhoto extends SiteImage
 		$binding->save();
 
 		$this->dimension_bindings->add($binding);
+	}
+
+	// }}}
+
+	// save file
+	// {{{ public static function saveUploadedFile()
+
+	/**
+	 * Saves a file that has been uploaded
+	 *
+	 * Saves photo files with unique filenames. If the file is an archive,
+	 * the archive contents are extracted.
+	 *
+	 * @param string $name Name of the file input
+	 * @return array $files An array in the form $file =>
+	 *               $original_filename.
+	 */
+	public static function saveUploadedFile($name)
+	{
+		if (!isset($_FILES[$name]))
+			throw new PinholeUploadException(
+				'File input name not found.');
+
+		$file = $_FILES[$name];
+
+		$ext = strtolower(end(explode('.', $file['name'])));
+
+		$filename = uniqid('file').'.'.$ext;
+		$file_path = sprintf('%s/%s',
+			sys_get_temp_dir(), $filename);
+
+		move_uploaded_file($file['tmp_name'], $file_path);
+		chmod($file_path, 0666);
+
+		return self::parseFile($file_path, $file['name']);
+	}
+
+	// }}}
+	// {{{ public static function parseFile()
+
+	/**
+	 * TODO: update documentation
+	 */
+	public static function parseFile($file, $original_filename = null)
+	{
+		if (!file_exists($file))
+			throw new PinholeProcessingException(
+				'File could not be found.');
+
+		$finfo = finfo_open(FILEINFO_MIME);
+		$mime_type = finfo_file($finfo, $file);
+
+		if (in_array($mime_type, self::getArchiveMimeTypes()))
+			$files = self::getArchivedFiles($file,
+				array_search($mime_type, self::getArchiveMimeTypes()));
+		else
+			$files = array(basename($file) => $original_filename);
+
+		return $files;
+	}
+
+	// }}}
+	// {{{ protected static function getArchiveMimeTypes()
+
+	/**
+	 * Get an array of archive mime types
+	 *
+	 * @return array array of arhive mime types
+	 */
+	protected static function getArchiveMimeTypes()
+	{
+		return array(
+			'zip'  => 'application/x-zip',
+		);
+	}
+
+	// }}}
+	// {{{ private static function getArchivedFiles()
+
+	/**
+	 * Processes an array of files
+	 */
+	private static function getArchivedFiles($file, $type)
+	{
+		$za = new ZipArchive();
+		$opened = $za->open($file);
+
+		if ($opened !== true)
+			throw new PinholeProcessingException(
+				'Error opening file archive');
+
+		$file_path = sys_get_temp_dir();
+
+		for ($i = 0; $i < $za->numFiles; $i++) {
+			$stat = $za->statIndex($i);
+
+			$ext = strtolower(end(explode('.', $stat['name'])));
+
+			// TODO: we probably need a better way to keep from
+			// extracting sub-dirs (mac archive files contain
+			// sub-dirs with system files)
+			if ($stat['size'] == 0 || strpos($stat['name'], '/') !== false)
+				continue;
+
+			$filename = uniqid('file').'.'.$ext;
+			$files[$filename] = $stat['name'];
+
+			$za->renameIndex($i, $filename);
+			$za->extractTo($file_path, $filename);
+			chmod($file_path.'/'.$filename, 0666);
+		}
+
+		$za->close();
+
+		unlink($file);
+
+		return $files;
+	}
+
+	// }}}
+
+	// save meta data
+	// {{{ public static function getMetaDataFromFile()
+
+	/**
+	 * Get the meta data from a photo
+	 *
+	 * @param string $filename
+	 *
+	 * @return array An array of PinholePhotoMetaDataBinding data objects
+	 *               with $shortname as the key of the array.
+	 */
+	public static function getMetaDataFromFile($file)
+	{
+		$file = escapeshellarg($file);
+
+		exec("exiftool -t $file", $tag_names);
+		exec("exiftool -t -s $file", $values);
+
+		$data_objects = array();
+
+		for ($i = 0; $i < count($tag_names); $i++) {
+			$ret = explode("\t", $values[$i]);
+			if (!isset($ret[1]))
+				continue;
+
+			$meta_data = new PinholePhotoMetaDataBinding();
+			$meta_data->shortname = strtolower($ret[0]);
+			$meta_data->value = $ret[1];
+
+			$ret = explode("\t", $tag_names[$i]);
+			$meta_data->title = $ret[0];
+
+			$data_objects[$meta_data->shortname] = $meta_data;
+		}
+
+		return $data_objects;
+	}
+
+	// }}}
+	// {{{ protected function processInternal()
+
+	/**
+	 * Processes the image
+	 *
+	 * At this point in the process, the image already has a filename and id
+	 * and is wrapped in a database transaction.
+	 *
+	 * @param string $image_file the image file to process
+	 */
+	protected function processInternal($image_file)
+	{
+		parent::processInternal($image_file);
+
+		$meta_data = self::getMetaDataFromFile($image_file);
+		$this->saveMetaData($meta_data);
+	}
+
+	// }}}
+	// {{{ protected function saveMetaData()
+
+	/**
+	 * Get the meta data from a photo
+	 *
+	 * @param array An array of PinholePhotoMetaDataBinding data objects
+	 *               with $shortname as the key of the array.
+	 * @return array An array of PinholeMetaData dataobjects
+	 */
+	protected function saveMetaData($meta_data)
+	{
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+
+		$where_clause = sprintf('PinholeMetaData.instance %s %s',
+			SwatDB::equalityOperator($instance_id),
+			$this->db->quote($instance_id, 'integer'));
+
+		$existing_meta_data = SwatDB::getOptionArray($this->db,
+			'PinholeMetaData', 'shortname', 'id', null,
+			$where_clause);
+
+		foreach ($meta_data as $data) {
+			$shortname = substr($data->shortname, 0, 255);
+			$title = substr($data->title, 0, 255);
+			$value = substr($data->value, 0, 255);
+
+			if (!in_array($shortname, $existing_meta_data)) {
+				$meta_data_id = SwatDB::insertRow($this->db,
+					'PinholeMetaData',
+					array('text:shortname',
+						'text:title',
+						'integer:instance'),
+					array('shortname' => $shortname,
+						'title' => $title,
+						'instance' => $instance_id),
+					'id');
+			} else {
+				$meta_data_id = array_search($shortname,
+					$existing_meta_data);
+			}
+
+			SwatDB::insertRow($this->db, 'PinholePhotoMetaDataBinding',
+				array('integer:photo',
+					'integer:meta_data',
+					'text:value'),
+				array('photo' => $this->id,
+					'meta_data' => $meta_data_id,
+					'value' => $value));
+		}
+	}
+
+	// }}}
+	// {{{ private function parseMetaDataDate()
+
+	private function parseMetaDataDate($date)
+	{
+		list($year, $month, $day, $hour, $minute, $second) =
+			sscanf($date, "%d:%d:%d %d:%d:%d");
+
+		if ($second === null)
+			return null;
+
+		$date = new SwatDate();
+		$date->setYear($year);
+		$date->setMonth($month);
+		$date->setDay($day);
+		$date->setHour($hour);
+		$date->setMinute($minute);
+		$date->setSecond($second);
+
+		return $date;
 	}
 
 	// }}}

@@ -2,7 +2,6 @@
 
 require_once 'Admin/pages/AdminXMLRPCServer.php';
 require_once 'NateGoSearch/NateGoSearch.php';
-require_once 'Pinhole/PinholePhotoFactory.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Pinhole/pages/PinholeSearchPage.php';
 
@@ -39,7 +38,8 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 			$photo->setInstance($this->app->instance->getInstance());
 			$photo->setFileBase('../../photos');
 			$photo->original_filename = $original_filename;
-			$photo->process('../../temp/'.$filename);
+			$photo->process(sys_get_temp_dir().'/'.$filename);
+			unlink(sys_get_temp_dir().'/'.$filename);
 
 			$response['id'] = $photo->id;
 			$response['processed_filename'] = $photo->filename;

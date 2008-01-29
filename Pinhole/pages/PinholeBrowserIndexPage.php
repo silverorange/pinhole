@@ -84,6 +84,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$date_tag_browser = $this->ui->getWidget('date_tag_browser');
 		$date_tag_browser->setTagList($this->tag_list);
 		$date_tag_browser->setDatabase($this->app->db);
+
+		if (count($this->getPath()) > 0)
+			$date_tag_browser->base = $this->getPath().'/'.$date_tag_browser->base;
 	}
 
 	// }}}
@@ -121,6 +124,12 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		foreach ($photos as $photo) {
 			$ds = new SwatDetailsStore();
+
+			if (count($this->getPath()) > 0)
+				$ds->root_path = $this->getPath().'/';
+			else
+				$ds->root_path = '';
+
 			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
 			$store->add($ds);

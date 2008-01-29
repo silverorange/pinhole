@@ -39,8 +39,9 @@
 				<object class="SiteImageCellRenderer">
 					<property name="image" type="data">photo</property>
 					<property name="image_dimension">thumb</property>
-					<property name="link">photo/%s</property>
-					<property name="link_value" type="data">path</property>
+					<property name="link">%sphoto/%s</property>
+					<property name="link_value[0]" type="data">root_path</property>
+					<property name="link_value[1]" type="data">path</property>
 					<property name="classes[]">photo-title</property>
 				</object>
 			</object>

@@ -139,37 +139,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	}
 
 	// }}}
-	// {{{ protected function getInlineJavaScript()
-
-	protected function getInlineJavaScript()
-	{
-		return sprintf("var %s_obj = new HoverFade('%s');",
-			'photo_view', 'photo_view');
-	}
-
-	// }}}
-	// {{{ protected function displayContent()
-
-	protected function displayContent()
-	{
-		parent::displayContent();
-		echo Swat::displayInlineJavaScript($this->getInlineJavaScript());
-	}
-
-	// }}}
-
-	// finalize phase
-	// {{{ public function finalize()
-
-	public function finalize()
-	{
-		parent::finalize();
-		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
-			'packages/pinhole/javascript/pinhole-hover-fade.js',
-			Pinhole::PACKAGE_ID));
-	}
-
-	// }}}
 }
 
 ?>

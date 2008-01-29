@@ -2,16 +2,16 @@
 
 require_once 'Swat/SwatUI.php';
 require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
+require_once 'Site/pages/SitePathPage.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagList.php';
-require_once 'Pinhole/pages/PinholePage.php';
 
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class PinholeBrowserPage extends PinholePage
+abstract class PinholeBrowserPage extends SitePathPage
 {
 	// {{{ protected properties
 

@@ -36,6 +36,9 @@ class PinholeTagEdit extends AdminDBEdit
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
 		$this->initTag();
+
+		if ($this->id === null)
+			$this->ui->getWidget('name_field')->visible = false;
 	}
 
 	// }}}
@@ -64,7 +67,7 @@ class PinholeTagEdit extends AdminDBEdit
 	{
 		$name = $this->ui->getWidget('name')->value;
 
-		if ($this->id === null && $name === null) {
+		if ($this->id === null) {
 			$name = $this->generateShortname(
 				$this->ui->getWidget('title')->value);
 

@@ -283,7 +283,7 @@ class PinholeTag extends PinholeAbstractTag
 	 *
 	 * @param SiteInstance $instance the site instance to use for this tag.
 	 */
-	public function setInstance(SiteInstance $instance)
+	public function setInstance(SiteInstance $instance = null)
 	{
 		parent::setInstance($instance);
 		$this->data_object->instance = $instance;

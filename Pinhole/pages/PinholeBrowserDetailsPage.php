@@ -117,9 +117,14 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$field->title = $meta_data->title;
 
 			if ($meta_data->machine_tag) {
+				if (count($this->getPath()) > 0)
+					$base = $this->getPath().'/tag';
+				else
+					$base = 'tag';
+
 				$renderer = new SwatLinkCellRenderer();
-				$renderer->link = sprintf('tag?%s',
-					$meta_data->getURI());
+				$renderer->link = sprintf('%s?%s',
+					$base, $meta_data->getURI());
 			} else {
 				$renderer = new SwatTextCellRenderer();
 			}

@@ -265,7 +265,7 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 		$this->meta_data->setDatabase($this->db);
 
 		// ensure meta data object exists
-		$valid = $this->meta_data->loadFromShortname($name, $this->instance);
+		$valid = $this->meta_data->loadByShortname($name, $this->instance);
 
 		return $valid;
 	}

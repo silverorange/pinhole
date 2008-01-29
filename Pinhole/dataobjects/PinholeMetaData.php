@@ -49,7 +49,7 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	public $machine_tag;
 
 	// }}}
-	// {{{ public function loadFromShortname()
+	// {{{ public function loadByShortname()
 
 	/**
 	 * Loads a meta-data data-object by its shortname
@@ -65,7 +65,7 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	 * @return boolean true if this meta-data data-object was loaded and false
 	 *                  if it could not be loaded.
 	 */
-	public function loadFromShortname($shortname, SiteInstance $instance = null)
+	public function loadByShortname($shortname, SiteInstance $instance = null)
 	{
 		$this->instance = $instance;
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;

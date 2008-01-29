@@ -121,7 +121,7 @@ class PinholeTag extends PinholeAbstractTag
 		$this->name = $string;
 
 		if (preg_match('/^[a-z0-9]+$/i', $string) == 1) {
-			if ($this->data_object->loadFromName($this->name,
+			if ($this->data_object->loadByName($this->name,
 				$this->instance)) {
 				$this->id         = $this->data_object->id;
 				$this->title      = $this->data_object->title;

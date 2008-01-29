@@ -100,7 +100,7 @@ class PinholeTag extends PinholeAbstractTag
 	 *
 	 * This tag parses with any alphanumeric string.
 	 *
-	 * @param string $string the tag string to parse. 
+	 * @param string $string the tag string to parse.
 	 * @param MDB2_Driver_Common $db the database connection used to parse the
 	 *                                tag string.
 	 * @param SiteInstance the site instance used to parse the tag string.
@@ -120,7 +120,7 @@ class PinholeTag extends PinholeAbstractTag
 
 		$this->name = $string;
 
-		if (preg_match('/^[a-z0-9]+$/i', $string) == 1) {
+		if (preg_match('/^[a-z0-9-]+$/i', $string) == 1) {
 			if ($this->data_object->loadByName($this->name,
 				$this->instance)) {
 				$this->id         = $this->data_object->id;

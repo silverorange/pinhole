@@ -122,11 +122,17 @@ abstract class PinholeBrowserPage extends SitePathPage
 					'search.keywords=%s', urlencode($keywords));
 
 				$options = $this->ui->getWidget('search_options');
+
+				if (count($this->getPath()) > 0)
+					$base = $this->getPath().'/tag';
+				else
+					$base = 'tag';
+
 				if ($options->value == 'all') {
-					$this->app->relocate('tag?'.$keyword_tag);
+					$this->app->relocate($base.'?'.$keyword_tag);
 				} else {
 					$this->tag_list->add($keyword_tag);
-					$this->app->relocate('tag?'.$this->tag_list->__toString());
+					$this->app->relocate($base.'?'.$this->tag_list->__toString());
 				}
 			}
 		} catch (SwatWidgetNotFoundException $e) {
@@ -199,6 +205,9 @@ abstract class PinholeBrowserPage extends SitePathPage
 		try {
 			$tag_list_view = $this->ui->getWidget('tag_list_view');
 			$tag_list_view->setTagList($this->tag_list);
+			if (count($this->getPath()) > 0)
+				$tag_list_view->base = $this->getPath().'/'.$tag_list_view->base;
+
 		} catch (SwatWidgetNotFoundException $e) {
 		}
 	}
@@ -212,6 +221,9 @@ abstract class PinholeBrowserPage extends SitePathPage
 			$tag_list_view = $this->ui->getWidget('sub_tag_list_view');
 			$tag_list_view->setTagList($this->tag_list);
 			$tag_list_view->setSubTagList($this->getSubTagList());
+			if (count($this->getPath()) > 0)
+				$tag_list_view->base = $this->getPath().'/'.$tag_list_view->base;
+
 		} catch (SwatWidgetNotFoundException $e) {
 		}
 	}

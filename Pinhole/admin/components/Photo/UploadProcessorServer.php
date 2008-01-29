@@ -42,6 +42,8 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 			$photo->process(sys_get_temp_dir().'/'.$filename);
 			unlink(sys_get_temp_dir().'/'.$filename);
 
+			$this->postProcessPhoto($photo);
+
 			$response['id'] = $photo->id;
 			$response['processed_filename'] = $photo->getFilename('thumb');
 

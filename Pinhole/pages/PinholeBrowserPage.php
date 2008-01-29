@@ -148,6 +148,12 @@ abstract class PinholeBrowserPage extends SitePathPage
 	{
 		parent::build();
 
+		if (isset($this->layout->navbar))
+			$this->getPath()->addEntriesToNavBar($this->layout->navbar);
+
+		$entry = $this->getPath()->getLast();
+		$this->layout->data->title = $entry->title;
+
 		$this->buildInternal();
 
 		$this->layout->startCapture('header_content');

@@ -1,16 +1,16 @@
 <?php
 
-require_once 'Pinhole/pages/PinholePage.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Swat/exceptions/SwatException.php';
+require_once 'Site/pages/SitePathPage.php';
 require_once 'Site/exceptions/SiteNotFoundException.php';
+require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoLoaderPage extends PinholePage
+class PinholePhotoLoaderPage extends SitePathPage
 {
 	// {{{ protected properties
 

@@ -30,10 +30,10 @@ h2#page_title {
 }
 
 .swat-tile-view .swat-tile a:hover {
-	background: #33393a;
+	background: #eee;
 }
 
 .swat-tile-view .site-image-wrapper img {
-	border: 1px solid #888a85;
-	background: #555753;
+	border: 1px solid #eee;
+	background: #fff;
 }

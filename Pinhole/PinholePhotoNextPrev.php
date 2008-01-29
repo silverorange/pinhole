@@ -13,8 +13,8 @@ require_once 'Swat/SwatControl.php';
 class PinholePhotoNextPrev extends SwatControl
 {
 	// {{{ public properties
-	
-	public $base = 'tag';
+
+	public $base = '';
 
 	// }}}
 	// {{{ protected properties
@@ -90,8 +90,8 @@ class PinholePhotoNextPrev extends SwatControl
 			$span_tag->display();
 		} else {
 			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href =
-				$this->appendTagPath(sprintf('photo/%s', $photo->id));
+			$a_tag->href = $this->appendTagPath(
+				sprintf('%sphoto/%s', $this->base, $photo->id));
 
 			$a_tag->title = $photo->title;
 			$a_tag->class = 'prev';
@@ -107,7 +107,7 @@ class PinholePhotoNextPrev extends SwatControl
 	{
 		$a_tag = new SwatHtmlTag('a');
 		$a_tag->setContent(Pinhole::_('Thumbnails'));
-		$a_tag->href = $this->appendTagPath('tag', $photo->id);
+		$a_tag->href = $this->appendTagPath($this->base.'tag', $photo->id);
 		$a_tag->class = 'view-all';
 
 		echo ' ';
@@ -127,8 +127,8 @@ class PinholePhotoNextPrev extends SwatControl
 			$span_tag->display();
 		} else {
 			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href =
-				$this->appendTagPath(sprintf('photo/%s', $photo->id));
+			$a_tag->href = $this->appendTagPath(
+				sprintf('%sphoto/%s', $this->base, $photo->id));
 
 			$a_tag->title = $photo->title;
 			$a_tag->class = 'next';

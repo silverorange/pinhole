@@ -49,7 +49,12 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		if ($this->photo->load($photo_id)) {
 			// ensure we are loading a photo in the current site instance
 			$current_instance_id = $this->app->instance->getId();
-			$photo_instance_id = $this->photo->image_set->instance->id;
+
+			if ($current_instance_id === null)
+				$photo_instance_id = $this->photo->image_set->instance;
+			else
+				$photo_instance_id = $this->photo->image_set->instance->id;
+
 			if ($photo_instance_id != $current_instance_id) {
 				// TODO: make exception nicer when instance is null
 				throw new SiteNotFoundException(sprintf(
@@ -135,6 +140,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$photo_next_prev = $this->ui->getWidget('photo_next_prev');
 		$photo_next_prev->setPhoto($this->photo);
 		$photo_next_prev->setTagList($this->tag_list);
+
+		if (count($this->getPath()) > 0)
+			$photo_next_prev->base = $this->getPath().'/';
 	}
 
 	// }}}

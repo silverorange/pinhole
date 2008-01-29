@@ -73,7 +73,7 @@ abstract class PinholeBrowserPage extends SitePathPage
 			// if we're at the root, show newest photos first
 			$this->tag_list->setPhotoOrderByClause(
 				'PinholePhoto.publish_date desc, id desc');
-		} else { 
+		} else {
 			// if we have tags selected, show oldest photos first
 			$this->tag_list->setPhotoOrderByClause(
 				'coalesce(PinholePhoto.photo_date, '.

@@ -33,13 +33,18 @@ class PinholePageFactory extends SitePageFactory
 	 * @param SiteWebApplication $app the web application for which the page is
 	 *                               being resolved.
 	 * @param string $source the source string for which to get the page.
+	 * @param SitePath $root_path optional. The root path of the page to reolve.
 	 * @param SiteLayout $layout optional, the layout to use.
 	 *
 	 * @return SitePage the page for the given source string.
 	 */
 	public function resolvePage(SiteWebApplication $app, $source,
-		$layout = null)
+		SitePath $root_path = null, $layout = null)
 	{
+		if ($root_path === null) {
+			$root_path = new SitePath();
+		}
+
 		if ($layout === null)
 			$layout = $this->resolveLayout($app, $source);
 
@@ -61,6 +66,11 @@ class PinholePageFactory extends SitePageFactory
 				array_unshift($regs, $app);
 
 				$page = $this->instantiatePage($app, $class, $regs);
+
+				// set root path on page
+				if ($page instanceof SitePathPage)
+					$page->setPath($root_path);
+
 				break;
 			}
 		}

@@ -1,12 +1,8 @@
-.pinhole-date-tag-browser {
-	color: #888a85;
-}
 
 .pinhole-date-tag-browser .years,
 .pinhole-date-tag-browser .months,
 .pinhole-date-tag-browser .days {
 	padding: 0.3em 20px 0 20px;
-	background: url(../images/date-browser-background.png) bottom repeat-x;
 }
 
 * html .pinhole-date-tag-browser .years,
@@ -16,17 +12,14 @@
 }
 
 .pinhole-date-tag-browser .years {
-	background-color: #434745;
-	border-bottom: 1px solid #4f4f4c;
+	border-bottom: 1px solid #eee;
 }
 
 .pinhole-date-tag-browser .months {
-	background-color: #3b4040;
-	border-bottom: 1px solid #454846;
+	border-bottom: 1px solid #eee;
 }
 .pinhole-date-tag-browser .days {
-	background-color: #353b3b;
-	border-bottom: 1px solid #3b403f;
+	border-bottom: 1px solid #eee;
 }
 
 .pinhole-date-tag-browser .years a,
@@ -56,10 +49,10 @@
 
 .pinhole-date-tag-browser a:hover,
 .pinhole-date-tag-browser .selected {
+	border-color: #eee;
 	border-width: 1px;
 	border-style: solid;
 	border-bottom: 0;
-	background: #2E3436;
 	-moz-border-radius-topright: 4px;
 	-moz-border-radius-topleft: 4px;
 }
@@ -72,22 +65,4 @@
 	font-weight: bold;
 	position: relative;
 	top: 2px;
-}
-
-.pinhole-date-tag-browser .years .selected,
-.pinhole-date-tag-browser .years a:hover {
-	background-color: #3b4040;
-	border-color: #4f4f4c;
-}
-
-.pinhole-date-tag-browser .months .selected,
-.pinhole-date-tag-browser .months a:hover {
-	background-color: #353b3b;
-	border-color: #454846;
-}
-
-.pinhole-date-tag-browser .days .selected,
-.pinhole-date-tag-browser .days a:hover {
-	background-color: #2E3436;
-	border-color: #3b403f;
 }

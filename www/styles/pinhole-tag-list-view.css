@@ -14,22 +14,13 @@
 	border-color: transparent;
 }
 
-.pinhole-tag-list-view span.tag-wrapper:hover {
-	border-color: #666;
-}
-
 .pinhole-tag-list-view span.tag-wrapper a.tag {
 	padding: 2px;
-}
-
-.pinhole-tag-list-view span.tag-wrapper:hover a.tag {
-	border-color: #666;
 }
 
 .pinhole-tag-list-view span.tag-wrapper a.remove {
 	visibility: hidden;
 	text-decoration: none;
-	color: #888a85;
 	vertical-align: top;
 	position: relative;
 	top: -0.2em;
@@ -40,12 +31,7 @@
 	visibility: visible;
 }
 
-.pinhole-tag-list-view span.tag-wrapper a.remove:hover {
-	color: #666;
-}
-
 .pinhole-tag-list-view span.photo-count {
-	color: #babdb6;
 	font-size: 85%;
 	margin-left: 0.5em;
 }

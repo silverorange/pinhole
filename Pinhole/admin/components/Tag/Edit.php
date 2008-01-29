@@ -5,7 +5,7 @@ require_once 'Swat/SwatDate.php';
 require_once 'NateGoSearch/NateGoSearch.php';
 require_once 'Admin/pages/AdminDBEdit.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Pinhole/tags/PinholeTag.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
 require_once 'Pinhole/pages/PinholeSearchPage.php';
 
 /**
@@ -46,7 +46,7 @@ class PinholeTagEdit extends AdminDBEdit
 
 	protected function initTag()
 	{
-		$class_name = SwatDBClassMap::get('PinholeTag');
+		$class_name = SwatDBClassMap::get('PinholeTagDataObject');
 		$this->tag = new $class_name();
 		$this->tag->setDatabase($this->app->db);
 		$this->tag->setInstance($this->app->instance->getInstance());

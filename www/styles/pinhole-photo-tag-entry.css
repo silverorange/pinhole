@@ -14,13 +14,13 @@
 }
 .pinhole-photo-tag-entry { /* for IE z-index of absolute divs inside relative divs issue */
 	z-index: 9000
-} 
+}
 
 .pinhole-photo-tag-entry input { /* abs for ie quirks */
 	_position: absolute;
 	width: 100%;
 	z-index: 0;
-} 
+}
 
 .pinhole-photo-tag-container {
 	position: absolute;

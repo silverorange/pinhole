@@ -119,7 +119,8 @@ class PinholePhotoEdit extends AdminDBEdit
 				throw new AdminNotFoundException(
 					sprintf(Pinhole::_('Photo with id “%s” not found.'),
 					$this->id));
-			elseif ($this->photo->image_set->instance->id != $instance_id)
+			elseif ($this->photo->image_set->instance !== null &&
+				$this->photo->image_set->instance->id != $instance_id)
 				throw new AdminNotFoundException(
 					sprintf(Pinhole::_('Photo with id “%s” loaded '.
 						'in the wrong instance.'),

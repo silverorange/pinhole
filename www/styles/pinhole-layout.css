@@ -1,7 +1,6 @@
 @import url("pinhole-layout-header.css");
 @import url("pinhole-layout-footer.css");
 @import url("pinhole-layout-sidebar.css");
-@import url("pinhole-photo-tile.css");
 @import url("swat-local.css");
 @import url("pinhole-forms.css");
 
@@ -20,8 +19,8 @@ body {
 
 /* Links */
 
-a:link    { color: #b0c9e4; } 
-a:visited { color: #b0c9e4; } 
+a:link    { color: #b0c9e4; }
+a:visited { color: #b0c9e4; }
 a:hover   { color: #729fcf; }
 a:active  { color: #729fcf; }
 
@@ -43,5 +42,3 @@ p { margin-bottom: 1em; }
 /* Hide from IE Mac \*/
 .clearfix {display:block;}
 /* End hide from IE Mac */
-
-

@@ -45,8 +45,6 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 			$response['id'] = $photo->id;
 			$response['processed_filename'] = $photo->getFilename('thumb');
 
-			$this->addToSearchQueue($photo);
-
 		} catch (SwatException $e) {
 			$e->process();
 
@@ -62,9 +60,9 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 	}
 
 	// }}}
-	// {{{ protected function addToSearchQueue()
+	// {{{ protected function postProcessPhoto()
 
-	protected function addToSearchQueue($photo)
+	protected function postProcessPhoto(PinholePhoto $photo)
 	{
 		$type = NateGoSearch::getDocumentType($this->app->db, 'photo');
 

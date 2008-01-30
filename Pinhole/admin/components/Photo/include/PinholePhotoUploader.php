@@ -42,7 +42,7 @@ class PinholePhotoUploader extends SwatFileEntry
 	/**
 	 * @var SwatProgressBar
 	 */
-	private $progress_bar; 
+	private $progress_bar;
 
 	/**
 	 * @var boolean

@@ -13,7 +13,7 @@ class PinholePhotoUploadStatusServer extends AdminXMLRPCServer
 {
 	// {{{ public function getStatus()
 
-	/** 
+	/**
 	 * Gets upload status for the given upload identifiers
 	 *
 	 * Statuses for the given identifiers are returned as follows:

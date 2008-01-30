@@ -198,16 +198,49 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
-	// {{{ public static function setStatus()
+	// {{{ public function addTagsByShortname()
+
+	public function addTagsByShortname($tag_names)
+	{
+		$this->checkDB();
+
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+
+		$sql = sprintf('insert into PinholePhotoTagBinding
+			(photo, tag) select %1$s, id from PinholeTag
+			where name in (%2$s) and PinholeTag.instance %3$s %4$s
+				and PinholeTag.id not in (select tag
+					from PinholePhotoTagBinding where photo = %1$s)',
+			$this->db->quote($this->id, 'integer'),
+			$this->db->datatype->implodeArray($tag_names, 'text'),
+			SwatDB::equalityOperator($instance_id),
+			$this->db->quote($instance_id, 'integer'));
+
+		SwatDB::exec($this->db, $sql);
+	}
+
+	// }}}
+	// {{{ public function setStatus()
 
 	public function setStatus($status)
 	{
+		// make static so that multiple photos being published at the same time
+		// have the exact same publish date
+		static $publish_date;
+
 		if (!array_key_exists($status, self::getStatuses()))
-			throw new SwatException('Invalid Status');	
+			throw new SwatException('Invalid Status');
 
 		if ($status == self::STATUS_PUBLISHED &&
-			$this->status != self::STATUS_PUBLISHED)
-			$this->publish_date = new SwatDate();
+			$this->status != self::STATUS_PUBLISHED) {
+
+			if ($publish_date === null) {
+				$publish_date = new SwatDate();
+				$publish_date->toUTC();
+			}
+
+			$this->publish_date = clone $publish_date;
+		}
 
 		$this->status = $status;
 	}

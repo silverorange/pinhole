@@ -15,12 +15,18 @@ require_once 'SwatDB/SwatDB.php';
  */
 class PinholePhotoActionsProcessor
 {
+	// {{{ private properties
+
 	/**
 	 * A reference to the page that is using this action processor
 	 *
 	 * @var AdminPage
 	 */
 	private $page;
+
+	// }}}
+
+	// {{{ public function __construct()
 
 	/**
 	 * Creates a new photo action processor
@@ -32,6 +38,9 @@ class PinholePhotoActionsProcessor
 		$this->page = $page;
 	}
 
+	// }}}
+	// {{{ public function process()
+
 	/**
 	 * Processes actions on photos
 	 *
@@ -40,8 +49,6 @@ class PinholePhotoActionsProcessor
 	 */
 	public function process($view, $actions, $ui)
 	{
-		//TODO: enforce PinholeInstance for selected items
-
 		switch ($actions->selected->id) {
 		case 'delete':
 			$this->page->app->replacePage('PinholePhoto/Delete');
@@ -57,16 +64,9 @@ class PinholePhotoActionsProcessor
 			else
 				$status = PinholePhoto::STATUS_PUBLISHED;
 
-			SwatDB::updateColumn($this->page->app->db, 'PinholePhoto',
-				'integer:status', $status,
-				'id', $view->getSelection());
-
-			if ($status == PinholePhoto::STATUS_PUBLISHED) {
-				$publish_date = new SwatDate();
-
-				SwatDB::updateColumn($this->page->app->db, 'PinholePhoto',
-					'timestamp:publish_date', $publish_date,
-					'id', $view->getSelection());
+			foreach ($this->getPhotos($view) as $photo) {
+				$photo->setStatus($status);
+				$photo->save();
 			}
 
 			$message = new SwatMessage(sprintf(Pinhole::ngettext(
@@ -82,23 +82,12 @@ class PinholePhotoActionsProcessor
 			$tag_list = $ui->getWidget('tags')->getSelectedTagList();
 			$tag_list = $tag_list->getByType('PinholeTag');
 			if (count($tag_list) > 0) {
-				$tag_ids = array();
+				$tag_shortnames = array();
 				foreach ($tag_list as $tag)
-					$tag_ids[] = $tag->id;
+					$tag_shortnames[] = $tag->name;
 
-				$db = $this->page->app->db;
-				$insert_sql = sprintf('insert into PinholePhotoTagBinding
-					(photo, tag) select %%1$s, id from PinholeTag
-					where id in (%s) and id not in (select tag
-					from PinholePhotoTagBinding where photo = %%1$s)',
-					$db->datatype->implodeArray($tag_ids, 'integer'));
-
-				foreach ($view->getSelection() as $id) {
-					$sql = sprintf($insert_sql,
-						$db->quote($id, 'integer'));
-
-					SwatDB::exec($db, $sql);
-				}
+				foreach ($this->getPhotos($view) as $photo)
+					$photo->addTagsByShortname($tag_shortnames);
 
 				$num = count($view->getSelection());
 				if (count($tag_list) > 1) {
@@ -119,6 +108,32 @@ class PinholePhotoActionsProcessor
 			break;
 		}
 	}
+
+	// }}}
+	// {{{ private function getPhotos()
+
+	private function getPhotos(SwatView $view)
+	{
+		$ids = array();
+		foreach ($view->getSelection() as $id)
+			$ids[] = $id;
+
+		$app = $this->page->app;
+		$instance_id = $app->instance->getId();
+
+		$sql = sprintf('select PinholePhoto.* from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			where PinholePhoto.id in (%s)
+			and ImageSet.instance %s %s',
+			$app->db->datatype->implodeArray($ids, 'integer'),
+			SwatDB::equalityOperator($instance_id),
+			$app->db->quote($instance_id, 'integer'));
+
+		return SwatDB::query($app->db, $sql,
+			SwatDBClassMap::get('PinholePhotoWrapper'));
+	}
+
+	// }}}
 }
 
 ?>

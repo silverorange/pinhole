@@ -87,7 +87,7 @@ class PinholePhotoActionsProcessor
 					$tag_shortnames[] = $tag->name;
 
 				foreach ($this->getPhotos($view) as $photo)
-					$photo->addTagsByShortname($tag_shortnames);
+					$photo->addTagsByName($tag_shortnames);
 
 				$num = count($view->getSelection());
 				if (count($tag_list) > 1) {

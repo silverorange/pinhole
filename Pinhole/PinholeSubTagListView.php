@@ -24,17 +24,13 @@ class PinholeSubTagListView extends SwatControl
 
 	// }}}
 	// {{{ public function __construct()
-	
+
 	public function __construct($id = null)
 	{
 		parent::__construct($id);
 
 		$this->addStyleSheet(
 			'packages/pinhole/styles/pinhole-sub-tag-list-view.css',
-			Pinhole::PACKAGE_ID);
-
-		$this->addJavaScript(
-			'packages/pinhole/javascript/pinhole-sortable-tag-list.js',
 			Pinhole::PACKAGE_ID);
 	}
 
@@ -60,7 +56,7 @@ class PinholeSubTagListView extends SwatControl
 		$div_tag->open();
 
 		$header_tag = new SwatHtmlTag('h3');
-		$header_tag->setContent(Pinhole::_('Tags'));
+		$header_tag->setContent(Pinhole::_('Newest Tags'));
 		$header_tag->display();
 
 		$ul_tag = new SwatHtmlTag('ul');
@@ -73,16 +69,11 @@ class PinholeSubTagListView extends SwatControl
 			$add_list = clone $this->tag_list;
 			$add_list->add($tag);
 
-			$li_tag->id = sprintf('%s.%s.%s',
-				$tag->name, '1', '2');
 			$li_tag->open();
 
 			$add_anchor_tag = new SwatHtmlTag('a');
 			$add_anchor_tag->class = 'pinhole-tag-list-view-tag';
 			$add_anchor_tag->rel = 'tag';
-//			$add_anchor_tag->title = 
-//				Pinhole::_('View all photos with this tag.');
-
 			$add_anchor_tag->href = $this->base.'?'.$add_list->__toString();
 			$add_anchor_tag->setContent($tag->getTitle());
 			$add_anchor_tag->display();
@@ -95,8 +86,6 @@ class PinholeSubTagListView extends SwatControl
 		$ul_tag->close();
 
 		$div_tag->close();
-
-		Swat::displayInlineJavaScript($this->getInlineJavaScript());
 	}
 
 	// }}}
@@ -113,20 +102,6 @@ class PinholeSubTagListView extends SwatControl
 	public function setSubTagList(PinholeTagList $tag_list)
 	{
 		$this->sub_tag_list = $tag_list;
-	}
-
-	// }}}
-	// {{{ protected function getInlineJavaScript()
-
-	/**
-	 * Gets the inline JavaScript for this textarea widget
-	 *
-	 * @return string the inline JavaScript for this textarea widget.
-	 */
-	protected function getInlineJavaScript()
-	{
-		return sprintf("var %s_obj = new PinholeSortableTagList('%s', '%s');",
-			$this->id, $this->id.'_list', $this->id);
 	}
 
 	// }}}

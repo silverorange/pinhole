@@ -933,7 +933,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 * list is empty, the returned list contains all tags.
 	 *
 	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
-	 *                            specified, all tags are loaded.
+	 *                           specified, all tags are loaded.
+	 * @param string $order_by_clause optional. SQL order by clause of the tag
+	 *                                list.
 	 *
 	 * @return PinholeTagList a list of tags not in this list that also apply
 	 *                         to the photos of this list. The list only
@@ -942,32 +944,20 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 * @see PinholeTagList::getPhotos()
 	 * @see PinholePhoto::getTags()
 	 */
-	public function getSubTags(SwatDBRange $range = null)
+	public function getSubTags(SwatDBRange $range = null,
+		$order_by_clause = null)
 	{
-		$tag_list = $this->getEmptyCopy();
+		if ($order_by_clause === null)
+			$order_by_clause = 'PinholeTagDateView.first_modified desc';
 
-		$photo_id_sql = 'select PinholePhoto.id from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
-
-		$join_clauses = implode(' ', $this->getJoinClauses());
-		if (strlen($join_clauses) > 0)
-			$photo_id_sql.= ' '.$join_clauses.' ';
-
-		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
-			$photo_id_sql.= ' where '.$where_clause;
-
-		$sql = sprintf('select PinholeTag.* from PinholeTag where id in
-			(select tag from PinholePhotoTagBinding where photo in
-			(%s))',
-			$photo_id_sql);
-
-		if ($this->instance !== null)
-			$sql.= sprintf(' and PinholeTag.instance = %s',
-				$this->db->quote($this->instance->id, 'integer'));
-
-		// temp until ordering is possible
-		$sql.= ' order by PinholeTag.title asc';
+		$sql = sprintf('select PinholeTag.*
+			from PinholeTag
+			inner join PinholeTagDateView on
+				PinholeTagDateView.tag = PinholeTag.id
+			where %s
+			order by %s',
+			$this->getSubTagWhereClause(),
+			$order_by_clause);
 
 		if ($range !== null)
 			$this->db->setLimit($range->getLimit(), $range->getOffset());
@@ -975,13 +965,38 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$tag_data_objects = SwatDB::query($this->db, $sql,
 			'PinholeTagDataObjectWrapper');
 
+		$tag_list = $this->getEmptyCopy();
+
 		foreach ($tag_data_objects as $data_object) {
 			$tag = new PinholeTag($data_object);
 			$tag_list->add($tag);
 		}
 
 		$tag_list = $tag_list->subtract($this);
+
 		return $tag_list;
+	}
+
+	// }}}
+	// {{{ public function getSubTagCount()
+
+	/**
+	 * Gets a count of tags not in this list that also apply to the photos
+	 * of this list
+	 *
+	 * @return integer Number of sub tags
+	 *
+	 * @see PinholePhoto::getSubTags()
+	 */
+	public function getSubTagCount()
+	{
+		$sql = sprintf('select count(PinholeTag.id)
+			from PinholeTag where %s',
+			$this->getSubTagWhereClause());
+
+		$count = SwatDB::queryOne($this->db, $sql);
+
+		return $count - count($this);
 	}
 
 	// }}}
@@ -1152,6 +1167,34 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function count()
 	{
 		return count($this->tags);
+	}
+
+	// }}}
+	// {{{ private function getSubTagWhereClause()
+
+	private function getSubTagWhereClause()
+	{
+		$photo_id_sql = 'select PinholePhoto.id from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
+
+		$join_clauses = implode(' ', $this->getJoinClauses());
+		if (strlen($join_clauses) > 0)
+			$photo_id_sql.= ' '.$join_clauses.' ';
+
+		$where_clause = $this->getWhereClause();
+		if (strlen($where_clause) > 0)
+			$photo_id_sql.= ' where '.$where_clause;
+
+		$sql = sprintf('PinholeTag.id in
+			(select tag from PinholePhotoTagBinding where photo in
+			(%s))',
+			$photo_id_sql);
+
+		if ($this->instance !== null)
+			$sql.= sprintf(' and PinholeTag.instance = %s',
+				$this->db->quote($this->instance->id, 'integer'));
+
+		return $sql;
 	}
 
 	// }}}

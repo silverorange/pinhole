@@ -125,14 +125,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$field->title = $meta_data->title;
 
 			if ($meta_data->machine_tag) {
-				if (count($this->getPath()) > 0)
-					$base = $this->getPath().'/tag';
-				else
-					$base = 'tag';
-
 				$renderer = new SwatLinkCellRenderer();
-				$renderer->link = sprintf('%s?%s',
-					$base, $meta_data->getURI());
+				$renderer->link = sprintf('%stag?%s',
+					$this->app->config->pinhole->path,
+					$meta_data->getURI());
 			} else {
 				$renderer = new SwatTextCellRenderer();
 			}
@@ -153,9 +149,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$photo_next_prev = $this->ui->getWidget('photo_next_prev');
 		$photo_next_prev->setPhoto($this->photo);
 		$photo_next_prev->setTagList($this->tag_list);
-
-		if (count($this->getPath()) > 0)
-			$photo_next_prev->base = $this->getPath().'/';
+		$photo_next_prev->base = $this->app->config->pinhole->path;
 	}
 
 	// }}}

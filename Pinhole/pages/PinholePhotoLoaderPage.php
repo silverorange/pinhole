@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Swat/exceptions/SwatException.php';
-require_once 'Site/pages/SitePathPage.php';
+require_once 'Site/pages/SitePage.php';
 require_once 'Site/exceptions/SiteNotFoundException.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
@@ -10,7 +10,7 @@ require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhotoLoaderPage extends SitePathPage
+class PinholePhotoLoaderPage extends SitePage
 {
 	// {{{ protected properties
 

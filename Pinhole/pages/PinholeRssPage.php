@@ -6,7 +6,7 @@ require_once 'Swat/SwatImageDisplay.php';
 require_once 'Swat/SwatTableStore.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
-require_once 'Site/pages/SitePathPage.php';
+require_once 'Site/pages/SitePage.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/layouts/PinholeRssLayout.php';
@@ -16,7 +16,7 @@ require_once 'Pinhole/layouts/PinholeRssLayout.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeRssPage extends SitePathPage
+class PinholeRssPage extends SitePage
 {
 	// {{{ public function __construct()
 

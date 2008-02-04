@@ -28,27 +28,30 @@
 	<!-- sidebar -->
 	<widget class="SwatContainer" id="sidebar_content">
 		<widget class="PinholeSubTagListView" id="sub_tag_list_view" />
+		<widget class="SwatContentBlock" id="sub_tag_list_content">
+			<property name="content_type">text/xml</property>
+		</widget>
 	</widget>
 
 	<!-- content -->
-		<widget class="SwatForm">
-	<widget class="SwatContainer" id="content">
-		<widget class="SwatTileView" id="photo_view">
-			<property name="classes[]">pinhole-tile-view</property>
-			<object class="SwatTile">
-				<object class="SiteImageCellRenderer">
-					<property name="image" type="data">photo</property>
-					<property name="image_dimension">thumb</property>
-					<property name="link">%sphoto/%s</property>
-					<property name="link_value[0]" type="data">root_path</property>
-					<property name="link_value[1]" type="data">path</property>
-					<property name="classes[]">photo-title</property>
+	<widget class="SwatForm">
+		<widget class="SwatContainer" id="content">
+			<widget class="SwatTileView" id="photo_view">
+				<property name="classes[]">pinhole-tile-view</property>
+				<object class="SwatTile">
+					<object class="SiteImageCellRenderer">
+						<property name="image" type="data">photo</property>
+						<property name="image_dimension">thumb</property>
+						<property name="link">%sphoto/%s</property>
+						<property name="link_value[0]" type="data">root_path</property>
+						<property name="link_value[1]" type="data">path</property>
+						<property name="classes[]">photo-title</property>
+					</object>
 				</object>
-			</object>
-		</widget>
-		<widget class="SwatPagination" id="pagination">
-			<property name="display_parts" type="constant">NEXT|PREV|PAGES</property>
+			</widget>
+			<widget class="SwatPagination" id="pagination">
+				<property name="display_parts" type="constant">NEXT|PREV|PAGES</property>
+			</widget>
 		</widget>
 	</widget>
-		</widget>
 </swatml>

@@ -79,6 +79,7 @@ class PinholePageFactory extends SitePageFactory
 		return array(
 			'^(photo)/([0-9]+)$'              => 'PinholeBrowserDetailsPage',
 			'^(tag)$'                         => 'PinholeBrowserIndexPage',
+			'^(tags)$'                        => 'PinholeBrowserTagPage',
 			'^(rss)$'                         => 'PinholeRssPage',
 			'^(loadphoto)/(.+)/(.+).jpg$'     => 'PinholePhotoLoaderPage',
 			'^robots.txt$'                    => 'PinholeRobotsPage',

@@ -199,14 +199,13 @@ abstract class PinholeBrowserPage extends SitePage
 
 	protected function buildTagListView()
 	{
-		try {
-			$tag_list_view = $this->ui->getWidget('tag_list_view');
-			$tag_list_view->setTagList($this->tag_list);
-			$tag_list_view->base =
-				$this->app->config->pinhole->path.$tag_list_view->base;
+		if (!$this->ui->hasWidget('tag_list_view'))
+			return;
 
-		} catch (SwatWidgetNotFoundException $e) {
-		}
+		$tag_list_view = $this->ui->getWidget('tag_list_view');
+		$tag_list_view->setTagList($this->tag_list);
+		$tag_list_view->base =
+			$this->app->config->pinhole->path.$tag_list_view->base;
 	}
 
 	// }}}
@@ -214,23 +213,57 @@ abstract class PinholeBrowserPage extends SitePage
 
 	protected function buildSubTagListView()
 	{
-		try {
-			$tag_list_view = $this->ui->getWidget('sub_tag_list_view');
-			$tag_list_view->setTagList($this->tag_list);
-			$tag_list_view->setSubTagList($this->getSubTagList());
-			$tag_list_view->base =
-				$this->app->config->pinhole->path.$tag_list_view->base;
+		if (!$this->ui->hasWidget('sub_tag_list_view'))
+			return;
 
-		} catch (SwatWidgetNotFoundException $e) {
+		$range = new SwatDBRange(30, 0);
+		$sub_tag_list = $this->getSubTagList($range);
+		$sub_tag_count = $this->getSubTagCount();
+		$base_path = $this->app->config->pinhole->path;
+
+		$tag_list_view = $this->ui->getWidget('sub_tag_list_view');
+		$tag_list_view->setTagList($this->tag_list);
+		$tag_list_view->setSubTagList($sub_tag_list);
+		$tag_list_view->base = $base_path.'tag';
+
+		if ($sub_tag_count > count($sub_tag_list)) {
+			ob_start();
+			$div_tag = new SwatHtmlTag('div');
+			$div_tag->class = 'pinhole-sub-tag-more-link';
+			$div_tag->open();
+
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->href = $base_path.'tags';
+			if (count($this->tag_list) > 0)
+				$a_tag->href.= '?'.$this->tag_list->__toString();
+
+			$a_tag->setContent(sprintf(Pinhole::_('View All %s Tags'),
+				$sub_tag_count));
+			$a_tag->display();
+
+			$div_tag->close();
+
+
+			$this->ui->getWidget('sub_tag_list_content')->content =
+				ob_get_clean();
 		}
 	}
 
 	// }}}
 	// {{{ protected function getSubTagList()
 
-	protected function getSubTagList()
+	protected function getSubTagList(SwatDBRange $range = null,
+		$order_by_clause = null)
 	{
-		return $this->tag_list->getSubTags();
+		return $this->tag_list->getSubTags($range, $order_by_clause);
+	}
+
+	// }}}
+	// {{{ protected function getSubTagCount()
+
+	protected function getSubTagCount()
+	{
+		return $this->tag_list->getSubTagCount();
 	}
 
 	// }}}

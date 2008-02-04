@@ -2,7 +2,7 @@
 
 require_once 'Swat/SwatUI.php';
 require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
-require_once 'Site/pages/SitePathPage.php';
+require_once 'Site/pages/SitePage.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagList.php';
 
@@ -11,7 +11,7 @@ require_once 'Pinhole/PinholeTagList.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class PinholeBrowserPage extends SitePathPage
+abstract class PinholeBrowserPage extends SitePage
 {
 	// {{{ protected properties
 
@@ -123,10 +123,7 @@ abstract class PinholeBrowserPage extends SitePathPage
 
 				$options = $this->ui->getWidget('search_options');
 
-				if (count($this->getPath()) > 0)
-					$base = $this->getPath().'/tag';
-				else
-					$base = 'tag';
+				$base = $this->app->config->pinhole->path.'tag';
 
 				if ($options->value == 'all') {
 					$this->app->relocate($base.'?'.$keyword_tag);
@@ -147,13 +144,6 @@ abstract class PinholeBrowserPage extends SitePathPage
 	public function build()
 	{
 		parent::build();
-
-		if (isset($this->layout->navbar))
-			$this->getPath()->addEntriesToNavBar($this->layout->navbar);
-
-		$entry = $this->getPath()->getLast();
-		if ($entry !== null)
-			$this->layout->data->title = $entry->title;
 
 		$this->buildInternal();
 
@@ -212,8 +202,8 @@ abstract class PinholeBrowserPage extends SitePathPage
 		try {
 			$tag_list_view = $this->ui->getWidget('tag_list_view');
 			$tag_list_view->setTagList($this->tag_list);
-			if (count($this->getPath()) > 0)
-				$tag_list_view->base = $this->getPath().'/'.$tag_list_view->base;
+			$tag_list_view->base =
+				$this->app->config->pinhole->path.$tag_list_view->base;
 
 		} catch (SwatWidgetNotFoundException $e) {
 		}
@@ -228,8 +218,8 @@ abstract class PinholeBrowserPage extends SitePathPage
 			$tag_list_view = $this->ui->getWidget('sub_tag_list_view');
 			$tag_list_view->setTagList($this->tag_list);
 			$tag_list_view->setSubTagList($this->getSubTagList());
-			if (count($this->getPath()) > 0)
-				$tag_list_view->base = $this->getPath().'/'.$tag_list_view->base;
+			$tag_list_view->base =
+				$this->app->config->pinhole->path.$tag_list_view->base;
 
 		} catch (SwatWidgetNotFoundException $e) {
 		}

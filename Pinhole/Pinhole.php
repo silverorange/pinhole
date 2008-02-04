@@ -119,18 +119,23 @@ class Pinhole
 	// {{{ public static function getConfigDefinitions()
 
 	/**
-	 * Gets configuration definitions used by the Site package
+	 * Gets configuration definitions used by the Pinhole package
 	 *
 	 * Applications should add these definitions to their config module before
 	 * loading the application configuration.
 	 *
-	 * @return array the configuration definitions used by the Site package.
+	 * @return array the configuration definitions used by this package.
 	 *
 	 * @see SiteConfigModule::addDefinitions()
 	 */
 	public static function getConfigDefinitions()
 	{
 		return array(
+			// Optional path prefix for all Pinhole content. If specified, this
+			// must have a trailing slash. This is used to integrate Pinhole
+			// content into another site.
+			'pinhole.path'        => '',
+
 			// Whether or not site is enabled
 			'site.enabled' => '1',
 		);

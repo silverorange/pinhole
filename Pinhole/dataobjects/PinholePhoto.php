@@ -198,9 +198,9 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
-	// {{{ public function addTagsByShortname()
+	// {{{ public function addTagsByName()
 
-	public function addTagsByShortname($tag_names)
+	public function addTagsByName($tag_names)
 	{
 		$this->checkDB();
 

@@ -14,6 +14,7 @@ class PinholeSubTagListView extends SwatControl
 	// {{{ public properties
 
 	public $base = 'tag';
+	public $title;
 
 	// }}}
 	// {{{ protected properties
@@ -56,7 +57,7 @@ class PinholeSubTagListView extends SwatControl
 		$div_tag->open();
 
 		$header_tag = new SwatHtmlTag('h3');
-		$header_tag->setContent(Pinhole::_('Newest Tags'));
+		$header_tag->setContent($this->title);
 		$header_tag->display();
 
 		$ul_tag = new SwatHtmlTag('ul');
@@ -76,6 +77,15 @@ class PinholeSubTagListView extends SwatControl
 			$add_anchor_tag->rel = 'tag';
 			$add_anchor_tag->href = $this->base.'?'.$add_list->__toString();
 			$add_anchor_tag->setContent($tag->getTitle());
+
+			if ($tag->photo_count !== null) {
+				$add_anchor_tag->title = sprintf('%s %s',
+					SwatString::minimizeEntities(
+						SwatString::numberFormat($tag->photo_count)),
+					SwatString::minimizeEntities(Pinhole::ngettext(
+						'Photo', 'Photos', $tag->photo_count)));
+			}
+
 			$add_anchor_tag->display();
 
 			$li_tag->close();

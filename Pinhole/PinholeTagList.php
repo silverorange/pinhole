@@ -984,19 +984,25 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 * @see PinholeTagList::getSubTags()
 	 */
 	public function getSubTagsByPopularity(SwatDBRange $range = null,
-		$order_by_clause = 'photo_count desc')
+		$order_by_clause = null)
 	{
+		if ($order_by_clause === null)
+			$order_by_clause = 'photo_count desc';
+
 		$sql = sprintf('select count(PinholePhoto.id) as photo_count,
 				PinholePhotoTagBinding.tag, PinholeTag.title
 			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
 			inner join PinholePhotoTagBinding on
 				PinholePhotoTagBinding.photo = PinholePhoto.id
 			inner join PinholeTag on
 				PinholePhotoTagBinding.tag = PinholeTag.id
+			%s
 			where %s
 			group by PinholePhotoTagBinding.tag, PinholeTag.title
 			order by %s',
-			$this->getSubTagWhereClause(),
+			implode(' ', $this->getJoinClauses()),
+			$this->getWhereClause(),
 			$order_by_clause);
 
 		if ($range !== null)

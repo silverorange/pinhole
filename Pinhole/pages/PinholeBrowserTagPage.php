@@ -92,7 +92,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 			$this->displaySimpleList($tag_list);
 		}
 
-		$this->ui->getWidget('content')->content = ob_get_clean();
+		$this->ui->getWidget('tag_list')->content = ob_get_clean();
 	}
 
 	// }}}

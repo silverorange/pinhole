@@ -10,8 +10,9 @@
 	</widget>
 
 	<!-- content -->
-	<widget class="SwatContentBlock" id="content">
-		<property name="content">TEST</property>
-		<property name="content_type">text/xml</property>
+	<widget class="SwatContainer" id="content">
+		<widget class="SwatContentBlock" id="tag_list">
+			<property name="content_type">text/xml</property>
+		</widget>
 	</widget>
 </swatml>

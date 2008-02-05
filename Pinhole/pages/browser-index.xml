@@ -18,24 +18,22 @@
 	</widget>
 
 	<!-- content -->
-	<widget class="SwatForm">
-		<widget class="SwatContainer" id="content">
-			<widget class="SwatTileView" id="photo_view">
-				<property name="classes[]">pinhole-tile-view</property>
-				<object class="SwatTile">
-					<object class="SiteImageCellRenderer">
-						<property name="image" type="data">photo</property>
-						<property name="image_dimension">thumb</property>
-						<property name="link">%sphoto/%s</property>
-						<property name="link_value[0]" type="data">root_path</property>
-						<property name="link_value[1]" type="data">path</property>
-						<property name="classes[]">photo-title</property>
-					</object>
+	<widget class="SwatContainer" id="content">
+		<widget class="SwatTileView" id="photo_view">
+			<property name="classes[]">pinhole-tile-view</property>
+			<object class="SwatTile">
+				<object class="SiteImageCellRenderer">
+					<property name="image" type="data">photo</property>
+					<property name="image_dimension">thumb</property>
+					<property name="link">%sphoto/%s</property>
+					<property name="link_value[0]" type="data">root_path</property>
+					<property name="link_value[1]" type="data">path</property>
+					<property name="classes[]">photo-title</property>
 				</object>
-			</widget>
-			<widget class="SwatPagination" id="pagination">
-				<property name="display_parts" type="constant">NEXT|PREV|PAGES</property>
-			</widget>
+			</object>
+		</widget>
+		<widget class="SwatPagination" id="pagination">
+			<property name="display_parts" type="constant">NEXT|PREV|PAGES</property>
 		</widget>
 	</widget>
 </swatml>

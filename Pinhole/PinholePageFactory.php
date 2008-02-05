@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Site/SitePageFactory.php';
-require_once 'Site/pages/SitePathPage.php';
 require_once 'Pinhole/layouts/PinholeLayout.php';
 
 /**

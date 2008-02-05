@@ -54,20 +54,9 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	{
 		parent::buildInternal();
 
-		$this->buildDateTagBrowser();
+		$this->ui->getWidget('tag_menu')->setTagList($this->tag_list);
+
 		$this->buildTags();
-	}
-
-	// }}}
-	// {{{ protected function buildDateTagBrowser()
-
-	protected function buildDateTagBrowser()
-	{
-		$date_tag_browser = $this->ui->getWidget('date_tag_browser');
-		$date_tag_browser->setTagList($this->tag_list);
-		$date_tag_browser->setDatabase($this->app->db);
-		$date_tag_browser->base =
-			$this->app->config->pinhole->path.$date_tag_browser->base;
 	}
 
 	// }}}
@@ -167,12 +156,16 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 			$min = min($min, $tag->photo_count);
 		}
 
+		$div_tag = new SwatHtmlTag('div');
+		$div_tag->class = 'pinhole-tag-cloud';
+		$div_tag->open();
+
 		$span_tag = new SwatHtmlTag('span');
 
 		foreach ($tag_list as $tag) {
 			$scale = ceil(($tag->photo_count - $min) / ($max - $min) * 200) + 100;
 
-			$span_tag->style = sprintf('font-size: %s%%; white-space: nowrap;',
+			$span_tag->style = sprintf('font-size: %s%%;',
 				$scale);
 
 			$span_tag->open();
@@ -180,6 +173,8 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 			$span_tag->close();
 			echo ' ';
 		}
+
+		$div_tag->close();
 	}
 
 	// }}}

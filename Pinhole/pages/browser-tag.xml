@@ -5,8 +5,8 @@
 	<widget class="SwatContainer" id="header_content">
 		<widget class="SwatDisplayableContainer" id="sub_hd">
 			<widget class="PinholeTagListView" id="tag_list_view" />
+			<widget class="PinholeBrowserTagPageMenu" id="tag_menu" />
 		</widget>
-		<widget class="PinholeDateTagBrowser" id="date_tag_browser" />
 	</widget>
 
 	<!-- content -->

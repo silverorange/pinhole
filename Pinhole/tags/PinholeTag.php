@@ -53,6 +53,13 @@ class PinholeTag extends PinholeAbstractTag
 	 */
 	public $createdate;
 
+	/**
+	 * Photo count
+	 *
+	 * @var integer
+	 */
+	public $photo_count;
+
 	// }}}
 	// {{{ private properties
 

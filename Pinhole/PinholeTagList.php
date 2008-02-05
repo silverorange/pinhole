@@ -947,14 +947,54 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function getSubTags(SwatDBRange $range = null,
 		$order_by_clause = null)
 	{
-		if ($order_by_clause === null)
-			$order_by_clause = 'PinholeTagDateView.first_modified desc';
+		$tag_data_objects = $this->getSubTagDataObjects($range,
+			$order_by_clause);
 
-		$sql = sprintf('select PinholeTag.*
-			from PinholeTag
-			inner join PinholeTagDateView on
-				PinholeTagDateView.tag = PinholeTag.id
+		$tag_list = $this->getEmptyCopy();
+
+		foreach ($tag_data_objects as $data_object) {
+			$tag = new PinholeTag($data_object);
+			$tag_list->add($tag);
+		}
+
+		$tag_list = $tag_list->subtract($this);
+
+		return $tag_list;
+	}
+
+	// }}}
+	// {{{ public function getSubTagsByPopularity()
+
+	/**
+	 * Gets a list of tags not in this list that also apply to the photos
+	 * of this list and orders them by the number of photos
+	 *
+	 * The list of subtags only includes {@link PinholeTag} objects. If this
+	 * list is empty, the returned list contains all tags.
+	 *
+	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
+	 *                           specified, all tags are loaded.
+	 * @param string $order_by_clause optional. SQL order by clause of the tag
+	 *                                list.
+	 *
+	 * @return PinholeTagList a list of tags not in this list that also apply
+	 *                         to the photos of this list. The list only
+	 *                         contains PinholeTag objects.
+	 *
+	 * @see PinholeTagList::getSubTags()
+	 */
+	public function getSubTagsByPopularity(SwatDBRange $range = null,
+		$order_by_clause = 'photo_count desc')
+	{
+		$sql = sprintf('select count(PinholePhoto.id) as photo_count,
+				PinholePhotoTagBinding.tag, PinholeTag.title
+			from PinholePhoto
+			inner join PinholePhotoTagBinding on
+				PinholePhotoTagBinding.photo = PinholePhoto.id
+			inner join PinholeTag on
+				PinholePhotoTagBinding.tag = PinholeTag.id
 			where %s
+			group by PinholePhotoTagBinding.tag, PinholeTag.title
 			order by %s',
 			$this->getSubTagWhereClause(),
 			$order_by_clause);
@@ -962,14 +1002,20 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if ($range !== null)
 			$this->db->setLimit($range->getLimit(), $range->getOffset());
 
-		$tag_data_objects = SwatDB::query($this->db, $sql,
-			'PinholeTagDataObjectWrapper');
+		$popular_tags = SwatDB::query($this->db, $sql);
+		$tag_data_objects = $this->getSubTagDataObjects();
 
+		$wrapper_class = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
 		$tag_list = $this->getEmptyCopy();
 
-		foreach ($tag_data_objects as $data_object) {
-			$tag = new PinholeTag($data_object);
-			$tag_list->add($tag);
+		foreach ($popular_tags as $popularity) {
+			foreach ($tag_data_objects as $data_object) {
+				if ($data_object->id == $popularity->tag) {
+					$tag = new PinholeTag($data_object);
+					$tag->photo_count = $popularity->photo_count;
+					$tag_list->add($tag);
+				}
+			}
 		}
 
 		$tag_list = $tag_list->subtract($this);
@@ -1195,6 +1241,43 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				$this->db->quote($this->instance->id, 'integer'));
 
 		return $sql;
+	}
+
+	// }}}
+	// {{{ private function getSubTagDataObjects()
+
+	/**
+	 * Gets a recordset of tag dataobjects.
+	 *
+	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
+	 *                           specified, all tags are loaded.
+	 * @param string $order_by_clause optional. SQL order by clause of the tag
+	 *                                list.
+	 *
+	 * @return PinholeTagDataObjectWrapper
+	 */
+	private function getSubTagDataObjects(SwatDBRange $range = null,
+		$order_by_clause = null)
+	{
+		if ($order_by_clause === null)
+			$order_by_clause = 'PinholeTagDateView.first_modified desc';
+
+		$sql = sprintf('select PinholeTag.*,
+				PinholeTagDateView.first_modified,
+				PinholeTagDateView.last_modified
+			from PinholeTag
+			inner join PinholeTagDateView on
+				PinholeTagDateView.tag = PinholeTag.id
+			where %s
+			order by %s',
+			$this->getSubTagWhereClause(),
+			$order_by_clause);
+
+		if ($range !== null)
+			$this->db->setLimit($range->getLimit(), $range->getOffset());
+
+		return SwatDB::query($this->db, $sql,
+			'PinholeTagDataObjectWrapper');
 	}
 
 	// }}}

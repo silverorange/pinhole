@@ -173,9 +173,23 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function displayPhoto()
 	{
+		$original_width = $this->photo->getWidth('original');
+		$large_width = $this->photo->getWidth('large');
+		$link_to_original = ($original_width > $large_width * 1.1);
+
+		if ($link_to_original) {
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->href = $this->photo->getUri('original');
+			$a_tag->title = Pinhole::_('View full-size image');
+			$a_tag->open();
+		}
+
 		$img_tag = $this->photo->getImgTag('large');
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
+
+		if ($link_to_original)
+			$a_tag->close();
 	}
 
 	// }}}

@@ -46,6 +46,30 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	public $createdate;
 
 	// }}}
+	// {{{ public read-only properties
+
+	/**
+	 * First modified
+	 *
+	 * @var Date
+	 */
+	public $first_modified;
+
+	/**
+	 * Last modified
+	 *
+	 * @var Date
+	 */
+	public $last_modified;
+
+	/**
+	 * Photo count
+	 *
+	 * @var integer
+	 */
+	public $photo_count;
+
+	// }}}
 	// {{{ public function loadByName()
 
 	/**
@@ -100,6 +124,10 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 		$this->table = 'PinholeTag';
 		$this->id_field = 'integer:id';
 		$this->registerDateProperty('createdate');
+
+		// read-only
+		$this->registerDateProperty('first_modified');
+		$this->registerDateProperty('last_modified');
 	}
 
 	// }}}

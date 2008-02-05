@@ -12,13 +12,20 @@ require_once 'Pinhole/tags/PinholePageTag.php';
  */
 class PinholeBrowserTagPage extends PinholeBrowserPage
 {
+	// {{{ protected properties
+
+	protected $display_type;
+
+	// }}}
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$tags = '')
+		$display_type = 'alphabetical', $tags = '')
 	{
 		parent::__construct($app, $layout, $tags);
+
 		$this->ui_xml = 'Pinhole/pages/browser-tag.xml';
+		$this->display_type = $display_type;
 	}
 
 	// }}}
@@ -68,13 +75,22 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 	protected function buildTags()
 	{
-		$tag_list = $this->tag_list->getSubTags(null, 'PinholeTag.title');
-
 		ob_start();
-		if (count($tag_list) < 30)
+
+		if ($this->display_type == 'alphabetical') {
+			$tag_list = $this->tag_list->getSubTags(null, 'PinholeTag.title');
+			if (count($tag_list) < 30)
+				$this->displaySimpleList($tag_list);
+			else
+				$this->displayAlphabeticalList($tag_list);
+		} elseif ($this->display_type == 'cloud') {
+			$tag_list = $this->tag_list->getSubTagsByPopularity(
+				null, 'PinholeTag.title');
+			$this->displayCloud($tag_list);
+		} elseif ($this->display_type == 'popular') {
+			$tag_list = $this->tag_list->getSubTagsByPopularity();
 			$this->displaySimpleList($tag_list);
-		else
-			$this->displayAlphabeticalList($tag_list);
+		}
 
 		$this->ui->getWidget('content')->content = ob_get_clean();
 	}
@@ -139,6 +155,34 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	}
 
 	// }}}
+	// {{{ protected function displayCloud()
+
+	protected function displayCloud(PinholeTagList $tag_list)
+	{
+		$max = null;
+		$min = null;
+
+		foreach ($tag_list as $tag) {
+			$max = max($max, $tag->photo_count);
+			$min = min($min, $tag->photo_count);
+		}
+
+		$span_tag = new SwatHtmlTag('span');
+
+		foreach ($tag_list as $tag) {
+			$scale = ceil(($tag->photo_count - $min) / ($max - $min) * 200) + 100;
+
+			$span_tag->style = sprintf('font-size: %s%%; white-space: nowrap;',
+				$scale);
+
+			$span_tag->open();
+			$this->displayTag($tag);
+			$span_tag->close();
+			echo ' ';
+		}
+	}
+
+	// }}}
 	// {{{ protected function displayTag()
 
 	protected function displayTag(PinholeTag $tag)
@@ -151,6 +195,12 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		$add_anchor_tag->href = $this->app->config->pinhole->path.'tag?'.
 			$add_list->__toString();
 		$add_anchor_tag->setContent($tag->getTitle());
+
+		if ($tag->photo_count !== null) {
+			$add_anchor_tag->title = sprintf(Pinhole::_('%s Photos'),
+				SwatString::minimizeEntities($tag->photo_count));
+		}
+
 		$add_anchor_tag->display();
 	}
 

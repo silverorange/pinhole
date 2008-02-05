@@ -102,7 +102,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		else
 			$tag_path = $this->tag_list->__toString().'/';
 
-		$pagination->link = 'tag?';
+		$pagination->link = $this->app->config->pinhole->path.'tag?';
 		$pagination->link.= str_replace('%', '%%', $tag_path);
 		$pagination->link.= 'page.number=%d';
 	}

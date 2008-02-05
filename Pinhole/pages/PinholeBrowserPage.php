@@ -60,7 +60,7 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->ui->mapClassPrefixToPath('Pinhole', 'Pinhole');
 		$this->ui->loadFromXML($this->ui_xml);
 
-		$this->initSearch();
+		$this->initSearchForm();
 		$this->initInternal();
 
 		$this->ui->init();
@@ -69,7 +69,7 @@ abstract class PinholeBrowserPage extends SitePage
 	// }}}
 	// {{{ protected function initSearch()
 
-	protected function initSearch()
+	protected function initSearchForm()
 	{
 		$this->ui->loadFromXML($this->search_ui_xml,
 			$this->ui->getWidget('header_content'));

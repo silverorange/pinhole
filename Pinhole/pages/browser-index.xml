@@ -3,22 +3,6 @@
 <swatml>
 	<!-- header -->
 	<widget class="SwatContainer" id="header_content">
-		<widget class="SwatForm" id="search_form">
-			<property name="action">search</property>
-			<widget class="SwatRadioList" id="search_options" />
-			<widget class="SwatFormField">
-				<property name="title">Keywords…</property>
-				<property name="access_key" type="string">4</property>
-				<widget class="SwatSearchEntry" id="keywords">
-					<property name="size" type="integer">30</property>
-					<property name="maxlength" type="integer">255</property>
-				</widget>
-				<widget class="SwatButton">
-					<property name="title">Search</property>
-					<property name="classes[]">compact-button</property>
-				</widget>
-			</widget>
-		</widget>
 		<widget class="SwatDisplayableContainer" id="sub_hd">
 			<widget class="PinholeTagListView" id="tag_list_view" />
 		</widget>

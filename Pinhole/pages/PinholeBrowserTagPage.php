@@ -44,7 +44,24 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		$this->layout->data->yui_grid_class = 'yui-t7';
 
 		$this->layout->data->title = SwatString::minimizeEntities(
-			Pinhole::_('Tags'));
+			$this->getPageTitle($this->display_type));
+	}
+
+	// }}}
+	// {{{ protected function getPageTitle()
+
+	protected function getPageTitle($display_type)
+	{
+		$title = Pinhole::_('Tag View - %s');
+
+		switch ($display_type) {
+		case 'alphabetical' :
+			return sprintf($title, Pinhole::_('Alphabetical'));
+		case 'popular' :
+			return sprintf($title, Pinhole::_('By Popularity'));
+		case 'cloud' :
+			return sprintf($title, Pinhole::_('Cloud View'));
+		}
 	}
 
 	// }}}
@@ -78,7 +95,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 			$this->displayCloud($tag_list);
 		} elseif ($this->display_type == 'popular') {
 			$tag_list = $this->tag_list->getSubTagsByPopularity();
-			$this->displaySimpleList($tag_list);
+			$this->displayByPopularity($tag_list);
 		}
 
 		$this->ui->getWidget('tag_list')->content = ob_get_clean();
@@ -96,6 +113,31 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		foreach ($tag_list as $tag) {
 			$li_tag->open();
 			$this->displayTag($tag);
+			$li_tag->close();
+		}
+
+		$ul_tag->close();
+	}
+
+	// }}}
+	// {{{ protected function displayByPopularity()
+
+	protected function displayByPopularity(PinholeTagList $tag_list)
+	{
+		$ul_tag = new SwatHtmlTag('ul');
+		$li_tag = new SwatHtmlTag('li');
+		$ul_tag->open();
+
+		foreach ($tag_list as $tag) {
+			$li_tag->open();
+			$this->displayTag($tag);
+
+			printf(' - %s %s',
+				SwatString::minimizeEntities(
+					SwatString::numberFormat($tag->photo_count)),
+				SwatString::minimizeEntities(Pinhole::ngettext(
+					'Photo', 'Photos', $tag->photo_count)));
+
 			$li_tag->close();
 		}
 
@@ -192,8 +234,11 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		$add_anchor_tag->setContent($tag->getTitle());
 
 		if ($tag->photo_count !== null) {
-			$add_anchor_tag->title = sprintf(Pinhole::_('%s Photos'),
-				SwatString::minimizeEntities($tag->photo_count));
+			$add_anchor_tag->title = sprintf('%s %s',
+				SwatString::minimizeEntities(
+					SwatString::numberFormat($tag->photo_count)),
+				SwatString::minimizeEntities(Pinhole::ngettext(
+					'Photo', 'Photos', $tag->photo_count)));
 		}
 
 		$add_anchor_tag->display();

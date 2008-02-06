@@ -53,8 +53,7 @@ class PinholeTagEdit extends AdminDBEdit
 
 		if ($this->id !== null && !$this->tag->load($this->id)) {
 			throw new AdminNotFoundException(
-				sprintf(Pinhole::_('Tag with id “%s” not found.'),
-					$this->id));
+				sprintf(Pinhole::_('Tag with id “%s” not found.'), $this->id));
 		}
 	}
 
@@ -126,9 +125,8 @@ class PinholeTagEdit extends AdminDBEdit
 
 		$this->addToSearchQueue();
 
-		$message = new SwatMessage(sprintf(
-			Pinhole::_('“%s” has been saved.'),
-			$this->tag->title));
+		$message = new SwatMessage(
+			sprintf(Pinhole::_('“%s” has been saved.'), $this->tag->title));
 
 		$this->app->messages->add($message);
 	}

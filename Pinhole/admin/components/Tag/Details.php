@@ -98,7 +98,7 @@ class PinholeTagDetails extends AdminPage
 	{
 		$this->navbar->popEntry();
 		$this->navbar->addEntry(
-			new SwatNavBarEntry(Pinhole::_('Tags'), 'Tag'));
+			new SwatNavBarEntry(Pinhole::_('Tags'), $this->getComponentName()));
 
 		$this->navbar->addEntry(new SwatNavBarEntry($this->tag->title));
 	}

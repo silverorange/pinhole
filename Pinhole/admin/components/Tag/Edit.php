@@ -49,7 +49,7 @@ class PinholeTagEdit extends AdminDBEdit
 		$class_name = SwatDBClassMap::get('PinholeTagDataObject');
 		$this->tag = new $class_name();
 		$this->tag->setDatabase($this->app->db);
-		$this->tag->setInstance($this->app->instance->getInstance());
+		$this->tag->instance = $this->app->instance->getInstance();
 
 		if ($this->id !== null && !$this->tag->load($this->id)) {
 			throw new AdminNotFoundException(
@@ -110,12 +110,12 @@ class PinholeTagEdit extends AdminDBEdit
 	protected function saveDBData()
 	{
 		$values = $this->ui->getValues(array(
-			'title',
-			'name',
+			'title', 'name', 'event',
 		));
 
 		$this->tag->title = $values['title'];
 		$this->tag->name  = $values['name'];
+		$this->tag->event  = $values['event'];
 
 		if ($this->id === null) {
 			$now = new SwatDate();

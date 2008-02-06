@@ -19,6 +19,11 @@
 					<property name="maxlength" type="integer">255</property>
 				</widget>
 			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Event?</property>
+				<property name="note" translatable="yes">If a tag is an event, its photos will be listed chronologically on its tag page.</property>
+				<widget class="SwatCheckbox" id="event" />
+			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button" />
 			</widget>

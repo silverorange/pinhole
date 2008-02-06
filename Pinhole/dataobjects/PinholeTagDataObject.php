@@ -45,6 +45,16 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	 */
 	public $createdate;
 
+	/**
+	 * Whether this tag represents an event or not
+	 *
+	 * When browsing a single tag that's an event, photos will be ordered
+	 * chronologically instead of the default reverse-chronological.
+	 *
+	 * @var boolean
+	 */
+	public $event;
+
 	// }}}
 	// {{{ public read-only properties
 

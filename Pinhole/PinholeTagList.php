@@ -1229,20 +1229,16 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	private function getPhotoOrderByClause()
 	{
-		$default = 'PinholePhoto.publish_date desc,
-			PinholePhoto.photo_date asc';
-
 		if ($this->photo_order_by_clause !== null) {
 			$order_by = $this->photo_order_by_clause;
-		} elseif ($this->count() == 0) {
-			$order_by = $default;
 		} else {
-			$order_by = 'coalesce(PinholePhoto.photo_date,
-				PinholePhoto.publish_date) asc, id asc';
+			$order_by = 'PinholePhoto.publish_date desc,
+            PinholePhoto.photo_date asc';
 
 			foreach ($this->getByType('PinholeTag') as $tag) {
-				if (!$tag->event) {
-					$order_by = $default;
+				if ($tag->event) {
+					$order_by = 'coalesce(PinholePhoto.photo_date,
+						PinholePhoto.publish_date) asc, id asc';
 					break;
 				}
 			}

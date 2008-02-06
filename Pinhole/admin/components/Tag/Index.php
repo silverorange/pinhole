@@ -113,7 +113,7 @@ class PinholeTagIndex extends AdminSearch
 		$this->ui->getWidget('results_frame')->title =
 			$this->getComponentTitle();
 
-		$this->ui->getWidget('tag_toollink')->link =
+		$this->ui->getWidget('tag_tool_link')->link =
 			$this->getComponentName().'/Edit';
 
 		$title_column = $this->ui->getWidget('index_view')->getColumn('title');

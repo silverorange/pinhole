@@ -71,14 +71,14 @@ class PinholeTagIndex extends AdminSearch
 			$this->app->replacePage($this->getComponentName().'/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
+
 		case 'status_action':
 			$num = count($view->checked_items);
 
 			$status = $this->ui->getWidget('status_flydown')->value;
 
-			SwatDB::updateColumn($this->app->db, 'PinholeTag',
-				'integer:status', $status,
-				'id', $view->checked_items);
+			SwatDB::updateColumn($this->app->db, 'PinholeTag', 'integer:status',
+				$status, 'id', $view->checked_items);
 
 			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'The status of one tag has been changed.',
@@ -93,6 +93,37 @@ class PinholeTagIndex extends AdminSearch
 	// }}}
 
 	// build phase
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
+	{
+		parent::buildInternal();
+
+		$this->buildComponentTitlesAndLinks();
+	}
+
+	// }}}
+	// {{{ protected function buildComponentTitlesAndLinks()
+
+	protected function buildComponentTitlesAndLinks()
+	{
+		$this->ui->getWidget('search_disclosure')->title =
+			'Search '.$this->getComponentTitle();
+
+		$this->ui->getWidget('results_frame')->title =
+			$this->getComponentTitle();
+
+		$this->ui->getWidget('tag_toollink')->link =
+			$this->getComponentName().'/Edit';
+
+		$title_column = $this->ui->getWidget('index_view')->getColumn('title');
+		$title_column->getFirstRenderer()->link =
+			$this->getComponentName().'/Details?id=%s';
+
+		$this->ui->getWidget('pager')->link = $this->getComponentName();
+	}
+
+	// }}}
 	// {{{ protected function getWhereClause()
 
 	protected function getWhereClause()

@@ -115,7 +115,7 @@ class PinholeTagEdit extends AdminDBEdit
 
 		$this->tag->title = $values['title'];
 		$this->tag->name  = $values['name'];
-		$this->tag->event  = $values['event'];
+		$this->tag->event = $values['event'];
 
 		if ($this->id === null) {
 			$now = new SwatDate();

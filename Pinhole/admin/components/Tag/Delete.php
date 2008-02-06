@@ -7,7 +7,6 @@ require_once 'Admin/AdminListDependency.php';
 /**
  * Delete confirmation page for Tags
  *
- *
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
@@ -66,27 +65,6 @@ class PinholeTagDelete extends AdminDBDelete
 
 		if ($dep->getStatusLevelCount(AdminDependency::DELETE) == 0)
 			$this->switchToCancelButton();
-
-		$this->buildNavBar();
-	}
-
-	// }}}
-	// {{{ protected function buildNavBar()
-
-	protected function buildNavBar()
-	{
-		$this->navbar->popEntry();
-
-		if ($this->single_delete) {
-			$navbar_rs = SwatDB::executeStoredProc($this->app->db,
-				'getPinholeTagNavBar', array($this->getFirstItem()));
-
-			foreach ($navbar_rs as $elem)
-				$this->navbar->addEntry(new SwatNavBarEntry($elem->title,
-					$this->getComponentName().'/Details?id='.$elem->id));
-		}
-
-		$this->navbar->addEntry(new SwatNavBarEntry(Pinhole::_('Delete')));
 	}
 
 	// }}}

@@ -57,8 +57,7 @@ class PinholeTagDetails extends AdminPage
 
 		if (!$this->tag->load($this->id))
 			throw new AdminNotFoundException(
-				sprintf(Pinhole::_('Tag with id “%s” not found.'),
-					$this->id));
+				sprintf(Pinhole::_('Tag with id “%s” not found.'), $this->id));
 	}
 
 	// }}}
@@ -80,6 +79,21 @@ class PinholeTagDetails extends AdminPage
 		$details_frame->title = Pinhole::_('Tag');
 		$details_frame->subtitle = $this->tag->title;
 
+		$this->buildToolbar();
+		$this->buildNavBar();
+	}
+
+	// }}}
+	// {{{ protected function buildToolbar()
+
+	protected function buildToolbar()
+	{
+		$this->ui->getWidget('edit_tool_link')->link =
+			$this->getComponentName().'/Edit?id=%s';
+
+		$this->ui->getWidget('delete_tool_link')->link =
+			$this->getComponentName().'/Delete?id=%s';
+
 		$toolbar = $this->ui->getWidget('details_toolbar');
 		$toolbar->setToolLinkValues(array($this->id));
 
@@ -87,8 +101,6 @@ class PinholeTagDetails extends AdminPage
 		$this->ui->getWidget('view_in_gallery')->link =
 			'photos/'.$this->tag->name;
 		*/
-
-		$this->buildNavBar();
 	}
 
 	// }}}
@@ -97,8 +109,8 @@ class PinholeTagDetails extends AdminPage
 	private function buildNavBar()
 	{
 		$this->navbar->popEntry();
-		$this->navbar->addEntry(
-			new SwatNavBarEntry(Pinhole::_('Tags'), $this->getComponentName()));
+		$this->navbar->addEntry(new SwatNavBarEntry($this->getComponentTitle(),
+			$this->getComponentName()));
 
 		$this->navbar->addEntry(new SwatNavBarEntry($this->tag->title));
 	}

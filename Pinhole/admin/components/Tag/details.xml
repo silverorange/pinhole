@@ -4,12 +4,12 @@
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame" id="details_frame">
 		<widget class="SwatToolbar" id="details_toolbar">
-			<widget class="SwatToolLink">
+			<widget class="SwatToolLink" id="edit_tool_link">
 				<property name="title" translatable="yes">Edit Tag</property>
 				<property name="link">Tag/Edit?id=%s</property>
 				<property name="stock_id">edit</property>
 			</widget>
-			<widget class="SwatToolLink">
+			<widget class="SwatToolLink" id="delete_tool_link">
 				<property name="title" translatable="yes">Delete Tag</property>
 				<property name="link">Tag/Delete?id=%s</property>
 				<property name="stock_id">delete</property>

@@ -78,12 +78,12 @@ class PinholeTagDelete extends AdminDBDelete
 		$this->navbar->popEntry();
 
 		if ($this->single_delete) {
-			$navbar_rs = SwatDB::executePinholedProc($this->app->db,
+			$navbar_rs = SwatDB::executeStoredProc($this->app->db,
 				'getPinholeTagNavBar', array($this->getFirstItem()));
 
 			foreach ($navbar_rs as $elem)
 				$this->navbar->addEntry(new SwatNavBarEntry($elem->title,
-					'Tag/Details?id='.$elem->id));
+					$this->getComponentName().'/Details?id='.$elem->id));
 		}
 
 		$this->navbar->addEntry(new SwatNavBarEntry(Pinhole::_('Delete')));

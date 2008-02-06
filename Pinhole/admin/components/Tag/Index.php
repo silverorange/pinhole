@@ -68,7 +68,7 @@ class PinholeTagIndex extends AdminSearch
 	{
 		switch ($actions->selected->id) {
 		case 'delete':
-			$this->app->replacePage('Tag/Delete');
+			$this->app->replacePage($this->getComponentName().'/Delete');
 			$this->app->getPage()->setItems($view->checked_items);
 			break;
 		case 'status_action':
@@ -107,7 +107,9 @@ class PinholeTagIndex extends AdminSearch
 			$clause = new AdminSearchClause('title');
 			$clause->table = 'PinholeTag';
 			$clause->value = $this->ui->getWidget('search_title')->value;
-			$clause->operator = $this->ui->getWidget('search_title_operator')->value;
+			$clause->operator =
+				$this->ui->getWidget('search_title_operator')->value;
+
 			$this->where_clause.= $clause->getClause($this->app->db, 'and');
 		}
 

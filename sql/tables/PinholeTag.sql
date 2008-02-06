@@ -3,6 +3,7 @@ create table PinholeTag (
 	instance integer null references Instance(id),
 	name varchar(255),
 	title varchar(255),
+	event boolean not null default false,
 	createdate timestamp,
 	primary key (id)
 );

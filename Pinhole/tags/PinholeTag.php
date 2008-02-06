@@ -54,6 +54,13 @@ class PinholeTag extends PinholeAbstractTag
 	public $createdate;
 
 	/**
+	 * Event?
+	 *
+	 * @var boolean
+	 */
+	public $event;
+
+	/**
 	 * Photo count
 	 *
 	 * @var integer
@@ -93,6 +100,7 @@ class PinholeTag extends PinholeAbstractTag
 			$this->id          = $this->data_object->id;
 			$this->name        = $this->data_object->name;
 			$this->title       = $this->data_object->title;
+			$this->event       = $this->data_object->event;
 			$this->createdate  = $this->data_object->createdate;
 			if ($this->data_object->instance !== null)
 				$this->setInstance($this->data_object->instance);

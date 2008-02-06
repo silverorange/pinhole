@@ -83,17 +83,6 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->tag_list->setPhotoWhereClause(sprintf(
 			'PinholePhoto.status = %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
-
-		if (count($this->tag_list) == 0) {
-			// if we're at the root, show newest photos first
-			$this->tag_list->setPhotoOrderByClause(
-				'PinholePhoto.publish_date desc, id desc');
-		} else {
-			// if we have tags selected, show oldest photos first
-			$this->tag_list->setPhotoOrderByClause(
-				'coalesce(PinholePhoto.photo_date, '.
-					'PinholePhoto.publish_date) asc, id asc');
-		}
 	}
 
 	// }}}

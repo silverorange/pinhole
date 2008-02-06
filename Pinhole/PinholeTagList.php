@@ -115,7 +115,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	/**
 	 * Range to apply to photos in this tag list
 	 *
-	 * @var SwatDBRange 
+	 * @var SwatDBRange
 	 *
 	 * @see PinholeTagList::setPhotoRange()
 	 * @see PinholeTagList::getRange()
@@ -720,8 +720,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if (strlen($where_clause) > 0)
 			$sql.= ' where '.$where_clause;
 
-		if ($this->photo_order_by_clause !== null)
-			$sql = $sql.' order by '.$this->photo_order_by_clause;
+		$sql.= ' order by '.$this->getPhotoOrderByClause();
 
 		$range = $this->getRange();
 		if ($range !== null)
@@ -837,8 +836,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if (strlen($where_clause) > 0)
 			$sql.= ' where '.$where_clause;
 
-		if ($this->photo_order_by_clause !== null)
-			$sql = $sql.' order by '.$this->photo_order_by_clause;
+		$sql.= ' order by '.$this->getPhotoOrderByClause();
 
 		$photo_class = SwatDBClassMap::get('PinholePhoto');
 
@@ -1219,6 +1217,38 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function count()
 	{
 		return count($this->tags);
+	}
+
+	// }}}
+	// {{{ private function getPhotoOrderByClause()
+
+	/**
+	 * Gets the order SQL order-by clause for this list
+	 *
+	 * @return string the SQL order-by clause
+	 */
+	private function getPhotoOrderByClause()
+	{
+		$default = 'PinholePhoto.publish_date desc,
+			PinholePhoto.photo_date asc';
+
+		if ($this->photo_order_by_clause !== null) {
+			$order_by = $this->photo_order_by_clause;
+		} elseif ($this->count() == 0) {
+			$order_by = $default;
+		} else {
+			$order_by = 'coalesce(PinholePhoto.photo_date,
+				PinholePhoto.publish_date) asc, id asc';
+
+			foreach ($this->getByType('PinholeTag') as $tag) {
+				if (!$tag->event) {
+					$order_by = $default;
+					break;
+				}
+			}
+		}
+
+		return $order_by;
 	}
 
 	// }}}

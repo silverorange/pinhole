@@ -25,8 +25,8 @@ h2#page_title {
 	/* IE6 Hack
 	   set an unused color to be index color
 	   then remove this indexed color */
-	_border-color: black;
-	_filter:chroma(color=black);
+	_border-color: tomato;
+	_filter:chroma(color=tomato);
 }
 
 .swat-tile-view .swat-tile a:hover {

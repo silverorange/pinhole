@@ -219,22 +219,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function saveDBData()
 	{
-		$values = $this->ui->getValues(array(
-			'title',
-			'description',
-			'photo_date',
-			'status',
-		));
-
-		// turns the date back into UTC
-		$photo_date = new SwatDate($values['photo_date']);
-		$photo_date->setTZbyID($this->photo->photo_time_zone);
-		$photo_date->toUTC();
-
-		$this->photo->title = $values['title'];
-		$this->photo->description = $values['description'];
-		$this->photo->photo_date = $photo_date;
-		$this->photo->setStatus($values['status']);
+		$this->setPhotoValues();
 		$this->photo->save();
 
 		$tag_list = $this->ui->getWidget('tags')->getSelectedTagList();
@@ -257,6 +242,37 @@ class PinholePhotoEdit extends AdminDBEdit
 			$this->photo->getTitle()));
 
 		$this->app->messages->add($message);
+	}
+
+	// }}}
+	// {{{ protected function setPhotoValues()
+
+	protected function setPhotoValues()
+	{
+		$values = $this->getUIValues();
+
+		// turns the date back into UTC
+		$photo_date = new SwatDate($values['photo_date']);
+		$photo_date->setTZbyID($this->photo->photo_time_zone);
+		$photo_date->toUTC();
+
+		$this->photo->title = $values['title'];
+		$this->photo->description = $values['description'];
+		$this->photo->photo_date = $photo_date;
+		$this->photo->setStatus($values['status']);
+	}
+
+	// }}}
+	// {{{ protected function getUIValues()
+
+	protected function getUIValues()
+	{
+		return $this->ui->getValues(array(
+			'title',
+			'description',
+			'photo_date',
+			'status',
+		));
 	}
 
 	// }}}

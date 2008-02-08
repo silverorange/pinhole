@@ -2,7 +2,7 @@
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
 	<widget class="SwatFrame" id="edit_frame">
-		<property name="title" translatable="yes">Edit</property>
+		<property name="title" translatable="yes">Edit Photo</property>
 		<!--widget class="SwatToolbar" id="edit_toolbar">
 			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">Edit Meta-Data</property>

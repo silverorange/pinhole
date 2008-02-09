@@ -112,10 +112,6 @@ class PinholeLayout extends SiteLayout
 	{
 		parent::finalize();
 
-		$this->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
-			'packages/pinhole/styles/pinhole-layout.css',
-			Pinhole::PACKAGE_ID));
-
 		// build html title (goes in html head)
 		$instance_title = $this->app->config->site->title;
 		$page_title = $this->data->title;

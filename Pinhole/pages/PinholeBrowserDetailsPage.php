@@ -91,6 +91,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		if (strlen($this->photo->title) > 0)
 			$this->layout->data->title =
 				SwatString::minimizeEntities($this->photo->title);
+
+		if (strlen($this->photo->description) > 0)
+			$this->layout->data->meta_description =
+				SwatString::minimizeEntities($this->photo->description);
 	}
 
 	// }}}

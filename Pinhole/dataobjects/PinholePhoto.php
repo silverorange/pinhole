@@ -246,6 +246,14 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
+	// {{{ public function isPublished()
+
+	public function isPublished()
+	{
+		return ($this->status == self::STATUS_PUBLISHED);
+	}
+
+	// }}}
 	// {{{ public static function getDateRange()
 
 	public static function getDateRange($db, $where = null)

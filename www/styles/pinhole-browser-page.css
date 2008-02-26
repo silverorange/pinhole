@@ -20,15 +20,6 @@ h2#page_title {
 #sub_hd {display:block;}
 /* End hide from IE Mac */
 
-.swat-tile-view .swat-tile {
-	border: 1px solid transparent;
-	/* IE6 Hack
-	   set an unused color to be index color
-	   then remove this indexed color */
-	_border-color: tomato;
-	_filter:chroma(color=tomato);
-}
-
 .swat-tile-view .swat-tile a:hover {
 	background: #eee;
 }

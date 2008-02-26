@@ -39,12 +39,8 @@
 	border-bottom: 0;
 	padding: 0.2em 0.2em;
 	text-decoration: none;
-	border: 1px solid transparent;
-	/* IE6 Hack
-	   set an unused color to be index color
-	   then remove this indexed color */
-	_border-color: tomato;
-	_filter:chroma(color=tomato);
+	border: 0;
+	margin: 1px;
 }
 
 .pinhole-date-tag-browser a:hover,
@@ -53,6 +49,7 @@
 	border-width: 1px;
 	border-style: solid;
 	border-bottom: 0;
+	margin: 0;
 	-moz-border-radius-topright: 4px;
 	-moz-border-radius-topleft: 4px;
 }

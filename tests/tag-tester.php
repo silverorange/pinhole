@@ -12,7 +12,13 @@ require_once 'Pinhole/PinholeTagFactory.php';
 
 $dsn = 'pgsql://php@192.168.0.26/gallery?sslmode=disable';
 $connection = MDB2::connect($dsn);
+
+$instance = new PinholeInstance();
+$instance->setDatabase($connection);
+$instance->load(1);
+
 PinholeTagFactory::setDefaultDatabase($connection);
+PinholeTagFactory::setDefaultInstance($instance);
 
 function test_tag($string)
 {

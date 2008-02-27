@@ -28,3 +28,7 @@ h2#page_title {
 	border: 1px solid #eee;
 	background: #fff;
 }
+
+.swat-tile-view .swat-tile {
+	padding: 1px;
+}

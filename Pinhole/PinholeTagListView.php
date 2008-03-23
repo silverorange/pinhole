@@ -14,6 +14,7 @@ class PinholeTagListView extends SwatControl
 	// {{{ public properties
 
 	public $base = 'tag';
+	public $rss_dimension_shortname = 'large';
 
 	// }}}
 	// {{{ protected properties
@@ -128,7 +129,9 @@ class PinholeTagListView extends SwatControl
 	{
 		$rss_link_tag = new SwatHtmlTag('a');
 		$rss_link_tag->class = 'rss';
-		$rss_link_tag->href = str_replace('tag', 'rss', $this->base);
+		$rss_link_tag->href = str_replace('tag',
+			'rss/'.$this->rss_dimension_shortname, $this->base);
+
 		if (count($this->tag_list) > 0)
 			$rss_link_tag->href.= '?'.$this->tag_list->__toString();
 

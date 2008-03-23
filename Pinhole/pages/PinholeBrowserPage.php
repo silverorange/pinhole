@@ -210,6 +210,10 @@ abstract class PinholeBrowserPage extends SitePage
 		$tag_list_view->setTagList($this->tag_list);
 		$tag_list_view->base =
 			$this->app->config->pinhole->path.$tag_list_view->base;
+
+		if (isset($this->app->cookie->dimension_shortname))
+			$tag_list_view->rss_dimension_shortname =
+				$this->app->cookie->dimension_shortname;
 	}
 
 	// }}}

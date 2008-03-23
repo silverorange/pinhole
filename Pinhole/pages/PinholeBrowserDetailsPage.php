@@ -27,9 +27,14 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected $photo;
 
 	/**
-	 * @var boolean
+	 * @var string
 	 */
-	protected $display_dimension = 'large';
+	protected $default_dimension = 'large';
+
+	/**
+	 * @var PinholeImageDimension
+	 */
+	protected $dimension;
 
 	/**
 	 * @var ImageDimensionWrapper
@@ -45,18 +50,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		parent::__construct($app, $layout, $tags);
 		$this->ui_xml = 'Pinhole/pages/browser-details.xml';
 
-		if ($dimension_shortname === null) {
-			if (isset($this->app->cookie->dimension_shortname))
-				$this->display_dimension =
-					$this->app->cookie->dimension_shortname;
-		} else {
-			$this->display_dimension = $dimension_shortname;
-			$this->app->cookie->setCookie('dimension_shortname',
-				$dimension_shortname, strtotime('+1 year'), '/',
-				$this->app->getBaseHref());
-		}
-
 		$this->createPhoto($photo_id);
+		$this->dimension = $this->initDimension($dimension_shortname);
 	}
 
 	// }}}
@@ -88,6 +83,49 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			throw new SiteNotFoundException(sprintf(
 				'No photo with the id %d exists.', $photo_id));
 		}
+	}
+
+	// }}}
+	// {{{ protected function initDimension()
+
+	protected function initDimension($shortname = null)
+	{
+		if ($shortname === null) {
+			if (isset($this->app->cookie->shortname))
+				$shortname = $this->app->cookie->shortname;
+			else
+				$shortname = $this->default_dimension;
+		}
+
+		$class_name = SwatDBClassMap::get('SiteImageDimension');
+		$display_dimension = new $class_name();
+		$display_dimension->setDatabase($this->app->db);
+		$display_dimension->loadByShortname('photos', $shortname);
+
+		if ($display_dimension === null || !$display_dimension->selectable)
+			throw new SiteNotFoundException(sprintf('Dimension “%s” is not '.
+				'a selectable photo dimension', $shortname));
+
+		$this->app->cookie->setCookie('display_dimension',
+			$shortname, strtotime('+1 year'), '/',
+			$this->app->getBaseHref());
+
+		$dimensions = $this->getSelectableDimensions();
+		$display_dimension = null;
+
+		foreach ($dimensions as $dimension)
+			if ($dimension->shortname == $shortname)
+				$display_dimension = $dimension;
+
+		if ($display_dimension === null)
+			return $dimensions->getFirst();
+		else
+			return $display_dimension;
+
+
+
+
+		return $display_dimension;
 	}
 
 	// }}}
@@ -197,7 +235,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		parent::buildTagListView();
 
 		$tag_list_view = $this->ui->getWidget('tag_list_view');
-		$tag_list_view->rss_dimension_shortname = $this->display_dimension;
+		$tag_list_view->rss_dimension_shortname =
+			$this->dimension->shortname;
 	}
 
 	// }}}
@@ -224,7 +263,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$a_tag->open();
 		}
 
-		$img_tag = $this->photo->getImgTag($this->getDimension()->shortname);
+		$img_tag = $this->photo->getImgTag(
+			$this->dimension->shortname);
+
 		$img_tag->class = 'pinhole-photo';
 		$img_tag->display();
 
@@ -263,7 +304,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		foreach ($dimensions as $dimension) {
 			ob_start();
 
-			if ($dimension->id == $this->getDimension()->id) {
+			if ($dimension->id == $this->dimension->id) {
 				$span_tag = new SwatHtmlTag('span');
 				$span_tag->setContent($dimension->title);
 				$span_tag->display();
@@ -289,24 +330,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		echo implode(', ', $list);
 
 		$div_tag->close();
-	}
-
-	// }}}
-	// {{{ protected function getDimension()
-
-	protected function getDimension()
-	{
-		$dimensions = $this->getSelectableDimensions();
-		$display_dimension = null;
-
-		foreach ($dimensions as $dimension)
-			if ($dimension->shortname == $this->display_dimension)
-				$display_dimension = $dimension;
-
-		if ($display_dimension === null)
-			return $dimensions->getFirst();
-		else
-			return $display_dimension;
 	}
 
 	// }}}

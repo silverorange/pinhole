@@ -21,9 +21,14 @@ class PinholeRssPage extends SitePage
 	// {{{ protected properties
 
 	/**
-	 * @var boolean
+	 * @var string
 	 */
-	protected $display_dimension = 'large';
+	protected $default_dimension = 'large';
+
+	/**
+	 * @var PinholeImageDimension
+	 */
+	protected $dimension;
 
 	// }}}
 	// {{{ public function __construct()
@@ -40,6 +45,26 @@ class PinholeRssPage extends SitePage
 
 		$tags = SiteApplication::initVar('tags');
 		$this->createTagList($tags);
+	}
+
+	// }}}
+	// {{{ protected function initDimension()
+
+	protected function initDimension($shortname = null)
+	{
+		if ($shortname === null)
+			$shortname = $this->default_dimension;
+
+		$class_name = SwatDBClassMap::get('SiteImageDimension');
+		$dimension = new $class_name();
+		$dimension->setDatabase($this->app->db);
+		$dimension->loadByShortname('photos', $shortname);
+
+		if ($dimension === null || !$dimension->selectable)
+			throw new SiteNotFoundException(sprintf('Dimension “%s” is not '.
+				'a selectable photo dimension', $shortname));
+
+		return $dimension;
 	}
 
 	// }}}

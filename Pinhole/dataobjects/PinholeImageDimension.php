@@ -28,6 +28,16 @@ class PinholeImageDimension extends SiteImageDimension
 	 */
 	public $publicly_accessible;
 
+	/**
+	 * Selectable
+	 *
+	 * If true, the image will be appear in the list of selectable dimensions
+	 * on the photo details page. 
+	 *
+	 * @var boolean
+	 */
+	public $selectable;
+
 	// }}}
 }
 

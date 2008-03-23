@@ -76,6 +76,7 @@ class PinholePageFactory extends SitePageFactory
 	protected function getPageMap()
 	{
 		return array(
+			'^(photo)/([0-9]+)/([\w\d*]+)$'   => 'PinholeBrowserDetailsPage',
 			'^(photo)/([0-9]+)$'              => 'PinholeBrowserDetailsPage',
 			'^(tag)$'                         => 'PinholeBrowserIndexPage',
 			'^(tags)$'                        => 'PinholeBrowserTagPage',
@@ -83,6 +84,7 @@ class PinholePageFactory extends SitePageFactory
 			'^(tags)/(popular)$'              => 'PinholeBrowserTagPage',
 			'^(tags)/(cloud)$'                => 'PinholeBrowserTagPage',
 			'^(rss)$'                         => 'PinholeRssPage',
+			'^(rss)/([\w\d*]+)$'              => 'PinholeRssPage',
 			'^(loadphoto)/(.+)/(.+).jpg$'     => 'PinholePhotoLoaderPage',
 			'^robots.txt$'                    => 'PinholeRobotsPage',
 		);

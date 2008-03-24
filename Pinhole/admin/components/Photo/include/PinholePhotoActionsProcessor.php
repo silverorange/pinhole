@@ -86,6 +86,7 @@ class PinholePhotoActionsProcessor
 				foreach ($tag_list as $tag)
 					$tag_shortnames[] = $tag->name;
 
+				define('SWATDB_DEBUG', true);
 				foreach ($this->getPhotos($view) as $photo)
 					$photo->addTagsByName($tag_shortnames);
 
@@ -129,8 +130,13 @@ class PinholePhotoActionsProcessor
 			SwatDB::equalityOperator($instance_id),
 			$app->db->quote($instance_id, 'integer'));
 
-		return SwatDB::query($app->db, $sql,
+		$photos = SwatDB::query($app->db, $sql,
 			SwatDBClassMap::get('PinholePhotoWrapper'));
+
+		foreach ($photos as $photo)
+			$photo->setInstance($app->instance->getInstance());
+
+		return $photos;
 	}
 
 	// }}}

@@ -86,7 +86,6 @@ class PinholePhotoActionsProcessor
 				foreach ($tag_list as $tag)
 					$tag_shortnames[] = $tag->name;
 
-				define('SWATDB_DEBUG', true);
 				foreach ($this->getPhotos($view) as $photo)
 					$photo->addTagsByName($tag_shortnames);
 

@@ -40,11 +40,9 @@ class PinholeRssPage extends SitePage
 
 		parent::__construct($app, $layout);
 
-		if ($dimension_shortname !== null)
-			$this->display_dimension = $dimension_shortname;
-
 		$tags = SiteApplication::initVar('tags');
 		$this->createTagList($tags);
+		$this->dimension = $this->initDimension($dimension_shortname);
 	}
 
 	// }}}
@@ -125,7 +123,7 @@ class PinholeRssPage extends SitePage
 
 			$uri = sprintf('%sphoto/%s',
 				$this->app->getBaseHref(),
-				$photo->id.'/'.$this->display_dimension);
+				$photo->id.'/'.$this->dimension->shortname);
 
 			if (count($this->tag_list) > 0)
 				$uri.= '?'.$this->tag_list->__toString();
@@ -140,7 +138,7 @@ class PinholeRssPage extends SitePage
 			printf('<guid>%stag/photo/%s/%s</guid>',
 				$this->app->getBaseHref(),
 				$photo->id,
-				$this->display_dimension);
+				$this->dimension->shortname);
 
 			$date = ($photo->photo_date === null) ? new SwatDate() :
 				$photo->photo_date;
@@ -165,8 +163,8 @@ class PinholeRssPage extends SitePage
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->open();
 
-		if ($photo->hasDimension($this->display_dimension)) {
-			$img = $photo->getImgTag($this->display_dimension);
+		if ($photo->hasDimension($this->dimension->shortname)) {
+			$img = $photo->getImgTag($this->dimension->shortname);
 			$img->src = $this->app->getBaseHref().$img->src;
 			$img->display();
 		}

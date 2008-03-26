@@ -1,4 +1,5 @@
-alter table ImageDimension add publicly_accessible boolean default false;
+alter table ImageDimension add publicly_accessible boolean not null default false;
+alter table ImageDimension add selectable boolean not null default true;
 
 /*
 INSERT INTO PinholeDimension (id, shortname, title, max_width, max_height, crop_to_max, strip, publicly_accessible, instance)

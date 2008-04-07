@@ -20,7 +20,7 @@ PinholePhotoUploadManager.setProcessorClient = function(uri)
 	PinholePhotoUploadManager.processor_client = new XML_RPC_Client(uri);
 }
 
-PinholePhotoUploadManager.setProcessorClient('UploadProcessorServer');
+PinholePhotoUploadManager.setProcessorClient('Photo/UploadProcessorServer');
 
 PinholePhotoUploadManager.setStatusClient = function(uri)
 {

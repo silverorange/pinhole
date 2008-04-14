@@ -2,7 +2,7 @@
 
 require_once 'PEAR/PackageFileManager2.php';
 
-$version = '1.1.7';
+$version = '1.1.8';
 $notes = <<<EOT
 see ChangeLog
 EOT;
@@ -52,13 +52,13 @@ $package->addReplacement('Pinhole/Pinhole.php', 'pear-config', '@DATA-DIR@', 'da
 
 $package->setPhpDep('5.1.5');
 $package->setPearinstallerDep('1.4.0');
-$package->addPackageDepWithChannel('required', 'Swat', 'pear.silverorange.com', '1.3.4');
-$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.2.15');
-$package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com', '1.3.1');
-$package->addPackageDepWithChannel('required', 'Date', 'pear.silverorange.com', '1.4.7so1');
+$package->addPackageDepWithChannel('required', 'Swat', 'pear.silverorange.com', '1.3.15');
+$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.2.27');
+$package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com', '1.3.9');
 $package->addPackageDepWithChannel('required', 'MDB2', 'pear.php.net', '2.2.2');
-$package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.5');
+$package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.6');
 $package->addPackageDepWithChannel('required', 'NateGoSearch', 'pear.silverorange.com', '1.0.16');
+$package->addExtensionDep('required', 'imagick', '2.0.0');
 $package->generateContents();
 
 if (isset($_GET['make']) || (isset($_SERVER['argv']) && @$_SERVER['argv'][1] == 'make')) {

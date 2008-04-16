@@ -38,11 +38,11 @@ class PinholePhotoIndex extends AdminSearch
 
 		$this->ui->loadFromXML($this->ui_xml);
 
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		// setup tag entry control
 		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->instance->getInstance());
+			$this->app->getInstance());
 
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s order by title',
@@ -100,7 +100,7 @@ class PinholePhotoIndex extends AdminSearch
 	protected function getWhereClause()
 	{
 		if ($this->where_clause === null) {
-			$instance_id = $this->app->instance->getId();
+			$instance_id = $this->app->getInstanceId();
 
 			$where = sprintf('PinholePhoto.status != %s
 				and ImageSet.instance %s %s',

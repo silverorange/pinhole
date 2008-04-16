@@ -31,11 +31,11 @@ class PinholePhotoPending extends AdminIndex
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
 
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		// setup tag entry control
 		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->instance->getInstance());
+			$this->app->getInstance());
 
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s order by title',
@@ -125,7 +125,7 @@ class PinholePhotoPending extends AdminIndex
 
 	protected function getWhereClause()
 	{
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		return sprintf('PinholePhoto.status = %s
 			and ImageSet.instance %s %s',

@@ -46,7 +46,7 @@ abstract class PinholeBrowserPage extends SitePage
 	protected function createTagList($tags)
 	{
 		$this->tag_list = new PinholeTagList($this->app->db,
-			$this->app->instance->getInstance(), $tags);
+			$this->app->getInstance(), $tags);
 	}
 
 	// }}}

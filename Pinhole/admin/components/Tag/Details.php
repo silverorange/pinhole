@@ -53,7 +53,7 @@ class PinholeTagDetails extends AdminPage
 		$class_name = SwatDBClassMap::get('PinholeTag');
 		$this->tag = new $class_name();
 		$this->tag->setDatabase($this->app->db);
-		$this->tag->setInstance($this->app->instance->getInstance());
+		$this->tag->setInstance($this->app->getInstance());
 
 		if (!$this->tag->load($this->id))
 			throw new AdminNotFoundException(

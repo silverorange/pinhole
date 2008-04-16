@@ -108,7 +108,7 @@ class PinholeMetaDataIndex extends AdminIndex
 			where PinholeMetaData.instance %s %s
 			order by %s';
 
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($instance_id),

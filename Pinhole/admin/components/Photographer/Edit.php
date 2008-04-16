@@ -43,7 +43,7 @@ class PinholePhotographerEdit extends AdminDBEdit
 		$class_name = SwatDBClassMap::get('PinholePhotographer');
 		$this->photographer = new $class_name();
 		$this->photographer->setDatabase($this->app->db);
-		$this->photographer->instance = $this->app->instance->getInstance();
+		$this->photographer->instance = $this->app->getInstance();
 
 		if ($this->id !== null) {
 			if (!$this->photographer->load($this->id))

@@ -41,17 +41,23 @@ class PinholePhotoLoaderPage extends SitePage
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
 			where PinholePhoto.filename = %s and ImageSet.instance %s %s',
 			$this->app->db->quote($filename, 'text'),
-			SwatDB::equalityOperator($this->app->instance->getId()),
-			$this->app->db->quote($this->app->instance->getId(), 'integer'));
+			SwatDB::equalityOperator($this->app->getInstanceId()),
+			$this->app->db->quote($this->app->getInstanceId(), 'integer'));
 
 		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
 		$photos = SwatDB::query($this->app->db, $sql, $wrapper_class);
 
-		// TODO: make this exception work better with null instances
-		if (count($photos) == 0)
-			throw new SiteNotFoundException(sprintf("Photo with ".
-				"filename '%s' does not exist in the instance '%s'.",
-				$filename, $this->app->instance-getInstance()->shortname));
+		if (count($photos) == 0) {
+			$instance = $this->app->getInstance();
+			if ($instance === null)
+				$message = sprintf("Photo with filename '%s' does not exist.",
+					$filename);
+			else
+				$message = sprintf("Photo with filename '%s' does not exist ".
+					"in the instance '%s'.", $filename, $instance->shortname);
+
+			throw new SiteNotFoundException($message);
+		}
 
 		$photo = $photos->getFirst();
 		$photo->setFileBase('../photos');

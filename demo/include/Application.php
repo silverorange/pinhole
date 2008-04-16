@@ -2,7 +2,6 @@
 
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/layouts/PinholeLayout.php';
-require_once 'Site/SiteMultipleInstanceModule.php';
 require_once 'Site/SiteWebApplication.php';
 require_once 'Site/SiteConfigModule.php';
 require_once 'Site/SiteDatabaseModule.php';
@@ -88,7 +87,6 @@ class Application extends SiteWebApplication
 		return array(
 			'config'   => 'SiteConfigModule',
 			'database' => 'SiteDatabaseModule',
-			'instance' => 'SiteMultipleInstanceModule',
 		);
 	}
 

@@ -65,7 +65,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->photo->setDatabase($this->app->db);
 		if ($this->photo->load($photo_id)) {
 			// ensure we are loading a photo in the current site instance
-			$current_instance_id = $this->app->instance->getId();
+			$current_instance_id = $this->app->getInstanceId();
 
 			if ($current_instance_id === null)
 				$photo_instance_id = $this->photo->image_set->instance;

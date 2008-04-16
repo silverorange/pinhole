@@ -49,7 +49,7 @@ class PinholeTagEdit extends AdminDBEdit
 		$class_name = SwatDBClassMap::get('PinholeTagDataObject');
 		$this->tag = new $class_name();
 		$this->tag->setDatabase($this->app->db);
-		$this->tag->instance = $this->app->instance->getInstance();
+		$this->tag->instance = $this->app->getInstance();
 
 		if ($this->id !== null && !$this->tag->load($this->id)) {
 			throw new AdminNotFoundException(
@@ -89,7 +89,7 @@ class PinholeTagEdit extends AdminDBEdit
 		$sql = 'select name from PinholeTag
 			where name = %s and id %s %s and instance %s %s';
 
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$sql = sprintf($sql,
 			$this->app->db->quote($name, 'text'),

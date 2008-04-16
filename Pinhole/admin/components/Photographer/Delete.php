@@ -19,7 +19,7 @@ class PinholePhotographerDelete extends AdminDBDelete
 	{
 		parent::processDBData();
 
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$sql = 'delete from PinholePhotographer where id in (%s)
 			and instance %s %s';
@@ -50,7 +50,7 @@ class PinholePhotographerDelete extends AdminDBDelete
 		parent::buildInternal();
 
 		$item_list = $this->getItemList('integer');
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$where_clause = sprintf('id in (%s) and instance %s %s',
 			$item_list,

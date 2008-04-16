@@ -36,7 +36,7 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 			$class_name = SwatDBClassMap::get('PinholePhoto');
 			$photo = new $class_name();
 			$photo->setDatabase($this->app->db);
-			$photo->setInstance($this->app->instance->getInstance());
+			$photo->setInstance($this->app->getInstance());
 			$photo->setFileBase('../../photos');
 			$photo->original_filename = $original_filename;
 			$photo->process(sys_get_temp_dir().'/'.$filename);

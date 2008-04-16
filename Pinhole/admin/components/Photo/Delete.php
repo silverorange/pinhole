@@ -34,7 +34,7 @@ class PinholePhotoDelete extends AdminDBDelete
 	protected function getPhotos()
 	{
 		$item_list = $this->getItemList('integer');
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$sql = sprintf('select PinholePhoto.* from PinholePhoto
 				inner join ImageSet on PinholePhoto.image_set = ImageSet.id
@@ -61,7 +61,7 @@ class PinholePhotoDelete extends AdminDBDelete
 
 		foreach ($photos as $photo) {
 			$photo->setFileBase('../../photos');
-			$photo->setInstance($this->app->instance->getInstance());
+			$photo->setInstance($this->app->getInstance());
 			$photo->delete();
 		}
 

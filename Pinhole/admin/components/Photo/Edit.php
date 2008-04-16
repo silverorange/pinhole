@@ -67,9 +67,9 @@ class PinholePhotoEdit extends AdminDBEdit
 		}
 
 		// setup tag entry control
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->instance->getInstance());
+			$this->app->getInstance());
 
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s
@@ -113,7 +113,7 @@ class PinholePhotoEdit extends AdminDBEdit
 			throw new AdminNoAccessException(
 				Pinhole::_('A Photo id is required.'));
 		} else {
-			$instance_id = $this->app->instance->getId();
+			$instance_id = $this->app->getInstanceId();
 
 			if (!$this->photo->load($this->id))
 				throw new AdminNotFoundException(
@@ -197,7 +197,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function getPendingPhotos()
 	{
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title
 			from PinholePhoto
@@ -373,7 +373,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->ui->setValues(get_object_vars($this->photo));
 
 		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->instance->getInstance());
+			$this->app->getInstance());
 
 		foreach ($this->photo->tags as $tag)
 			$tag_list->add($tag);

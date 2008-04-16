@@ -119,7 +119,7 @@ class PinholePhotoActionsProcessor
 			$ids[] = $id;
 
 		$app = $this->page->app;
-		$instance_id = $app->instance->getId();
+		$instance_id = $app->getInstanceId();
 
 		$sql = sprintf('select PinholePhoto.* from PinholePhoto
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
@@ -133,7 +133,7 @@ class PinholePhotoActionsProcessor
 			SwatDBClassMap::get('PinholePhotoWrapper'));
 
 		foreach ($photos as $photo)
-			$photo->setInstance($app->instance->getInstance());
+			$photo->setInstance($app->getInstance());
 
 		return $photos;
 	}

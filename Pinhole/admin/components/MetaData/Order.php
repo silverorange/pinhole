@@ -57,7 +57,7 @@ class PinholeMetaDataOrder extends AdminDBOrder
 
 	protected function loadData()
 	{
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$where_clause = sprintf('show = %s and instance %s %s',
 			$this->app->db->quote($this->parent, 'boolean'),

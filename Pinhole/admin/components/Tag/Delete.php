@@ -22,7 +22,7 @@ class PinholeTagDelete extends AdminDBDelete
 
 		$sql = 'delete from PinholeTag where id in (%s) and instance %s %s';
 		$item_list = $this->getItemList('integer');
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 		$sql = sprintf($sql, $item_list,
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
@@ -46,7 +46,7 @@ class PinholeTagDelete extends AdminDBDelete
 		parent::buildInternal();
 
 		$item_list = $this->getItemList('integer');
-		$instance_id = $this->app->instance->getId();
+		$instance_id = $this->app->getInstanceId();
 
 		$where_clause = sprintf('id in (%s) and instance %s %s',
 			$item_list,

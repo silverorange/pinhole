@@ -179,7 +179,7 @@ class PinholePhoto extends SiteImage
 	{
 		$title = $this->title;
 
-		if ($this->title === null && $show_file_name)
+		if ($this->title === null && $show_filename)
 			$title = $this->original_filename;
 
 		return $title;

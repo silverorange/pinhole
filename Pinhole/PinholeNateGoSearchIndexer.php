@@ -1,8 +1,10 @@
 <?php
 
+require_once 'Swat/SwatDetailsStore.php';
 require_once 'Site/SiteNateGoSearchIndexer.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeSearchPage.php';
+require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**
  * Pinhole search indexer application for NateGoSearch
@@ -181,25 +183,15 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		$photo_indexer->setSpellChecker($spell_checker);
 
 		$photo_indexer->addTerm(new NateGoSearchTerm('title', 5));
+		$photo_indexer->addTerm(new NateGoSearchTerm('tags', 2));
 		$photo_indexer->addTerm(new NateGoSearchTerm('description'));
 		$photo_indexer->setMaximumWordLength(32);
 		$photo_indexer->addUnindexedWords(
 			NateGoSearchIndexer::getDefaultUnindexedWords());
 
-		// the tag indexer appends, it gets called after the photo indexer
-		$tag_indexer = new NateGoSearchIndexer('tag', $this->db, false, true);
-
-		$tag_indexer->addTerm(new NateGoSearchTerm('tag_title', 3));
-		$tag_indexer->addTerm(new NateGoSearchTerm('tag_name'));
-		$tag_indexer->addUnindexedWords(
-			NateGoSearchIndexer::getDefaultUnindexedWords());
-
 		$type = NateGoSearch::getDocumentType($this->db, 'photo');
 
-		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title,
-				PinholePhoto.description,
-				PinholeTag.title as tag_title,
-				PinholeTag.name as tag_name
+		$sql = sprintf('select PinholePhoto.*
 			from PinholePhoto
 				left outer join PinholePhotoTagBinding on
 					PinholePhotoTagBinding.photo = PinholePhoto.id
@@ -214,37 +206,42 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		$this->output(Pinhole::_('Indexing photos ... ').'   ',
 			self::VERBOSITY_ALL);
 
-		$photos = SwatDB::query($this->db, $sql);
+		$photos = SwatDB::query($this->db, $sql,
+			SwatDBClassMap::get('PinholePhotoWrapper'));
+
 		$total = count($photos);
 		$count = 0;
 		$current_photo_id = null;
 		foreach ($photos as $photo) {
+			$ds = new SwatDetailsStore($photo);
+			$ds->title = $photo->getTitle();
+
+			$tags = '';
+			foreach ($photo->tags as $tag)
+				$tags.= ' '.$tag->title.' '.$tag->name;
+
+			$ds->tags = $tags;
 
 			if ($count % 10 == 0) {
 				$photo_indexer->commit();
-				$tag_indexer->commit();
 				$this->output(str_repeat(chr(8), 3), self::VERBOSITY_ALL);
 				$this->output(sprintf('%2d%%', ($count / $total) * 100),
 					self::VERBOSITY_ALL);
 			}
 
-			$document = new NateGoSearchDocument($photo, 'id');
+			$document = new NateGoSearchDocument($ds, 'id');
 
-			// only index photo fields once
-			if ($photo->id !== $current_photo_id) {
-				$photo_indexer->index($document);
-				$current_photo_id = $photo->id;
-			}
-
-			$tag_indexer->index($document);
-
+			$photo_indexer->index($document);
+			$current_photo_id = $photo->id;
 			$count++;
 		}
 
 		$this->output(str_repeat(chr(8), 3).Pinhole::_('done')."\n",
 			self::VERBOSITY_ALL);
 
+		define('SWATDB_DEBUG', true);
 		$photo_indexer->commit();
+		exit;
 		$tag_indexer->commit();
 		unset($photo_indexer);
 		unset($tag_indexer);

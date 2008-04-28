@@ -239,7 +239,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$message = new SwatMessage(sprintf(
 			Pinhole::_('“%s” has been saved.'),
-			$this->photo->getTitle()));
+			$this->photo->getTitle(true)));
 
 		$this->app->messages->add($message);
 	}

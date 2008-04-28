@@ -169,14 +169,17 @@ class PinholePhoto extends SiteImage
 	/**
 	 * Gets the title of this photo
 	 *
+	 * @param boolean $show_filename Whether to show the photo's filename if
+	 *                                no title is set.
+	 *
 	 * @return string the title of this photo. If this photo has no title then
 	 *                 the original filename is returned.
 	 */
-	public function getTitle()
+	public function getTitle($show_filename = false)
 	{
 		$title = $this->title;
 
-		if ($this->title === null)
+		if ($this->title === null && $show_file_name)
 			$title = $this->original_filename;
 
 		return $title;

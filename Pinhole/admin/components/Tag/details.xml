@@ -3,6 +3,7 @@
 <swatml>
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame" id="details_frame">
+		<property name="title" translatable="yes">Tag</property>
 		<widget class="SwatToolbar" id="details_toolbar">
 			<widget class="SwatToolLink" id="edit_tool_link">
 				<property name="title" translatable="yes">Edit Tag</property>
@@ -37,6 +38,52 @@
 					<property name="value" type="data">photo_count</property>
 				</object>
 			</object>
+		</widget>
+	</widget>
+	<widget class="SwatFrame" id="photo_frame">
+		<property name="title" translatable="yes">Photos</property>
+		<widget class="SwatToolbar" id="photo_toolbar">
+			<widget class="SwatToolLink" id="order_tool_link">
+				<property name="title" translatable="yes">Change Order</property>
+				<property name="link">Tag/PhotoOrder?id=%s</property>
+			</widget>
+		</widget>
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTileView" id="index_view">
+				<object class="SwatTile">
+					<object class="SiteImageCellRenderer">
+						<property name="image" type="data">photo</property>
+						<property name="image_dimension">thumb</property>
+						<property name="link">Photo/Edit?id=%s</property>
+						<property name="link_value" type="data">photo.id</property>
+						<property name="path_prefix">../</property>
+						<property name="classes[]" type="data">class_name</property>
+					</object>
+					<object class="SwatCheckboxCellRenderer" id="items">
+						<property name="value" type="data">photo.id</property>
+						<property name="title" translatable="yes">select photo</property>
+					</object>
+				</object>
+			</widget>
+			<widget class="AdminPagination" id="pager">
+				<property name="link">Photo</property>
+				<property name="page_size" type="integer">100</property>
+			</widget>
+			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="delete">
+					<property name="title" translatable="yes">delete…</property>
+				</widget>
+				<widget class="SwatActionItem" id="tags_action">
+					<property name="title" translatable="yes">add tags…</property>
+					<widget class="PinholePhotoTagEntry" id="tags" />
+				</widget>
+				<widget class="SwatActionItem" id="status_action">
+					<property name="title" translatable="yes">change status…</property>
+					<widget class="SwatFlydown" id="status_flydown">
+						<property name="show_blank" type="boolean">false</property>
+					</widget>
+				</widget>
+			</widget>
 		</widget>
 	</widget>
 </swatml>

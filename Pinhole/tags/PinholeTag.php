@@ -61,6 +61,13 @@ class PinholeTag extends PinholeAbstractTag
 	public $event;
 
 	/**
+	 * Order manually
+	 *
+	 * @var boolean
+	 */
+	public $order_manually;
+
+	/**
 	 * Photo count
 	 *
 	 * @var integer
@@ -96,12 +103,13 @@ class PinholeTag extends PinholeAbstractTag
 			$this->data_object = new PinholeTagDataObject();
 			$this->createdate  = new SwatDate();
 		} else {
-			$this->data_object = $data_object;
-			$this->id          = $this->data_object->id;
-			$this->name        = $this->data_object->name;
-			$this->title       = $this->data_object->title;
-			$this->event       = $this->data_object->event;
-			$this->createdate  = $this->data_object->createdate;
+			$this->data_object    = $data_object;
+			$this->id             = $this->data_object->id;
+			$this->name           = $this->data_object->name;
+			$this->title          = $this->data_object->title;
+			$this->event          = $this->data_object->event;
+			$this->order_manually = $this->data_object->order_manually;
+			$this->createdate     = $this->data_object->createdate;
 			if ($this->data_object->instance !== null)
 				$this->setInstance($this->data_object->instance);
 		}
@@ -177,19 +185,21 @@ class PinholeTag extends PinholeAbstractTag
 	}
 
 	// }}}
-	// {{{ public function getWhereClause()
+	// {{{ public function getJoinClauses()
 
 	/**
-	 * Gets the SQL where clause for this tag
+	 * Gets the SQL join clause for this tag
 	 *
-	 * @return string the SQL where clause for this tag.
+	 * @return string the SQL join clause for this tag.
 	 */
-	public function getWhereClause()
+	public function getJoinClauses()
 	{
-		return sprintf('PinholePhoto.id in
-			(select PinholePhotoTagBinding.photo from PinholePhotoTagBinding
-			where PinholePhotoTagBinding.tag = %s)',
-			$this->db->quote($this->id, 'integer'));
+		return array(
+			sprintf('inner join PinholePhotoTagBinding as %1$s
+				on %1$s.photo = PinholePhoto.id
+				and %1$s.tag = %2$s',
+				'Tag'.$this->id,
+				$this->db->quote($this->id, 'integer')));
 	}
 
 	// }}}
@@ -338,10 +348,12 @@ class PinholeTag extends PinholeAbstractTag
 		$loaded = false;
 
 		if ($this->data_object->load($id)) {
-			$this->id         = $this->data_object->id;
-			$this->name       = $this->data_object->name;
-			$this->title      = $this->data_object->title;
-			$this->createdate = $this->data_object->createdate;
+			$this->id             = $this->data_object->id;
+			$this->name           = $this->data_object->name;
+			$this->title          = $this->data_object->title;
+			$this->event          = $this->data_object->event;
+			$this->order_manually = $this->data_object->order_manually;
+			$this->createdate     = $this->data_object->createdate;
 			$loaded = true;
 		}
 

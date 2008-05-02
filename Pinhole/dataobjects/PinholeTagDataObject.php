@@ -55,6 +55,13 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	 */
 	public $event;
 
+	/**
+	 * Whether this tag's photos can be ordered manually
+	 *
+	 * @var boolean
+	 */
+	public $order_manually;
+
 	// }}}
 	// {{{ public read-only properties
 

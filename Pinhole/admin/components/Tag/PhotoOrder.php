@@ -75,7 +75,8 @@ class PinholeTagPhotoOrder extends AdminDBOrder
 		$frame->title = Admin::_('Order Photos');
 
 		$form = $this->ui->getWidget('order_form');
-		$form->action = 'Tag/PhotoOrder?id='.$this->tag->id;
+		$form->action = sprintf('%s/PhotoOrder?id=%s',
+			$this->getComponentName(), $this->tag->id);
 	}
 
 	// }}}
@@ -93,7 +94,7 @@ class PinholeTagPhotoOrder extends AdminDBOrder
 		$class_name = SwatDBClassMap::get('PinholeImageSet');
 		$set = new $class_name();
 		$set->setDatabase($this->app->db);
-		$set->instance = $this->app->instance->getInstance();
+		$set->instance = $this->app->getInstance();
 		$set->loadByShortname('photos');
 		$thumb = $set->getDimensionByShortname('thumb');
 

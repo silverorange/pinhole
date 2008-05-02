@@ -123,9 +123,6 @@ class PinholeTagDetails extends AdminIndex
 		$details_frame->title = Pinhole::_('Tag');
 		$details_frame->subtitle = $this->tag->title;
 
-		$this->ui->getWidget('order_tool_link')->visible =
-			($this->tag->order_manually);
-
 		$this->buildToolbar();
 		$this->buildNavBar();
 	}

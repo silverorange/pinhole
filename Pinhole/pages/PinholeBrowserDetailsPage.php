@@ -91,8 +91,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function initDimension($shortname = null)
 	{
 		if ($shortname === null) {
-			if (isset($this->app->cookie->shortname))
-				$shortname = $this->app->cookie->shortname;
+			if (isset($this->app->cookie->display_dimension))
+				$shortname = $this->app->cookie->display_dimension;
 			else
 				$shortname = $this->default_dimension;
 		}

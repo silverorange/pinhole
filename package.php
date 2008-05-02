@@ -53,7 +53,7 @@ $package->addReplacement('Pinhole/Pinhole.php', 'pear-config', '@DATA-DIR@', 'da
 $package->setPhpDep('5.1.5');
 $package->setPearinstallerDep('1.4.0');
 $package->addPackageDepWithChannel('required', 'Swat', 'pear.silverorange.com', '1.3.15');
-$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.2.28');
+$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.2.30');
 $package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com', '1.3.9');
 $package->addPackageDepWithChannel('required', 'MDB2', 'pear.php.net', '2.2.2');
 $package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.6');

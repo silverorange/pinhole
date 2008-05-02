@@ -50,6 +50,18 @@ class PinholeTagPhotoOrder extends AdminDBOrder
 	// }}}
 
 	// process phase
+	// {{{ protected function saveData()
+
+	protected function saveData()
+	{
+		$options_list = $this->ui->getWidget('options');
+		$this->tag->order_manually = ($options_list->value == 'custom');
+		$this->tag->save();
+
+		parent::saveData();
+	}
+
+	// }}}
 	// {{{ protected function saveIndex()
 
 	protected function saveIndex($id, $index)

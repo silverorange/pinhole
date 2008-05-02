@@ -24,11 +24,6 @@
 				<property name="note" translatable="yes">If a tag is an event, its photos will be listed chronologically on its tag page.</property>
 				<widget class="SwatCheckbox" id="event" />
 			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Manually order photos?</property>
-				<property name="note" translatable="yes">To manually order photos, use the “change order” tool on the tag details page.</property>
-				<widget class="SwatCheckbox" id="order_manually" />
-			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button" />
 			</widget>

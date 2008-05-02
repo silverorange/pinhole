@@ -147,6 +147,9 @@ class PinholeTagDetails extends AdminIndex
 		$toolbar = $this->ui->getWidget('photo_toolbar');
 		$toolbar->setToolLinkValues(array($this->id));
 
+		$this->ui->getWidget('order_tool_link')->link =
+			$this->getComponentName().'/PhotoOrder?id=%s';
+
 		/*
 		$this->ui->getWidget('view_in_gallery')->link =
 			'photos/'.$this->tag->name;

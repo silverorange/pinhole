@@ -137,6 +137,21 @@ class PinholeTagPhotoOrder extends AdminDBOrder
 	}
 
 	// }}}
+	// {{{ protected function buildNavBar()
+
+	protected function buildNavBar()
+	{
+		$this->navbar->popEntry();
+		$this->navbar->addEntry(new SwatNavBarEntry($this->getComponentTitle(),
+			$this->getComponentName()));
+
+		$this->navbar->addEntry(new SwatNavBarEntry($this->tag->title,
+			$this->getComponentName().'/Details?id='.$this->tag->id));
+
+		parent::buildNavBar();
+	}
+
+	// }}}
 
 	// finalize phase
 	// {{{ public function finalize()

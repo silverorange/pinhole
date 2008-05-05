@@ -2,3 +2,7 @@
 	display: block;
 	float: left;
 }
+
+.swat-change-order-item img {
+	border: 3px solid #ccc;
+}

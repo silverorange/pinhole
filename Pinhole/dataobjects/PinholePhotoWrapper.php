@@ -40,6 +40,14 @@ class PinholePhotoWrapper extends SiteImageWrapper
 	}
 
 	// }}}
+	// {{{ protected function getImageDimensionBindingWrapperClassName()
+
+	protected function getImageDimensionBindingWrapperClassName()
+	{
+		return SwatDBClassMap::get('PinholePhotoDimensionBindingWrapper');
+	}
+
+	// }}}
 }
 
 ?>

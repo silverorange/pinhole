@@ -2,6 +2,7 @@
 
 require_once 'Site/dataobjects/SiteImageSet.php';
 require_once 'Site/dataobjects/SiteInstance.php';
+require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 
 /**
  * A dataobject class for image sets with instance
@@ -57,6 +58,14 @@ class PinholeImageSet extends SiteImageSet
 
 		$this->registerInternalProperty('instance',
 			SwatDBClassMap::get('SiteInstance'));
+	}
+
+	// }}}
+	// {{{ protected function getImageDimensionClassName()
+
+	protected function getImageDimensionWrapperClassName()
+	{
+		return SwatDBClassMap::get('PinholeImageDimensionWrapper');
 	}
 
 	// }}}

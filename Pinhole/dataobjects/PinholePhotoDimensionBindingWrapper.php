@@ -15,14 +15,11 @@ require_once 'PinholePhotoDimensionBinding.php';
 class PinholePhotoDimensionBindingWrapper extends
 	SiteImageDimensionBindingWrapper
 {
-	// {{{ protected function init()
+	// {{{ protected function getImageDimensionBindingClassName()
 
-	protected function init()
+	protected function getImageDimensionBindingClassName()
 	{
-		parent::init();
-
-		$this->row_wrapper_class =
-			SwatDBClassMap::get('PinholePhotoDimensionBinding');
+		return SwatDBClassMap::get('PinholePhotoDimensionBinding');
 	}
 
 	// }}}

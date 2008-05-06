@@ -109,6 +109,26 @@ class PinholePhoto extends SiteImage
 	private $instance;
 
 	// }}}
+
+	// dataobject methods
+	// {{{ protected function getImageDimensionBindingClassName()
+
+	protected function getImageDimensionBindingClassName()
+	{
+		return SwatDBClassMap::get('PinholePhotoDimensionBinding');
+	}
+
+	// }}}
+	// {{{ protected function getImageDimensionBindingWrapperClassName()
+
+	protected function getImageDimensionBindingWrapperClassName()
+	{
+		return SwatDBClassMap::get('PinholePhotoDimensionBindingWrapper');
+	}
+
+	// }}}
+
+	// image methods
 	// {{{ public function publish()
 
 	/**

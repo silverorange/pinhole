@@ -47,6 +47,11 @@ class PinholePhotoEdit extends AdminDBEdit
 	 */
 	protected $pending_photo_ids = array();
 
+	/**
+	 * @var PinholeImageDimensionWrapper
+	 */
+	protected $dimensions;
+
 	// }}}
 
 	// init phase
@@ -98,6 +103,14 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
 		$this->ui->getWidget('tags')->setDatabase($this->app->db);
+
+		$replicator = $this->ui->getWidget('site_link_field');
+		$replicators = array();
+		$dimensions = $this->getDimensions();
+		foreach ($dimensions as $dimension)
+			$replicators[$dimension->id] = $dimension->title;
+
+		$replicator->replicators = $replicators;
 	}
 
 	// }}}
@@ -210,6 +223,29 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
 		return SwatDB::query($this->app->db, $sql, $wrapper_class);
+	}
+
+	// }}}
+	// {{{ protected function getDimensions()
+
+	protected function getDimensions()
+	{
+		if ($this->dimensions === null) {
+			$sql = sprintf('select ImageDimension.*
+					from PinholePhotoDimensionBinding
+					inner join ImageDimension on
+						PinholePhotoDimensionBinding.dimension =
+							ImageDimension.id
+					where PinholePhotoDimensionBinding.photo = %s
+					order by coalesce(ImageDimension.max_width,
+						ImageDimension.max_height) asc',
+				$this->app->db->quote($this->id, 'integer'));
+
+			$wrapper = SwatDBClassMap::get('PinholeImageDimensionWrapper');
+			$this->dimensions = SwatDB::query($this->app->db, $sql, $wrapper);
+		}
+
+		return $this->dimensions;
 	}
 
 	// }}}
@@ -355,6 +391,22 @@ class PinholePhotoEdit extends AdminDBEdit
 					$this->upcomingPendingPhotoCount());
 		}
 
+		$replicator = $this->ui->getWidget('site_link_field');
+		foreach ($this->getDimensions() as $dimension) {
+			if ($dimension->shortname == 'original') {
+				$image = $this->photo->getTitle(true);
+				$link = $this->photo->getUri('original');
+			} else {
+				$image = $this->photo->getImgTag($dimension->shortname);
+				$link = 'photo/'.$this->photo->id;
+			}
+
+			$code = sprintf('<a href="%s%s">%s</a>',
+				$this->app->getFrontendBaseHref(), $link, $image);
+
+			$replicator->getWidget('site_link_code', $dimension->id)->value =
+				$code;
+		}
 	}
 
 	// }}}

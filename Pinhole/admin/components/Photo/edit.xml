@@ -18,6 +18,15 @@
 		<widget class="SwatMessageDisplay" id="message_display" />
 		<widget class="SwatForm" id="edit_form">
 			<widget class="SwatImagePreviewDisplay" id="thumbnail" />
+			<widget class="SwatDisclosure" id="site_links">
+				<property name="title" translatable="yes">Embed Photo</property>
+				<property name="open" type="boolean">false</property>
+				<widget class="SwatReplicableFormField" id="site_link_field">
+					<widget class="SwatEntry" id="site_link_code">
+						<property name="classes[]">site-link-entry</property>
+					</widget>
+				</widget>
+			</widget>
 			<widget class="SwatFormField">
 				<property name="title" translatable="yes">Title</property>
 				<widget class="SwatEntry" id="title" />

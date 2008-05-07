@@ -97,7 +97,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$shortname = $this->default_dimension;
 		}
 
-		$class_name = SwatDBClassMap::get('SiteImageDimension');
+		$class_name = SwatDBClassMap::get('PinholeImageDimension');
 		$display_dimension = new $class_name();
 		$display_dimension->setDatabase($this->app->db);
 		$display_dimension->loadByShortname('photos', $shortname);

@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Date/Calc.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Site/dataobjects/SiteImage.php';
@@ -645,7 +646,7 @@ class PinholePhoto extends SiteImage
 		list($year, $month, $day, $hour, $minute, $second) =
 			sscanf($date, "%d:%d:%d %d:%d:%d");
 
-		if ($second === null)
+		if ($second === null || !Date_Calc::isValidDate($day, $month, $year))
 			return null;
 
 		$date = new SwatDate();

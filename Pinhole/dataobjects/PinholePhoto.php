@@ -646,16 +646,14 @@ class PinholePhoto extends SiteImage
 		list($year, $month, $day, $hour, $minute, $second) =
 			sscanf($date, "%d:%d:%d %d:%d:%d");
 
-		if ($second === null || !Date_Calc::isValidDate($day, $month, $year))
+		$date = new SwatDate();
+		$error = $date->setDayMonthYear($day, $month, $year);
+		if (PEAR::isError($error))
 			return null;
 
-		$date = new SwatDate();
-		$date->setYear($year);
-		$date->setMonth($month);
-		$date->setDay($day);
-		$date->setHour($hour);
-		$date->setMinute($minute);
-		$date->setSecond($second);
+		$error = $date->setHourMinuteSecond($hour, $minute, $second);
+		if (PEAR::isError($error))
+			return null;
 
 		return $date;
 	}

@@ -613,7 +613,7 @@ class PinholePhoto extends SiteImage
 			$title = substr($data->title, 0, 255);
 
 			if (mb_check_encoding($data->value, 'UTF-8')) {
-				$value = $data_value;
+				$value = $data->value;
 			} else {
 				// assume ISO-8859-1
 				$value = iconv('ISO-8859-1', 'UTF-8', $value);

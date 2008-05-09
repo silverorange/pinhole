@@ -24,7 +24,7 @@
 				</widget>
 				<widget class="SwatFormField">
 					<property name="title">Time Zone for Camera</property>
-					<property name="note">This is the time zone the camera when it took this photo/set. Often the same as above, unless the camera was set to the wrong time zone.</property>
+					<property name="note">This is the time zone of the camera when it took this photo/set. Often the same as above, unless the camera was set to the wrong time zone.</property>
 					<widget class="SwatTimeZoneEntry" id="camera_time_zone" />
 				</widget>
 			</widget>

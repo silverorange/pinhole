@@ -611,7 +611,15 @@ class PinholePhoto extends SiteImage
 		foreach ($meta_data as $data) {
 			$shortname = substr($data->shortname, 0, 255);
 			$title = substr($data->title, 0, 255);
-			$value = substr($data->value, 0, 255);
+
+			if (mb_check_encoding($data->value, 'UTF-8')) {
+				$value = $data_value;
+			} else {
+				// assume ISO-8859-1
+				$value = iconv('ISO-8859-1', 'UTF-8', $value);
+			}
+
+			$value = substr($value, 0, 255);
 
 			if (!in_array($shortname, $existing_meta_data)) {
 				$meta_data_id = SwatDB::insertRow($this->db,

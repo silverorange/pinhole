@@ -616,7 +616,7 @@ class PinholePhoto extends SiteImage
 				$value = $data->value;
 			} else {
 				// assume ISO-8859-1
-				$value = iconv('ISO-8859-1', 'UTF-8', $value);
+				$value = iconv('ISO-8859-1', 'UTF-8', $data->value);
 			}
 
 			$value = substr($value, 0, 255);

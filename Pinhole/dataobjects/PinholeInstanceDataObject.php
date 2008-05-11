@@ -13,6 +13,19 @@ require_once 'Site/dataobjects/SiteInstance.php';
  */
 class PinholeInstanceDataObject extends SwatDBDataObject
 {
+	// {{{ public function setInstance()
+
+	/**
+	 * Sets the instance for this data object
+	 *
+	 * param SiteInstance $instance The instance for this data-object
+	 */
+	public function setInstance(SiteInstance $instance = null)
+	{
+		$this->instance = $instance;
+	}
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()

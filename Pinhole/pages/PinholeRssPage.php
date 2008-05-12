@@ -10,6 +10,7 @@ require_once 'Site/pages/SitePage.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/layouts/PinholeRssLayout.php';
+require_once 'Pinhole/dataobjects/PinholeImageDimension.php';
 
 /**
  * @package   Pinhole
@@ -53,7 +54,7 @@ class PinholeRssPage extends SitePage
 		if ($shortname === null)
 			$shortname = $this->default_dimension;
 
-		$class_name = SwatDBClassMap::get('SiteImageDimension');
+		$class_name = SwatDBClassMap::get('PinholeImageDimension');
 		$dimension = new $class_name();
 		$dimension->setDatabase($this->app->db);
 		$dimension->loadByShortname('photos', $shortname);

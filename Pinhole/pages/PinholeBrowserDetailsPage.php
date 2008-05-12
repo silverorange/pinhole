@@ -7,10 +7,10 @@ require_once 'Swat/SwatTextCellRenderer.php';
 require_once 'Swat/SwatLinkCellRenderer.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/SwatString.php';
-require_once 'Site/dataobjects/SiteImageDimensionWrapper.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 
 /**
  * @package   Pinhole
@@ -351,7 +351,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$this->app->db->quote($this->photo->id, 'integer'),
 				$this->app->db->quote(true, 'boolean'));
 
-			$wrapper = SwatDBClassMap::get('SiteImageDimensionWrapper');
+			$wrapper = SwatDBClassMap::get('PinholeImageDimensionWrapper');
 
 			$dimensions = SwatDB::query($this->app->db, $sql, $wrapper);
 

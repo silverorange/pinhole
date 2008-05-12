@@ -72,6 +72,8 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		parent::buildInternal();
 
 		$this->ui->getWidget('tag_menu')->setTagList($this->tag_list);
+		$this->ui->getWidget('tag_menu')->base =
+			$this->app->config->pinhole->path;
 
 		$this->buildTags();
 	}

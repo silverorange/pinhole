@@ -6,8 +6,9 @@
 	width: 116px;
 }
 
-.swat-tile a {
+.swat-tile-view .swat-tile a {
 	text-decoration: none;
+	padding: 6px;
 }
 
 .swat-tile a span.title {

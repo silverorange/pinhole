@@ -21,6 +21,12 @@
 	<widget class="SwatContainer" id="content">
 		<widget class="SwatTileView" id="photo_view">
 			<property name="classes[]">pinhole-tile-view</property>
+			<object class="SwatTileViewGroup" id="publish_period">
+				<property name="group_by">publish_period</property>
+				<object class="SwatTextCellRenderer">
+					<property name="text" type="data">publish_period</property>
+				</object>
+			</object>
 			<object class="SwatTile">
 				<object class="SiteImageCellRenderer">
 					<property name="image" type="data">photo</property>

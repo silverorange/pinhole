@@ -74,6 +74,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$view = $this->ui->getWidget('photo_view');
 		$view->model = $this->getPhotoTableStore();
+
+		$view->getGroup('publish_period')->visible =
+			(count($this->tag_list) == 0);
 	}
 
 	// }}}
@@ -126,6 +129,30 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$ds->root_path = $this->app->config->pinhole->path;
 			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
+
+			$now = new SwatDate();
+			$now->convertTZbyID($this->app->config->date->time_zone);
+
+			$publish_date = $photo->publish_date;
+			$publish_date->convertTZbyID($this->app->config->date->time_zone);
+
+			if (count($this->tag_list) == 0) {
+				$days_past = $now->dateDiff($publish_date, false);
+				if ($days_past <= 1)
+					$period = Pinhole::_('Today');
+				elseif ($days_past <= 2)
+					$period = Pinhole::_('Yesterday');
+				elseif ($days_past <= 7)
+					$period = sprintf(Pinhole::_('%d Days Ago'),
+						floor($days_past));
+				else
+					$period = $publish_date->format(SwatDate::DF_DATE_LONG);
+
+				$ds->publish_period = sprintf(Pinhole::_('Added %s'), $period);
+			} else {
+				$ds->publish_period = null;
+			}
+
 			$store->add($ds);
 		}
 

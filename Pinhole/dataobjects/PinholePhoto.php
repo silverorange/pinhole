@@ -596,9 +596,13 @@ class PinholePhoto extends SiteImage
 	{
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;
 
-		if (isset($meta_data['createdate']))
-			$this->photo_date = $this->parseMetaDataDate(
+		if (isset($meta_data['createdate'])) {
+			$photo_date = $this->parseMetaDataDate(
 				$meta_data['createdate']->value);
+
+			if ($photo_date !== null && $photo_date->isPast())
+				$this->photo_date = $photo_date;
+		}
 
 		$where_clause = sprintf('PinholeMetaData.instance %s %s',
 			SwatDB::equalityOperator($instance_id),

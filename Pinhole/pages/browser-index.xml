@@ -34,7 +34,7 @@
 					<property name="link">%sphoto/%s</property>
 					<property name="link_value[0]" type="data">root_path</property>
 					<property name="link_value[1]" type="data">path</property>
-					<property name="classes[]">photo-title</property>
+					<property name="classes[]">photo-tile</property>
 				</object>
 			</object>
 		</widget>

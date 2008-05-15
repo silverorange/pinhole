@@ -13,6 +13,7 @@ class PinholeTagListView extends SwatControl
 {
 	// {{{ public properties
 
+	public $home_title;
 	public $base = 'tag';
 	public $rss_dimension_shortname = 'large';
 
@@ -51,8 +52,10 @@ class PinholeTagListView extends SwatControl
 		$div_tag->id = $this->id;
 		$div_tag->open();
 
-		if (count($this->tag_list) > 0)
+		if (count($this->tag_list) > 0) {
+			$this->displayHomeLink();
 			$this->displayTagList($this->tag_list);
+		}
 
 		$this->displayCount();
 		$this->displayRssLink();
@@ -144,6 +147,24 @@ class PinholeTagListView extends SwatControl
 		$rss_link_tag->open();
 		$rss_image_tag->display();
 		$rss_link_tag->close();
+	}
+
+	// }}}
+	// {{{ protected function displayHomeLink()
+
+	protected function displayHomeLink()
+	{
+		if ($this->home_title !== null) {
+			$tag_anchor_tag = new SwatHtmlTag('a');
+			$tag_anchor_tag->class = 'tag';
+			$tag_anchor_tag->href = $this->base;
+			$tag_anchor_tag->setContent($this->home_title);
+
+			echo '<span class="tag-wrapper">';
+			$tag_anchor_tag->display();
+			echo ' » ';
+			echo '</span>';
+		}
 	}
 
 	// }}}

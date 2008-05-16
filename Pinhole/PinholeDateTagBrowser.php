@@ -460,6 +460,9 @@ class PinholeDateTagBrowser extends SwatControl
 
 		$dates = array();
 		while ($row = $rows->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+			if ($row->photo_date === null)
+				continue;
+
 			$date = new SwatDate($row->photo_date);
 			$dates[$date->format($date_format)] = $row->photo_count;
 		}

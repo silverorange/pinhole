@@ -52,10 +52,10 @@ class PinholeTagListView extends SwatControl
 		$div_tag->id = $this->id;
 		$div_tag->open();
 
-		if (count($this->tag_list) > 0) {
-			$this->displayHomeLink();
+		$this->displayHomeLink();
+
+		if (count($this->tag_list) > 0)
 			$this->displayTagList($this->tag_list);
-		}
 
 		$this->displayCount();
 		$this->displayRssLink();
@@ -162,7 +162,10 @@ class PinholeTagListView extends SwatControl
 
 			echo '<span class="tag-wrapper">';
 			$tag_anchor_tag->display();
-			echo ' » ';
+
+			if (count($this->tag_list) > 0)
+				echo ' » ';
+
 			echo '</span>';
 		}
 	}

@@ -140,12 +140,9 @@ class PinholeTagListView extends SwatControl
 		if (count($this->tag_list) > 0)
 			$rss_link_tag->href.= '?'.$this->tag_list->__toString();
 
-		$rss_text_tag = new SwatHtmlTag('span');
-		$rss_text_tag->setContent(Pinhole::_('Feed'));
+		$rss_link_tag->setContent(Pinhole::_('Feed'));
 
-		$rss_link_tag->open();
-		$rss_text_tag->display();
-		$rss_link_tag->close();
+		$rss_link_tag->display();
 	}
 
 	// }}}

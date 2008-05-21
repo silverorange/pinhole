@@ -8,8 +8,11 @@ require_once 'Swat/SwatInputControl.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'Swat/SwatState.php';
 require_once 'Swat/SwatString.php';
+require_once 'Swat/SwatMessage.php';
 require_once 'Swat/SwatYUI.php';
 require_once 'Pinhole/PinholeTagList.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
+require_once 'Pinhole/tags/PinholeTag.php';
 
 /**
  * Control for selecting multiple tags from a list of tags
@@ -39,11 +42,11 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	private $selected_tag_list;
 
 	/**
-	 * Database connection used by this tag entry control
+	 * Application used by this tag entry control
 	 *
-	 * @var MDB2_Driver_Common
+	 * @var SiteWebApplication
 	 */
-	private $db;
+	private $app;
 
 	// }}}
 	// {{{ public function __construct()
@@ -134,16 +137,21 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	{
 		parent::process();
 
-		if ($this->db === null)
+		if ($this->app === null)
 			throw new SwatException(
-				'A database must be set on the tag entry control during '.
+				'An application must be set on the tag entry control during '.
 				'the widget init phase.');
 
+		$this->selected_tag_list = $this->tag_list->getEmptyCopy();
+
 		$data = &$this->getForm()->getFormData();
+		$new_key = $this->id.'_new';
+		if (isset($data[$new_key]) && is_array($data[$new_key]))
+			foreach ($data[$new_key] as $new_tag)
+				$this->insertTag($new_tag);
+
 		if (isset($data[$this->id]) && is_array($data[$this->id])) {
 			$tag_strings = $data[$this->id];
-
-			$this->selected_tag_list = $this->tag_list->getEmptyCopy();
 
 			// make sure entered tags are in the original tag list
 			foreach ($tag_strings as $tag_string)
@@ -214,19 +222,16 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	}
 
 	// }}}
-	// {{{ public function setDatabase()
+	// {{{ public function setApplication()
 
 	/**
-	 * Sets the database connection used by this tag entry control
+	 * Sets the application used by this tag entry control
 	 *
-	 * A database connection must be set before this control can be processed
-	 * correctly. Set the database in the widget init phase.
-	 *
-	 * @param MDB2_Driver_Common $db the database connection to use.
+	 * @param SiteWebApplication $app the application to use.
 	 */
-	public function setDatabase(MDB2_Driver_Common $db)
+	public function setApplication(SiteWebApplication $app)
 	{
-		$this->db = $db;
+		$this->app = $app;
 	}
 
 	// }}}
@@ -272,6 +277,61 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 	public function getSelectedTagList()
 	{
 		return $this->selected_tag_list;
+	}
+
+	// }}}
+	// {{{ protected function insertTag()
+
+	/**
+	 * Creates a new tag
+	 *
+	 * @throws SwatException if no database connection is set on this tag
+	 *                        entry control.
+	 */
+	protected function insertTag($title)
+	{
+		if ($this->app === null)
+			throw new SwatException(
+				'An application must be set on the tag entry control during '.
+				'the widget init phase.');
+
+		// check to see if the tag already exists
+		$instance_id = $this->app->getInstanceId();
+		$sql = sprintf('select * from
+			PinholeTag where title = %s and instance %s %s',
+			$this->app->db->quote($title, 'text'),
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
+
+		$tags = SwatDB::query($this->app->db, $sql,
+			SwatDBClassMap::get('PinholeTagDataObjectWrapper'));
+
+		// only insert if no tag already exists (prevents creating two tags on
+		// reloading)
+		if (count($tags) > 0) {
+			$tag_obj = $tags->getFirst();
+		} else {
+			$tag_obj = new PinholeTagDataObject();
+			$tag_obj->setDatabase($this->app->db);
+			$tag_obj->instance = $instance_id;
+			$tag_obj->title = $title;
+			$tag_obj->save();
+		}
+
+		$tag = new PinholeTag($tag_obj);
+		$this->tag_list->add($tag);
+		$this->selected_tag_list->add($tag);
+
+		$message = new SwatMessage(
+			sprintf(Pinhole::_('“%s” tag has been added'),
+				SwatString::minimizeEntities($tag->getTitle())));
+
+		$message->content_type = 'text/xml';
+		$message->secondary_content = sprintf(Pinhole::_(
+			'You can <a href="Tag/Edit?id=%d">edit this tag</a> to customize it.'),
+			$tag_obj->id);
+
+		$this->app->messages->add($message);
 	}
 
 	// }}}

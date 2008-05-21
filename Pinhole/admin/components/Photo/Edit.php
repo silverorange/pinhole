@@ -72,6 +72,8 @@ class PinholePhotoEdit extends AdminDBEdit
 		}
 
 		// setup tag entry control
+		$this->ui->getWidget('tags')->setApplication($this->app);
+
 		$instance_id = $this->app->getInstanceId();
 		$tag_list = new PinholeTagList($this->app->db,
 			$this->app->getInstance());
@@ -102,7 +104,6 @@ class PinholePhotoEdit extends AdminDBEdit
 			$tag_list->add(new PinholeTag($data_object));
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
-		$this->ui->getWidget('tags')->setDatabase($this->app->db);
 
 		$replicator = $this->ui->getWidget('site_link_field');
 		$replicators = array();

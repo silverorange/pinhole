@@ -56,7 +56,7 @@ class PinholePhotoIndex extends AdminSearch
 			$tag_list->add(new PinholeTag($data_object));
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
-		$this->ui->getWidget('tags')->setDatabase($this->app->db);
+		$this->ui->getWidget('tags')->setApplication($this->app);
 
 		// setup status list
 		$status_flydown = $this->ui->getWidget('status_flydown');

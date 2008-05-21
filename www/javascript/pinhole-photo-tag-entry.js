@@ -41,25 +41,53 @@ function PinholePhotoTagEntry(id, tag_list, initial_selected_tag_list)
 PinholePhotoTagEntry.prototype.handleOnAvailable = function()
 {
 	// create auto-complete widget
-	var auto_complete = new YAHOO.widget.AutoComplete(
+	this.auto_complete = new YAHOO.widget.AutoComplete(
 		this.input_element, this.id + '_container', this.data_store, {
 		queryDelay:            0,
 		minQueryLength:        0,
 		highlightClassName:    'pinhole-photo-tag-highlight',
 		prehighlightClassName: 'pinhole-photo-tag-prehighlight',
+		autoHighlight:         true,
 		useShadow:             false,
-		forceSelection:        true,
+		forceSelection:        false,
 		animVert:              false,
 		formatResult:
 			function(item, query)
 			{
 				// 0 is title, 1 is tag string
-				return item[0] + ' (' + item[1] + ')'; 
+				return item[0] + ' (' + item[1] + ')';
 			}
 	});
 
-	auto_complete.itemSelectEvent.subscribe(
+	this.auto_complete.itemSelectEvent.subscribe(
 		this.addTagFromAutoComplete, this, true);
+
+	YAHOO.util.Event.addListener(this.input_element, 'keydown',
+		function(e, entry) {
+			if (YAHOO.util.Event.getCharCode(e) == 13 &&
+				!entry.auto_complete.isContainerOpen()) {
+				YAHOO.util.Event.stopEvent(e);
+				entry.createTag();
+			}
+		}, this);
+
+	var a_tag = document.createElement('a');
+	a_tag.href = '#';
+	YAHOO.util.Event.addListener(a_tag, 'click',
+		function(e, entry) {
+			YAHOO.util.Event.preventDefault(e);
+			entry.createTag();
+		}, this);
+
+	var img_tag = document.createElement('img');
+	img_tag.src = 'packages/swat/images/swat-tool-link-create.png';
+	img_tag.title = 'Add Tag';
+	img_tag.alt = '';
+	img_tag.className = 'add-tag';
+	a_tag.appendChild(img_tag);
+
+	document.getElementById(this.id).insertBefore(a_tag,
+		document.getElementById(this.id + '_container'));
 
 	// initialize values passed in
 	for (var i = 0; i < this.initial_selected_tag_list.length; i++) {
@@ -84,8 +112,21 @@ PinholePhotoTagEntry.prototype.addTag = function(tag_string)
 {
 	var found = false;
 
+	// trim tag string
+	tag_string = tag_string.replace(/^\s+|\s+$/g, '');
+
+	if (tag_string.length == 0)
+		return;
+
+	for (i = 0; i < this.selected_tag_list.length; i++) {
+		var tag = this.selected_tag_list[i][1];
+		if (tag.toUpperCase() == tag_string.toUpperCase())
+			return;
+	}
+
 	for (i = 0; i < this.data_store.data.length; i++) {
-		if (this.data_store.data[i][1] == tag_string) {
+		var tag = this.data_store.data[i][1];
+		if (tag.toUpperCase() == tag_string.toUpperCase()) {
 			// get tag title
 			var title = this.data_store.data[i][0];
 
@@ -100,14 +141,16 @@ PinholePhotoTagEntry.prototype.addTag = function(tag_string)
 		}
 	}
 
-	if (!found)
-		return;
+	// create new tag
+	var new_tag = (!found);
+
+	if (new_tag)
+		var title = tag_string;
 
 	// create new list node
 	var li_tag = document.createElement('li');
 	li_tag.id = this.id + '_tag_' + tag_string;
-
-	var title_node = document.createTextNode(title + ' ');
+	YAHOO.util.Dom.setStyle(li_tag, 'opacity', 0);
 
 	var anchor_tag = document.createElement('a');
 	anchor_tag.id = this.id + '_tag_remove_' + tag_string;
@@ -123,20 +166,46 @@ PinholePhotoTagEntry.prototype.addTag = function(tag_string)
 		},
 		this, true);
 
-	var hidden_tag = document.createElement('input');
-	hidden_tag.type = 'hidden';
-	hidden_tag.name = this.id + '[]';
-	hidden_tag.value = tag_string;
+	if (new_tag) {
+		var hidden_tag = document.createElement('input');
+		hidden_tag.type = 'hidden';
+		hidden_tag.name = this.id + '_new[]';
+		hidden_tag.value = tag_string;
+		var title_node = document.createTextNode(title + ' (new) ');
+		li_tag.className = 'new-tag';
+		li_tag.appendChild(hidden_tag);
+	} else {
+		var title_node = document.createTextNode(title + ' ');
+		var hidden_tag = document.createElement('input');
+		hidden_tag.type = 'hidden';
+		hidden_tag.name = this.id + '[]';
+		hidden_tag.value = tag_string;
+		li_tag.appendChild(hidden_tag);
+	}
 
 	li_tag.appendChild(title_node);
 	li_tag.appendChild(anchor_tag);
-	li_tag.appendChild(hidden_tag);
 
 	// add list node
 	this.list_element.appendChild(li_tag);
 
+	var in_attributes = { opacity: { from: 0, to: 1 } };
+	var in_animation = new YAHOO.util.Anim(li_tag, in_attributes,
+		0.5, YAHOO.util.Easing.easeIn);
+
+	in_animation.animate();
+
 	// clear input value once a value is chosen
 	this.input_element.value = '';
+}
+
+// }}}
+// {{{ createTag()
+
+PinholePhotoTagEntry.prototype.createTag = function()
+{
+	var tag_title = this.input_element.value;
+	this.addTag(tag_title);
 }
 
 // }}}
@@ -151,10 +220,20 @@ PinholePhotoTagEntry.prototype.removeTag = function(tag_string)
 	if (anchor_tag)
 		YAHOO.util.Event.purgeElement(anchor_tag);
 
-	// remove list node 
+	// remove list node
 	var li_tag = document.getElementById(this.id + '_tag_' + tag_string);
-	if (li_tag)
-		li_tag.parentNode.removeChild(li_tag);
+	if (li_tag) {
+		var out_attributes = { opacity: { from: 1, to: 0 } };
+		var out_animation = new YAHOO.util.Anim(li_tag, out_attributes,
+			0.25, YAHOO.util.Easing.easeOut);
+
+		out_animation.onComplete.subscribe(function(e)
+		{
+			li_tag.parentNode.removeChild(li_tag);
+		}, this, true);
+
+		out_animation.animate();
+	}
 
 	for (i = 0; i < this.selected_tag_list.length; i++) {
 		if (this.selected_tag_list[i][1] == tag_string) {

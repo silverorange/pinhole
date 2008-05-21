@@ -68,11 +68,11 @@ class PinholePhotoTagEntry extends SwatInputControl implements SwatState
 		$this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
 		$this->addJavaScript(
-			'packages/pinhole/javascript/pinhole-photo-tag-entry.js',
+			'packages/pinhole/admin/javascript/pinhole-photo-tag-entry.js',
 			Pinhole::PACKAGE_ID);
 
 		$this->addStyleSheet(
-			'packages/pinhole/styles/pinhole-photo-tag-entry.css',
+			'packages/pinhole/admin/styles/pinhole-photo-tag-entry.css',
 			Pinhole::PACKAGE_ID);
 	}
 

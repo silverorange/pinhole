@@ -8,7 +8,7 @@ require_once 'Swat/SwatTableStore.php';
 require_once 'NateGoSearch/NateGoSearchQuery.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'include/PinholePhotoTagEntry.php';
+require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
 require_once 'include/PinholePhotoActionsProcessor.php';
 
 /**

@@ -12,7 +12,7 @@ require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 require_once 'Pinhole/pages/PinholeSearchPage.php';
-require_once 'include/PinholePhotoTagEntry.php';
+require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
 
 /**
  * Page for viewing photo details and editing

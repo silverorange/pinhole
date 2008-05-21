@@ -6,7 +6,7 @@ require_once 'Swat/SwatTableStore.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'include/PinholePhotoActionsProcessor.php';
-require_once 'include/PinholePhotoTagEntry.php';
+require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
 
 /**
  * Pending photos page

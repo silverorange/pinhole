@@ -8,7 +8,7 @@ require_once 'SwatDB/SwatDB.php';
 require_once 'Admin/pages/AdminIndex.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Pinhole/tags/PinholeTag.php';
-require_once 'Pinhole/admin/components/Photo/include/PinholePhotoTagEntry.php';
+require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
 require_once 'Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php';
 
 /**
@@ -64,7 +64,7 @@ class PinholeTagDetails extends AdminIndex
 			$tag_list->add(new PinholeTag($data_object));
 
 		$this->ui->getWidget('tags')->setTagList($tag_list);
-		$this->ui->getWidget('tags')->setDatabase($this->app->db);
+		$this->ui->getWidget('tags')->setApplication($this->app);
 
 		// setup status list
 		$status_flydown = $this->ui->getWidget('status_flydown');

@@ -29,7 +29,7 @@ PinholePhotoUploadPage.thumbnail_height = 100;
 PinholePhotoUploadPage.thumbnail_margin = 5;
 PinholePhotoUploadPage.thumbnail_padding = 10;
 PinholePhotoUploadPage.path = '../images/photos/thumb';
-PinholePhotoUploadPage.processing_text = 'Processing Photo … ';
+PinholePhotoUploadPage.processing_text = 'Processing Photo';
 PinholePhotoUploadPage.processed_text = 'Finished Processing!';
 
 PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
@@ -135,7 +135,7 @@ PinholePhotoUploadPage.prototype.display = function(type, args)
 PinholePhotoUploadPage.prototype.updateProcessingText = function(count)
 {
 	var text = PinholePhotoUploadPage.processing_text;
-	//text+= ' ' + this.current_photo + ' of ' + this.total_photos;
+	text += ' ' + this.current_photo + ' of ' + this.total_photos;
 	this.processing_message.innerHTML = text;
 }
 

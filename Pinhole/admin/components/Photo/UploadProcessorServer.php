@@ -48,12 +48,12 @@ class PinholePhotoUploadProcessorServer extends AdminXMLRPCServer
 			$response['processed_filename'] = $photo->getFilename('thumb');
 
 		} catch (SwatException $e) {
-			$e->process();
+			$e->log();
 
 			$response['error'] = 'Error processing '.$original_filename;
 		} catch (Exception $e) {
 			$e = new SwatException($e);
-			$e->process();
+			$e->log();
 
 			$response['error'] = 'Error processing '.$original_filename;
 		}

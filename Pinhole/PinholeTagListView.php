@@ -132,7 +132,7 @@ class PinholeTagListView extends SwatControl
 	protected function displayRssLink()
 	{
 		$rss_link_tag = new SwatHtmlTag('a');
-		$rss_link_tag->class = 'rss';
+		$rss_link_tag->class = 'feed';
 		$rss_link_tag->title = Pinhole::_('Feed for this set of photos');
 		$rss_link_tag->href = str_replace('tag',
 			'rss/'.$this->rss_dimension_shortname, $this->base);

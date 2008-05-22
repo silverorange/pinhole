@@ -208,13 +208,33 @@ PinholePhotoUploadClient.prototype.uploadComplete = function(file_objects, error
 PinholePhotoUploadClient.prototype.upload = function(event)
 {
 	YAHOO.util.Event.preventDefault(event);
-	this.input.form.action = this.form_action;
-	this.input.form.target = this.id + '_iframe';
-	this.input.form.submit();
-	this.progress_bar.setValue(0);
-	this.progress_bar.setText(PinholePhotoUploadClient.progress_unknown_text);
-	this.showProgressBar();
-	PinholePhotoUploadManager.addClient(this);
+
+	if (document.getElementById(this.id).value.length > 0) {
+
+		// reset the form
+		var container = document.getElementById('photo_processing').childNodes[0];
+		for (var i = 0; i < container.childNodes.length; i++) {
+			alert(node.nodeName + ' - ' + node.id + ' - ' + node.className);
+
+			if (node.id == '' || node.id != 'photo_container')
+				container.removeChild(node);
+		}
+
+		var errors = YAHOO.util.Dom.getElementsByClassName(
+			'pinhole-photo-uploader-errors');
+
+		if (errors.length > 0)
+			container.removeChild(errors[0]);
+
+		// handle the post
+		this.input.form.action = this.form_action;
+		this.input.form.target = this.id + '_iframe';
+		this.input.form.submit();
+		this.progress_bar.setValue(0);
+		this.progress_bar.setText(PinholePhotoUploadClient.progress_unknown_text);
+		this.showProgressBar();
+		PinholePhotoUploadManager.addClient(this);
+	}
 }
 
 /**

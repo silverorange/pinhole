@@ -7,8 +7,6 @@ PinholePhotoUploadPage = function(uploader)
 	this.photo_container = document.getElementById('photo_container');
 	this.spacer_div = document.createElement('div');
 	this.processing_message = document.createElement('h2');
-	this.error_messages = document.createElement('ul');
-	this.error_messages.className = 'pinhole-photo-uploader-errors';
 
 	this.uploader = uploader;
 	this.total_photos;
@@ -145,13 +143,17 @@ PinholePhotoUploadPage.prototype.complete = function()
 		PinholePhotoUploadPage.processed_text;
 
 	if (this.errors.length) {
-		this.photo_container.parentNode.insertBefore(this.error_messages,
+		var error_messages = document.createElement('ul');
+		error_messages.className = 'pinhole-photo-uploader-errors';
+		this.photo_container.parentNode.insertBefore(error_messages,
 			this.photo_container);
 
 		for (i = 0; i < this.errors.length; i++) {
 			var error = document.createElement('li');
 			error.innerHTML = this.errors[0];
-			this.error_messages.appendChild(error);
+			error_messages.appendChild(error);
 		}
+
+		this.errors = [];
 	}
 }

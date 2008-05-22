@@ -64,12 +64,11 @@
 	top: 2px;
 }
 
-.pinhole-tag-list-view a.rss {
-	background: url('../images/rss.png') left top no-repeat;
+.pinhole-tag-list-view a.feed {
+	background: url('../images/feed.png') left top no-repeat;
 	display: -moz-inline-box;
 	height: 16px;
 	overflow: hidden;
-	padding-left: 40px;
 	text-indent: -3000px;
 	vertical-align: middle;
 	width: 16px;

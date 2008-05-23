@@ -11,7 +11,7 @@
 		<widget class="AdminNote">
 			<property name="content" translatable="yes">Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</property>
 		</widget>
-		<widget class="SwatFormField">
+		<widget class="SwatFormField" id="photo_processing">
 			<widget class="SwatDisplayableContainer" id="photo_container" />
 		</widget>
 		<widget class="SwatForm" id="time_zone_form">

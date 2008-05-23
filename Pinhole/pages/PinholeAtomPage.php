@@ -74,7 +74,7 @@ class PinholeAtomPage extends SitePage
 	 * @param string $dimension_shortname
 	 */
 	public function __construct(SiteWebApplication $app, SiteLayout $layout,
-		$dimension_shortname)
+		$dimension_shortname = null)
 	{
 		$layout = new SiteLayout($app, 'Pinhole/layouts/xhtml/atom.php');
 

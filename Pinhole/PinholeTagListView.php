@@ -15,7 +15,7 @@ class PinholeTagListView extends SwatControl
 
 	public $home_title;
 	public $base = 'tag';
-	public $rss_dimension_shortname = 'large';
+	public $atom_dimension_shortname = 'large';
 
 	// }}}
 	// {{{ protected properties
@@ -59,7 +59,7 @@ class PinholeTagListView extends SwatControl
 
 		$this->displayCount();
 		echo ' ';
-		$this->displayRssLink();
+		$this->displayAtomLink();
 
 		$div_tag->close();
 	}
@@ -127,22 +127,22 @@ class PinholeTagListView extends SwatControl
 	}
 
 	// }}}
-	// {{{ protected function displayRssLink()
+	// {{{ protected function displayAtomLink()
 
-	protected function displayRssLink()
+	protected function displayAtomLink()
 	{
-		$rss_link_tag = new SwatHtmlTag('a');
-		$rss_link_tag->class = 'feed';
-		$rss_link_tag->title = Pinhole::_('Feed for this set of photos');
-		$rss_link_tag->href = str_replace('tag',
-			'rss/'.$this->rss_dimension_shortname, $this->base);
+		$atom_link_tag = new SwatHtmlTag('a');
+		$atom_link_tag->class = 'feed';
+		$atom_link_tag->title = Pinhole::_('Feed for this set of photos');
+		$atom_link_tag->href = str_replace('tag',
+			'atom/'.$this->atom_dimension_shortname, $this->base);
 
 		if (count($this->tag_list) > 0)
-			$rss_link_tag->href.= '?'.$this->tag_list->__toString();
+			$atom_link_tag->href.= '?'.$this->tag_list->__toString();
 
-		$rss_link_tag->setContent(Pinhole::_('Feed'));
+		$atom_link_tag->setContent(Pinhole::_('Feed'));
 
-		$rss_link_tag->display();
+		$atom_link_tag->display();
 	}
 
 	// }}}

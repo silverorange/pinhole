@@ -10,7 +10,6 @@ require_once 'Swat/SwatString.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 
 /**
  * @package   Pinhole
@@ -110,22 +109,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$shortname, strtotime('+1 year'), '/',
 			$this->app->getBaseHref());
 
-		$dimensions = $this->getSelectableDimensions();
-		$display_dimension = null;
-
-		foreach ($dimensions as $dimension)
-			if ($dimension->shortname == $shortname)
-				$display_dimension = $dimension;
-
-		if ($display_dimension === null)
-			return $dimensions->getFirst();
-		else
-			return $display_dimension;
-
-
-
-
-		return $display_dimension;
+		return $this->photo->getClosestSelectableDimensionTo($shortname);
 	}
 
 	// }}}
@@ -289,7 +273,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function displayDimensions()
 	{
-		$dimensions = clone $this->getSelectableDimensions();
+		$dimensions = clone $this->photo->getSelectableDimensions();
 
 		if (count($dimensions) <= 1)
 			return;
@@ -331,45 +315,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		echo implode(', ', $list);
 
 		$div_tag->close();
-	}
-
-	// }}}
-	// {{{ protected function getSelectableDimensions()
-
-	protected function getSelectableDimensions()
-	{
-		if ($this->selectable_dimensions === null) {
-			$sql = sprintf('select ImageDimension.*
-					from PinholePhotoDimensionBinding
-					inner join ImageDimension on
-						PinholePhotoDimensionBinding.dimension =
-							ImageDimension.id
-					where PinholePhotoDimensionBinding.photo = %s
-						and ImageDimension.selectable = %s
-					order by coalesce(ImageDimension.max_width,
-						ImageDimension.max_height) asc',
-				$this->app->db->quote($this->photo->id, 'integer'),
-				$this->app->db->quote(true, 'boolean'));
-
-			$wrapper = SwatDBClassMap::get('PinholeImageDimensionWrapper');
-
-			$dimensions = SwatDB::query($this->app->db, $sql, $wrapper);
-
-			$this->selectable_dimensions = new $wrapper();
-			$last_dimension = null;
-
-			foreach ($dimensions as $dimension) {
-				if ($last_dimension === null ||
-					$this->photo->getWidth($dimension->shortname) >
-					$this->photo->getWidth($last_dimension->shortname) * 1.1) {
-
-					$this->selectable_dimensions->add($dimension);
-					$last_dimension = $dimension;
-				}
-			}
-		}
-
-		return $this->selectable_dimensions;
 	}
 
 	// }}}

@@ -5,6 +5,7 @@ require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Site/dataobjects/SiteImage.php';
 require_once 'Pinhole/dataobjects/PinholeImageSet.php';
+require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
 require_once 'Pinhole/exceptions/PinholeUploadException.php';
@@ -108,6 +109,8 @@ class PinholePhoto extends SiteImage
 	 * @var SiteInstance
 	 */
 	private $instance;
+
+	private $selectable_dimensions;
 
 	// }}}
 
@@ -275,6 +278,63 @@ class PinholePhoto extends SiteImage
 	public function isPublished()
 	{
 		return ($this->status == self::STATUS_PUBLISHED);
+	}
+
+	// }}}
+	// {{{ public function getClosestSelectableDimensionTo()
+
+	public function getClosestSelectableDimensionTo($shortname)
+	{
+		$dimensions = $this->getSelectableDimensions();
+		$display_dimension = null;
+
+		foreach ($dimensions as $dimension)
+			if ($dimension->shortname == $shortname)
+				$display_dimension = $dimension;
+
+		if ($display_dimension === null)
+			return $dimensions->getFirst();
+		else
+			return $display_dimension;
+	}
+
+	// }}}
+	// {{{ public function getSelectableDimensions()
+
+	public function getSelectableDimensions()
+	{
+		if ($this->selectable_dimensions === null) {
+			$sql = sprintf('select ImageDimension.*
+					from PinholePhotoDimensionBinding
+					inner join ImageDimension on
+						PinholePhotoDimensionBinding.dimension =
+							ImageDimension.id
+					where PinholePhotoDimensionBinding.photo = %s
+						and ImageDimension.selectable = %s
+					order by coalesce(ImageDimension.max_width,
+						ImageDimension.max_height) asc',
+				$this->db->quote($this->id, 'integer'),
+				$this->db->quote(true, 'boolean'));
+
+			$wrapper = SwatDBClassMap::get('PinholeImageDimensionWrapper');
+
+			$dimensions = SwatDB::query($this->db, $sql, $wrapper);
+
+			$this->selectable_dimensions = new $wrapper();
+			$last_dimension = null;
+
+			foreach ($dimensions as $dimension) {
+				if ($last_dimension === null ||
+					$this->getWidth($dimension->shortname) >
+					$this->getWidth($last_dimension->shortname) * 1.1) {
+
+					$this->selectable_dimensions->add($dimension);
+					$last_dimension = $dimension;
+				}
+			}
+		}
+
+		return $this->selectable_dimensions;
 	}
 
 	// }}}

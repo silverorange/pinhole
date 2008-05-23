@@ -199,7 +199,8 @@ class PinholeAtomPage extends SitePage
 		if (count($this->tag_list) > 0)
 			$uri.= '?'.$this->tag_list->__toString();
 
-		$entry = new XML_Atom_Entry($uri, '', $photo->publish_date);
+		$entry = new XML_Atom_Entry($uri, $photo->getTitle(),
+			$photo->publish_date);
 
 		if ($photo->hasDimension($this->dimension->shortname))
 			$dimension = $this->dimension;

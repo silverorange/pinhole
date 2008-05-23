@@ -83,8 +83,10 @@ class PinholePageFactory extends SitePageFactory
 			'^(tags)/(alphabetical)$'         => 'PinholeBrowserTagPage',
 			'^(tags)/(popular)$'              => 'PinholeBrowserTagPage',
 			'^(tags)/(cloud)$'                => 'PinholeBrowserTagPage',
-			'^(rss)$'                         => 'PinholeRssPage',
-			'^(rss)/([\w\d*]+)$'              => 'PinholeRssPage',
+			'^(atom)$'                        => 'PinholeAtomPage',
+			'^(atom)/([\w\d*]+)$'             => 'PinholeAtomPage',
+			'^(rss)$'                         => 'PinholeAtomPage',
+			'^(rss)/([\w\d*]+)$'              => 'PinholeAtomPage',
 			'^(loadphoto)/(.+)/(.+).jpg$'     => 'PinholePhotoLoaderPage',
 			'^robots.txt$'                    => 'PinholeRobotsPage',
 		);

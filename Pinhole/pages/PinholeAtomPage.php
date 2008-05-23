@@ -1,0 +1,196 @@
+<?php
+
+require_once 'Site/pages/SitePage.php';
+require_once 'Swat/SwatHtmlTag.php';
+require_once 'Pinhole/PinholeTagList.php';
+require_once 'Pinhole/dataobjects/PinholeImageDimension.php';
+require_once 'XML/Atom/Feed.php';
+require_once 'XML/Atom/Entry.php';
+
+/**
+ * Displays an Atom feed of photos
+ *
+ * @package   Pinhole
+ * @copyright 2008 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
+ */
+class PinholeAtomPage extends SitePage
+{
+	// {{{ protected properties
+
+	/**
+	 * @var string
+	 */
+	protected $default_dimension = 'large';
+
+	/**
+	 * @var PinholeImageDimension
+	 */
+	protected $dimension;
+
+	/**
+	 * @var XML_Atom_Feed
+	 */
+	protected $feed;
+
+	// }}}
+	// {{{ public function __construct()
+
+	/**
+	 * Creates a new Atom post page
+	 *
+	 * @param SiteWebApplication $app the application.
+	 * @param SiteLayout $layout
+	 * @param string $dimension_shortname
+	 */
+	public function __construct(SiteWebApplication $app, SiteLayout $layout,
+		$dimension_shortname)
+	{
+		$layout = new SiteLayout($app, 'Pinhole/layouts/xhtml/atom.php');
+
+		parent::__construct($app, $layout);
+
+		$tags = SiteApplication::initVar('tags');
+		$this->createTagList($tags);
+		$this->dimension = $this->initDimension($dimension_shortname);
+	}
+
+	// }}}
+	// {{{ protected function initDimension()
+
+	protected function initDimension($shortname = null)
+	{
+		if ($shortname === null)
+			$shortname = $this->default_dimension;
+
+		$class_name = SwatDBClassMap::get('PinholeImageDimension');
+		$dimension = new $class_name();
+		$dimension->setDatabase($this->app->db);
+		$dimension->loadByShortname('photos', $shortname);
+
+		if ($dimension === null || !$dimension->selectable)
+			throw new SiteNotFoundException(sprintf('Dimension “%s” is not '.
+				'a selectable photo dimension', $shortname));
+
+		return $dimension;
+	}
+
+	// }}}
+	// {{{ protected function createTagList()
+
+	protected function createTagList($tags)
+	{
+		$this->tag_list = new PinholeTagList($this->app->db,
+			$this->app->getInstance(), $tags);
+	}
+
+	// }}}
+
+	// build phase
+	// {{{ public function build()
+
+	public function build()
+	{
+		$this->buildAtomFeed();
+
+		$this->layout->startCapture('content');
+		$this->displayAtomFeed();
+		$this->layout->endCapture();
+	}
+
+	// }}}
+	// {{{ protected function buildAtomFeed()
+
+	protected function buildAtomFeed()
+	{
+		$this->tag_list->setPhotoRange(new SwatDBRange(50));
+
+		$this->tag_list->setPhotoWhereClause(sprintf(
+			'PinholePhoto.status = %s',
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
+
+		$this->tag_list->setPhotoOrderByClause(
+			'PinholePhoto.publish_date desc, id desc');
+
+		$site_base_href  = $this->app->getBaseHref();
+		$pinhole_base_href = $site_base_href.$this->app->config->pinhole->path;
+
+		$this->feed = new XML_Atom_Feed($pinhole_base_href,
+			$this->app->config->site->title);
+
+		$this->feed->addLink($site_base_href.$this->source, 'self',
+			'application/atom+xml');
+
+		$this->feed->setGenerator('Pinhole');
+		$this->feed->setBase($site_base_href);
+
+		//$author_uri = '';
+		//$this->feed->addAuthor($this->post->author->name, $author_uri,
+		//	$this->post->author->email);
+
+		$photos = $this->tag_list->getPhotos();
+
+		foreach ($photos as $photo) {
+			$uri = sprintf('%sphoto/%s/%s',
+				$pinhole_base_href,
+				$photo->id,
+				$this->dimension->shortname);
+
+			if (count($this->tag_list) > 0)
+				$uri.= '?'.$this->tag_list->__toString();
+
+			$entry = new XML_Atom_Entry($uri, '', $photo->publish_date);
+
+			$entry->setContent($this->getPhotoContent($photo), 'html');
+
+			//$entry->addAuthor($author_name, $author_uri, $author_email);
+			$entry->addLink($uri, 'alternate', 'text/html');
+
+			$this->feed->addEntry($entry);
+		}
+	}
+
+	// }}}
+	// {{{ protected function getPhotoContent()
+
+	protected function getPhotoContent(PinholePhoto $photo)
+	{
+		ob_start();
+
+		$div_tag = new SwatHtmlTag('div');
+		$div_tag->open();
+
+		if ($photo->hasDimension($this->dimension->shortname)) {
+			$img = $photo->getImgTag($this->dimension->shortname);
+		} else {
+			$dimension = $photo->getClosestSelectableDimensionTo(
+				$this->dimension->shortname);
+
+			$img = $photo->getImgTag($dimension->shortname);
+		}
+		$img->src = $this->app->getBaseHref().$img->src;
+		$img->display();
+
+		if ($photo->description !== null) {
+			$div_tag = new SwatHtmlTag('div');
+			$div_tag->setContent($photo->description, 'text/xml');
+			$div_tag->display();
+		}
+
+		$div_tag->close();
+
+		return ob_get_clean();
+	}
+
+	// }}}
+	// {{{ protected function displayAtomFeed()
+
+	protected function displayAtomFeed()
+	{
+		echo $this->feed;
+	}
+
+	// }}}
+}
+
+?>

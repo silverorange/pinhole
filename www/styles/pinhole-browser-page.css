@@ -32,3 +32,16 @@ h2#page_title {
 .swat-tile-view .swat-tile {
 	padding: 1px;
 }
+
+.pinhole-tag-list-view a.feed {
+	background: url('../images/feed.png') left top no-repeat;
+	display: -moz-inline-box;
+	height: 16px;
+	color: rgba(255,255,255,0);
+	font: 0/0 Arial;
+	overflow: hidden;
+	text-indent: -3000px;
+	vertical-align: middle;
+	width: 16px;
+}
+

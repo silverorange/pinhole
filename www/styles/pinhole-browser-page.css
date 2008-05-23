@@ -36,9 +36,9 @@ h2#page_title {
 .pinhole-tag-list-view a.feed {
 	background: url('../images/feed.png') left top no-repeat;
 	display: -moz-inline-box;
+	display: inline-block;
 	height: 16px;
 	color: rgba(255,255,255,0);
-	font: 0/0 Arial;
 	overflow: hidden;
 	text-indent: -3000px;
 	vertical-align: middle;

@@ -10,6 +10,13 @@ require_once 'XML/Atom/Entry.php';
 /**
  * Displays an Atom feed of photos
  *
+ * Photos are displayed reverse-chronologically based on their publish-date.
+ * The number of photos is always at least $min_entries, but if a recently
+ * published batch of photos (within the time of $recent_period) exceeds
+ * $min_entries, up to $max_entries photos will be displayed. This makes it
+ * easier to ensure that a subscriber won't miss part of a batch, while
+ * limiting server load for the feed.
+ *
  * @package   Pinhole
  * @copyright 2008 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
@@ -17,6 +24,29 @@ require_once 'XML/Atom/Entry.php';
 class PinholeAtomPage extends SitePage
 {
 	// {{{ protected properties
+
+	/**
+	 * The minimum number of entries to display
+	 *
+	 * @var integer
+	 */
+	protected $min_entries = 20;
+
+	/**
+	 * The maximum number of entries to display
+	 *
+	 * @var integer
+	 */
+	protected $max_entries = 200;
+
+	/**
+	 * Period for recently added photos (in seconds)
+	 *
+	 * Default value is two days.
+	 *
+	 * @var
+	 */
+	protected $recent_period = 172800;
 
 	/**
 	 * @var string
@@ -103,7 +133,7 @@ class PinholeAtomPage extends SitePage
 
 	protected function buildAtomFeed()
 	{
-		$this->tag_list->setPhotoRange(new SwatDBRange(50));
+		$this->tag_list->setPhotoRange(new SwatDBRange($this->max_entries));
 
 		$this->tag_list->setPhotoWhereClause(sprintf(
 			'PinholePhoto.status = %s',
@@ -130,7 +160,20 @@ class PinholeAtomPage extends SitePage
 
 		$photos = $this->tag_list->getPhotos();
 
+		$threshold = new SwatDate();
+		$threshold->toUTC();
+		$threshold->subtractSeconds($this->recent_period);
+
+		$count = 0;
+
 		foreach ($photos as $photo) {
+			$count++;
+
+			if ($count > $this->max_entries ||
+				($count > $this->min_entries) &&
+					$photo->publish_date->before($threshold))
+				break;
+
 			$uri = sprintf('%sphoto/%s/%s',
 				$pinhole_base_href,
 				$photo->id,

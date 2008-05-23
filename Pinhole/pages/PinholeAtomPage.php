@@ -143,9 +143,8 @@ class PinholeAtomPage extends SitePage
 			'PinholePhoto.publish_date desc, id desc');
 
 		$site_base_href  = $this->app->getBaseHref();
-		$pinhole_base_href = $site_base_href.$this->app->config->pinhole->path;
 
-		$this->feed = new XML_Atom_Feed($pinhole_base_href,
+		$this->feed = new XML_Atom_Feed($this->getPinholeBaseHref(),
 			$this->app->config->site->title);
 
 		$this->feed->addLink($site_base_href.$this->source, 'self',
@@ -174,43 +173,71 @@ class PinholeAtomPage extends SitePage
 					$photo->publish_date->before($threshold))
 				break;
 
-			$uri = sprintf('%sphoto/%s/%s',
-				$pinhole_base_href,
-				$photo->id,
+			$this->feed->addEntry($this->getEntry($photo));
+		}
+	}
+
+	// }}}
+	// {{{ protected function getPinholeBaseHref()
+
+	protected function getPinholeBaseHref()
+	{
+		$site_base_href  = $this->app->getBaseHref();
+		return $site_base_href.$this->app->config->pinhole->path;
+	}
+
+	// }}}
+	// {{{ protected function getEntry()
+
+	protected function getEntry(PinholePhoto $photo)
+	{
+		$uri = sprintf('%sphoto/%s/%s',
+			$this->getPinholeBaseHref(),
+			$photo->id,
+			$this->dimension->shortname);
+
+		if (count($this->tag_list) > 0)
+			$uri.= '?'.$this->tag_list->__toString();
+
+		$entry = new XML_Atom_Entry($uri, '', $photo->publish_date);
+
+		if ($photo->hasDimension($this->dimension->shortname))
+			$dimension = $this->dimension;
+		else
+			$dimension = $photo->getClosestSelectableDimensionTo(
 				$this->dimension->shortname);
 
-			if (count($this->tag_list) > 0)
-				$uri.= '?'.$this->tag_list->__toString();
+		$entry->setContent($this->getPhotoContent($photo, $dimension), 'html');
 
-			$entry = new XML_Atom_Entry($uri, '', $photo->publish_date);
+		//$entry->addAuthor($author_name, $author_uri, $author_email);
+		$entry->addLink($uri, 'alternate', 'text/html');
 
-			$entry->setContent($this->getPhotoContent($photo), 'html');
+		// add enclosure
+		$photo_uri = $photo->getUri($dimension->shortname);
+		$link = new XML_Atom_Link(
+			$this->app->getBaseHref().$photo_uri,
+			'enclosure',
+			$photo->getMimeType($dimension->shortname));
 
-			//$entry->addAuthor($author_name, $author_uri, $author_email);
-			$entry->addLink($uri, 'alternate', 'text/html');
+		$link->setTitle($photo->getTitle());
+		//$link->setLength();
+		$entry->addLink($link);
 
-			$this->feed->addEntry($entry);
-		}
+		return $entry;
 	}
 
 	// }}}
 	// {{{ protected function getPhotoContent()
 
-	protected function getPhotoContent(PinholePhoto $photo)
+	protected function getPhotoContent(PinholePhoto $photo,
+		PinholeImageDimension $dimension)
 	{
 		ob_start();
 
 		$div_tag = new SwatHtmlTag('div');
 		$div_tag->open();
 
-		if ($photo->hasDimension($this->dimension->shortname)) {
-			$img = $photo->getImgTag($this->dimension->shortname);
-		} else {
-			$dimension = $photo->getClosestSelectableDimensionTo(
-				$this->dimension->shortname);
-
-			$img = $photo->getImgTag($dimension->shortname);
-		}
+		$img = $photo->getImgTag($dimension->shortname);
 		$img->src = $this->app->getBaseHref().$img->src;
 		$img->display();
 

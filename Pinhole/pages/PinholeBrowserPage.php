@@ -212,7 +212,7 @@ abstract class PinholeBrowserPage extends SitePage
 			$this->app->config->pinhole->path.$tag_list_view->base;
 
 		if (isset($this->app->cookie->dimension_shortname))
-			$tag_list_view->rss_dimension_shortname =
+			$tag_list_view->atom_dimension_shortname =
 				$this->app->cookie->dimension_shortname;
 	}
 
@@ -337,7 +337,7 @@ abstract class PinholeBrowserPage extends SitePage
 			Pinhole::PACKAGE_ID));
 
 		if (count($this->tag_list) > 0)
-			$this->layout->data->rss_link = 'rss?'.$this->tag_list->__toString();
+			$this->layout->data->atom_link = 'atom?'.$this->tag_list->__toString();
 	}
 
 	// }}}

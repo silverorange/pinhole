@@ -211,6 +211,7 @@ class PinholeAtomPage extends SitePage
 		$entry->setContent($this->getPhotoContent($photo, $dimension), 'html');
 
 		//$entry->addAuthor($author_name, $author_uri, $author_email);
+		$entry->addAuthor($this->app->config->site->title);
 		$entry->addLink($uri, 'alternate', 'text/html');
 
 		// add enclosure

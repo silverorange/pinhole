@@ -214,8 +214,6 @@ PinholePhotoUploadClient.prototype.upload = function(event)
 		// reset the form
 		var container = document.getElementById('photo_processing').childNodes[0];
 		for (var i = 0; i < container.childNodes.length; i++) {
-			alert(node.nodeName + ' - ' + node.id + ' - ' + node.className);
-
 			if (node.id == '' || node.id != 'photo_container')
 				container.removeChild(node);
 		}

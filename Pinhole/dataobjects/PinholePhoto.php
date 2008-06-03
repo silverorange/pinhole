@@ -774,7 +774,7 @@ class PinholePhoto extends SiteImage
 
 		$tag_list = new PinholeTagList($this->db, $this->image_set->instance);
 		foreach ($data_objects as $object)
-			$tag_list->add(new PinholeTag($object));
+			$tag_list->add(new PinholeTag($this->image_set->instance, $object));
 
 		return $tag_list;
 	}

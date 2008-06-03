@@ -65,11 +65,15 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 
 	/**
 	 * Creates a new tag
+	 *
+	 * @param SiteInstance $instance optional. The instance for the current
+	 *                               site.
 	 */
-	public function __construct()
+	public function __construct(SiteInstance $instance = null)
 	{
 		$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
 		$this->photos = new $wrapper();
+		$this->setInstance($instance);
 	}
 
 	// }}}
@@ -265,19 +269,6 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	}
 
 	// }}}
-	// {{{ public function setInstance()
-
-	/**
-	 * Sets the site instance used by this tag
-	 *
-	 * @param SiteInstance $instance the site instance to use for this tag.
-	 */
-	public function setInstance(SiteInstance $instance = null)
-	{
-		$this->instance = $instance;
-	}
-
-	// }}}
 	// {{{ public function setDatabase()
 
 	/**
@@ -358,6 +349,19 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	public function isModified()
 	{
 		return false;
+	}
+
+	// }}}
+	// {{{ protected function setInstance()
+
+	/**
+	 * Sets the site instance used by this tag
+	 *
+	 * @param SiteInstance $instance the site instance to use for this tag.
+	 */
+	protected function setInstance(SiteInstance $instance = null)
+	{
+		$this->instance = $instance;
 	}
 
 	// }}}

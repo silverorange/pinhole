@@ -12,6 +12,19 @@ require_once 'Pinhole/dataobjects/PinholePhoto.php';
  */
 class PinholePhotoDimensionBinding extends SiteImageDimensionBinding
 {
+	// {{{ public properties
+
+	/**
+	 * Photo Id
+	 *
+	 * This is not an internal property since alternative effiecient methods
+	 * are used to load dimensions and dimension bindings.
+	 *
+	 * @var integer
+	 */
+	public $photo;
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()
@@ -20,9 +33,6 @@ class PinholePhotoDimensionBinding extends SiteImageDimensionBinding
 
 		$this->table = 'PinholePhotoDimensionBinding';
 		$this->image_field = 'photo';
-
-		$this->registerInternalProperty('photo',
-			SwatDBClassMap::get('PinholePhoto'));
 	}
 
 	// }}}

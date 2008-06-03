@@ -90,12 +90,15 @@ class PinholeTag extends PinholeAbstractTag
 	/**
 	 * Creates a new tag
 	 *
+	 * @param SiteInstance $instance optional. The instance for the current
+	 *                               site.
 	 * @param PinholeTagDataObject $data_object optional. Data object to create
 	 *                                           this tag from. If not
 	 *                                           specified, an empty tag is
 	 *                                           created.
 	 */
-	public function __construct(PinholeTagDataObject $data_object = null)
+	public function __construct(SiteInstance $instance = null,
+		PinholeTagDataObject $data_object = null)
 	{
 		parent::__construct();
 
@@ -110,8 +113,6 @@ class PinholeTag extends PinholeAbstractTag
 			$this->event          = $this->data_object->event;
 			$this->order_manually = $this->data_object->order_manually;
 			$this->createdate     = $this->data_object->createdate;
-			if ($this->data_object->instance !== null)
-				$this->setInstance($this->data_object->instance);
 		}
 	}
 

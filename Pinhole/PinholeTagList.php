@@ -175,7 +175,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 						$this->add($tag);
 					}
 				} else {
-					$tag = new PinholeTag($data_object);
+					$tag = new PinholeTag($this->instance, $data_object);
 					$this->add($tag);
 				}
 			}
@@ -951,7 +951,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$tag_list = $this->getEmptyCopy();
 
 		foreach ($tag_data_objects as $data_object) {
-			$tag = new PinholeTag($data_object);
+			$tag = new PinholeTag($this->instance, $data_object);
 			$tag_list->add($tag);
 		}
 
@@ -1015,7 +1015,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		foreach ($popular_tags as $popularity) {
 			foreach ($tag_data_objects as $data_object) {
 				if ($data_object->id == $popularity->tag) {
-					$tag = new PinholeTag($data_object);
+					$tag = new PinholeTag($this->instance, $data_object);
 					$tag->photo_count = $popularity->photo_count;
 					$tag_list->add($tag);
 				}

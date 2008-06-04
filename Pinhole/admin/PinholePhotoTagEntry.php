@@ -113,59 +113,6 @@ class PinholePhotoTagEntry extends SiteTagEntry
 	}
 
 	// }}}
-	// {{{ protected function updateTagBinding()
-
-	/**
-	 * Creates a new tag
-	 *
-	 * @throws SwatException if no database connection is set on this tag
-	 *                        entry control.
-	 */
-	protected function updateTagBinding($title)
-	{
-		if ($this->app === null)
-			throw new SwatException(
-				'An application must be set on the tag entry control during '.
-				'the widget init phase.');
-
-		// check to see if the tag already exists
-		$instance_id = $this->app->getInstanceId();
-		$sql = sprintf('select * from
-			PinholeTag where title = %s and instance %s %s',
-			$this->app->db->quote($title, 'text'),
-			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer'));
-
-		$tags = SwatDB::query($this->app->db, $sql,
-			SwatDBClassMap::get('PinholeTagDataObjectWrapper'));
-
-		// only insert if no tag already exists (prevents creating two tags on
-		// reloading)
-		if (count($tags) > 0) {
-			$tag_obj = $tags->getFirst();
-		} else {
-			$tag_obj = new PinholeTagDataObject();
-			$tag_obj->setDatabase($this->app->db);
-			$tag_obj->instance = $instance_id;
-			$tag_obj->title = $title;
-			$tag_obj->save();
-			$message = new SwatMessage(
-				sprintf(Pinhole::_('“%s” tag has been added'),
-					SwatString::minimizeEntities($tag_obj->title)));
-
-			$message->content_type = 'text/xml';
-			$message->secondary_content = sprintf(Pinhole::_(
-				'You can <a href="Tag/Edit?id=%d">edit this tag</a> '.
-				'to customize it.'),
-				$tag_obj->id);
-
-			$this->app->messages->add($message);
-		}
-
-		$this->selected_tag_array[] = $tag_obj->name;
-	}
-
-	// }}}
 }
 
 ?>

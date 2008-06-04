@@ -26,6 +26,29 @@ class PinholePhotoTagEntry extends SiteTagEntry
 	private $app;
 
 	// }}}
+	// {{{ public function setAllTags()
+
+	public function setAllTags()
+	{
+		$instance_id = $this->app->getInstanceId();
+		$tag_array = array();
+
+		$sql = sprintf('select * from PinholeTag
+			where instance %s %s
+			order by title',
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'));
+
+		$tags = SwatDB::query($this->app->db, $sql,
+			'PinholeTagDataObjectWrapper');
+
+		foreach ($tags as $tag)
+			$tag_array[$tag->name] = $tag->title;
+
+		$this->setTagArray($tag_array);
+	}
+
+	// }}}
 	// {{{ public function setApplication()
 
 	/**
@@ -36,20 +59,6 @@ class PinholePhotoTagEntry extends SiteTagEntry
 	public function setApplication(SiteWebApplication $app)
 	{
 		$this->app = $app;
-	}
-
-	// }}}
-	// {{{ public function setTagList()
-
-	/**
-	 * Sets the list of tags that may be selected by this tag entry control
-	 *
-	 * @param PinholeTagList $tag_list the list of tags that may be selected by
-	 *                                  this tag entry control.
-	 */
-	public function setTagList(PinholeTagList $tag_list)
-	{
-		$this->tag_list = $tag_list;
 	}
 
 	// }}}

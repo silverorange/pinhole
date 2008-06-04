@@ -73,10 +73,8 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		// setup tag entry control
 		$this->ui->getWidget('tags')->setApplication($this->app);
-
 		$instance_id = $this->app->getInstanceId();
-		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance());
+		$tag_array = array();
 
 		$sql = sprintf('select * from PinholeTag
 			where instance %s %s
@@ -84,26 +82,13 @@ class PinholePhotoEdit extends AdminDBEdit
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
 
-		/* TODO: use this once status is figured out
-		$sql = sprintf('select * from PinholeTag
-			where instance %s %s
-				and (status = %s or id in
-					(select tag from PinholePhotoTagBinding
-					where photo = %s))
-			order by title',
-			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer'),
-			$this->app->db->quote(PinholeTag::STATUS_ENABLED, 'integer'),
-			$this->app->db->quote($this->photo->id, 'integer'));
-		*/
-
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
 
-		foreach ($tags as $data_object)
-			$tag_list->add(new PinholeTag($data_object));
+		foreach ($tags as $tag)
+			$tag_array[$tag->name] = $tag->title;
 
-		$this->ui->getWidget('tags')->setTagList($tag_list);
+		$this->ui->getWidget('tags')->setTagArray($tag_array);
 
 		$replicator = $this->ui->getWidget('site_link_field');
 		$replicators = array();
@@ -122,6 +107,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$class_name = SwatDBClassMap::get('PinholePhoto');
 		$this->photo = new $class_name();
 		$this->photo->setDatabase($this->app->db);
+		$this->photo->setInstance($this->app->getInstance());
 
 		if ($this->id === null) {
 			throw new AdminNoAccessException(
@@ -259,18 +245,8 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->setPhotoValues();
 		$this->photo->save();
 
-		$tag_list = $this->ui->getWidget('tags')->getSelectedTagList();
-
-		if ($tag_list !== null) {
-			$tag_list = $tag_list->getByType('PinholeTag');
-			$tag_ids = array();
-			foreach ($tag_list as $tag)
-				$tag_ids[] = $tag->id;
-
-			SwatDB::updateBinding($this->app->db, 'PinholePhotoTagBinding',
-				'photo', $this->id, 'tag', $tag_ids,
-				'PinholeTag', 'id');
-		}
+		$tags = $this->ui->getWidget('tags')->getSelectedTagArray();
+		$this->photo->addTagsByName($tags, true);
 
 		$this->addToSearchQueue();
 
@@ -425,13 +401,12 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		$this->ui->setValues(get_object_vars($this->photo));
 
-		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance());
+		$tags = array();
 
 		foreach ($this->photo->tags as $tag)
-			$tag_list->add($tag);
+			$tags[] = $tag->name;
 
-		$this->ui->getWidget('tags')->setSelectedTagList($tag_list);
+		$this->ui->getWidget('tags')->setSelectedTagArray($tags);
 
 		// sets the date to the set timezone
 		$converted_date = $this->photo->photo_date;

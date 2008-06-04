@@ -41,22 +41,23 @@ class PinholePhotoIndex extends AdminSearch
 		$instance_id = $this->app->getInstanceId();
 
 		// setup tag entry control
-		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance());
+		$this->ui->getWidget('tags')->setApplication($this->app);
+		$instance_id = $this->app->getInstanceId();
+		$tag_array = array();
 
 		$sql = sprintf('select * from PinholeTag
-			where instance %s %s order by title',
+			where instance %s %s
+			order by title',
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
 
-		foreach ($tags as $data_object)
-			$tag_list->add(new PinholeTag($data_object));
+		foreach ($tags as $tag)
+			$tag_array[$tag->name] = $tag->title;
 
-		$this->ui->getWidget('tags')->setTagList($tag_list);
-		$this->ui->getWidget('tags')->setApplication($this->app);
+		$this->ui->getWidget('tags')->setTagArray($tag_array);
 
 		// setup status list
 		$status_flydown = $this->ui->getWidget('status_flydown');

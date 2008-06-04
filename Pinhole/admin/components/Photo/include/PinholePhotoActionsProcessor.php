@@ -79,21 +79,17 @@ class PinholePhotoActionsProcessor
 			break;
 
 		case 'tags_action':
-			$tag_list = $ui->getWidget('tags')->getSelectedTagList();
-			$tag_list = $tag_list->getByType('PinholeTag');
-			if (count($tag_list) > 0) {
-				$tag_shortnames = array();
-				foreach ($tag_list as $tag)
-					$tag_shortnames[] = $tag->name;
-
+			$tag_array = $ui->getWidget('tags')->getSelectedTagArray();
+			if (count($tag_array) > 0) {
 				foreach ($this->getPhotos($view) as $photo)
-					$photo->addTagsByName($tag_shortnames);
+					$photo->addTagsByName($tag_array);
 
 				$num = count($view->getSelection());
-				if (count($tag_list) > 1) {
+				if (count($tag_array) > 1) {
 					$message = new SwatMessage(sprintf(Pinhole::ngettext(
-						'Tags have been added to one photo.',
-						'Tags have been added to %s photos.', $num),
+						'%s tags have been added to one photo.',
+						'%s tags have been added to %s photos.', $num),
+						SwatString::numberFormat(count($tag_array)),
 						SwatString::numberFormat($num)));
 				} else {
 					$message = new SwatMessage(sprintf(Pinhole::ngettext(

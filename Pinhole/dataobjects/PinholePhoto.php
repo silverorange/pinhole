@@ -227,17 +227,29 @@ class PinholePhoto extends SiteImage
 	// }}}
 	// {{{ public function addTagsByName()
 
-	public function addTagsByName($tag_names)
+	public function addTagsByName(array $tag_names,
+		$clear_existing_tags = false)
 	{
 		$this->checkDB();
 
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;
 
+		$sql = sprintf('delete from PinholePhotoTagBinding
+			where photo = %s',
+			$this->db->quote($this->id, 'integer'));
+
+		if (!$clear_existing_tags)
+			$sql.= sprintf(' and tag in (select id from
+				PinholeTag where name in (%s) and instance %s %s)',
+				$this->db->datatype->implodeArray($tag_names, 'text'),
+				SwatDB::equalityOperator($instance_id),
+				$this->db->quote($instance_id, 'integer'));
+
+		SwatDB::exec($this->db, $sql);
+
 		$sql = sprintf('insert into PinholePhotoTagBinding
 			(photo, tag) select %1$s, id from PinholeTag
-			where name in (%2$s) and PinholeTag.instance %3$s %4$s
-				and PinholeTag.id not in (select tag
-					from PinholePhotoTagBinding where photo = %1$s)',
+			where name in (%2$s) and PinholeTag.instance %3$s %4$s',
 			$this->db->quote($this->id, 'integer'),
 			$this->db->datatype->implodeArray($tag_names, 'text'),
 			SwatDB::equalityOperator($instance_id),

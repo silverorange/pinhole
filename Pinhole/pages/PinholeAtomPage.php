@@ -44,7 +44,7 @@ class PinholeAtomPage extends SitePage
 	 *
 	 * Default value is two days.
 	 *
-	 * @var
+	 * @var interger
 	 */
 	protected $recent_period = 172800;
 

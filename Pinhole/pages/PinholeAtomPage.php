@@ -76,7 +76,7 @@ class PinholeAtomPage extends SitePage
 	public function __construct(SiteWebApplication $app, SiteLayout $layout,
 		$dimension_shortname = null)
 	{
-		$layout = new SiteLayout($app, 'Pinhole/layouts/xhtml/atom.php');
+		$layout = new SiteLayout($app, 'Site/layouts/xhtml/atom.php');
 
 		parent::__construct($app, $layout);
 

@@ -13,7 +13,7 @@
 			</widget>
 			<widget class="SwatFormField">
 				<property name="title" translatable="yes">Display in Photo Details</property>
-				<widget class="SwatCheckbox" id="show" />
+				<widget class="SwatCheckbox" id="visible" />
 			</widget>
 			<widget class="SwatFormField">
 				<property name="title" translatable="yes">Display Machine Tag</property>

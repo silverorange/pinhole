@@ -1,19 +1,19 @@
-INSERT INTO AdminSection (id, displayorder, title, description, show)
+INSERT INTO AdminSection (id, displayorder, title, description, visible)
 	VALUES (101, 10, 'Gallery', NULL, true);
 
-INSERT INTO AdminComponent (id, section, displayorder, shortname, title, description, enabled, show)
+INSERT INTO AdminComponent (id, section, displayorder, shortname, title, description, enabled, visible)
 	VALUES (100, 101, 10, 'Photographer', 'Photographers', NULL, true, true);
 
-INSERT INTO AdminComponent (id, section, displayorder, shortname, title, description, enabled, show)
+INSERT INTO AdminComponent (id, section, displayorder, shortname, title, description, enabled, visible)
 	VALUES (101, 101, 5, 'Photo', 'Photos', NULL, true, true);
 
-	INSERT INTO AdminSubComponent (id, component, displayorder, shortname, title, show)
+	INSERT INTO AdminSubComponent (id, component, displayorder, shortname, title, visible)
 		VALUES (102, 101, 5, 'Upload', 'Upload Photos', true);
 
-	INSERT INTO AdminSubComponent (id, component, displayorder, shortname, title, show)
+	INSERT INTO AdminSubComponent (id, component, displayorder, shortname, title, visible)
 		VALUES (101, 101, 10, 'Pending', 'Pending Photos', true);
 
-INSERT INTO AdminComponent (id, section, displayorder, shortname, title, description, enabled, show)
+INSERT INTO AdminComponent (id, section, displayorder, shortname, title, description, enabled, visible)
 	VALUES (102, 101, 20, 'Tag', 'Tags', NULL, true, true);
 
 

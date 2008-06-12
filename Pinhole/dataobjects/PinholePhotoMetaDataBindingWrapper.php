@@ -31,7 +31,7 @@ class PinholePhotoMetaDataBindingWrapper extends SwatDBRecordsetWrapper
 			from PinholePhotoMetaDataBinding
 			inner join PinholeMetaData on
 				PinholeMetaData.id = PinholePhotoMetaDataBinding.meta_data
-			where PinholeMetaData.show = %s
+			where PinholeMetaData.visible = %s
 				and PinholePhotoMetaDataBinding.photo = %s 
 			order by PinholeMetaData.displayorder, PinholeMetaData.title';
 

@@ -42,7 +42,7 @@ class PinholeMetaDataIndex extends AdminIndex
 		switch ($actions->selected->id) {
 			case 'show_details':
 				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
-					'boolean:show', true, 'id', $view->getSelection());
+					'boolean:visible', true, 'id', $view->getSelection());
 
 				$message = new SwatMessage(sprintf(Admin::ngettext(
 					"%d detail has been enabled.",
@@ -53,7 +53,7 @@ class PinholeMetaDataIndex extends AdminIndex
 
 			case 'dont_show_details':
 				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
-					'boolean:show', false, 'id',
+					'boolean:visible', false, 'id',
 					$view->getSelection());
 
 				$message = new SwatMessage(sprintf(Admin::ngettext(
@@ -113,7 +113,7 @@ class PinholeMetaDataIndex extends AdminIndex
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'),
-			$this->getOrderByClause($view, 'show desc, displayorder, title'));
+			$this->getOrderByClause($view, 'visible desc, displayorder, title'));
 
 		$metadata = SwatDB::query($this->app->db, $sql);
 
@@ -125,9 +125,9 @@ class PinholeMetaDataIndex extends AdminIndex
 			$ds->title       = $data->title;
 			$ds->shortname   = $data->shortname;
 			$ds->id          = $data->id;
-			$ds->show        = $data->show;
+			$ds->visible     = $data->visible;
 			$ds->machine_tag = $data->machine_tag;
-			if ($ds->show)
+			if ($ds->visible)
 				$ds->group_title = 'Shown';
 			else
 				$ds->group_title = 'Not Shown';

@@ -172,7 +172,7 @@ class PinholePhotoIndex extends AdminSearch
 		$this->order_by_clause = 'PinholePhoto.publish_date desc,
 			PinholePhoto.photo_date desc, PinholePhoto.id';
 
-		if (strlen(trim($keywords)) > 0) {
+		if (trim($keywords) != '') {
 			$query = new NateGoSearchQuery($this->app->db);
 			$query->addDocumentType('photo');
 			$query->addBlockedWords(

@@ -446,14 +446,14 @@ class PinholeDateTagBrowser extends SwatControl
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $tag_list->getJoinClauses());
-		if (strlen($join_clauses) > 0)
+		if ($join_clauses != '')
 			$sql.= ' '.$join_clauses.' ';
 
 		$where_clause = $tag_list->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$where_clause;
 
-		if (strlen($group_by_clause) > 0)
+		if ($group_by_clause != '')
 			$sql.= ' group by '.$group_by_clause;
 
 		$rows = SwatDB::query($this->db, $sql, null);

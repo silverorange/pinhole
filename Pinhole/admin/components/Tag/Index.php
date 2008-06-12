@@ -156,7 +156,7 @@ class PinholeTagIndex extends AdminSearch
 
 		$sql = 'select count(id) from PinholeTag';
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$this->getWhereClause();
 
 		$pager = $this->ui->getWidget('pager');
@@ -164,7 +164,7 @@ class PinholeTagIndex extends AdminSearch
 
 		$sql = 'select PinholeTag.* from PinholeTag';
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$this->getWhereClause();
 
 		$sql.= ' order by '.$this->getOrderByClause($view, 'PinholeTag.title');

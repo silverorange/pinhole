@@ -116,10 +116,10 @@ class PinholeLayout extends SiteLayout
 		$instance_title = $this->app->config->site->title;
 		$page_title = $this->data->title;
 
-		if (strlen($page_title) > 0)
-			$this->data->html_title = $page_title.' - '.$instance_title;
-		else
+		if ($page_title == '')
 			$this->data->html_title = $instance_title;
+		else
+			$this->data->html_title = $page_title.' - '.$instance_title;
 
 		// build displayed title (top of page)
 		$this->data->instance_title = $instance_title;

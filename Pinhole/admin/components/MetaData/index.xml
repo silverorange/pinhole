@@ -7,15 +7,15 @@
 		<widget class="SwatForm" id="index_form">
 			<widget class="SwatTableView" id="index_view">
                 <object class="SwatTableViewGroup">
-					<property name="id">show</property>
-					<property name="group_by">show</property>
+					<property name="id">visible</property>
+					<property name="group_by">visible</property>
 					<object class="SwatTextCellRenderer">
 						<property name="text" type="data">group_title</property>
 					</object>
 					<object class="AdminGroupLinkCellRenderer">
 						<property name="text" translatable="yes">Change Order</property>
 						<property name="link">MetaData/Order?parent=%s</property>
-						<property name="link_value" type="data">show</property>
+						<property name="link_value" type="data">visible</property>
 					</object>
 				</object>
 				<object class="SwatTableViewCheckboxColumn" id="checkbox">
@@ -35,7 +35,7 @@
 				<object class="SwatTableViewColumn">
 					<property name="title" translatable="yes">Display in Photo Details</property>
 					<object class="SwatBooleanCellRenderer">
-						<property name="value" type="data">show</property>
+						<property name="value" type="data">visible</property>
 					</object>
 				</object>
 				<object class="SwatTableViewColumn">

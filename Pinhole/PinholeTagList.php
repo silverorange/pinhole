@@ -145,7 +145,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		$db->loadModule('Datatype', null, true);
 
-		if (is_string($tag_list_string) && strlen($tag_list_string) > 0) {
+		if (is_string($tag_list_string) && $tag_list_string != '') {
 			$tag_strings = explode('/', $tag_list_string);
 
 			// remove duplicate tags
@@ -201,7 +201,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$string.= '/'.$tag->__toString();
 
 		// strip leading slash
-		if (strlen($string) > 0)
+		if ($string != '')
 			$string = substr($string, 1);
 
 		return $string;
@@ -253,7 +253,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		foreach ($this->tags as $tag) {
 			$tag_where_clause = $tag->getWhereClause();
-			if (strlen($tag_where_clause) > 0)
+			if ($tag_where_clause != '')
 				$where_clauses[] = '('.$tag_where_clause.')';
 		}
 
@@ -713,11 +713,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
-		if (strlen($join_clauses) > 0)
+		if ($join_clauses != '')
 			$sql.= ' '.$join_clauses.' ';
 
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$where_clause;
 
 		$sql.= ' order by '.$this->getPhotoOrderByClause();
@@ -747,11 +747,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
-		if (strlen($join_clauses) > 0)
+		if ($join_clauses != '')
 			$sql.= ' '.$join_clauses.' ';
 
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$where_clause;
 
 		return SwatDB::queryOne($this->db, $sql);
@@ -781,11 +781,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
-		if (strlen($join_clauses) > 0)
+		if ($join_clauses != '')
 			$sql.= ' '.$join_clauses.' ';
 
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$where_clause;
 
 		$range = SwatDB::queryRow($this->db, $sql);
@@ -829,11 +829,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
-		if (strlen($join_clauses) > 0)
+		if ($join_clauses != '')
 			$sql.= ' '.$join_clauses.' ';
 
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$where_clause;
 
 		$sql.= ' order by '.$this->getPhotoOrderByClause();
@@ -1266,11 +1266,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
-		if (strlen($join_clauses) > 0)
+		if ($join_clauses != '')
 			$photo_id_sql.= ' '.$join_clauses.' ';
 
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$photo_id_sql.= ' where '.$where_clause;
 
 		$sql = sprintf('PinholeTag.id in

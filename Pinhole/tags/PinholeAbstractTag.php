@@ -222,11 +222,11 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 			$sql = 'select * from PinholePhoto';
 
 			$join_clauses = implode(' ', $this->getJoinClauses());
-			if (strlen($join_clauses) > 0)
+			if ($join_clauses != '')
 				$sql.= ' '.$join_clauses.' ';
 
 			$where_clause = $this->getWhereClause();
-			if (strlen($where_clause) > 0)
+			if ($where_clause != '')
 				$sql.= ' where '.$where_clause;
 
 			if ($range !== null)
@@ -258,11 +258,11 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 		$sql = 'select count(id) from PinholePhoto';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
-		if (strlen($join_clauses) > 0)
+		if ($join_clauses != '')
 			$sql.= ' '.$join_clauses.' ';
 
 		$where_clause = $this->getWhereClause();
-		if (strlen($where_clause) > 0)
+		if ($where_clause != '')
 			$sql.= ' where '.$where_clause;
 
 		return SwatDB::queryOne($this->db, $sql);

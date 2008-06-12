@@ -124,20 +124,20 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$title = $this->photo->getTitle();
 
 		if (isset($this->layout->navbar)) {
-			if (strlen($title) > 0)
-				$this->layout->navbar->createEntry($title);
-			else
+			if ($title == '')
 				$this->layout->navbar->createEntry('Photo');
+			else
+				$this->layout->navbar->createEntry($title);
 		}
 
 		// Set YUI Grid CSS class for one full-width column on details page.
 		$this->layout->data->yui_grid_class = 'yui-t7';
 
 		// Set photo title.
-		if (strlen($title) > 0)
+		if ($title != '')
 			$this->layout->data->title = SwatString::minimizeEntities($title);
 
-		if (strlen($this->photo->description) > 0)
+		if ($this->photo->description != '')
 			$this->layout->data->meta_description =
 				SwatString::minimizeEntities($this->photo->description);
 	}

@@ -225,13 +225,13 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 			$sql = 'select * from PinholePhoto';
 
 			$join_clauses = implode(' ', $this->getJoinClauses());
-			if (strlen($join_clauses) > 0)
+			if ($join_clauses != '')
 				$sql.= ' '.$join_clauses.' ';
 
 			$sql.= ' where ';
 
 			$where_clause = $this->getWhereClause();
-			if (strlen($where_clause) > 0)
+			if ($where_clause != '')
 				$sql.= $where_clause.' and ';
 
 			$sql.= sprintf('PinholePhoto.id = %s',
@@ -314,7 +314,7 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	{
 		switch ($name) {
 		case 'keywords':
-			$valid = (strlen(trim($value)) > 0);
+			$valid = (trim($value) != '');
 			break;
 
 		default:

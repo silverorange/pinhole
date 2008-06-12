@@ -61,12 +61,12 @@ class PinholeMetaDataEdit extends AdminDBEdit
 	{
 		$values = $this->ui->getValues(array(
 			'title',
-			'show',
+			'visible',
 			'machine_tag',
 		));
 
 		$this->metadata->title       = $values['title'];
-		$this->metadata->show        = $values['show'];
+		$this->metadata->visible     = $values['visible'];
 		$this->metadata->machine_tag = $values['machine_tag'];
 		$this->metadata->save();
 

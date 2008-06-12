@@ -39,7 +39,7 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	 *
 	 * @var boolean
 	 */
-	public $show;
+	public $visible;
 
 	/**
 	 * default false,

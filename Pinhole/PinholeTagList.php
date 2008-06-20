@@ -1235,6 +1235,21 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$order_by = 'PinholePhoto.publish_date desc,
 				PinholePhoto.photo_date asc';
 
+			// If all of the tags are date tags, order by photo_date rather
+			// than publish_date
+			if (count($this->tags) != 0) {
+				$all_date_tags = true;
+				foreach ($this->tags as $tag) {
+					if (!$tag instanceof PinholeDateTag) {
+						$all_date_tags = false;
+						break;
+					}
+				}
+
+				$order_by = 'coalesce(PinholePhoto.photo_date,
+					PinholePhoto.publish_date) asc, id asc';
+			}
+
 			// If there are any event tags in this tag list, order by
 			// photo date asecending.
 			foreach ($this->getByType('PinholeTag') as $tag) {

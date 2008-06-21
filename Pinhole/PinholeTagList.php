@@ -1246,8 +1246,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 					}
 				}
 
-				$order_by = 'coalesce(PinholePhoto.photo_date,
-					PinholePhoto.publish_date) asc, id asc';
+				if ($all_date_tags)
+					$order_by = 'coalesce(PinholePhoto.photo_date,
+						PinholePhoto.publish_date) asc';
 			}
 
 			// If there are any event tags in this tag list, order by
@@ -1255,7 +1256,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			foreach ($this->getByType('PinholeTag') as $tag) {
 				if ($tag->event) {
 					$order_by = 'coalesce(PinholePhoto.photo_date,
-						PinholePhoto.publish_date) asc, id asc';
+						PinholePhoto.publish_date) asc';
 
 					break;
 				}

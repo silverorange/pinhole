@@ -257,6 +257,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->title = $values['title'];
 		$this->photo->description = $values['description'];
 		$this->photo->photo_date = $photo_date;
+		$this->photo->photo_time_zone = $values['photo_time_zone'];
 		$this->photo->setStatus($values['status']);
 	}
 
@@ -269,6 +270,7 @@ class PinholePhotoEdit extends AdminDBEdit
 			'title',
 			'description',
 			'photo_date',
+			'photo_time_zone',
 			'status',
 		));
 	}

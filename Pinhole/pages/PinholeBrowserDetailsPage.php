@@ -115,12 +115,31 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	// }}}
 
 	// build phase
-	// {{{ public function build()
+	// {{{ protected function buildInternal()
 
-	public function build()
+	protected function buildInternal()
 	{
-		parent::build();
+		parent::buildInternal();
 
+		$view = $this->ui->getWidget('photo_details_view');
+		$view->data = $this->getPhotoDetailsStore();
+
+		$this->buildMetaData();
+		$this->buildLayout();
+		$this->buildPhotoNextPrev();
+
+		$description = $this->ui->getWidget('description');
+
+		// Set to text/xml for now pending review in ticket #1159.
+		$description->content_type = 'text/xml';
+		$description->content = $this->photo->description;
+	}
+
+	// }}}
+	// {{{ protected function buildLayout()
+
+	protected function buildLayout()
+	{
 		$title = $this->photo->getTitle();
 
 		if (isset($this->layout->navbar)) {
@@ -138,28 +157,19 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$this->layout->data->title = SwatString::minimizeEntities($title);
 
 		if ($this->photo->description != '')
-			$this->layout->data->meta_description =
-				SwatString::minimizeEntities($this->photo->description);
-	}
+			$this->layout->data->meta_description.=
+				(($this->layout->data->meta_description == '') ? '' : ' ').
+				$this->photo->description;
 
-	// }}}
-	// {{{ protected function buildInternal()
+		if (count($this->photo->tags) != 0) {
+			$tags = array();
+			foreach ($this->photo->tags as $tag)
+				$tags[] = $tag->title;
 
-	protected function buildInternal()
-	{
-		parent::buildInternal();
-
-		$view = $this->ui->getWidget('photo_details_view');
-		$view->data = $this->getPhotoDetailsStore();
-
-		$this->buildMetaData();
-		$this->buildPhotoNextPrev();
-
-		$description = $this->ui->getWidget('description');
-
-		// Set to text/xml for now pending review in ticket #1159.
-		$description->content_type = 'text/xml';
-		$description->content = $this->photo->description;
+			$this->layout->data->meta_keywords.=
+				(($this->layout->data->meta_keywords == '') ? '' : ' ').
+				implode(', ', $tags);
+		}
 	}
 
 	// }}}

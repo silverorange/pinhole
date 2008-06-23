@@ -23,3 +23,6 @@ body:last-child:not(:root:root) #description {
 	clear: both;
 }
 
+#photo_time_zone_areas {
+	display: block;
+}

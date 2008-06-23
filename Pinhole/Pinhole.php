@@ -137,7 +137,10 @@ class Pinhole
 			'pinhole.path'        => '',
 
 			// Whether or not site is enabled
-			'site.enabled' => '1',
+			'site.enabled' => true,
+
+			// Whether or not search engines can index the site
+			'pinhole.search_engine_indexable' => true,
 		);
 	}
 

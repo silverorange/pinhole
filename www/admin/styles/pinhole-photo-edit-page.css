@@ -1,0 +1,25 @@
+#title, #description {
+	width: 98%;
+}
+
+/* Safari hack */
+body:last-child:not(:root:root) #description {
+	resize: vertical;
+	max-width: 98%;
+	min-width: 98%;
+}
+
+#page_primary {
+	float: left;
+	width: 450px;
+	margin-right: 20px;
+}
+
+#page_sidebar {
+	float: left;
+}
+
+.swat-footer-form-field {
+	clear: both;
+}
+

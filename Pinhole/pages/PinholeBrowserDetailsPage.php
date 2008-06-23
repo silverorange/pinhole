@@ -144,7 +144,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		if (isset($this->layout->navbar)) {
 			if ($title == '')
-				$this->layout->navbar->createEntry('Photo');
+				$this->layout->navbar->createEntry(Pinhole::_('Photo'));
 			else
 				$this->layout->navbar->createEntry($title);
 		}

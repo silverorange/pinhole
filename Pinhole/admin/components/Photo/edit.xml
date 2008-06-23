@@ -17,47 +17,55 @@
 		</widget-->
 		<widget class="SwatMessageDisplay" id="message_display" />
 		<widget class="SwatForm" id="edit_form">
-			<widget class="SwatImagePreviewDisplay" id="thumbnail" />
-			<widget class="SwatDisclosure" id="site_links">
-				<property name="title" translatable="yes">Embed Photo</property>
-				<property name="open" type="boolean">false</property>
-				<widget class="SwatReplicableFormField" id="site_link_field">
-					<widget class="SwatEntry" id="site_link_code">
-						<property name="read_only" type="boolean">true</property>
-						<property name="classes[]">site-link-entry</property>
+			<!-- {{{ Primary Form Area -->
+			<widget class="SwatDisplayableContainer" id="page_primary">
+				<widget class="SwatImagePreviewDisplay" id="preview" />
+				<widget class="SwatDisclosure" id="site_links">
+					<property name="title" translatable="yes">Embed Photo</property>
+					<property name="open" type="boolean">false</property>
+					<widget class="SwatReplicableFormField" id="site_link_field">
+						<widget class="SwatEntry" id="site_link_code">
+							<property name="read_only" type="boolean">true</property>
+							<property name="classes[]">site-link-entry</property>
+						</widget>
+					</widget>
+					<widget class="SwatDisplayableContainer">
+						<property name="classes[]">swat-note</property>
+						<widget class="SwatContentBlock">
+							<property name="content" translatable="yes">Note: The photo must be published for embeded links to work.</property>
+						</widget>
 					</widget>
 				</widget>
-				<widget class="SwatDisplayableContainer">
-					<property name="classes[]">swat-note</property>
-					<widget class="SwatContentBlock">
-						<property name="content" translatable="yes">Note: The photo must be published for embeded links to work.</property>
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Title</property>
+					<widget class="SwatEntry" id="title" />
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Description</property>
+					<widget class="SwatTextarea" id="description" />
+				</widget>
+				<widget class="SwatContentBlock" id="status_info" />
+			</widget>
+			<!-- }}} -->
+			<!-- {{{ Sidebar Area -->
+			<widget class="SwatDisplayableContainer" id="page_sidebar">
+				<widget class="SwatFormField" id="status_field">
+					<property name="title" translatable="yes">Status</property>
+					<widget class="SwatRadioList" id="status" />
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Date Taken</property>
+					<widget class="SwatDateEntry" id="photo_date">
+						<property name="required_parts" type="constant">YEAR</property>
+						<property name="display_parts" type="constant">YEAR|MONTH|DAY|TIME|CALENDAR</property>
 					</widget>
 				</widget>
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Title</property>
-				<widget class="SwatEntry" id="title" />
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Date Taken</property>
-				<widget class="SwatDateEntry" id="photo_date">
-					<property name="required_parts" type="constant">YEAR</property>
-					<property name="display_parts" type="constant">YEAR|MONTH|DAY|TIME|CALENDAR</property>
+				<widget class="SwatFormField">
+					<property name="title" translatable="yes">Add Tags</property>
+					<widget class="PinholePhotoTagEntry" id="tags" />
 				</widget>
 			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Description</property>
-				<widget class="SwatTextarea" id="description" />
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Add Tags</property>
-				<widget class="PinholePhotoTagEntry" id="tags" />
-			</widget>
-			<widget class="SwatFormField" id="status_field">
-				<property name="title" translatable="yes">Status</property>
-				<widget class="SwatRadioList" id="status" />
-			</widget>
-			<widget class="SwatContentBlock" id="status_info" />
+			<!-- }}} -->
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
 					<property name="title" translatable="yes">Update</property>

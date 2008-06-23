@@ -330,13 +330,13 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		parent::buildInternal();
 
-		$thumbnail = $this->ui->getWidget('thumbnail');
-		$thumbnail->image = $this->photo->getUri('thumb', '../');
-		$thumbnail->width = $this->photo->getWidth('thumb');
-		$thumbnail->height = $this->photo->getHeight('thumb');
-		$thumbnail->preview_image = $this->photo->getUri('large', '../');
-		$thumbnail->preview_width = $this->photo->getWidth('large');
-		$thumbnail->preview_height = $this->photo->getHeight('large');
+		$preview = $this->ui->getWidget('preview');
+		$preview->image = $this->photo->getUri('small', '../');
+		$preview->width = $this->photo->getWidth('small');
+		$preview->height = $this->photo->getHeight('small');
+		$preview->preview_image = $this->photo->getUri('large', '../');
+		$preview->preview_width = $this->photo->getWidth('large');
+		$preview->preview_height = $this->photo->getHeight('large');
 
 		/*
 		$toolbar = $this->ui->getWidget('edit_toolbar');
@@ -401,6 +401,19 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$this->ui->getWidget('photo_date')->value = $converted_date;
 
+	}
+
+	// }}}
+
+	// finalize phase
+	// {{{ public function finalize()
+
+	public function finalize()
+	{
+		parent::finalize();
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/admin/styles/pinhole-photo-edit-page.css',
+			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

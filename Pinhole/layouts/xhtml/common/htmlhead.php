@@ -9,5 +9,5 @@
 	<meta name="keywords" content="<?= $this->meta_keywords ?>" />
 	<? /* TODO: add meta keywords and description */ ?> 
 	<!-- Some icons by the Tango project http://www.Tango-Project.org -->
-	<link rel="alternate" type="application/atom+xml" title="RSS" href="<?=$this->atom_link?>" />
+	<link rel="alternate" type="application/atom+xml" title="RSS" href="<?=$this->feed_link?>" />
 </head>

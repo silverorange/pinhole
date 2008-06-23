@@ -15,7 +15,7 @@ class PinholeTagListView extends SwatControl
 
 	public $home_title;
 	public $base = 'tag';
-	public $atom_dimension_shortname = 'large';
+	public $feed_dimension_shortname = 'large';
 
 	// }}}
 	// {{{ protected properties
@@ -131,18 +131,18 @@ class PinholeTagListView extends SwatControl
 
 	protected function displayAtomLink()
 	{
-		$atom_link_tag = new SwatHtmlTag('a');
-		$atom_link_tag->class = 'feed';
-		$atom_link_tag->title = Pinhole::_('Feed for this set of photos');
-		$atom_link_tag->href = str_replace('tag',
-			'atom/'.$this->atom_dimension_shortname, $this->base);
+		$feed_link_tag = new SwatHtmlTag('a');
+		$feed_link_tag->class = 'feed';
+		$feed_link_tag->title = Pinhole::_('Feed for this set of photos');
+		$feed_link_tag->href = str_replace('tag',
+			'feed/'.$this->feed_dimension_shortname, $this->base);
 
 		if (count($this->tag_list) > 0)
-			$atom_link_tag->href.= '?'.$this->tag_list->__toString();
+			$feed_link_tag->href.= '?'.$this->tag_list->__toString();
 
-		$atom_link_tag->setContent(Pinhole::_('Feed'));
+		$feed_link_tag->setContent(Pinhole::_('Feed'));
 
-		$atom_link_tag->display();
+		$feed_link_tag->display();
 	}
 
 	// }}}

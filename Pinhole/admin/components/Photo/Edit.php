@@ -366,7 +366,6 @@ class PinholePhotoEdit extends AdminDBEdit
 
 			$code = sprintf('<a href="%s%s">%s</a>',
 				$this->app->getFrontendBaseHref(), $link, $image);
-			echo SwatString::minimizeEntities($code); exit;
 
 			$replicator->getWidget('site_link_code', $dimension->id)->value =
 				$code;

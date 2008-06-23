@@ -360,11 +360,13 @@ class PinholePhotoEdit extends AdminDBEdit
 				$link = $this->photo->getUri('original');
 			} else {
 				$image = $this->photo->getImgTag($dimension->shortname);
+				$image->src = $this->app->getFrontendBaseHref().$image->src;
 				$link = 'photo/'.$this->photo->id;
 			}
 
 			$code = sprintf('<a href="%s%s">%s</a>',
 				$this->app->getFrontendBaseHref(), $link, $image);
+			echo SwatString::minimizeEntities($code); exit;
 
 			$replicator->getWidget('site_link_code', $dimension->id)->value =
 				$code;

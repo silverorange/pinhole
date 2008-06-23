@@ -31,7 +31,7 @@ class PinholeLayout extends SiteLayout
 		$this->data->search_content = '';
 		$this->data->dates = '';
 		$this->data->content = '';
-		$this->data->atom_link = 'atom';
+		$this->data->feed_link = 'feed';
 
 		$this->initLayouts();
 		/*

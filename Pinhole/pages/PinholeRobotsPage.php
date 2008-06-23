@@ -16,7 +16,8 @@ class PinholeRobotsPage extends SitePage
 	{
 		parent::build();
 
-		echo $this->getDisallowString();
+		if (!$this->app->config->pinhole->search_engine_indexable)
+			echo $this->getDisallowString();
 
 		exit();
 	}

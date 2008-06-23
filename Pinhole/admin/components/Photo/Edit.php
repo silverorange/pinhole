@@ -129,9 +129,6 @@ class PinholePhotoEdit extends AdminDBEdit
 			PinholePhoto::getStatusTitle(PinholePhoto::STATUS_PUBLISHED));
 		$status->addOption(PinholePhoto::STATUS_UNPUBLISHED,
 			PinholePhoto::getStatusTitle(PinholePhoto::STATUS_UNPUBLISHED));
-
-		$this->ui->getWidget('status_field')->title =
-			Pinhole::_('Change Status to');
 	}
 
 	// }}}

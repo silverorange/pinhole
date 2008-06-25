@@ -122,6 +122,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 		$indexer = new NateGoSearchIndexer('tag', $this->db);
 
+		$indexer->addTerm(new NateGoSearchTerm('name'));
 		$indexer->addTerm(new NateGoSearchTerm('title'));
 		$indexer->setMaximumWordLength(32);
 		$indexer->addUnindexedWords(

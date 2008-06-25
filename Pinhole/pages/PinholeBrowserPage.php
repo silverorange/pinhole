@@ -160,7 +160,9 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->layout->endCapture();
 
 		$this->layout->startCapture('content');
+		Pinhole::displayAd($this->app, 'top');
 		$this->displayContent();
+		Pinhole::displayAd($this->app, 'bottom');
 		$this->layout->endCapture();
 	}
 

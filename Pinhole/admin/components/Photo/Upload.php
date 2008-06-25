@@ -71,9 +71,20 @@ class PinholePhotoUpload extends AdminPage
 		$class_name = SwatDBClassMap::get('PinholePhoto');
 		$photo = new $class_name();
 		$photo->setDatabase($this->app->db);
-		$photo->load($photo_id);
 
-		// TODO maybe check PinholePhoto instance here
+		$instance_id = $this->app->getInstanceId();
+
+		if (!$photo->load($photo_id)) {
+			throw new AdminNotFoundException(
+				sprintf(Pinhole::_('Photo with id “%s” not found.'),
+				$this->id));
+		} elseif ($photo->image_set->instance !== null &&
+			$photo->image_set->instance->id != $instance_id) {
+			throw new AdminNotFoundException(
+				sprintf(Pinhole::_('Photo with id “%s” loaded '.
+					'in the wrong instance.'),
+				$photo->id));
+		}
 
 		// save the photo time zone
 		$photo->photo_time_zone = $this->ui->getWidget('photo_time_zone')->value;

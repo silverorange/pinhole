@@ -53,6 +53,7 @@ class PinholeConfigIndex extends AdminPage
 			),
 			'pinhole' => array(
 				'header_image',
+				'photos_per_page',
 				'search_engine_indexable',
 			),
 			'date' => array(

@@ -25,6 +25,12 @@
 				</object>
 			</object>
 			<object class="SwatDetailsViewField">
+				<property name="title" translatable="yes">Photos Per Page</property>
+				<object class="SwatNumericCellRenderer">
+					<property name="value" type="data">pinhole_photos_per_page</property>
+				</object>
+			</object>
+			<object class="SwatDetailsViewField">
 				<property name="title" translatable="yes">Site Time Zone</property>
 				<object class="SwatNullTextCellRenderer">
 					<property name="text" type="data">date_time_zone</property>

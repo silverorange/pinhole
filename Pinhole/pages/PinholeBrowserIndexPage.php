@@ -17,11 +17,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	/**
 	 * @var integer
 	 */
-	protected $page_size = 50;
-
-	/**
-	 * @var integer
-	 */
 	protected $page_number = 1;
 
 	// }}}
@@ -41,15 +36,17 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	{
 		parent::createTagList($tags);
 
+		$page_size = $this->app->config->pinhole->photos_per_page;
+
 		$page_tags = $this->tag_list->getByType('PinholePageTag');
 		if (count($page_tags) == 0) {
-			$range = new SwatDBRange($this->page_size);
+			$range = new SwatDBRange($page_size);
 		} else {
 			// get first page tag if it exists and set current page
 			$page_tags->rewind();
 			$page_tag = $page_tags->current();
-			$range = new SwatDBRange($this->page_size,
-				$this->page_size * ($page_tag->getPageNumber() - 1));
+			$range = new SwatDBRange($page_size,
+				$page_size * ($page_tag->getPageNumber() - 1));
 
 			$this->page_number = $page_tag->getPageNumber();
 		}
@@ -98,7 +95,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	{
 		$pagination = $this->ui->getWidget('pagination');
 		$pagination->total_records = $this->tag_list->getPhotoCount();
-		$pagination->page_size = $this->page_size;
+		$pagination->page_size =
+			$this->app->config->pinhole->photos_per_page;
+
 		$pagination->setCurrentPage($this->page_number);
 		if (count($this->tag_list) == 0)
 			$tag_path = '';

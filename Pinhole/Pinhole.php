@@ -141,7 +141,46 @@ class Pinhole
 
 			// Whether or not search engines can index the site
 			'pinhole.search_engine_indexable' => true,
+
+			'pinhole.header_image' => null,
+
+			'pinhole.ad_top' => '',
+			'pinhole.ad_bottom' => '',
+			'pinhole.ad_referers_only' => false,
 		);
+	}
+
+	// }}}
+	// {{{ public static function displayAd()
+
+	/**
+	 * Display an ad
+	 *
+	 * If $config->pinhole->ad_referers_only is true, the referer's domain is
+	 * checked against the site's domain to ensure the page has been arrived at
+	 * via another site.
+	 *
+	 * @param SiteApplication $app The current application
+	 * @param string $ad_type The type of ad to display
+	 */
+	public static function displayAd(SiteApplication $app, $type)
+	{
+		$type_name = 'ad_'.$type;
+
+		if ($app->config->pinhole->$type_name != '') {
+			$base_href = $app->getBaseHref();
+			$referer   = SiteApplication::initVar('HTTP_REFERER',
+				null, SiteApplication::VAR_SERVER);
+
+			// Display ad if referers only is off OR if there is a referer and
+			// it does not start with the app base href.
+			if (!$app->config->pinhole->ad_referers_only || ($referer !== null &&
+				strncmp($referer, $base_href, strlen($base_href)) != 0)) {
+				echo '<div class="ad">';
+				echo $app->config->pinhole->$type_name;
+				echo '</div>';
+			}
+		}
 	}
 
 	// }}}

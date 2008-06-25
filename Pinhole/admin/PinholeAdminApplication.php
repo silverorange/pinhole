@@ -51,6 +51,10 @@ class PinholeAdminApplication extends AdminApplication
 	{
 		parent::addConfigDefinitions($config);
 		$config->addDefinitions(Pinhole::getConfigDefinitions());
+
+		$config->addDefinitions(array(
+			'pinhole.camera_time_zone' => null,
+			));
 	}
 
 	// }}}

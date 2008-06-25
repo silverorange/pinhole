@@ -31,11 +31,13 @@ class PinholePhotoUpload extends AdminPage
 		$button = $this->ui->getWidget('submit_button');
 		$button->sensitive = false;
 
-		$this->ui->getWidget('photo_time_zone')->value =
-			$this->app->default_time_zone->getID();
+		$camera_time_zone = $this->app->config->pinhole->camera_time_zone;
 
-		$this->ui->getWidget('camera_time_zone')->value =
-			$this->app->default_time_zone->getID();
+		$time_zone = ($camera_time_zone === null) ?
+			$this->app->default_time_zone->getID() : $camera_time_zone;
+
+		$this->ui->getWidget('photo_time_zone')->value = $time_zone;
+		$this->ui->getWidget('camera_time_zone')->value = $time_zone;
 	}
 
 	// }}}
@@ -87,7 +89,13 @@ class PinholePhotoUpload extends AdminPage
 		}
 
 		// save the photo time zone
-		$photo->photo_time_zone = $this->ui->getWidget('photo_time_zone')->value;
+		$photo->photo_time_zone =
+			$this->ui->getWidget('photo_time_zone')->value;
+
+		$this->app->config->pinhole->camera_time_zone =
+			$photo->photo_time_zone;
+
+		$this->app->config->save();
 
 		// convert the photo date to UTC using the camera time zone
 		$photo->photo_date = new SwatDate($photo->photo_date);

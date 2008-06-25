@@ -11,7 +11,6 @@ require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
-require_once 'Pinhole/pages/PinholeSearchPage.php';
 require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
 
 /**

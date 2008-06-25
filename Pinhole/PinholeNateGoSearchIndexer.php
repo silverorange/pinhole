@@ -3,7 +3,6 @@
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'Site/SiteNateGoSearchIndexer.php';
 require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/pages/PinholeSearchPage.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**

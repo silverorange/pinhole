@@ -4,7 +4,6 @@ require_once 'Swat/exceptions/SwatException.php';
 require_once 'Admin/pages/AdminXMLRPCServer.php';
 require_once 'NateGoSearch/NateGoSearch.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/pages/PinholeSearchPage.php';
 
 /**
  * An XML-RPC server for upload processing

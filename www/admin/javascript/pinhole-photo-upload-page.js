@@ -2,6 +2,8 @@
  * @copyright 2007 silverorange
  */
 
+// {{{ PinholePhotoUploadPage
+
 PinholePhotoUploadPage = function(uploader)
 {
 	this.photo_container = document.getElementById('photo_container');
@@ -19,7 +21,24 @@ PinholePhotoUploadPage = function(uploader)
 	this.uploader.fileProcessedEvent.subscribe(this.addPhoto, this, true);
 	this.uploader.fileErrorEvent.subscribe(this.addError, this, true);
 	this.uploader.processingCompleteEvent.subscribe(this.complete, this, true);
+
+	// time zone flydowns
+	this.match_time_zone_flydowns = true;
+	var photo_regions = document.getElementById('photo_time_zone_regions');
+	YAHOO.util.Event.addListener(photo_regions, 'change',
+		this.handleTimeZoneChange, this, true);
+
+	var camera_regions = document.getElementById('camera_time_zone_regions');
+	YAHOO.util.Event.addListener(camera_regions, 'click',
+		this.disableTimeZoneMatching, this, true);
+
+	var camera_areas = document.getElementById('camera_time_zone_areas');
+	YAHOO.util.Event.addListener(camera_areas, 'click',
+		this.disableTimeZoneMatching, this, true);
 }
+
+// }}}
+// {{{ PinholePhotoUploadPage properties
 
 PinholePhotoUploadPage.fade_duration = 1;
 PinholePhotoUploadPage.thumbnail_width = 100;
@@ -29,6 +48,38 @@ PinholePhotoUploadPage.thumbnail_padding = 10;
 PinholePhotoUploadPage.path = '../images/photos/thumb';
 PinholePhotoUploadPage.processing_text = 'Processing Photo';
 PinholePhotoUploadPage.processed_text = 'Finished Processing!';
+
+// }}}
+
+// time zone methods
+// {{{ PinholePhotoUploadPage.prototype.disableTimeZoneMatching
+
+PinholePhotoUploadPage.prototype.disableTimeZoneMatching = function(e)
+{
+	this.match_time_zone_flydowns = false;
+}
+
+// }}}
+// {{{ PinholePhotoUploadPage.prototype.handleTimeZoneChange
+
+PinholePhotoUploadPage.prototype.handleTimeZoneChange = function(e)
+{
+	if (!this.match_time_zone_flydowns)
+		return;
+
+	document.getElementById('camera_time_zone_areas').selectedIndex =
+		document.getElementById('photo_time_zone_areas').selectedIndex;
+
+	camera_time_zone_regions_cascade.update();
+
+	document.getElementById('camera_time_zone_regions').selectedIndex =
+		document.getElementById('photo_time_zone_regions').selectedIndex;
+}
+
+// }}}
+
+// photo handling methods
+// {{{ PinholePhotoUploadPage.prototype.addPhoto
 
 PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 {
@@ -60,6 +111,9 @@ PinholePhotoUploadPage.prototype.addPhoto = function(type, args)
 	this.updateProcessingText();
 }
 
+// }}}
+// {{{ PinholePhotoUploadPage.prototype.addError
+
 PinholePhotoUploadPage.prototype.addError  = function(type, args)
 {
 	this.current_photo++;
@@ -68,11 +122,17 @@ PinholePhotoUploadPage.prototype.addError  = function(type, args)
 	this.errors.push(args[0]);
 }
 
+// }}}
+// {{{ PinholePhotoUploadPage.prototype.uploadError
+
 PinholePhotoUploadPage.prototype.uploadError  = function(type, args)
 {
 	this.errors.push(args[0]);
 	this.complete();
 }
+
+// }}}
+// {{{ PinholePhotoUploadPage.prototype.fadeInPhoto
 
 PinholePhotoUploadPage.prototype.fadeInPhoto = function()
 {
@@ -115,6 +175,9 @@ PinholePhotoUploadPage.prototype.fadeInPhoto = function()
 	animation.animate();
 }
 
+// }}}
+// {{{ PinholePhotoUploadPage.prototype.display
+
 PinholePhotoUploadPage.prototype.display = function(type, args)
 {
 	this.total_photos = args[0];
@@ -130,12 +193,18 @@ PinholePhotoUploadPage.prototype.display = function(type, args)
 	this.photo_container.parentNode.appendChild(clear_div);
 }
 
+// }}}
+// {{{ PinholePhotoUploadPage.prototype.updateProcessingText 
+
 PinholePhotoUploadPage.prototype.updateProcessingText = function(count)
 {
 	var text = PinholePhotoUploadPage.processing_text;
 	text += ' ' + this.current_photo + ' of ' + this.total_photos;
 	this.processing_message.innerHTML = text;
 }
+
+// }}}
+// {{{ PinholePhotoUploadPage.prototype.complete
 
 PinholePhotoUploadPage.prototype.complete = function()
 {
@@ -157,3 +226,5 @@ PinholePhotoUploadPage.prototype.complete = function()
 		this.errors = [];
 	}
 }
+
+// }}}

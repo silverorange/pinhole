@@ -142,6 +142,7 @@ class Pinhole
 			// Whether or not search engines can index the site
 			'pinhole.search_engine_indexable' => true,
 
+			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
 
 			'pinhole.ad_top' => '',

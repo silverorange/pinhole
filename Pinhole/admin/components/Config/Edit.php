@@ -114,6 +114,7 @@ class PinholeConfigEdit extends AdminEdit
 			'site_meta_description',
 			'date_time_zone',
 			'pinhole_search_engine_indexable',
+			'pinhole_photos_per_page',
 			'analytics_google_account',
 		));
 
@@ -188,6 +189,7 @@ class PinholeConfigEdit extends AdminEdit
 			),
 			'pinhole' => array(
 				'header_image',
+				'photos_per_page',
 				'search_engine_indexable',
 			),
 			'date' => array(

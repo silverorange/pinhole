@@ -19,6 +19,14 @@
 				</widget>
 			</widget>
 			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Photos Per Page</property>
+				<property name="note" translatable="yes">Maximum of 100 allowed</property>
+				<widget class="SwatIntegerEntry" id="pinhole_photos_per_page">
+					<property name="minimum_value" type="integer">1</property>
+					<property name="maximum_value" type="integer">100</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
 				<property name="title" translatable="yes">Site Time Zone</property>
 				<widget class="SwatTimeZoneEntry" id="date_time_zone" />
 			</widget>

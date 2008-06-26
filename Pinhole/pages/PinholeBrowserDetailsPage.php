@@ -261,7 +261,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$img_tag = $this->photo->getImgTag(
 			$this->dimension->shortname);
 
-		$img_tag->class = 'pinhole-photo';
+		$img_tag->class = 'pinhole-photo pinhole-photo-primary';
 		$img_tag->display();
 
 		if ($link_to_original)
@@ -337,10 +337,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		parent::finalize();
 		$this->layout->addHtmlHeadEntrySet(
 			$this->ui->getRoot()->getHtmlHeadEntrySet());
-
-		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
-			'packages/pinhole/styles/pinhole-browser-details-page.css',
-			Pinhole::PACKAGE_ID));
 	}
 
 	// }}}

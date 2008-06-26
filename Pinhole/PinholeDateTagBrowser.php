@@ -51,25 +51,6 @@ class PinholeDateTagBrowser extends SwatControl
 	protected $db;
 
 	// }}}
-	// {{{ public function __construct()
-
-	/**
-	 * Creates a new date tag browser control
-	 *
-	 * @param string $id a non-visible unique id for this widget.
-	 *
-	 * @see SwatWidget::__construct()
-	 */
-	public function __construct($id = null)
-	{
-		parent::__construct($id);
-
-		$this->addStyleSheet(
-			'packages/pinhole/styles/pinhole-date-tag-browser.css',
-			Pinhole::PACKAGE_ID);
-	}
-
-	// }}}
 	// {{{ public function display()
 
 	/**

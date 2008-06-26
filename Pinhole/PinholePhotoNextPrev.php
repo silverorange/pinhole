@@ -24,18 +24,6 @@ class PinholePhotoNextPrev extends SwatControl
 	protected $photo;
 
 	// }}}
-	// {{{ public function __construct()
-
-	public function __construct($id = null)
-	{
-		parent::__construct($id);
-
-		$this->addStyleSheet(
-			'packages/pinhole/styles/pinhole-photo-next-prev.css',
-			Pinhole::PACKAGE_ID);
-	}
-
-	// }}}
 	// {{{ public function display()
 
 	public function display()

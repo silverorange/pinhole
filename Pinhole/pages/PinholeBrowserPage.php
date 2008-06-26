@@ -334,10 +334,6 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->layout->addHtmlHeadEntrySet(
 			$this->ui->getRoot()->getHtmlHeadEntrySet());
 
-		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
-			'packages/pinhole/styles/pinhole-browser-page.css',
-			Pinhole::PACKAGE_ID));
-
 		if (count($this->tag_list) > 0)
 			$this->layout->data->feed_link = 'feed?'.$this->tag_list->__toString();
 	}

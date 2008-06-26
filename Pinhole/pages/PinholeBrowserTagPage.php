@@ -259,20 +259,6 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	}
 
 	// }}}
-
-	// finalize phase
-	// {{{ public function finalize()
-
-	public function finalize()
-	{
-		parent::finalize();
-
-		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
-			'packages/pinhole/styles/pinhole-browser-tag-page.css',
-			Pinhole::PACKAGE_ID));
-	}
-
-	// }}}
 }
 
 ?>

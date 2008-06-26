@@ -144,6 +144,7 @@ class Pinhole
 
 			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
+			'pinhole.camera_time_zone' => null,
 
 			'pinhole.ad_top' => '',
 			'pinhole.ad_bottom' => '',

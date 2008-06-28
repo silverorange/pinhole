@@ -75,7 +75,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				// TODO: make exception nicer when instance is null
 				throw new SiteNotFoundException(sprintf(
 					'Photo does not belong to the current instance: %s.',
-					$current_instance->shortname));
+					$this->app->getInstance()->shortname));
 			}
 		} else {
 			// photo was not found

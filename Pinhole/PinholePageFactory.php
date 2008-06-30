@@ -92,15 +92,6 @@ class PinholePageFactory extends SitePageFactory
 	}
 
 	// }}}
-	// {{{ protected function resolveLayout()
-
-	protected function resolveLayout(SiteWebApplication $app, $source)
-	{
-		$layout = new PinholeLayout($app, 'Pinhole/layouts/xhtml/default.php');
-		return $layout;
-	}
-
-	// }}}
 }
 
 ?>

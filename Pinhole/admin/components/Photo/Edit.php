@@ -398,7 +398,6 @@ class PinholePhotoEdit extends AdminDBEdit
 			$converted_date->convertTZbyID($this->photo->photo_time_zone);
 
 		$this->ui->getWidget('photo_date')->value = $converted_date;
-
 	}
 
 	// }}}

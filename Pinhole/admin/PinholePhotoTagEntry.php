@@ -109,6 +109,7 @@ class PinholePhotoTagEntry extends SiteTagEntry
 			$this->app->messages->add($message);
 		}
 
+		$this->tag_array[$tag_obj->name] = $tag_obj->title;
 		$this->selected_tag_array[] = $tag_obj->name;
 	}
 

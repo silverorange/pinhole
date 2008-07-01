@@ -75,6 +75,7 @@ class PinholePhotoLoaderPage extends SitePage
 
 		header('Content-Type: '.$this->photo->getMimeType(
 			$this->dimension_shortname));
+
 		readfile($this->photo->getFilePath($this->dimension_shortname));
 
 		exit();

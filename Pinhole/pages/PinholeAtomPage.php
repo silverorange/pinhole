@@ -198,9 +198,10 @@ class PinholeAtomPage extends SitePage
 		if ($this->page > 1) {
 			$this->tag_list->setPhotoRange(
 				new SwatDBRange($this->min_entries,
-					$count + ($this->min_entries * ($this->page - 1))));
+					$count + ($this->min_entries * ($this->page - 2))));
 
 			$photos = $this->tag_list->getPhotos();
+			$count = $this->min_entries;
 		}
 
 		$this->addEntries($photos, $count);

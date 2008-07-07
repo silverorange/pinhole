@@ -3,6 +3,7 @@
 require_once 'Site/pages/SitePage.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'Pinhole/PinholeTagList.php';
+require_once 'Pinhole/tags/PinholePageTag.php';
 require_once 'Pinhole/dataobjects/PinholeImageDimension.php';
 require_once 'XML/Atom/Feed.php';
 require_once 'XML/Atom/Entry.php';
@@ -54,6 +55,11 @@ class PinholeAtomPage extends SitePage
 	protected $default_dimension = 'large';
 
 	/**
+	 * @var integer
+	 */
+	protected $page;
+
+	/**
 	 * @var PinholeImageDimension
 	 */
 	protected $dimension;
@@ -83,6 +89,19 @@ class PinholeAtomPage extends SitePage
 		$tags = SiteApplication::initVar('tags');
 		$this->createTagList($tags);
 		$this->dimension = $this->initDimension($dimension_shortname);
+
+		$page_tags = $this->tag_list->getByType('PinholePageTag');
+		if (count($page_tags) == 0) {
+			$this->page = 1;
+		} else {
+			// get first page tag if it exists and set current page
+			$page_tags->rewind();
+			$page_tag = $page_tags->current();
+			$this->page = $page_tag->getPageNumber();
+		}
+
+		foreach ($page_tags as $tag)
+			$this->tag_list->remove($tag);
 	}
 
 	// }}}
@@ -166,14 +185,80 @@ class PinholeAtomPage extends SitePage
 		$count = 0;
 
 		foreach ($photos as $photo) {
-			$count++;
-
 			if ($count > $this->max_entries ||
 				($count > $this->min_entries) &&
 					$photo->publish_date->before($threshold))
 				break;
 
-			$this->feed->addEntry($this->getEntry($photo));
+			$count++;
+		}
+
+		$this->buildAtomPagination($count);
+
+		if ($this->page > 1) {
+			$this->tag_list->setPhotoRange(
+				new SwatDBRange($this->min_entries,
+					$count + ($this->min_entries * ($this->page - 1))));
+
+			$photos = $this->tag_list->getPhotos();
+		}
+
+		$this->addEntries($photos, $count);
+	}
+
+	// }}}
+	// {{{ protected function addEntries()
+
+	protected function addEntries(PinholePhotoWrapper $photos, $num_photos)
+	{
+		$count = 0;
+		foreach ($photos as $photo) {
+			if ($count < $num_photos) {
+				$this->feed->addEntry($this->getEntry($photo));
+			}
+
+			$count++;
+		}
+	}
+
+	// }}}
+	// {{{ protected function buildAtomPagination()
+
+	protected function buildAtomPagination($first_page_size)
+	{
+		// Feed paging. See IETF RFC 5005.
+		$total_photos = $this->tag_list->getPhotoCount();
+
+		$tag_string = (string) $this->tag_list;
+		if ($tag_string != '')
+			$tag_string.= '/';
+
+		$uri = sprintf('%sfeed/%s%s%s',
+			$this->getPinholeBaseHref(),
+			$this->dimension->shortname,
+			(strlen($tag_string) > 0) ? '?' : '',
+			$tag_string);
+
+		$this->feed->addLink($uri,
+			'first', 'application/atom+xml');
+
+		if ($tag_string == '')
+			$uri.= '?';
+
+		$last = (ceil(($total_photos - $first_page_size) / $this->min_entries)
+			+ 1);
+
+		$this->feed->addLink($uri.'page.number='.$last,
+			'last', 'application/atom+xml');
+
+		if ($this->page != 1) {
+			$this->feed->addLink($uri.'page.number='.($this->page - 1),
+				'previous', 'application/atom+xml');
+		}
+
+		if ($this->page != $last) {
+			$this->feed->addLink($uri.'page.number='.($this->page + 1),
+				'next', 'application/atom+xml');
 		}
 	}
 

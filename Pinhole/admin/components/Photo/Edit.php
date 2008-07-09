@@ -42,11 +42,6 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected $pending_photos = array();
 
 	/**
-	 * @var array
-	 */
-	protected $pending_photo_ids = array();
-
-	/**
 	 * @var PinholeImageDimensionWrapper
 	 */
 	protected $dimensions;
@@ -163,7 +158,6 @@ class PinholePhotoEdit extends AdminDBEdit
 		$found = false;
 
 		foreach ($this->pending_photos as $photo) {
-			echo $photo->id.'<br />';
 			if ($photo->id == $this->photo->id)
 				$found = true;
 			elseif ($found)

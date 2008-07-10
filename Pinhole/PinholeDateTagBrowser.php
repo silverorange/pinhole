@@ -66,7 +66,7 @@ class PinholeDateTagBrowser extends SwatControl
 
 		parent::display();
 
-		$date_range = $this->tag_list->getPhotoDateRange();
+		$date_range = $this->tag_list->getPhotoInfo();
 		$start_date = $date_range['start'];
 		$end_date   = $date_range['end'];
 
@@ -143,15 +143,15 @@ class PinholeDateTagBrowser extends SwatControl
 		$empty_tag_list = $this->tag_list->getEmptyCopy();
 
 		// get date range of all photos with current tag list's filters
-		$global_date_range = $empty_tag_list->getPhotoDateRange();
+		$date_range = $empty_tag_list->getPhotoInfo();
 
 		// if there are no photos, don't display years
-		if ($global_date_range['start'] === null &&
-			$global_date_range['end'] === null)
+		if ($date_range['start'] === null &&
+			$date_range['end'] === null)
 			return;
 
-		$year_start = $global_date_range['start']->getYear();
-		$year_end   = $global_date_range['end']->getYear();
+		$year_start = $date_range['start']->getYear();
+		$year_end   = $date_range['end']->getYear();
 		$date       = new SwatDate();
 
 		// get selected year if it exists

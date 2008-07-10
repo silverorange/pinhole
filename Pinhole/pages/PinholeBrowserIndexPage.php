@@ -119,7 +119,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		else
 			$tag_path = '?'.$this->tag_list->__toString();
 
-		$photos = $this->tag_list->getPhotos();
+		$photos = $this->tag_list->getPhotos('thumbnail');
 
 		$store = new SwatTableStore();
 

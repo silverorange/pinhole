@@ -9,6 +9,7 @@ require_once 'Swat/exceptions/SwatInvalidClassException.php';
 require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Pinhole/PinholeTagFactory.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'Pinhole/dataobjects/PinholePhotoThumbnailWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 
@@ -712,7 +713,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @return PinholePhotoWrapper the photos of this tag list.
 	 */
-	public function getPhotos()
+	public function getPhotos($dimension_shortname = null)
 	{
 		$sql = 'select PinholePhoto.id, PinholePhoto.title,
 				PinholePhoto.original_filename, PinholePhoto.photo_date,
@@ -735,7 +736,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if ($range !== null)
 			$this->db->setLimit($range->getLimit(), $range->getOffset());
 
-		$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
+		if ($dimension_shortname == 'thumbnail')
+			$wrapper = SwatDBClassMap::get('PinholePhotoThumbnailWrapper');
+		else
+			$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
+
 		return SwatDB::query($this->db, $sql, $wrapper);
 	}
 

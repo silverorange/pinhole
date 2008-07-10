@@ -16,19 +16,31 @@ class PinholeRobotsPage extends SitePage
 	{
 		parent::build();
 
-		if (!$this->app->config->pinhole->search_engine_indexable)
-			echo $this->getDisallowString();
+		if (!$this->app->config->pinhole->search_engine_indexable) {
+			$this->displayDisallowString();
+		} else {
+			$this->displayGeneralRules();
+		}
 
 		exit();
 	}
 
 	// }}}
-	// {{{ protected function getDisallowString()
+	// {{{ protected function displayDisallowString()
 
-	protected function getDisallowString()
+	protected function displayDisallowString()
 	{
-		//return '';
-		return "User-agent: * \nDisallow: /";
+		echo "User-agent: * \nDisallow: /";
+	}
+
+	// }}}
+	// {{{ protected function displayGeneralRules()
+
+	protected function displayGeneralRules()
+	{
+		echo "User-agent: * \n";
+		echo "Disallow: /tag?*\n";
+		echo "Allow: /tag?page.number=*";
 	}
 
 	// }}}

@@ -1034,11 +1034,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$tag_list = $this->getEmptyCopy();
 
 		$popular_tags->seek();
-		while ($tag = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+		while ($row = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {
 			foreach ($tag_data_objects as $data_object) {
-				if ($data_object->id == $tag->tag) {
+				if ($data_object->id == $row->tag) {
 					$tag = new PinholeTag($this->instance, $data_object);
-					$tag->photo_count = $tag->photo_count;
+					$tag->photo_count = $row->photo_count;
 					$tag_list->add($tag);
 				}
 			}

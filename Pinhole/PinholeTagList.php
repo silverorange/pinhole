@@ -123,6 +123,13 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	private $photo_range = null;
 
+	/**
+	 * A cache of the photos' start-date, end-date, and photo-count
+	 *
+	 * @var array
+	 */
+	private $photo_info_cache;
+
 	// }}}
 	// {{{ public function __construct()
 
@@ -466,6 +473,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			array_splice($this->tag_keys, $index, 1);
 			if ($this->tag_index >= $index && $this->tag_index > 0)
 				$this->tag_index--;
+
+			$this->resetPhotoInfoCache();
 		}
 
 		return $removed;
@@ -489,6 +498,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$this->tags = array();
 		$this->tag_keys = array();
 		$this->tag_index = 0;
+
+		$this->resetPhotoInfoCache();
 
 		return $tag_list;
 	}
@@ -757,7 +768,34 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getPhotoCount()
 	{
-		$sql = 'select count(PinholePhoto.id) from PinholePhoto
+		$info = $this->getPhotoInfo();
+		if (count($info) > 0)
+			return $info['count'];
+		else
+			return 0;
+	}
+
+	// }}}
+	// {{{ public function getPhotoInfo()
+
+	/**
+	 * Gets the date range and count of photos of this tag list
+	 *
+	 * @return array a three element array with the keys 'start', 'end', and
+	 *                'count'. If there are no photos in the intersection of
+	 *                the tags in this tag list, an empty array is returned.
+	 */
+	public function getPhotoInfo()
+	{
+		if (is_array($this->photo_info_cache))
+			return $this->photo_info_cache;
+
+		$sql = 'select count(PinholePhoto.id) as photo_count,
+				max(convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) as last_photo_date,
+				min(convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) as first_photo_date
+			from PinholePhoto
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
@@ -768,7 +806,19 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if ($where_clause != '')
 			$sql.= ' where '.$where_clause;
 
-		return SwatDB::queryOne($this->db, $sql);
+		$row = SwatDB::queryRow($this->db, $sql);
+
+		if ($row === null) {
+			$this->photo_info_cache = array();
+		} else {
+			$this->photo_info_cache = array(
+				'count' => $row->photo_count,
+				'start' => new SwatDate($row->first_photo_date),
+				'end'   => new SwatDate($row->last_photo_date),
+			);
+		}
+
+		return $this->photo_info_cache;
 	}
 
 	// }}}
@@ -1136,6 +1186,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		foreach ($this->tags as $tag)
 			$tag->delete();
+
+		$this->resetPhotoInfoCache();
 	}
 
 	// }}}
@@ -1239,6 +1291,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function count()
 	{
 		return count($this->tags);
+	}
+
+	// }}}
+	// {{{ protected function resetPhotoInfoCache()
+
+	protected function resetPhotoInfoCache()
+	{
+		$this->photo_info_cache = null;
 	}
 
 	// }}}

@@ -153,18 +153,23 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 			// get all simple tag strings
 			$simple_tag_strings = preg_grep('/^[A-Za-z0-9]+$/', $tag_strings);
-			$quoted_tag_strings =
-				$db->datatype->implodeArray($simple_tag_strings, 'text');
 
-			// load all simple tags in one query
-			$sql = sprintf('select * from PinholeTag
-				where name in (%s) and instance %s %s',
-				$quoted_tag_strings,
-				SwatDB::equalityOperator($instance_id),
-				$db->quote($instance_id, 'integer'));
+			if (count($simple_tag_strings) > 0) {
+				$quoted_tag_strings =
+					$db->datatype->implodeArray($simple_tag_strings, 'text');
 
-			$tag_data_objects =
-				SwatDB::query($db, $sql, 'PinholeTagDataObjectWrapper');
+				// load all simple tags in one query
+				$sql = sprintf('select * from PinholeTag
+					where name in (%s) and instance %s %s',
+					$quoted_tag_strings,
+					SwatDB::equalityOperator($instance_id),
+					$db->quote($instance_id, 'integer'));
+
+				$tag_data_objects =
+					SwatDB::query($db, $sql, 'PinholeTagDataObjectWrapper');
+			} else {
+				$tag_data_objects = new PinholeTagDataObjectWrapper();
+			}
 
 			foreach ($tag_strings as $tag_string) {
 				// check if we've already loaded a simple tag for this string

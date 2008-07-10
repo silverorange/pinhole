@@ -709,7 +709,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getPhotos()
 	{
-		$sql = 'select PinholePhoto.* from PinholePhoto
+		$sql = 'select PinholePhoto.id, PinholePhoto.title,
+				PinholePhoto.original_filename, PinholePhoto.photo_date,
+				PinholePhoto.publish_date, PinholePhoto.image_set,
+				PinholePhoto.filename
+			from PinholePhoto
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
 		$join_clauses = implode(' ', $this->getJoinClauses());

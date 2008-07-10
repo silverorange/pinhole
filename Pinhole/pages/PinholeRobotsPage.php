@@ -40,7 +40,8 @@ class PinholeRobotsPage extends SitePage
 	{
 		echo "User-agent: * \n";
 		echo "Disallow: /tag?*\n";
-		echo "Allow: /tag?page.number=*";
+		echo "Allow: /tag?page.number=*\n";
+		echo "Crawl-delay: 60";
 	}
 
 	// }}}

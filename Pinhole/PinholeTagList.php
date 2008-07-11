@@ -1048,9 +1048,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function getSubTagsByPopularity(SwatDBRange $range = null,
 		$order_by_clause = null)
 	{
-		if ($order_by_clause === null)
-			$order_by_clause = 'photo_count desc';
-
 		$sql = sprintf('select count(PinholePhoto.id) as photo_count,
 				PinholePhotoTagBinding.tag
 			from PinholePhoto
@@ -1060,10 +1057,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			%s
 			where %s
 			group by PinholePhotoTagBinding.tag
-			order by %s',
+			order by photo_count desc',
 			implode(' ', $this->getJoinClauses()),
-			$this->getWhereClause(),
-			$order_by_clause);
+			$this->getWhereClause());
 
 		if ($range !== null)
 			$this->db->setLimit($range->getLimit(), $range->getOffset());
@@ -1077,15 +1073,18 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$sql = sprintf('select PinholeTag.* from PinholeTag where id in (%s)',
 			implode(',', $tag_ids));
 
+		if ($order_by_clause !== null)
+			$sql.= ' order by '.$order_by_clause;
+
 		$tag_data_objects = SwatDB::query($this->db, $sql,
 			'PinholeTagDataObjectWrapper');
 
 		$wrapper_class = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
 		$tag_list = $this->getEmptyCopy();
 
-		$popular_tags->seek();
-		while ($row = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {
-			foreach ($tag_data_objects as $data_object) {
+		foreach ($tag_data_objects as $data_object) {
+			$popular_tags->seek();
+			while ($row = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {
 				if ($data_object->id == $row->tag) {
 					$tag = new PinholeTag($this->instance, $data_object);
 					$tag->photo_count = $row->photo_count;

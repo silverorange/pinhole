@@ -97,10 +97,7 @@ class PinholePhotoNextPrev extends SwatControl
 		$a_tag->setContent(Pinhole::_('Thumbnails'));
 		$a_tag->href = $this->appendTagPath($this->base.'tag', $photo->id);
 		$a_tag->class = 'view-all';
-
-		echo ' ';
 		$a_tag->display();
-		echo ' ';
 	}
 
 	// }}}

@@ -84,8 +84,6 @@ class PinholePageFactory extends SitePageFactory
 			'^(tags)/(cloud)$'                => 'PinholeBrowserTagPage',
 			'^(feed)$'                        => 'PinholeAtomPage',
 			'^(feed)/([\w\d*]+)$'             => 'PinholeAtomPage',
-			'^(rss)$'                         => 'PinholeAtomPage',
-			'^(rss)/([\w\d*]+)$'              => 'PinholeAtomPage',
 			'^(loadphoto)/(.+)/(.+).jpg$'     => 'PinholePhotoLoaderPage',
 			'^robots.txt$'                    => 'PinholeRobotsPage',
 		);

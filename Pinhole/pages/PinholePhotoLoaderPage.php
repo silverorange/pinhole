@@ -87,7 +87,7 @@ class PinholePhotoLoaderPage extends SitePage
 	protected function createLayout()
 	{
 		return new SiteLayout($this->app,
-			'../layouts/xhtml/blank.php');
+			'Pinhole/layouts/xhtml/blank.php');
 	}
 
 	// }}}

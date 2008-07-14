@@ -20,7 +20,6 @@ class PinholeCalendarGadget extends SiteGadget
 	{
 		$date = new SwatDate();
 		$date->setDay(1);
-		$date->setMonth(6);
 		$date->clearTime();
 
 		$sql = "select count(PinholePhoto.id) as photo_count,

@@ -40,10 +40,15 @@ class PinholePhotoTagEntry extends SiteTagEntry
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');
 
-		foreach ($tags as $tag)
-			$tag_array[$tag->name] = $tag->title;
+		// switch to using the JSON server if there are more than 300 tags
+		if (count($tags) > 300) {
+			$this->json_server = 'Photo/TagServer';
+		} else {
+			foreach ($tags as $tag)
+				$tag_array[$tag->name] = $tag->title;
 
-		$this->setTagArray($tag_array);
+			$this->setTagArray($tag_array);
+		}
 	}
 
 	// }}}
@@ -78,7 +83,8 @@ class PinholePhotoTagEntry extends SiteTagEntry
 		// check to see if the tag already exists
 		$instance_id = $this->app->getInstanceId();
 		$sql = sprintf('select * from
-			PinholeTag where title = %s and instance %s %s',
+			PinholeTag where lower(title) = lower(%s)
+				and instance %s %s',
 			$this->app->db->quote($title, 'text'),
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));

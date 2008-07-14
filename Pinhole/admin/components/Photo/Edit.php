@@ -382,7 +382,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$tags = array();
 
 		foreach ($this->photo->tags as $tag)
-			$tags[] = $tag->name;
+			$tags[$tag->name] = $tag->title;
 
 		$this->ui->getWidget('tags')->setSelectedTagArray($tags);
 

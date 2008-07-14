@@ -14,7 +14,6 @@ class PinholeSubTagListView extends SwatControl
 	// {{{ public properties
 
 	public $base = 'tag';
-	public $title;
 
 	// }}}
 	// {{{ protected properties
@@ -55,10 +54,6 @@ class PinholeSubTagListView extends SwatControl
 		$div_tag->class = 'pinhole-sub-tag-list-view';
 		$div_tag->id = $this->id;
 		$div_tag->open();
-
-		$header_tag = new SwatHtmlTag('h3');
-		$header_tag->setContent($this->title);
-		$header_tag->display();
 
 		$ul_tag = new SwatHtmlTag('ul');
 		$ul_tag->id = $this->id.'_list';

@@ -3,6 +3,7 @@
 require_once 'Swat/Swat.php';
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'Site/Site.php';
+require_once 'Site/SiteGadgetFactory.php';
 require_once 'XML/RPCAjax.php';
 
 /**
@@ -191,5 +192,6 @@ class Pinhole
 Pinhole::setupGettext();
 
 SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
+SiteGadgetFactory::addPath('Pinhole/gadgets');
 
 ?>

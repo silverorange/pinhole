@@ -1048,6 +1048,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function getSubTagsByPopularity(SwatDBRange $range = null,
 		$order_by_clause = null)
 	{
+		$tag_list = $this->getEmptyCopy();
+
 		$sql = sprintf('select count(PinholePhoto.id) as photo_count,
 				PinholePhotoTagBinding.tag
 			from PinholePhoto
@@ -1066,6 +1068,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		$popular_tags = SwatDB::query($this->db, $sql, null);
 
+		if ($popular_tags->rowCount() == 0)
+			return $tag_list;
+
 		$tag_ids = array();
 		while ($tag = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT))
 			$tag_ids[] = $this->db->quote($tag->tag, 'integer');
@@ -1080,7 +1085,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			'PinholeTagDataObjectWrapper');
 
 		$wrapper_class = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
-		$tag_list = $this->getEmptyCopy();
 
 		$popular_tags->seek();
 		while ($row = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {

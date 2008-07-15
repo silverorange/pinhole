@@ -55,6 +55,19 @@ class PinholeSubTagListView extends SwatControl
 		$div_tag->id = $this->id;
 		$div_tag->open();
 
+		if (count($this->tag_list) > 0) {
+			$titles = array();
+			foreach ($this->tag_list as $tag)
+				$titles[] = $tag->getTitle();
+
+			$header_tag = new SwatHtmlTag('h2');
+			$header_tag->setContent(sprintf(
+				'View photos tagged “%s” and:',
+				implode('”, “', $titles)));
+
+			$header_tag->display();
+		}
+
 		$ul_tag = new SwatHtmlTag('ul');
 		$ul_tag->id = $this->id.'_list';
 		$ul_tag->open();

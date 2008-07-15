@@ -238,10 +238,6 @@ abstract class PinholeBrowserPage extends SitePage
 		$tag_list_view->setSubTagList($sub_tag_list);
 		$tag_list_view->base = $base_path.'tag';
 
-		$tag_list_view->title = (count($this->tag_list) == 0) ?
-			Pinhole::_('Recently Added Tags') :
-			Pinhole::_('Popular Related Tags');
-
 		if ($sub_tag_count > count($sub_tag_list)) {
 			ob_start();
 			$div_tag = new SwatHtmlTag('div');
@@ -271,11 +267,8 @@ abstract class PinholeBrowserPage extends SitePage
 	protected function getSubTagList(SwatDBRange $range = null,
 		$order_by_clause = null)
 	{
-		if (count($this->tag_list) == 0)
-			return $this->tag_list->getSubTags($range, $order_by_clause);
-		else
-			return $this->tag_list->getSubTagsByPopularity(
-				$range, $order_by_clause);
+		return $this->tag_list->getSubTagsByPopularity(
+			$range, $order_by_clause);
 	}
 
 	// }}}

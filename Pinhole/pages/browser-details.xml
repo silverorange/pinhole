@@ -9,18 +9,15 @@
 		</widget>
 	</widget>
 
-	<!-- sidebar -->
-	<widget class="SwatContainer" id="sidebar_content">
-		<widget class="PinholeSubTagListView" id="sub_tag_list_view" />
-		<widget class="SwatContentBlock" id="sub_tag_list_content">
-			<property name="content_type">text/xml</property>
-		</widget>
-	</widget>
-
 	<!-- content -->
 	<widget class="SwatContainer" id="content">
 		<widget class="SwatDisplayableContainer" id="description_container">
 			<widget class="SwatContentBlock" id="description" />
+		</widget>
+		<widget class="SwatDisplayableContainer" id="tags_container">
+			<widget class="SwatContentBlock" id="tags">
+				<property name="content_type">text/xml</property>
+			</widget>
 		</widget>
 		<widget class="SwatDisclosure" id="photo_details">
 			<property name="title">Photo Details</property>

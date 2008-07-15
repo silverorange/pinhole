@@ -129,7 +129,27 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->buildPhotoNextPrev();
 
 		$description = $this->ui->getWidget('description');
+		// Set to text/xml for now pending review in ticket #1159.
+		$description->content_type = 'text/xml';
+		$description->content = $this->photo->description;
 
+		$tag_array = array();
+		foreach ($this->photo->tags as $tag) {
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->href = $this->app->config->pinhole->path.'tag?'.$tag->name;
+			$a_tag->setContent($tag->getTitle());
+			$tag_array[] = (string) $a_tag;
+		}
+
+		if (count($tag_array) > 0) {
+			$tags = $this->ui->getWidget('tags');
+			$tags->content = sprintf(Pinhole::_('Tags: %s'),
+				implode(', ', $tag_array));
+		} else {
+			$this->ui->getWidget('tags_container')->visible = false;
+		}
+
+		$description = $this->ui->getWidget('description');
 		// Set to text/xml for now pending review in ticket #1159.
 		$description->content_type = 'text/xml';
 		$description->content = $this->photo->description;
@@ -212,6 +232,15 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
+	// {{{ protected function buildSubTagListView()
+
+	protected function buildSubTagListView()
+	{
+		// don't show tag-list on this page
+		return;
+	}
+
+	// }}}
 	// {{{ protected function getPhotoDetailsStore()
 
 	protected function getPhotoDetailsStore()
@@ -232,14 +261,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$tag_list_view = $this->ui->getWidget('tag_list_view');
 		$tag_list_view->rss_dimension_shortname =
 			$this->dimension->shortname;
-	}
-
-	// }}}
-	// {{{ protected function getSubTagList()
-
-	protected function getSubTagList()
-	{
-		return parent::getSubTagList()->intersect($this->photo->tags);
 	}
 
 	// }}}

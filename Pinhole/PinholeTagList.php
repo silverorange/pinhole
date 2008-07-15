@@ -1068,12 +1068,12 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		$popular_tags = SwatDB::query($this->db, $sql, null);
 
-		if ($popular_tags->rowCount() == 0)
-			return $tag_list;
-
 		$tag_ids = array();
 		while ($tag = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT))
 			$tag_ids[] = $this->db->quote($tag->tag, 'integer');
+
+		if ($tag_ids == 0)
+			return $tag_list;
 
 		$sql = sprintf('select PinholeTag.* from PinholeTag where id in (%s)',
 			implode(',', $tag_ids));

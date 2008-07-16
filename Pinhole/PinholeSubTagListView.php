@@ -13,6 +13,7 @@ class PinholeSubTagListView extends SwatControl
 {
 	// {{{ public properties
 
+	public $title;
 	public $base = 'tag';
 
 	// }}}
@@ -62,9 +63,13 @@ class PinholeSubTagListView extends SwatControl
 
 			$header_tag = new SwatHtmlTag('h2');
 			$header_tag->setContent(sprintf(
-				'View photos tagged “%s” and:',
+				Pinhole::_('View photos tagged “%s” and:'),
 				implode('”, “', $titles)));
 
+			$header_tag->display();
+		} elseif ($this->title !== null) {
+			$header_tag = new SwatHtmlTag('h2');
+			$header_tag->setContent($this->title);
 			$header_tag->display();
 		}
 

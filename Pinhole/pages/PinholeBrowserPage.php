@@ -226,7 +226,7 @@ abstract class PinholeBrowserPage extends SitePage
 		if (!$this->ui->hasWidget('sub_tag_list_view'))
 			return;
 
-		$range = new SwatDBRange(30, 0);
+		$range = new SwatDBRange(20, 0);
 
 		$sub_tag_list = $this->getSubTagList($range);
 		$sub_tag_count = $this->getSubTagCount();
@@ -237,6 +237,9 @@ abstract class PinholeBrowserPage extends SitePage
 		$tag_list_view->setTagList($this->tag_list);
 		$tag_list_view->setSubTagList($sub_tag_list);
 		$tag_list_view->base = $base_path.'tag';
+
+		if (count($sub_tag_list) > 0)
+			$tag_list_view->title = Pinhole::_('Recently Added Tags');
 
 		if ($sub_tag_count > count($sub_tag_list)) {
 			ob_start();
@@ -267,8 +270,15 @@ abstract class PinholeBrowserPage extends SitePage
 	protected function getSubTagList(SwatDBRange $range = null,
 		$order_by_clause = null)
 	{
-		return $this->tag_list->getSubTagsByPopularity(
-			$range, $order_by_clause);
+		if (count($this->tag_list) > 0) {
+			$sub_tag_list = $this->tag_list->getSubTagsByPopularity(
+				$range, $order_by_clause);
+		} else {
+			$sub_tag_list = $this->tag_list->getSubTags(
+				$range, $order_by_clause);
+		}
+
+		return $sub_tag_list;
 	}
 
 	// }}}

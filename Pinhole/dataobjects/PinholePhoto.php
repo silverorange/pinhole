@@ -233,6 +233,7 @@ class PinholePhoto extends SiteImage
 		$this->checkDB();
 
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+		$tag_names = array_keys($tag_names);
 
 		$sql = sprintf('delete from PinholePhotoTagBinding
 			where photo = %s',

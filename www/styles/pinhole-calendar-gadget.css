@@ -2,6 +2,24 @@
 	width: 16em;
 }
 
+.pinhole-calendar-gadget-container table a {
+	display: block;
+}
+
+.pinhole-calendar-gadget td {
+	text-align: center;
+	width: 2em;
+	height: 1.5em;
+}
+
+.pinhole-calendar-gadget td a {
+	text-decoration: none;
+}
+
+.pinhole-calendar-gadget .days-of-week {
+	font-size: 90%;
+}
+
 .pinhole-calendar-body {
 	text-align: center;
 	height: 12em;

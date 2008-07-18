@@ -105,12 +105,10 @@ class PinholeCalendarGadget extends SiteGadget
 			if ($i > 0) {
 				if (array_key_exists($i, $day_count)) {
 					printf('<td class="has-photos">'.
-						'<a href="%stag?date.date=%s-%s-%s" '.
+						'<a href="%stag?date.date=%s" '.
 						'title="%s %s">%s</a></td>',
 						$app->config->pinhole->path,
-						$date->getYear(),
-						$date->getMonth(),
-						$i,
+						$date->format('%Y-%m-%d'),
 						$locale->formatNumber($day_count[$i]),
 						Pinhole::ngettext('Photo', 'Photos', $day_count[$i]),
 						$i);

@@ -76,6 +76,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				throw new SiteNotFoundException(sprintf(
 					'Photo does not belong to the current instance: %s.',
 					$this->app->getInstance()->shortname));
+			} elseif ($this->photo->private &&
+				!$this->app->session->isLoggedIn()) {
+
+				$message = "Photo is private and user is not logged in.";
+				throw new SiteNotFoundException($message);
 			}
 		} else {
 			// photo was not found

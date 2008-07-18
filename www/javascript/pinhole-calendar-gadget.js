@@ -38,7 +38,7 @@ function PinholeCalendarGadget(id, year, month)
 		this, true);
 }
 
-PinholeCalendarGadget.prototype.getNextMonth = function()
+PinholeCalendarGadget.prototype.getNextMonth = function(e)
 {
 	if (this.month == 12) {
 		this.month = 1;
@@ -48,9 +48,10 @@ PinholeCalendarGadget.prototype.getNextMonth = function()
 	}
 
 	this.loadCalendar();
+	e.preventDefault();
 }
 
-PinholeCalendarGadget.prototype.getPrevMonth = function()
+PinholeCalendarGadget.prototype.getPrevMonth = function(e)
 {
 	if (this.month == 1) {
 		this.month = 12;
@@ -60,6 +61,7 @@ PinholeCalendarGadget.prototype.getPrevMonth = function()
 	}
 
 	this.loadCalendar();
+	e.preventDefault();
 }
 
 PinholeCalendarGadget.prototype.loadCalendar = function()

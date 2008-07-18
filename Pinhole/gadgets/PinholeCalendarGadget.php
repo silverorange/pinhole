@@ -33,6 +33,7 @@ class PinholeCalendarGadget extends SiteGadget
 
 		echo '<div class="pinhole-calendar-gadget-head">';
 		echo '<a class="pinhole-calendar-gadget-prev" '.
+			'title="'.Pinhole::_('Previous Month').'" '.
 			'id="'.$this->calendar_id.'_prev" href="#">«</a>';
 
 		echo '<div id="'.$this->calendar_id.'_month" class="pinhole-calendar-month">';
@@ -40,6 +41,7 @@ class PinholeCalendarGadget extends SiteGadget
 		echo '</div>';
 
 		echo '<a class="pinhole-calendar-gadget-next" '.
+			'title="'.Pinhole::_('Next Month').'" '.
 			'id="'.$this->calendar_id.'_next" href="#">»</a>';
 
 		echo '</div>';
@@ -61,6 +63,9 @@ class PinholeCalendarGadget extends SiteGadget
 	{
 		$a_tag = new SwatHtmlTag('a');
 		$a_tag->setContent($date->format('%B, %Y'));
+		$a_tag->title = sprintf('View photos taken during %s',
+			$date->format('%B, %Y'));
+
 		$a_tag->href = sprintf('%stag?date.month=%s/date.year=%s',
 			$app->config->pinhole->path,
 			$date->getMonth(),

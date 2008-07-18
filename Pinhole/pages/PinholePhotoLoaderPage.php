@@ -60,6 +60,14 @@ class PinholePhotoLoaderPage extends SitePage
 		}
 
 		$photo = $photos->getFirst();
+
+		if ($photo->private && !$this->app->session->isLoggedIn()) {
+			$message = sprintf("Photo with filename '%s' is private and user ".
+				"is not logged in.", $filename);
+
+			throw new SiteNotFoundException($message);
+		}
+
 		$photo->setFileBase('../photos');
 		return $photo;
 	}

@@ -1,0 +1,36 @@
+.pinhole-calendar-gadget-container table {
+	width: 16em;
+}
+
+.pinhole-calendar-body {
+	text-align: center;
+	height: 12em;
+	width: 16em;
+}
+
+.pinhole-calendar-gadget-head {
+	width: 16em;
+	position: relative;
+	text-align: center;
+	padding-bottom: 6px;
+}
+
+.pinhole-calendar-gadget-month {
+	margin: 0 2em;
+}
+
+.pinhole-calendar-gadget-prev {
+	text-decoration: none;
+	font-weight: bold;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.pinhole-calendar-gadget-next {
+	font-weight: bold;
+	text-decoration: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+}

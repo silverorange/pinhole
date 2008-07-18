@@ -4,6 +4,7 @@ require_once 'Site/SiteGadget.php';
 require_once 'Swat/SwatString.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'SwatI18N/SwatI18NLocale.php';
+require_once 'Pinhole/dataobjects/PinholePhoto.php';
 
 /**
  * Displays a calendar of the last month of photos
@@ -16,37 +17,67 @@ class PinholeCalendarGadget extends SiteGadget
 {
 	// {{{ protected properties
 
-	protected $date;
-
-	// }}}
-	// {{{ public function __construct()
-
-	public function __construct(SiteApplication $app,
-		SiteGadgetInstance $instance)
-	{
-		parent::__construct($app, $instance);
-
-		$this->date = new SwatDate();
-		$this->date->setDay(1);
-		$this->date->clearTime();
-	}
+	protected $calendar_id;
 
 	// }}}
 	// {{{ protected function displayContent()
 
 	protected function displayContent()
 	{
-		$a_tag = new SwatHtmlTag('a');
-		$a_tag->setContent($this->date->format('%B, %Y'));
-		$a_tag->href = sprintf('%stag?date.month=%s/date.year=%s',
-			$this->app->config->pinhole->path,
-			$this->date->getMonth(),
-			$this->date->getYear());
+		echo '<div id="'.$this->calendar_id.'" '.
+			'class="pinhole-calendar-gadget-container">';
 
-		$day_count = $this->getPhotoCountPerDay();
+		$date = new SwatDate();
+		$date->setDay(1);
+		$date->clearTime();
+
+		echo '<div class="pinhole-calendar-gadget-head">';
+		echo '<a class="pinhole-calendar-gadget-prev" '.
+			'id="'.$this->calendar_id.'_prev" href="#">«</a>';
+
+		echo '<div id="'.$this->calendar_id.'_month" class="pinhole-calendar-month">';
+		echo self::displayCalendarMonth($this->app, $date);
+		echo '</div>';
+
+		echo '<a class="pinhole-calendar-gadget-next" '.
+			'id="'.$this->calendar_id.'_next" href="#">»</a>';
+
+		echo '</div>';
+
+		echo '<div id="'.$this->calendar_id.'_body" class="pinhole-calendar-body">';
+		echo self::displayCalendarBody($this->app, $date);
+		echo '</div>';
+
+		echo '</div>';
+
+		Swat::displayInlineJavaScript($this->getInlineJavaScript($date));
+	}
+
+	// }}}
+	// {{{ public static function displayCalendarMonth()
+
+	public static function displayCalendarMonth(SiteWebApplication $app,
+		SwatDate $date)
+	{
+		$a_tag = new SwatHtmlTag('a');
+		$a_tag->setContent($date->format('%B, %Y'));
+		$a_tag->href = sprintf('%stag?date.month=%s/date.year=%s',
+			$app->config->pinhole->path,
+			$date->getMonth(),
+			$date->getYear());
+
 		$h4 = new SwatHtmlTag('h4');
 		$h4->setContent((string) $a_tag, 'text/xml');
 		$h4->display();
+	}
+
+	// }}}
+	// {{{ public static function displayCalendarBody()
+
+	public static function displayCalendarBody(SiteWebApplication $app,
+		SwatDate $date)
+	{
+		$day_count = self::getPhotoCountPerDay($app, $date);
 
 		echo '<table>';
 
@@ -64,8 +95,8 @@ class PinholeCalendarGadget extends SiteGadget
 
 		$locale = SwatI18NLocale::get();
 		$count = 0;
-		$start = ((-1) * ($this->date->getDayOfWeek())) + 1;
-		for ($i = $start; $i <= $this->date->getDaysInMonth(); $i++) {
+		$start = ((-1) * ($date->getDayOfWeek())) + 1;
+		for ($i = $start; $i <= $date->getDaysInMonth(); $i++) {
 			if ($i == $start)
 				echo '<tr>';
 			elseif ($count % 7 == 0)
@@ -76,9 +107,9 @@ class PinholeCalendarGadget extends SiteGadget
 					printf('<td class="has-photos">'.
 						'<a href="%stag?date.date=%s-%s-%s" '.
 						'title="%s %s">%s</a></td>',
-						$this->app->config->pinhole->path,
-						$this->date->getYear(),
-						$this->date->getMonth(),
+						$app->config->pinhole->path,
+						$date->getYear(),
+						$date->getMonth(),
 						$i,
 						$locale->formatNumber($day_count[$i]),
 						Pinhole::ngettext('Photo', 'Photos', $day_count[$i]),
@@ -97,9 +128,10 @@ class PinholeCalendarGadget extends SiteGadget
 	}
 
 	// }}}
-	// {{{ protected function getPhotoCountPerDay()
+	// {{{ public static function getPhotoCountPerDay()
 
-	protected function getPhotoCountPerDay()
+	public static function getPhotoCountPerDay(
+		SiteWebApplication $app, SwatDate $date)
 	{
 		$sql = "select count(PinholePhoto.id) as photo_count,
 				date_part('day', max(convertTZ(PinholePhoto.photo_date,
@@ -115,7 +147,7 @@ class PinholeCalendarGadget extends SiteGadget
 			group by date_part('day', convertTZ(PinholePhoto.photo_date,
 				PinholePhoto.photo_time_zone))";
 
-		$end_date = clone $this->date;
+		$end_date = clone $date;
 		if ($end_date->getMonth() == 12) {
 			$end_date->setMonth(1);
 			$end_date->setYear($end_date->getYear() + 1);
@@ -124,14 +156,14 @@ class PinholeCalendarGadget extends SiteGadget
 		}
 
 		$sql = sprintf($sql,
-			SwatDB::equalityOperator($this->app->getInstanceId()),
-			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED),
-			$this->app->db->quote($this->date->getDate(), 'date'),
-			$this->app->db->quote($end_date->getDate(), 'date'));
+			SwatDB::equalityOperator($app->getInstanceId()),
+			$app->db->quote($app->getInstanceId(), 'integer'),
+			$app->db->quote(PinholePhoto::STATUS_PUBLISHED),
+			$app->db->quote($date->getDate(), 'date'),
+			$app->db->quote($end_date->getDate(), 'date'));
 
 
-		$days = SwatDB::query($this->app->db, $sql);
+		$days = SwatDB::query($app->db, $sql);
 
 		$day_count = array();
 		foreach ($days as $day) {
@@ -142,10 +174,42 @@ class PinholeCalendarGadget extends SiteGadget
 	}
 
 	// }}}
+	// {{{ protected function getInlineJavaScript()
+
+	protected function getInlineJavaScript(SwatDate $date)
+	{
+		$javascript = sprintf(
+			"var %s = new PinholeCalendarGadget('%s', %d, %d);",
+			$this->calendar_id, $this->calendar_id,
+			$date->getYear(), $date->getMonth());
+
+		return $javascript;
+	}
+
+	// }}}
 	// {{{ protected function define()
 
 	protected function define()
 	{
+		static $count = 0;
+
+		$this->calendar_id = 'pinhole_calendar_gadget'.$count;
+		$count++;
+
+		$this->html_head_entry_set->addEntrySet(
+			XML_RPCAjax::getHtmlHeadEntrySet());
+
+		$yui = new SwatYUI(array('event', 'animation'));
+		$this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
+
+		$this->addJavascript(
+			'packages/pinhole/javascript/pinhole-calendar-gadget.js',
+			Pinhole::PACKAGE_ID);
+
+		$this->addStylesheet(
+			'packages/pinhole/styles/pinhole-calendar-gadget.css',
+			Pinhole::PACKAGE_ID);
+
 		$this->defineDefaultTitle(Pinhole::_('Photo Calendar'));
 		$this->defineDescription(Pinhole::_(
 			'Displays a calendar of the last month with the photos taken.'));

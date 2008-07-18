@@ -96,6 +96,8 @@ class PinholeCalendarGadget extends SiteGadget
 		$locale = SwatI18NLocale::get();
 		$count = 0;
 		$start = ((-1) * ($date->getDayOfWeek())) + 1;
+		$current_date = clone $date;
+
 		for ($i = $start; $i <= $date->getDaysInMonth(); $i++) {
 			if ($i == $start)
 				echo '<tr>';
@@ -103,12 +105,14 @@ class PinholeCalendarGadget extends SiteGadget
 				echo '</tr><tr>';
 
 			if ($i > 0) {
+				$current_date->setDay($i);
+
 				if (array_key_exists($i, $day_count)) {
 					printf('<td class="has-photos">'.
 						'<a href="%stag?date.date=%s" '.
 						'title="%s %s">%s</a></td>',
 						$app->config->pinhole->path,
-						$date->format('%Y-%m-%d'),
+						$current_date->format('%Y-%m-%d'),
 						$locale->formatNumber($day_count[$i]),
 						Pinhole::ngettext('Photo', 'Photos', $day_count[$i]),
 						$i);

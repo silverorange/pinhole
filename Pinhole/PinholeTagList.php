@@ -82,6 +82,13 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private $db;
 
 	/**
+     * Show private photos?
+	 *
+	 * @var boolean
+	 */
+	private $show_private_photos = false;
+
+	/**
 	 * Site instance used by this tag list
 	 *
 	 * Only photos and tags belonging to the site instance can be loaded by
@@ -145,11 +152,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *                                 tag strings are ignored.
 	 */
 	public function __construct(MDB2_Driver_Common $db,
-		SiteInstance $instance = null, $tag_list_string = null)
+		SiteInstance $instance = null, $tag_list_string = null,
+		$show_private_photos = false)
 	{
 		$this->setDatabase($db);
 		$this->instance = $instance;
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+
+		$this->show_private_photos = $show_private_photos;
 
 		$db->loadModule('Datatype', null, true);
 
@@ -276,6 +286,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if ($this->instance !== null)
 			$where_clauses[] = sprintf('(ImageSet.instance = %s)',
 				$this->db->quote($this->instance->id, 'integer'));
+
+		if (!$this->show_private_photos)
+			$where_clauses[] = sprintf('(PinholePhoto.private = %s)',
+				$this->db->quote(false, 'boolean'));
 
 		$where_clause = implode(' '.$operator.' ', $where_clauses);
 

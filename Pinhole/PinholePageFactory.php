@@ -85,6 +85,7 @@ class PinholePageFactory extends SitePageFactory
 			'^(feed)$'                        => 'PinholeAtomPage',
 			'^(feed)/([\w\d*]+)$'             => 'PinholeAtomPage',
 			'^(loadphoto)/(.+)/(.+).jpg$'     => 'PinholePhotoLoaderPage',
+			'^(login)$'                       => 'PinholeLoginPage',
 			'^robots.txt$'                    => 'PinholeRobotsPage',
 		);
 	}

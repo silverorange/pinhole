@@ -36,6 +36,7 @@ abstract class PinholeBrowserPage extends SitePage
 	public function __construct(SiteApplication $app, SiteLayout $layout)
 	{
 		parent::__construct($app, $layout);
+
 		$tags = SiteApplication::initVar('tags');
 		$this->createTagList($tags);
 	}
@@ -46,7 +47,8 @@ abstract class PinholeBrowserPage extends SitePage
 	protected function createTagList($tags)
 	{
 		$this->tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance(), $tags);
+			$this->app->getInstance(), $tags,
+			$this->app->session->isLoggedIn());
 	}
 
 	// }}}

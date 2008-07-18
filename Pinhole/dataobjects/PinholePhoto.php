@@ -100,6 +100,13 @@ class PinholePhoto extends SiteImage
 	 */
 	 public $photo_time_zone;
 
+	/**
+	 * Private
+	 *
+	 * @var boolean
+	 */
+	 public $private;
+
 	// }}}
 	// {{{ private properties
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatForm" id="login_form">
+		<widget class="SwatFormField">
+			<property name="title" translatable="yes">Passphrase</property>
+			<widget class="SwatPasswordEntry" id="passphrase">
+				<property name="maxlength" type="integer">255</property>
+			</widget>
+			<widget class="SwatButton" id="login_button">
+				<property name="title" translatable="yes">Login</property>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

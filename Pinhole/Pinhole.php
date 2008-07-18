@@ -143,6 +143,9 @@ class Pinhole
 			// Whether or not search engines can index the site
 			'pinhole.search_engine_indexable' => true,
 
+			// A passphrase for viewing private photos
+			'pinhole.passphrase' => null,
+
 			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
 			'pinhole.camera_time_zone' => null,

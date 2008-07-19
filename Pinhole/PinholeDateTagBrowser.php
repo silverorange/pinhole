@@ -179,7 +179,7 @@ class PinholeDateTagBrowser extends SwatControl
 				$a_tag = new SwatHtmlTag('a');
 
 				$a_tag->title = sprintf(Pinhole::ngettext(
-					'one photo', '%s photos', $photos[$i]),
+					'1 photo', '%s photos', $photos[$i]),
 					SwatString::numberFormat($photos[$i]));
 
 				$a_tag->href = $this->base.'?'.$tag_list->__toString();
@@ -256,7 +256,7 @@ class PinholeDateTagBrowser extends SwatControl
 			if (array_key_exists($key, $photos)) {
 				$a_tag = new SwatHtmlTag('a');
 				$a_tag->title = sprintf(Pinhole::ngettext(
-					'one photo', '%s photos', $photos[$key]),
+					'1 photo', '%s photos', $photos[$key]),
 					SwatString::numberFormat($photos[$key]));
 
 				if ($selected_month === $i) {
@@ -340,7 +340,7 @@ class PinholeDateTagBrowser extends SwatControl
 			if (array_key_exists($key, $photos)) {
 				$a_tag = new SwatHtmlTag('a');
 				$a_tag->title = sprintf(Pinhole::ngettext(
-					'one photo', '%s photos', $photos[$key]),
+					'1 photo', '%s photos', $photos[$key]),
 					SwatString::numberFormat($photos[$key]));
 
 				if ($selected_day === $i) {

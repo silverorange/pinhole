@@ -38,6 +38,7 @@ class PinholeCalendarGadget extends SiteGadget
 			'class="pinhole-calendar-gadget-container">';
 
 		$date = new SwatDate();
+		$date->convertTZbyID($this->app->config->date->time_zone);
 		$date->setDay(1);
 		$date->clearTime();
 

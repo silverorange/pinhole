@@ -60,7 +60,7 @@ class PinholeTagListGadget extends SiteGadget
 			$div_tag->open();
 
 			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href = $base_path.'tags';
+			$a_tag->href = $base_path.'tags/date';
 			$a_tag->setContent(sprintf(Pinhole::_('View All %s Tags'),
 				$sub_tag_count));
 

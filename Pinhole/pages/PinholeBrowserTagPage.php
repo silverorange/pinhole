@@ -55,6 +55,8 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		$title = Pinhole::_('Tag View - %s');
 
 		switch ($display_type) {
+		case 'date' :
+			return sprintf($title, Pinhole::_('By Date Added'));
 		case 'alphabetical' :
 			return sprintf($title, Pinhole::_('Alphabetical'));
 		case 'popular' :
@@ -91,9 +93,14 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 				$this->displaySimpleList($tag_list);
 			else
 				$this->displayAlphabeticalList($tag_list);
+		} elseif ($this->display_type == 'date') {
+			$tag_list = $this->tag_list->getSubTags();
+
+			$this->displayByDateAdded($tag_list);
 		} elseif ($this->display_type == 'cloud') {
 			$tag_list = $this->tag_list->getSubTagsByPopularity(
 				null, 'PinholeTag.title');
+
 			$this->displayCloud($tag_list);
 		} elseif ($this->display_type == 'popular') {
 			$tag_list = $this->tag_list->getSubTagsByPopularity();
@@ -147,6 +154,68 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	}
 
 	// }}}
+	// {{{ protected function displayByDateAdded()
+
+	protected function displayByDateAdded(PinholeTagList $tag_list)
+	{
+		$now = new SwatDate();
+		$now->convertTZbyID($this->app->config->date->time_zone);
+
+		$store = new SwatTableStore();
+
+		foreach ($tag_list as $tag) {
+			$ds = new SwatDetailsStore();
+			$ds->tag = $tag;
+
+			$tag_date = $tag->getDataObject()->first_modified;
+			$tag_date->convertTZbyID(
+				$this->app->config->date->time_zone);
+
+			$days_past = $now->dateDiff($tag_date, false);
+
+			if ($days_past <= 1)
+				$ds->date_part = Pinhole::_('Today');
+			elseif ($days_past <= $now->getDayOfWeek() + 1)
+				$ds->date_part = Pinhole::_('This Week');
+			elseif ($days_past <= $now->getDay())
+				$ds->date_part = Pinhole::_('This Month');
+			elseif ($days_past <= $now->getDayOfYear())
+				$ds->date_part = Pinhole::_('This Year');
+			else
+				$ds->date_part = sprintf(Pinhole::_('%s'),
+					$tag_date->getYear());
+
+			$store->add($ds);
+		}
+
+		$ul_tag = new SwatHtmlTag('ul');
+		$li_tag = new SwatHtmlTag('li');
+		$ul_tag->open();
+		$part = null;
+
+		foreach ($store as $ds) {
+			if ($part !== $ds->date_part) {
+				if ($part === null)
+					$li_tag->close();
+
+				$li_tag->open();
+				$h2_tag = new SwatHtmlTag('h2');
+				$h2_tag->class = 'pinhole-tag-entity';
+				$h2_tag->setContent($ds->date_part);
+				$h2_tag->display();
+			} elseif ($part !== null) {
+				echo ', ';
+			}
+
+			$this->displayTag($ds->tag);
+			$part = $ds->date_part;
+		}
+
+		$li_tag->close();
+		$ul_tag->close();
+	}
+
+	// }}}
 	// {{{ protected function displayAlphabeticalList()
 
 	protected function displayAlphabeticalList(PinholeTagList $tag_list)
@@ -192,6 +261,13 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 	protected function displayCloud(PinholeTagList $tag_list)
 	{
+		$sorted_tag_list = array();
+
+		foreach ($tag_list as $tag)
+			$sorted_tag_list[] = $tag;
+
+		usort($sorted_tag_list, array(&$this, 'sortTagsByTitle'));
+
 		$max = null;
 		$min = null;
 
@@ -206,7 +282,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 		$span_tag = new SwatHtmlTag('span');
 
-		foreach ($tag_list as $tag) {
+		foreach ($sorted_tag_list as $tag) {
 			$scale = ceil(($tag->photo_count - $min) / ($max - $min) * 200) + 100;
 
 			$span_tag->style = sprintf('font-size: %s%%;',
@@ -244,6 +320,21 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		}
 
 		$add_anchor_tag->display();
+	}
+
+	// }}}
+	// {{{ protected static function sortTagsByTitle()
+
+	protected static function sortTagsByTitle(PinholeTag $tag_a,
+		PinholeTag $tag_b)
+	{
+		$al = strtolower($tag_a->title);
+		$bl = strtolower($tag_b->title);
+
+		if ($al === $bl)
+			return 0;
+
+		return ($al > $bl) ? 1 : -1;
 	}
 
 	// }}}

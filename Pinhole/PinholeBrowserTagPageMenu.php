@@ -47,6 +47,12 @@ class PinholeBrowserTagPageMenu extends SwatControl
 
 		$a_tag = new SwatHtmlTag('a');
 		$a_tag->href = $this->appendTagPath(
+			sprintf('%stags/date', $this->base));
+		$a_tag->setContent(Pinhole::_('By Date Added'));
+		$a_tag->display();
+
+		$a_tag = new SwatHtmlTag('a');
+		$a_tag->href = $this->appendTagPath(
 			sprintf('%stags/popular', $this->base));
 		$a_tag->setContent(Pinhole::_('By Popularity'));
 		$a_tag->display();

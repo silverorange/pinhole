@@ -172,6 +172,19 @@ class PinholeTag extends PinholeAbstractTag
 	}
 
 	// }}}
+	// {{{ public function getDataObject()
+
+	/**
+	 * Gets the data-object associated with this tag, if any.
+	 *
+	 * @return PinholeTagDataObject The tag's data-object, or null if none.
+	 */
+	public function getDataObject()
+	{
+		return $this->data_object;
+	}
+
+	// }}}
 	// {{{ public function __toString()
 
 	/**

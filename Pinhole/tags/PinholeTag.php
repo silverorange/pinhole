@@ -368,7 +368,7 @@ class PinholeTag extends PinholeAbstractTag
 	 * Deletes this tag from the database
 	 *
 	 * After this tag is deleted from the database it still exists as a PHP
-	 * object. 
+	 * object.
 	 */
 	public function delete()
 	{

@@ -20,6 +20,16 @@ class PinholeCalendarGadget extends SiteGadget
 	protected $calendar_id;
 
 	// }}}
+	// {{{ protected function displayTitle()
+
+	public function displayTitle()
+	{
+		if ($this->hasValue('title')) {
+			parent::displayTitle();
+		}
+	}
+
+	// }}}
 	// {{{ protected function displayContent()
 
 	protected function displayContent()

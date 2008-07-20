@@ -257,8 +257,15 @@ abstract class PinholeBrowserPage extends SitePage
 			else
 				$a_tag->href.= '/date';
 
-			$a_tag->setContent(sprintf(Pinhole::_('View All %s Tags'),
-				$sub_tag_count));
+			if (count($sub_tag_list) > 0) {
+				$a_tag->setContent(sprintf(
+					Pinhole::_('View All %s Intersecting Tags'),
+					$sub_tag_count));
+			} else {
+				$a_tag->setContent(sprintf(Pinhole::_('View All %s Tags'),
+					$sub_tag_count));
+			}
+
 			$a_tag->display();
 
 			$div_tag->close();

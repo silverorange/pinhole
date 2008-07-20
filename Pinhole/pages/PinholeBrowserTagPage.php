@@ -226,7 +226,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 				substr($tag->title, 0, 1)));
 
 			if (is_numeric($entity))
-				$entity = '0';
+				$entity = Pinhole::_('0 - 9');
 
 			ob_start();
 			$this->displayTag($tag);
@@ -241,12 +241,11 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 		foreach ($grouped_tags as $entity => $group) {
 			$li_tag->open();
-			if (!is_numeric($entity)) {
-				$h2_tag = new SwatHtmlTag('h2');
-				$h2_tag->class = 'pinhole-tag-entity';
-				$h2_tag->setContent($entity);
-				$h2_tag->display();
-			}
+
+			$h2_tag = new SwatHtmlTag('h2');
+			$h2_tag->class = 'pinhole-tag-entity';
+			$h2_tag->setContent($entity);
+			$h2_tag->display();
 
 			echo implode(', ', $group);
 

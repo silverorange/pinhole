@@ -738,14 +738,18 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @return PinholePhotoWrapper the photos of this tag list.
 	 */
-	public function getPhotos($dimension_shortname = null)
+	public function getPhotos($dimension_shortname = null, array $fields = null)
 	{
-		$sql = 'select PinholePhoto.id, PinholePhoto.title,
-				PinholePhoto.original_filename, PinholePhoto.photo_date,
-				PinholePhoto.publish_date, PinholePhoto.image_set,
-				PinholePhoto.filename
-			from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
+		if ($fields === null) {
+			$fields = array('PinholePhoto.id', 'PinholePhoto.title',
+				'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
+				'PinholePhoto.publish_date', 'PinholePhoto.image_set',
+				'PinholePhoto.filename', 'PinholePhoto.status');
+		}
+
+		$sql = sprintf('select %s from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id',
+			implode(', ', $fields));
 
 		$join_clauses = implode(' ', $this->getJoinClauses());
 		if ($join_clauses != '')

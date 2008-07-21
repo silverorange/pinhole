@@ -181,7 +181,9 @@ class PinholeTagIndex extends AdminSearch
 
 			$class_name = SwatDBClassMap::get('PinholeTag');
 			foreach ($data_objects as $data_object) {
-				$tag = new $class_name($data_object);
+				$tag = new $class_name($this->app->getInstance(),
+					$data_object);
+
 				$store->add($tag);
 			}
 		}

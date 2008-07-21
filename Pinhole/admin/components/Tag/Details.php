@@ -7,6 +7,7 @@ require_once 'Swat/SwatNavBar.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Admin/pages/AdminIndex.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
+require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
 require_once 'Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php';

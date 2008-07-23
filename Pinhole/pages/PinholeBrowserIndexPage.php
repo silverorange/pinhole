@@ -22,10 +22,10 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	// }}}
 	// {{{ public function __construct()
 
-	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$tags = '')
+	public function __construct(SiteApplication $app, SiteLayout $layout = null,
+		array $arguments = array())
 	{
-		parent::__construct($app, $layout, $tags);
+		parent::__construct($app, $layout, $arguments);
 		$this->ui_xml = 'Pinhole/pages/browser-index.xml';
 	}
 

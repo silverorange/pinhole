@@ -44,13 +44,26 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$photo_id = null, $dimension_shortname = null, $tags = '')
+		array $arguments)
 	{
-		parent::__construct($app, $layout, $tags);
+		parent::__construct($app, $layout, $arguments);
+
 		$this->ui_xml = 'Pinhole/pages/browser-details.xml';
 
-		$this->createPhoto($photo_id);
-		$this->dimension = $this->initDimension($dimension_shortname);
+		$this->createPhoto($this->getArgument('photo_id'));
+		$this->dimension = $this->initDimension(
+			$this->getArgument('dimension_shortname'));
+	}
+
+	// }}}
+	// {{{ protected function getArgumentMap()
+
+	protected function getArgumentMap()
+	{
+		return array(
+			'photo_id' => array(0, null),
+			'dimension_shortname' => array(1, null),
+		);
 	}
 
 	// }}}

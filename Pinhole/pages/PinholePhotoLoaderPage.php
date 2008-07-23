@@ -23,12 +23,23 @@ class PinholePhotoLoaderPage extends SitePage
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$dimension_shortname, $photo_id)
+		array $arguments)
 	{
-		parent::__construct($app, $layout);
+		parent::__construct($app, $layout, $arguments);
 
-		$this->photo = $this->getPhoto($photo_id);
-		$this->dimension_shortname = $dimension_shortname;
+		$this->photo = $this->getPhoto($this->getArgument('filename'));
+		$this->dimension_shortname = $this->getArgument('dimension_shortname');
+	}
+
+	// }}}
+	// {{{ protected function getArgumentMap()
+
+	protected function getArgumentMap()
+	{
+		return array(
+			'dimension_shortname' => array(0, null),
+			'filename' => array(1, null),
+		);
 	}
 
 	// }}}

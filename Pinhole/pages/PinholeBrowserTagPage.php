@@ -20,12 +20,22 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	// {{{ public function __construct()
 
 	public function __construct(SiteApplication $app, SiteLayout $layout,
-		$display_type = 'alphabetical', $tags = '')
+		array $arguments)
 	{
-		parent::__construct($app, $layout, $tags);
+		parent::__construct($app, $layout, $arguments);
 
 		$this->ui_xml = 'Pinhole/pages/browser-tag.xml';
-		$this->display_type = $display_type;
+		$this->display_type = $this->getArgument('display_type');
+	}
+
+	// }}}
+	// {{{ protected function getArgumentMap()
+
+	protected function getArgumentMap()
+	{
+		return array(
+			'display_type' => array(0, 'alphabetical'),
+		);
 	}
 
 	// }}}

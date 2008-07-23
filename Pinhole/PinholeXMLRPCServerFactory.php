@@ -11,12 +11,12 @@ class PinholeXMLRPCServerFactory extends SiteXMLRPCServerFactory
 {
 	// {{{ public function __construct()
 
-	public function __construct()
+	public function __construct(SiteApplication $app)
 	{
-		parent::__construct();
+		parent::__construct($app);
 
 		// set location to load Pinhole page classes from
-		$this->class_map['Pinhole'] = 'Pinhole/pages';
+		$this->page_class_map['Pinhole'] = 'Pinhole/pages';
 	}
 
 	// }}}

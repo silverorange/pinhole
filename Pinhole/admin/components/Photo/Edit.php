@@ -323,12 +323,15 @@ class PinholePhotoEdit extends AdminDBEdit
 		parent::buildInternal();
 
 		$preview = $this->ui->getWidget('preview');
-		$preview->image = $this->photo->getUri('small', '../');
 		$preview->width = $this->photo->getWidth('small');
 		$preview->height = $this->photo->getHeight('small');
-		$preview->preview_image = $this->photo->getUri('large', '../');
+		$preview->image = sprintf('%s/Loader?id=%s&dimension=%s',
+			$this->getComponentName(), $this->photo->id, 'small');
+
 		$preview->preview_width = $this->photo->getWidth('large');
 		$preview->preview_height = $this->photo->getHeight('large');
+		$preview->preview_image = sprintf('%s/Loader?id=%s&dimension=%s',
+			$this->getComponentName(), $this->photo->id, 'large');
 
 		/*
 		$toolbar = $this->ui->getWidget('edit_toolbar');

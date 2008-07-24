@@ -220,7 +220,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			$where = sprintf('date_part(%s, convertTZ(PinholePhoto.photo_date,
 				PinholePhoto.photo_time_zone)) = %s',
 				$this->db->quote($this->name, 'text'),
-				$this->db->quote($this->value, 'date'));
+				$this->db->quote($this->value, 'float'));
 
 			break;
 
@@ -530,19 +530,18 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			break;
 
 		case 'year':
-			$year = intval($value);
 			$date = new SwatDate();
-			$valid = ($year > 0 && $year <= $date->getYear());
+			$valid = (ctype_digit($value) && $value > 0 &&
+				$value <= $date->getYear());
+
 			break;
 
 		case 'month':
-			$month = intval($value);
-			$valid = ($month >= 1 && $month <= 12);
+			$valid = (ctype_digit($value) && $value >= 1 && $value <= 12);
 			break;
 
 		case 'day':
-			$day = intval($value);
-			$valid = ($day >= 1 && $day <= 31);
+			$valid = (ctype_digit($value) && $value >= 1 && $value <= 31);
 			break;
 
 		default:

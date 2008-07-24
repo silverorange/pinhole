@@ -1090,7 +1090,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		while ($tag = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT))
 			$tag_ids[] = $this->db->quote($tag->tag, 'integer');
 
-		if ($tag_ids == 0)
+		if (count($tag_ids) == 0)
 			return $tag_list;
 
 		$sql = sprintf('select PinholeTag.* from PinholeTag where id in (%s)',

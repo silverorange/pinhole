@@ -57,15 +57,7 @@ class PinholePhotoLoader extends AdminPage
 		}
 
 		$photo = $photos->getFirst();
-
-		if ($photo->private && !$this->app->session->isLoggedIn()) {
-			$message = sprintf("Photo with filename '%s' is private and user ".
-				"is not logged in.", $filename);
-
-			throw new AdminNoAccessException($message);
-		}
-
-		$photo->setFileBase('../photos');
+		$photo->setFileBase('../../photos');
 		return $photo;
 	}
 
@@ -81,7 +73,7 @@ class PinholePhotoLoader extends AdminPage
 		header('Content-Type: '.$this->photo->getMimeType(
 			$this->dimension_shortname));
 
-		readfile('../'.$this->photo->getFilePath($this->dimension_shortname, '../'));
+		readfile($this->photo->getFilePath($this->dimension_shortname));
 		exit();
 	}
 

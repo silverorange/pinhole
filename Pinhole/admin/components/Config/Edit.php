@@ -111,7 +111,6 @@ class PinholeConfigEdit extends AdminEdit
 	{
 		$values = $this->ui->getValues(array(
 			'site_title',
-			'pinhole_passphrase',
 			'site_meta_description',
 			'date_time_zone',
 			'pinhole_search_engine_indexable',
@@ -126,11 +125,12 @@ class PinholeConfigEdit extends AdminEdit
 			$name = substr_replace($key, '.', strpos($key, '_'), 1);
 			list($section, $title) = explode('.', $name, 2);
 
-			if ($name == 'pinhole.phassphrase')
-				$value = md5($value);
-
 			$this->app->config->$section->$title = (string)$value;
 		}
+
+		if ($this->ui->getWidget('pinhole_passphrase')->value != '')
+			$this->app->config->pinhole->passphrase =
+				md5($this->ui->getWidget('pinhole_passphrase')->value);
 
 		$this->app->config->save();
 		$message = new SwatMessage(
@@ -150,7 +150,6 @@ class PinholeConfigEdit extends AdminEdit
 	{
 		parent::buildInternal();
 		$this->buildConfigValues();
-		$this->buildPreviewImage();
 
 		$this->ui->getWidget('pinhole_passphrase_field')->visible =
 			($this->app->config->pinhole->passphrase !== null);
@@ -188,32 +187,6 @@ class PinholeConfigEdit extends AdminEdit
 		}
 
 		$this->ui->setValues($values);
-	}
-
-	// }}}
-	// {{{ protected function buildPreviewImage()
-
-	protected function buildPreviewImage()
-	{
-		$header_id = $this->app->config->pinhole->header_image;
-
-		if ($header_id != '') {
-			/* TODO
-			$class = SwatDBClassMap::get('PinholeFile');
-			$file = new $class();
-			$file->setDatabase($this->app->db);
-			$file->load(intval($header_id));
-
-			$path = $file->getRelativeUri('../');
-			$this->ui->getWidget('image_preview')->file = $file;
-			*/
-		} else {
-			$this->ui->getWidget('image_container')->visible = false;
-			$this->ui->getWidget('change_image')->title =
-				Pinhole::_('Add Header Image');
-
-			$this->ui->getWidget('change_image')->open = true;
-		}
 	}
 
 	// }}}

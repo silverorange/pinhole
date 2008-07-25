@@ -21,7 +21,7 @@
 			<widget class="SwatFormField" id="pinhole_passphrase_field">
 				<property name="title" translatable="yes">Private Photos Password</property>
 				<property name="note" translatable="yes">Leave blank to keep your existing password.</property>
-				<widget class="SwatPassword" id="pinhole_passphrase" />
+				<widget class="SwatPasswordEntry" id="pinhole_passphrase" />
 			</widget>
 			<widget class="SwatFormField">
 				<property name="title" translatable="yes">Photos Per Page</property>

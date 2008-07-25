@@ -30,9 +30,6 @@ class PinholeLoginPage extends SitePage
 	{
 		parent::init();
 
-		if ($this->app->session->isLoggedIn())
-			$this->app->relocate($this->app->config->pinhole->path);
-
 		$this->ui = new SwatUI();
 		$this->ui->loadFromXML($this->ui_xml);
 
@@ -58,8 +55,11 @@ class PinholeLoginPage extends SitePage
 			$passphrase = $this->ui->getWidget('passphrase')->value;
 
 			if ($this->app->session->login($passphrase)) {
-				// TODO: relocate to referer
-				$this->app->relocate('');
+				if ($form->getHiddenField('referer') === null)
+					$this->app->relocate('');
+				else
+					$this->app->relocate($form->getHiddenField('referer'));
+
 			} else {
 				$message = new SwatMessage(Site::_('Login Incorrect'),
 					SwatMessage::WARNING);
@@ -85,6 +85,11 @@ class PinholeLoginPage extends SitePage
 	public function build()
 	{
 		parent::build();
+
+		$form = $this->ui->getWidget('login_form');
+		if ($form->getHiddenField('referer') === null &&
+			isset($_SERVER['HTTP_REFERER']))
+			$form->addHiddenField('referer', $_SERVER['HTTP_REFERER']);
 
 		$this->layout->startCapture('content', true);
 		$this->ui->display();

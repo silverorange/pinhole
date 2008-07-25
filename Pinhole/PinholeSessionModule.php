@@ -52,13 +52,11 @@ class PinholeSessionModule extends SiteSessionModule
 	 */
 	public function login($passphrase)
 	{
-		if ($this->isLoggedIn())
-			$this->logout();
+		$this->logout();
 
-		$instance = ($this->app->hasModule('SiteMultipleInstanceModule')) ?
-			$this->app->getInstanceId() : null;
-
-		// TODO: should passphrase be md5/salted?
+		// TODO: should passphrase be salted?
+		$passphrase = md5($passphrase);
+		$instance = $this->getInstanceId();
 
 		$sql = sprintf('select instance from instanceconfigsetting
 			where instance %s %s and name = %s and value = %s',
@@ -75,10 +73,29 @@ class PinholeSessionModule extends SiteSessionModule
 			if (!isset($this->authenticated_instances))
 				$this->authenticated_instances = array();
 
-			$this->authenticated_instances[] = ($id === null) ? 0 : $id;
+			$this->authenticated_instances[$this->getInstanceId()] = true;
 		}
 
 		return $this->isLoggedIn();
+	}
+
+	// }}}
+	// {{{ public function logout()
+
+	public function logout()
+	{
+		unset($this->authenticated_instances[$this->getInstanceId()]);
+	}
+
+	// }}}
+	// {{{ private function getInstanceId()
+
+	private function getInstanceId()
+	{
+		$id = ($this->app->hasModule('SiteMultipleInstanceModule')) ?
+			$this->app->getInstanceId() : null;
+
+		return ($id === null) ? 0 : $id;
 	}
 
 	// }}}
@@ -92,18 +109,18 @@ class PinholeSessionModule extends SiteSessionModule
 	 */
 	public function isLoggedIn()
 	{
-		$instance = ($this->app->hasModule('SiteMultipleInstanceModule')) ?
-			$this->app->getInstanceId() : 0;
+		if (!$this->isActive()) {
+			return false;
+		} elseif (!$this->app->isSecure()) {
+			return false;
+		} elseif (isset($this->authenticated_instances) &&
+			array_key_exists($this->getInstanceId(),
+				$this->authenticated_instances)) {
 
-		if (!$this->isActive())
-			return false;
-		elseif (!$this->app->isSecure())
-			return false;
-		elseif (isset($this->authenticated_instances) &&
-			in_array($instance, $this->authenticated_instances))
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	// }}}

@@ -49,6 +49,9 @@ class PinholeTagDetails extends AdminIndex
 		$this->ui->loadFromXML($this->ui_xml);
 		$instance_id = $this->app->getInstanceId();
 
+		$this->ui->getWidget('passphrase_field')->visible =
+			($this->app->config->pinhole->passphrase === null);
+
 		// setup tag entry control
 		$this->ui->getWidget('tags')->setApplication($this->app);
 		$this->ui->getWidget('tags')->setAllTags();
@@ -111,7 +114,6 @@ class PinholeTagDetails extends AdminIndex
 		$details_frame->subtitle = $this->tag->title;
 
 		$this->buildToolbar();
-		$this->buildNavBar();
 	}
 
 	// }}}
@@ -141,10 +143,12 @@ class PinholeTagDetails extends AdminIndex
 	}
 
 	// }}}
-	// {{{ private function buildNavBar()
+	// {{{ protected function buildNavBar()
 
-	private function buildNavBar()
+	protected function buildNavBar()
 	{
+		parent::buildNavBar();
+
 		$this->navbar->popEntry();
 		$this->navbar->addEntry(new SwatNavBarEntry($this->getComponentTitle(),
 			$this->getComponentName()));

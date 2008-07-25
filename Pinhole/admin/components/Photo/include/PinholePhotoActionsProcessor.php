@@ -55,6 +55,48 @@ class PinholePhotoActionsProcessor
 			$this->page->app->getPage()->setItems($view->getSelection());
 			break;
 
+		case 'private':
+			if ($ui->getWidget('passphrase')->value !== null) {
+				$this->page->app->config->pinhole->passphrase =
+					md5($ui->getWidget('passphrase')->value);
+
+				$this->page->app->config->save();
+			}
+
+			if ($this->page->app->config->pinhole->passphrase !== null) {
+				$num = count($view->getSelection());
+
+				foreach ($this->getPhotos($view) as $photo) {
+					$photo->private = true;
+					$photo->save();
+				}
+
+				$message = new SwatMessage(sprintf(Pinhole::ngettext(
+					'One photo has been set as private.',
+					'%s photos have been set as private.', $num),
+					SwatString::numberFormat($num)));
+
+				$this->page->app->messages->add($message);
+			}
+
+			break;
+
+		case 'public':
+			$num = count($view->getSelection());
+
+			foreach ($this->getPhotos($view) as $photo) {
+				$photo->private = true;
+				$photo->save();
+			}
+
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
+				'One photo has been set as public.',
+				'%s photos have been set as public.', $num),
+				SwatString::numberFormat($num)));
+
+			$this->page->app->messages->add($message);
+			break;
+
 		case 'publish':
 		case 'status_action':
 			$num = count($view->getSelection());

@@ -26,3 +26,20 @@ body:last-child:not(:root:root) #description {
 #photo_time_zone_areas {
 	display: block;
 }
+
+.swat-grouping-form-field-fieldset .swat-form-field {
+	padding-top: 0;
+}
+
+#privacy_field .swat-form-field-contents {
+	display: block;
+}
+
+#privacy_field .swat-form-field-contents .swat-form-field-contents {
+	display: inline;
+}
+
+#passphrase_field label {
+	font-size: 90%;
+	display: block;
+}

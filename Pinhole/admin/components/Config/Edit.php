@@ -111,6 +111,7 @@ class PinholeConfigEdit extends AdminEdit
 	{
 		$values = $this->ui->getValues(array(
 			'site_title',
+			'pinhole_passphrase',
 			'site_meta_description',
 			'date_time_zone',
 			'pinhole_search_engine_indexable',
@@ -121,37 +122,13 @@ class PinholeConfigEdit extends AdminEdit
 		$values['pinhole_search_engine_indexable'] =
 			($values['pinhole_search_engine_indexable']) ? '1' : '0';
 
-		try {
-			$transaction = new SwatDBTransaction($this->app->db);
-			$values['pinhole_header_image'] = $this->processUploadFile();
-			$transaction->commit();
-
-		} catch (SwatDBException $e) {
-			$transaction->rollback();
-
-			$message = new SwatMessage(Admin::_(
-				'A database error has occured. The item was not saved.'),
-				SwatMessage::SYSTEM_ERROR);
-
-			$this->app->messages->add($message);
-
-			$e->process();
-			return false;
-
-		} catch (SwatException $e) {
-			$message = new SwatMessage(Admin::_(
-				'An error has occured. The item was not saved.'),
-				SwatMessage::SYSTEM_ERROR);
-
-			$this->app->messages->add($message);
-
-			$e->process();
-			return false;
-		}
-
 		foreach ($values as $key => $value) {
 			$name = substr_replace($key, '.', strpos($key, '_'), 1);
 			list($section, $title) = explode('.', $name, 2);
+
+			if ($name == 'pinhole.phassphrase')
+				$value = md5($value);
+
 			$this->app->config->$section->$title = (string)$value;
 		}
 
@@ -174,6 +151,9 @@ class PinholeConfigEdit extends AdminEdit
 		parent::buildInternal();
 		$this->buildConfigValues();
 		$this->buildPreviewImage();
+
+		$this->ui->getWidget('pinhole_passphrase_field')->visible =
+			($this->app->config->pinhole->passphrase !== null);
 	}
 
 	// }}}

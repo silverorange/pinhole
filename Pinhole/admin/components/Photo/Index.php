@@ -47,6 +47,9 @@ class PinholePhotoIndex extends AdminSearch
 		// setup status list
 		$status_flydown = $this->ui->getWidget('status_flydown');
 		$status_flydown->addOptionsByArray(PinholePhoto::getStatuses());
+
+		$this->ui->getWidget('passphrase_field')->visible =
+			($this->app->config->pinhole->passphrase === null);
 	}
 
 	// }}}

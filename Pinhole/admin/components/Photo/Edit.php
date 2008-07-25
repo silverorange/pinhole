@@ -65,6 +65,9 @@ class PinholePhotoEdit extends AdminDBEdit
 			$this->pending_photos = $this->getPendingPhotos();
 		}
 
+		$this->ui->getWidget('passphrase_field')->visible =
+			($this->app->config->pinhole->passphrase === null);
+
 		// setup tag entry control
 		$this->ui->getWidget('tags')->setApplication($this->app);
 		$this->ui->getWidget('tags')->setAllTags();
@@ -213,6 +216,23 @@ class PinholePhotoEdit extends AdminDBEdit
 	// }}}
 
 	// process phase
+	// {{{ protected function validate()
+
+	protected function validate()
+	{
+		$private = $this->ui->getWidget('private')->value;
+
+		if ($this->app->config->pinhole->passphrase === null && $private &&
+			$this->ui->getWidget('passphrase')->value === null) {
+
+			$message = new SwatMessage(Pinhole::_('A password is required for '.
+				'private photos.'));
+
+			$this->ui->getWidget('passphrase')->addMessage($message);
+		}
+	}
+
+	// }}}
 	// {{{ protected function saveDBData()
 
 	protected function saveDBData()
@@ -222,6 +242,14 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$tags = $this->ui->getWidget('tags')->getSelectedTagArray();
 		$this->photo->addTagsByName($tags, true);
+
+		if ($this->app->config->pinhole->passphrase === null &&
+			$this->ui->getWidget('private')->value) {
+			$this->app->config->pinhole->passphrase =
+				md5($this->ui->getWidget('passphrase')->value);
+
+			$this->app->config->save();
+		}
 
 		$this->addToSearchQueue();
 
@@ -247,6 +275,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->title = $values['title'];
 		$this->photo->description = $values['description'];
 		$this->photo->photo_date = $photo_date;
+		$this->photo->private = $values['private'];
 		$this->photo->photo_time_zone = $values['photo_time_zone'];
 		$this->photo->setStatus($values['status']);
 	}
@@ -262,6 +291,7 @@ class PinholePhotoEdit extends AdminDBEdit
 			'photo_date',
 			'photo_time_zone',
 			'status',
+			'private',
 		));
 	}
 
@@ -316,12 +346,39 @@ class PinholePhotoEdit extends AdminDBEdit
 	// }}}
 
 	// build phase
+	// {{{ public function build()
+
+	public function build()
+	{
+		parent::build();
+
+		$this->layout->startCapture('content');
+		Swat::displayInlineJavaScript('var edit_page = new PinholePhotoEditPage();');
+		$this->layout->endCapture();
+	}
+
+	// }}}
 	// {{{ protected function buildInternal()
 
 	protected function buildInternal()
 	{
 		parent::buildInternal();
 
+		$this->buildPreview();
+		$this->buildPendingCount();
+		$this->buildSiteLinks();
+
+		/*
+		$toolbar = $this->ui->getWidget('edit_toolbar');
+		$toolbar->setToolLinkValues($this->photo->id);
+		*/
+	}
+
+	// }}}
+	// {{{ protected function buildPreview()
+
+	protected function buildPreview()
+	{
 		$preview = $this->ui->getWidget('preview');
 		$preview->width = $this->photo->getWidth('small');
 		$preview->height = $this->photo->getHeight('small');
@@ -332,12 +389,13 @@ class PinholePhotoEdit extends AdminDBEdit
 		$preview->preview_height = $this->photo->getHeight('large');
 		$preview->preview_image = sprintf('%s/Loader?id=%s&dimension=%s',
 			$this->getComponentName(), $this->photo->id, 'large');
+	}
 
-		/*
-		$toolbar = $this->ui->getWidget('edit_toolbar');
-		$toolbar->setToolLinkValues($this->photo->id);
-		*/
+	// }}}
+	// {{{ protected function buildPendingCount()
 
+	protected function buildPendingCount()
+	{
 		if ($this->upcomingPendingPhotoCount() > 0) {
 			$this->ui->getWidget('proceed_button')->visible = true;
 			$this->ui->getWidget('status_info')->content =
@@ -347,7 +405,13 @@ class PinholePhotoEdit extends AdminDBEdit
 					$this->upcomingPendingPhotoCount()),
 					$this->upcomingPendingPhotoCount());
 		}
+	}
 
+	// }}}
+	// {{{ protected function buildSiteLinks()
+
+	protected function buildSiteLinks()
+	{
 		$replicator = $this->ui->getWidget('site_link_field');
 		foreach ($this->getDimensions() as $dimension) {
 			if ($dimension->shortname == 'original') {
@@ -405,8 +469,13 @@ class PinholePhotoEdit extends AdminDBEdit
 	public function finalize()
 	{
 		parent::finalize();
+
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/admin/styles/pinhole-photo-edit-page.css',
+			Pinhole::PACKAGE_ID));
+
+		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
+			'packages/pinhole/admin/javascript/pinhole-photo-edit-page.js',
 			Pinhole::PACKAGE_ID));
 	}
 

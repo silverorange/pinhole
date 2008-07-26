@@ -32,7 +32,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED));
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		$years = SwatDB::query($this->app->db, $sql);
 		$locale = SwatI18NLocale::get();

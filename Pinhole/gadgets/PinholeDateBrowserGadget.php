@@ -37,13 +37,14 @@ class PinholeDateBrowserGadget extends SiteGadget
 		$years = SwatDB::query($this->app->db, $sql);
 		$locale = SwatI18NLocale::get();
 
+		echo '<ul>';
+
 		foreach ($years as $year) {
 			$date = new SwatDate($year->photo_date);
 			$date->getYear();
 
-			$div_tag = new SwatHtmlTag('div');
-			$div_tag->class = 'pinhole-date-browser-gadget-year';
-			$div_tag->open();
+			$li_tag = new SwatHtmlTag('li');
+			$li_tag->open();
 
 			$a_tag = new SwatHtmlTag('a');
 			$a_tag->href = $this->app->config->pinhole->path.'tag?date.year='.
@@ -56,8 +57,10 @@ class PinholeDateBrowserGadget extends SiteGadget
 			echo ' '.$locale->formatNumber($year->photo_count).' '.
 				Pinhole::ngettext('Photo', 'Photos', $year->photo_count);
 
-			$div_tag->close();
+			$li_tag->close();
 		}
+
+		echo '</ul>';
 	}
 
 	// }}}

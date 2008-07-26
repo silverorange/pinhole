@@ -90,7 +90,7 @@ class PinholeStatisticsGadget extends SiteGadget
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED));
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		return SwatDB::queryRow($this->app->db, $sql);
 	}
@@ -110,7 +110,7 @@ class PinholeStatisticsGadget extends SiteGadget
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED));
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		$tag_count = SwatDB::queryOne($this->app->db, $sql);
 
@@ -128,7 +128,7 @@ class PinholeStatisticsGadget extends SiteGadget
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED));
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
 		$popular_tag_info = SwatDB::queryRow($this->app->db, $sql);
 

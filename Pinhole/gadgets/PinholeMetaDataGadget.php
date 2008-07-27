@@ -71,7 +71,7 @@ class PinholeMetaDataGadget extends SiteGadget
 			echo '<ul>';
 			foreach ($rows as $row) {
 				if ($row->meta_data == $meta->id) {
-					echo '<li>';
+					echo '<li class="clearfix"><div>';
 
 					$a_tag = new SwatHtmlTag('a');
 					$a_tag->href = sprintf('%stag?meta.%s=%s',
@@ -82,10 +82,10 @@ class PinholeMetaDataGadget extends SiteGadget
 					$a_tag->setContent($row->value);
 					$a_tag->display();
 
-					echo ' '.$locale->formatNumber($row->photo_count).' '.
-						Pinhole::ngettext('Photo', 'Photos', $row->photo_count);
+					echo ' <span>'.$locale->formatNumber($row->photo_count).
+						'</span>';
 
-					echo '</li>';
+					echo '</div></li>';
 				}
 			}
 			echo '</ul>';

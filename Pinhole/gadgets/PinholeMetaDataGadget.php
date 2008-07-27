@@ -6,6 +6,7 @@ require_once 'Swat/SwatHtmlTag.php';
 require_once 'Swat/SwatDisclosure.php';
 require_once 'Swat/SwatContentBlock.php';
 require_once 'SwatI18N/SwatI18NLocale.php';
+require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
 
 /**
  * Displays some statistics about the current gallery
@@ -76,7 +77,7 @@ class PinholeMetaDataGadget extends SiteGadget
 					$a_tag->href = sprintf('%stag?meta.%s=%s',
 						$this->app->config->pinhole->path,
 						$meta->shortname,
-						$row->value);
+						PinholePhotoMetaDataBinding::escapeValue($row->value));
 
 					$a_tag->setContent($row->value);
 					$a_tag->display();

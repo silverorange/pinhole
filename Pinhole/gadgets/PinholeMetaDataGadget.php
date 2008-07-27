@@ -105,13 +105,6 @@ class PinholeMetaDataGadget extends SiteGadget
 
 	protected function define()
 	{
-		// TODO: add this correctly
-		/*
-		$this->addJavascript(
-			'packages/swat/javascript/swat-disclosure.js',
-			Swat::PACKAGE_ID);
-		*/
-
 		$this->defineDefaultTitle(Pinhole::_('Metadata Browser (Beta)'));
 		$this->defineDescription(Pinhole::_(
 			'Display information about photo meta data and '.

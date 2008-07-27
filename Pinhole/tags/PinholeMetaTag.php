@@ -59,7 +59,7 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 	/**
 	 * Parses this meta tag from a tag string
 	 *
-	 * @param string $string the tag string to parse. 
+	 * @param string $string the tag string to parse.
 	 * @param MDB2_Driver_Common $db the database connection used to parse the
 	 *                            tag string.
 	 * @param SiteInstance the site instance used to parse the tag string.

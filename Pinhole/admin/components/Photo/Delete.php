@@ -99,8 +99,6 @@ class PinholePhotoDelete extends AdminDBDelete
 			the following %s?</strong>',
 			Pinhole::ngettext('photo', 'photos', count($store)));
 		$message->content_type = 'text/xml';
-
-		$this->buildNavBar();
 	}
 
 	// }}}
@@ -108,6 +106,7 @@ class PinholePhotoDelete extends AdminDBDelete
 
 	protected function buildNavBar()
 	{
+		parent::buildNavBar();
 		$this->navbar->addEntry(new SwatNavBarEntry(Pinhole::_('Delete')));
 	}
 

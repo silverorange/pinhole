@@ -436,6 +436,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function buildNavBar()
 	{
+		parent::buildNavBar();
 		//$this->navbar->createEntry(Pinhole::_('Edit'));
 	}
 

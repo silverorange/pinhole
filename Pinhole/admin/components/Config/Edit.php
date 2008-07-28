@@ -212,6 +212,7 @@ class PinholeConfigEdit extends AdminEdit
 
 	protected function buildNavBar()
 	{
+		parent::buildNavBar();
 		$this->navbar->createEntry(Pinhole::_('Edit Site Settings'));
 	}
 

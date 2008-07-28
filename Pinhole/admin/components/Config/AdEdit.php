@@ -113,6 +113,7 @@ class PinholeConfigAdEdit extends AdminEdit
 
 	protected function buildNavBar()
 	{
+		parent::buildNavBar();
 		$this->navbar->createEntry(Pinhole::_('Edit Ad Settings'));
 	}
 

@@ -46,8 +46,7 @@ class PinholeMetaDataGadget extends SiteGadget
 			where PinholeMetaData.instance %s %s and PinholePhoto.status = %s
 				and PinholeMetaData.visible = %s
 				and PinholeMetaData.machine_tag = %s
-			group by meta_data, value
-			order by value";
+			group by meta_data, value";
 
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
@@ -61,6 +60,12 @@ class PinholeMetaDataGadget extends SiteGadget
 
 		$this->container = new SwatContainer();
 
+		$sorted_rows = array();
+		foreach ($rows as $row)
+			$sorted_rows[] = $row;
+
+		usort($sorted_rows, array(get_class($this), 'sortMetaData'));
+
 		foreach ($meta_data as $meta) {
 			$disclosure = new SwatDisclosure();
 			$disclosure->title = $meta->title;
@@ -69,7 +74,7 @@ class PinholeMetaDataGadget extends SiteGadget
 			ob_start();
 
 			echo '<ul>';
-			foreach ($rows as $row) {
+			foreach ($sorted_rows as $row) {
 				if ($row->meta_data == $meta->id) {
 					echo '<li class="clearfix"><div>';
 
@@ -110,6 +115,26 @@ class PinholeMetaDataGadget extends SiteGadget
 		$this->defineDescription(Pinhole::_(
 			'Display information about photo meta data and '.
 			'allow browsing by meta data'));
+	}
+
+	// }}}
+	// {{{ private static function sortMetaData()
+
+	private static function sortMetaData($a, $b)
+	{
+		if (floatval($a->value) > 0 && floatval($b->value) > 0) {
+			$al = floatval($a->value);
+			$bl = floatval($b->value);
+		} else {
+			$al = strtolower($a->value);
+			$bl = strtolower($b->value);
+		}
+
+		if ($al == $bl) {
+			return 0;
+		}
+
+		return ($al > $bl) ? +1 : -1;
 	}
 
 	// }}}

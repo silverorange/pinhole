@@ -157,6 +157,27 @@ class Pinhole
 	}
 
 	// }}}
+	// {{{ public static function getHtmlHeadEntrySet()
+
+	/**
+	 * Gets site-wide HTML head entries for sites using Pinhole
+	 *
+	 * Applications may add these head entries to their layout.
+	 *
+	 * @return SwatHtmlHeadEntrySet the HTML head entries used by Pinhole.
+	 */
+	public static function getHtmlHeadEntrySet(SiteApplication $app)
+	{
+		$set = new SwatHtmlHeadEntrySet();
+		$pinhole_base_href = $app->config->pinhole->path;
+
+		$set->addEntry(new SwatLinkHtmlHeadEntry($pinhole_base_href.'feed',
+			'alternate','application/atom+xml', 'Feed'));
+
+		return $set;
+	}
+
+	// }}}
 	// {{{ public static function displayAd()
 
 	/**
@@ -187,20 +208,6 @@ class Pinhole
 				echo '</div>';
 			}
 		}
-	}
-
-	// }}}
-	// {{{ public static function getHtmlHeadEntrySet()
-
-	public static function getHtmlHeadEntrySet(SiteApplication $app)
-	{
-		$set = new SwatHtmlHeadEntrySet();
-		$pinhole_base_href = $app->config->pinhole->path;
-
-		$set->addEntry(new SwatLinkHtmlHeadEntry($pinhole_base_href.'feed',
-			'alternate','application/atom+xml', 'Feed'));
-
-		return $set;
 	}
 
 	// }}}

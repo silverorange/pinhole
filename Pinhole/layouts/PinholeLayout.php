@@ -55,7 +55,7 @@ abstract class PinholeLayout extends SiteLayout
 	public function finalize()
 	{
 		parent::finalize();
-
+		$this->addHtmlHeadEntrySet(Pinhole::getHtmlHeadEntrySet($this->app));
 		$this->finalizeTitle();
 	}
 
@@ -75,16 +75,6 @@ abstract class PinholeLayout extends SiteLayout
 
 		// build displayed title (top of page)
 		$this->data->instance_title = $instance_title;
-	}
-
-	// }}}
-	// {{{ protected function finalizeFeedLink()
-
-	protected function finalizeFeedLink()
-	{
-		$this->addHtmlHeadEntry(
-			new SwatLinkHtmlHeadEntry('feed', 'alternate',
-				'application/atom+xml', 'Feed'));
 	}
 
 	// }}}

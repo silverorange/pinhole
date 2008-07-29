@@ -2,95 +2,113 @@
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
 	<widget class="SwatMessageDisplay" id="message_display" />
-	<widget class="SwatFrame" id="site_frame">
-		<property name="title" translatable="yes">Site Settings</property>
-		<widget class="SwatToolbar" id="site_toolbar">
-			<widget class="SwatToolLink">
-				<property name="title" translatable="yes">Edit Site Settings</property>
-				<property name="link">Config/Edit</property>
-				<property name="stock_id">edit</property>
+	<widget class="SwatFrame">
+		<property name="title" translatable="yes">Customize</property>
+		<!-- {{{ Theme -->
+		<widget class="SwatFrame" id="theme_frame">
+			<property name="title" translatable="yes">Current Theme</property>
+			<widget class="SwatToolbar" id="theme_toolbar">
+				<widget class="SwatToolLink">
+					<property name="title" translatable="yes">Change Theme</property>
+					<property name="link">Theme</property>
+					<property name="stock_id">edit</property>
+				</widget>
+				<widget class="SwatToolLink">
+					<property name="title" translatable="yes">Customize Sidebar</property>
+					<property name="link">Sidebar</property>
+					<property name="stock_id">edit</property>
+				</widget>
+			</widget>
+			<widget class="SwatForm">
+				<widget class="SiteThemeDisplay" id="theme" />
 			</widget>
 		</widget>
-		<widget class="SwatDetailsView" id="config_settings_view">
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Site Title</property>
-				<object class="SwatNullTextCellRenderer">
-					<property name="text" type="data">site_title</property>
+		<!-- }}} -->
+		<!-- {{{ Config Settings -->
+		<widget class="SwatFrame" id="site_frame">
+			<property name="title" translatable="yes">Site Settings</property>
+			<widget class="SwatToolbar" id="site_toolbar">
+				<widget class="SwatToolLink">
+					<property name="title" translatable="yes">Edit Site Settings</property>
+					<property name="link">Config/Edit</property>
+					<property name="stock_id">edit</property>
+				</widget>
+			</widget>
+			<widget class="SwatDetailsView" id="config_settings_view">
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Site Title</property>
+					<object class="SwatNullTextCellRenderer">
+						<property name="text" type="data">site_title</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Default Meta Description</property>
-				<object class="SwatNullTextCellRenderer">
-					<property name="text" type="data">site_meta_description</property>
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Default Meta Description</property>
+					<object class="SwatNullTextCellRenderer">
+						<property name="text" type="data">site_meta_description</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Photos Per Page</property>
-				<object class="SwatNumericCellRenderer">
-					<property name="value" type="data">pinhole_photos_per_page</property>
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Photos Per Page</property>
+					<object class="SwatNumericCellRenderer">
+						<property name="value" type="data">pinhole_photos_per_page</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Site Time Zone</property>
-				<object class="SwatNullTextCellRenderer">
-					<property name="text" type="data">date_time_zone</property>
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Site Time Zone</property>
+					<object class="SwatNullTextCellRenderer">
+						<property name="text" type="data">date_time_zone</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Allow Search Engines to Index</property>
-				<object class="SwatBooleanCellRenderer">
-					<property name="stock_id">yes-no</property>
-					<property name="value" type="data">pinhole_search_engine_indexable</property>
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Allow Search Engines to Index</property>
+					<object class="SwatBooleanCellRenderer">
+						<property name="stock_id">yes-no</property>
+						<property name="value" type="data">pinhole_search_engine_indexable</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Google Analytics Account</property>
-				<object class="SwatNullTextCellRenderer">
-					<property name="text" type="data">analytics_google_account</property>
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Google Analytics Account</property>
+					<object class="SwatNullTextCellRenderer">
+						<property name="text" type="data">analytics_google_account</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Header Image</property>
-				<object class="SwatImageCellRenderer">
-					<property name="image" type="data">pinhole_header_image</property>
-				</object>
-				<object class="SwatNullTextCellRenderer">
-					<property name="visible" type="data">!has_pinhole_header_image</property>
-				</object>
-			</object>
-		</widget>
-	</widget>
-	<widget class="SwatFrame" id="ad_frame">
-		<property name="title" translatable="yes">Ad Settings</property>
-		<widget class="SwatToolbar" id="ad_toolbar">
-			<widget class="SwatToolLink">
-				<property name="title" translatable="yes">Edit Ad Settings</property>
-				<property name="link">Config/AdEdit</property>
-				<property name="stock_id">edit</property>
 			</widget>
 		</widget>
-		<widget class="SwatDetailsView" id="ad_settings_view">
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Display Ad at Top of Page</property>
-				<object class="SwatBooleanCellRenderer">
-					<property name="stock_id">yes-no</property>
-					<property name="value" type="data">pinhole_ad_top</property>
+		<!-- }}} -->
+		<!-- {{{ Ad Settings -->
+		<widget class="SwatFrame" id="ad_frame">
+			<property name="title" translatable="yes">Ad Settings</property>
+			<widget class="SwatToolbar" id="ad_toolbar">
+				<widget class="SwatToolLink">
+					<property name="title" translatable="yes">Edit Ad Settings</property>
+					<property name="link">Config/AdEdit</property>
+					<property name="stock_id">edit</property>
+				</widget>
+			</widget>
+			<widget class="SwatDetailsView" id="ad_settings_view">
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Display Ad at Top of Page</property>
+					<object class="SwatBooleanCellRenderer">
+						<property name="stock_id">yes-no</property>
+						<property name="value" type="data">pinhole_ad_top</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Display Ad at Bottom of Page</property>
-				<object class="SwatBooleanCellRenderer">
-					<property name="stock_id">yes-no</property>
-					<property name="value" type="data">pinhole_ad_bottom</property>
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Display Ad at Bottom of Page</property>
+					<object class="SwatBooleanCellRenderer">
+						<property name="stock_id">yes-no</property>
+						<property name="value" type="data">pinhole_ad_bottom</property>
+					</object>
 				</object>
-			</object>
-			<object class="SwatDetailsViewField">
-				<property name="title" translatable="yes">Only Display Ads to Visitors From Other Websites</property>
-				<object class="SwatBooleanCellRenderer">
-					<property name="stock_id">yes-no</property>
-					<property name="value" type="data">pinhole_ad_referers_only</property>
+				<object class="SwatDetailsViewField">
+					<property name="title" translatable="yes">Only Display Ads to Visitors From Other Websites</property>
+					<object class="SwatBooleanCellRenderer">
+						<property name="stock_id">yes-no</property>
+						<property name="value" type="data">pinhole_ad_referers_only</property>
+					</object>
 				</object>
-			</object>
+			</widget>
 		</widget>
+		<!-- }}} -->
 	</widget>
 </swatml>

@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Swat/SwatDetailsStore.php';
+require_once 'Site/admin/SiteThemeDisplay.php';
 require_once 'Admin/pages/AdminPage.php';
 //require_once 'Pinhole/dataobjects/PinholeFile.php';
 
@@ -37,8 +38,27 @@ class PinholeConfigIndex extends AdminPage
 	{
 		parent::buildInternal();
 		$this->buildMessages();
+		$this->buildTheme();
 		$this->buildSiteSettingsView();
 		$this->buildAdSettingsView();
+	}
+
+	// }}}
+	// {{{ protected function buildTheme()
+
+	protected function buildTheme()
+	{
+		$current_theme = $this->app->config->site->theme;
+
+		$themes = $this->app->theme->getAvailable();
+		foreach ($themes as $theme) {
+			if ($theme->getShortname() == $current_theme) {
+				$theme_display = $this->ui->getWidget('theme');
+				$theme_display->selected = true;
+				$theme_display->setTheme($theme);
+				break;
+			}
+		}
 	}
 
 	// }}}
@@ -52,7 +72,6 @@ class PinholeConfigIndex extends AdminPage
 				'meta_description',
 			),
 			'pinhole' => array(
-				'header_image',
 				'photos_per_page',
 				'search_engine_indexable',
 			),
@@ -120,29 +139,6 @@ class PinholeConfigIndex extends AdminPage
 
 		$view = $this->ui->getWidget('ad_settings_view');
 		$view->data = $ds;
-	}
-
-	// }}}
-	// {{{ protected function buildDetailsPinholeHeaderImage()
-
-	protected function buildDetailsPinholeHeaderImage(SwatDetailsStore $ds)
-	{
-		$ds->pinhole_header_image = '';
-		$ds->has_pinhole_header_image = false;
-
-		$header_image = $this->app->config->pinhole->header_image;
-		if ($header_image != '') {
-			/* TODO
-			$class = SwatDBClassMap::get('PinholeFile');
-			$file = new $class();
-			$file->setDatabase($this->app->db);
-			if ($file->load(intval($header_image))) {
-				$path = $file->getRelativeUri('../');
-				$ds->pinhole_header_image = $path;
-				$ds->has_pinhole_header_image = true;
-			}
-			*/
-		}
 	}
 
 	// }}}

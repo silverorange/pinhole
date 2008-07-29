@@ -3,7 +3,7 @@
 <swatml>
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame">
-		<property name="title" translatable="yes">Customize</property>
+		<property name="title" translatable="yes">Customize Gallery</property>
 		<!-- {{{ Theme -->
 		<widget class="SwatFrame" id="theme_frame">
 			<property name="title" translatable="yes">Current Theme</property>

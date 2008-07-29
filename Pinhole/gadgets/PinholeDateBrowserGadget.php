@@ -146,7 +146,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 
 	protected function define()
 	{
-		$this->defineDefaultTitle(Pinhole::_('View Photos By Date'));
+		$this->defineDefaultTitle(Pinhole::_('View Photos By Year'));
 		$this->defineDescription(Pinhole::_(
 			'Displays a list of years photos were taken.'));
 	}

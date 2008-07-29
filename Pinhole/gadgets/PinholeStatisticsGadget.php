@@ -38,6 +38,16 @@ class PinholeStatisticsGadget extends SiteGadget
 
 			$li_tag->display();
 
+			$days = $last_date->dateDiff($first_date);
+			$avg = round(((float) $stats->photo_count / (float) $days), 2);
+			$li_tag = new SwatHtmlTag('li');
+			$li_tag->setContent(sprintf(
+				Pinhole::_('Approximately %s photos have been uploaded '.
+					'per day'),
+				$locale->formatNumber($avg)));
+
+			$li_tag->display();
+
 			$li_tag->setContent(sprintf(
 				Pinhole::_('Last photo uploaded on %s'),
 				$last_date->format(SwatDate::DF_DATE)));

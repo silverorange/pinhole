@@ -253,16 +253,13 @@ abstract class PinholeBrowserPage extends SitePage
 			$a_tag = new SwatHtmlTag('a');
 			$a_tag->href = $base_path.'tags';
 
-			if (count($this->tag_list) > 0)
+			if (count($this->tag_list) > 0) {
 				$a_tag->href.= '?'.$this->tag_list->__toString();
-			else
-				$a_tag->href.= '/date';
-
-			if (count($sub_tag_list) > 0) {
 				$a_tag->setContent(sprintf(
 					Pinhole::_('View All %s Intersecting Tags'),
 					$sub_tag_count));
 			} else {
+				$a_tag->href.= '/date';
 				$a_tag->setContent(sprintf(Pinhole::_('View All %s Tags'),
 					$sub_tag_count));
 			}

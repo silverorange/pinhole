@@ -26,7 +26,7 @@ class PinholePhotoThumbnailWrapper extends PinholePhotoWrapper
 			$this->binding_table,
 			$this->binding_table_image_field,
 			implode(',', $image_ids),
-			$this->db->quote('thumbnail', 'text'));
+			$this->db->quote('thumb', 'text'));
 
 		return $sql;
 	}

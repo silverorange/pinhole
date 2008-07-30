@@ -80,15 +80,16 @@ class PinholeAtomPage extends SitePage
 	 * @param string $dimension_shortname
 	 */
 	public function __construct(SiteWebApplication $app, SiteLayout $layout,
-		$dimension_shortname = null)
+		array $arguments = array())
 	{
 		$layout = new SiteLayout($app, 'Site/layouts/xhtml/atom.php');
 
-		parent::__construct($app, $layout);
+		parent::__construct($app, $layout, $arguments);
 
 		$tags = SiteApplication::initVar('tags');
 		$this->createTagList($tags);
-		$this->dimension = $this->initDimension($dimension_shortname);
+		$this->dimension = $this->initDimension(
+			$this->getArgument('dimension_shortname'));
 
 		$page_tags = $this->tag_list->getByType('PinholePageTag');
 		if (count($page_tags) == 0) {
@@ -102,6 +103,16 @@ class PinholeAtomPage extends SitePage
 
 		foreach ($page_tags as $tag)
 			$this->tag_list->remove($tag);
+	}
+
+	// }}}
+	// {{{ protected function getArgumentMap()
+
+	protected function getArgumentMap()
+	{
+		return array(
+			'dimension_shortname' => array(0, null),
+		);
 	}
 
 	// }}}

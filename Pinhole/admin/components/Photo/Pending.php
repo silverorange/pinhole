@@ -93,6 +93,11 @@ class PinholePhotoPending extends AdminIndex
 		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
 		$photos = SwatDB::query($this->app->db, $sql, $wrapper_class);
 
+		$tile_view = $this->ui->getWidget('index_view');
+		$tile_view->check_all_extended_count = $pager->total_records;
+		$tile_view->check_all_visible_count = count($photos);
+		$tile_view->check_all_unit = Pinhole::_('Pending Photos');
+
 		$store = new SwatTableStore();
 
 		if (count($photos) != 0) {

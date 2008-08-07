@@ -69,16 +69,19 @@ class PinholeTagIndex extends AdminSearch
 		switch ($actions->selected->id) {
 		case 'delete':
 			$this->app->replacePage($this->getComponentName().'/Delete');
-			$this->app->getPage()->setItems($view->checked_items);
+			$this->app->getPage()->setItems($view->checked_items,
+				$view->getColumn('checkbox')->isExtendedCheckAllSelected());
+
 			break;
 
 		case 'status_action':
+			/* TODO
 			$num = count($view->checked_items);
 
 			$status = $this->ui->getWidget('status_flydown')->value;
 
-			SwatDB::updateColumn($this->app->db, 'PinholeTag', 'integer:status',
-				$status, 'id', $view->checked_items);
+			$sql = sprintf('update PinholeTag set status = %s
+				where PinholeTag.instance = %s and %s');
 
 			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'The status of one tag has been changed.',
@@ -87,6 +90,7 @@ class PinholeTagIndex extends AdminSearch
 
 			$this->app->messages->add($message);
 			break;
+			*/
 		}
 	}
 
@@ -187,6 +191,12 @@ class PinholeTagIndex extends AdminSearch
 				$store->add($tag);
 			}
 		}
+
+		$index_view = $this->ui->getWidget('index_view');
+		$checkbox_column = $index_view->getColumn('checkbox');
+		$checkbox_column->check_all_visible_count = count($data_objects);
+		$checkbox_column->check_all_extended_count = $pager->total_records;
+		$checkbox_column->check_all_unit = Pinhole::_('tags');
 
 		return $store;
 	}

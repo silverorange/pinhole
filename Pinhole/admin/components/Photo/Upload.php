@@ -95,7 +95,7 @@ class PinholePhotoUpload extends AdminPage
 		$this->app->config->pinhole->camera_time_zone =
 			$photo->photo_time_zone;
 
-		$this->app->config->save();
+		$this->app->config->save(array('pinhole.camera_time_zone'));
 
 		// convert the photo date to UTC using the camera time zone
 		$photo->photo_date = new SwatDate($photo->photo_date);

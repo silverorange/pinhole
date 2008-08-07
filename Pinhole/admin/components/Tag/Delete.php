@@ -20,12 +20,16 @@ class PinholeTagDelete extends AdminDBDelete
 	{
 		parent::processDBData();
 
-		$sql = 'delete from PinholeTag where id in (%s) and instance %s %s';
+		$sql = 'delete from PinholeTag where instance %s %s';
+
 		$item_list = $this->getItemList('integer');
 		$instance_id = $this->app->getInstanceId();
-		$sql = sprintf($sql, $item_list,
+		$sql = sprintf($sql,
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
+
+		if (!$this->extended_selected)
+			$sql.= sprintf(' and id in (%s)', $item_list);
 
 		$num = SwatDB::exec($this->app->db, $sql);
 
@@ -45,26 +49,34 @@ class PinholeTagDelete extends AdminDBDelete
 	{
 		parent::buildInternal();
 
-		$item_list = $this->getItemList('integer');
-		$instance_id = $this->app->getInstanceId();
+		if ($this->extended_selected) {
+			$message = $this->ui->getWidget('confirmation_message');
+			$message->content = Pinhole::_('Are you sure you want '.
+				'to delete <strong>all tags</strong>?');
+			$message->content_type = 'text/xml';
 
-		$where_clause = sprintf('id in (%s) and instance %s %s',
-			$item_list,
-			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer'));
+		} else {
+			$item_list = $this->getItemList('integer');
+			$instance_id = $this->app->getInstanceId();
 
-		$dep = new AdminListDependency();
-		$dep->setTitle(Pinhole::_('tag'), Pinhole::_('tags'));
-		$dep->entries = AdminListDependency::queryEntries($this->app->db,
-			'PinholeTag', 'integer:id', null, 'text:title', 'title',
-			$where_clause, AdminDependency::DELETE);
+			$where_clause = sprintf('id in (%s) and instance %s %s',
+				$item_list,
+				SwatDB::equalityOperator($instance_id),
+				$this->app->db->quote($instance_id, 'integer'));
 
-		$message = $this->ui->getWidget('confirmation_message');
-		$message->content = $dep->getMessage();
-		$message->content_type = 'text/xml';
+			$dep = new AdminListDependency();
+			$dep->setTitle(Pinhole::_('tag'), Pinhole::_('tags'));
+			$dep->entries = AdminListDependency::queryEntries($this->app->db,
+				'PinholeTag', 'integer:id', null, 'text:title', 'title',
+				$where_clause, AdminDependency::DELETE);
 
-		if ($dep->getStatusLevelCount(AdminDependency::DELETE) == 0)
-			$this->switchToCancelButton();
+			$message = $this->ui->getWidget('confirmation_message');
+			$message->content = $dep->getMessage();
+			$message->content_type = 'text/xml';
+
+			if ($dep->getStatusLevelCount(AdminDependency::DELETE) == 0)
+				$this->switchToCancelButton();
+		}
 	}
 
 	// }}}

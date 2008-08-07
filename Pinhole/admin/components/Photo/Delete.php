@@ -38,10 +38,20 @@ class PinholePhotoDelete extends AdminDBDelete
 
 		$sql = sprintf('select PinholePhoto.* from PinholePhoto
 				inner join ImageSet on PinholePhoto.image_set = ImageSet.id
-				where PinholePhoto.id in (%s) and ImageSet.instance %s %s',
-				$item_list,
+				where ImageSet.instance %s %s',
 				SwatDB::equalityOperator($instance_id),
 				$this->app->db->quote($instance_id, 'integer'));
+
+		// note the only page with an extended-selection that accesses this
+		// is the pending photos page - so enforce status here.
+		if ($this->extended_selected) {
+			$sql.= sprintf(' and PinholePhoto.status = %s',
+				$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'));
+		} else {
+			$sql.= sprintf(' and PinholePhoto.id in (%s)', $item_list);
+		}
+
+		echo $sql; exit;
 
 		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
 		return SwatDB::query($this->app->db, $sql, $wrapper_class);
@@ -81,24 +91,35 @@ class PinholePhotoDelete extends AdminDBDelete
 	{
 		parent::buildInternal();
 
-		$container = $this->ui->getWidget('confirmation_container');
-		$delete_view = $this->ui->getWidget('delete_view');
+		if ($this->extended_selected) {
+			// note the only page with an extended-selection that accesses this
+			// is the pending photos page - so the message can be more
+			// specific.
+			$message = $this->ui->getWidget('confirmation_message');
+			$message->content_type = 'text/xml';
+			$message->content = Pinhole::_('<strong>Are you sure '.
+				'you want to delete all pending photos?</strong>');
 
-		$store = new SwatTableStore();
+		} else {
+			$container = $this->ui->getWidget('confirmation_container');
+			$delete_view = $this->ui->getWidget('delete_view');
 
-		foreach ($this->getPhotos() as $photo) {
-			$ds = new SwatDetailsStore();
-			$ds->photo = $photo;
-			$store->add($ds);
+			$store = new SwatTableStore();
+
+			foreach ($this->getPhotos() as $photo) {
+				$ds = new SwatDetailsStore();
+				$ds->photo = $photo;
+				$store->add($ds);
+			}
+
+			$delete_view->model = $store;
+
+			$message = $this->ui->getWidget('confirmation_message');
+			$message->content_type = 'text/xml';
+			$message->content = sprintf(Pinhole::_('<strong>Are you sure '.
+				'you want to delete the following %s?</strong>'),
+				Pinhole::ngettext('photo', 'photos', count($store)));
 		}
-
-		$delete_view->model = $store;
-
-		$message = $this->ui->getWidget('confirmation_message');
-		$message->content = sprintf('<strong>Are you sure you want to delete
-			the following %s?</strong>',
-			Pinhole::ngettext('photo', 'photos', count($store)));
-		$message->content_type = 'text/xml';
 	}
 
 	// }}}

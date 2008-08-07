@@ -52,7 +52,9 @@ class PinholePhotoActionsProcessor
 		switch ($actions->selected->id) {
 		case 'delete':
 			$this->page->app->replacePage('Photo/Delete');
-			$this->page->app->getPage()->setItems($view->getSelection());
+			$this->page->app->getPage()->setItems($view->getSelection(),
+				$view->isExtendedCheckAllSelected());
+
 			break;
 
 		case 'private':
@@ -60,13 +62,14 @@ class PinholePhotoActionsProcessor
 				$this->page->app->config->pinhole->passphrase =
 					md5($ui->getWidget('passphrase')->value);
 
-				$this->page->app->config->save();
+				$this->page->app->config->save(array('pinhole.passphrase'));
 			}
 
 			if ($this->page->app->config->pinhole->passphrase !== null) {
-				$num = count($view->getSelection());
+				$photos = $this->getPhotos($view);
+				$num = count($photos);
 
-				foreach ($this->getPhotos($view) as $photo) {
+				foreach ($photos as $photo) {
 					$photo->private = true;
 					$photo->save();
 				}
@@ -82,9 +85,10 @@ class PinholePhotoActionsProcessor
 			break;
 
 		case 'public':
-			$num = count($view->getSelection());
+			$photos = $this->getPhotos($view);
+			$num = count($photos);
 
-			foreach ($this->getPhotos($view) as $photo) {
+			foreach ($photos as $photo) {
 				$photo->private = true;
 				$photo->save();
 			}
@@ -99,14 +103,15 @@ class PinholePhotoActionsProcessor
 
 		case 'publish':
 		case 'status_action':
-			$num = count($view->getSelection());
+			$photos = $this->getPhotos($view);
+			$num = count($photos);
 
 			if ($ui->hasWidget('status_flydown'))
 				$status = $ui->getWidget('status_flydown')->value;
 			else
 				$status = PinholePhoto::STATUS_PUBLISHED;
 
-			foreach ($this->getPhotos($view) as $photo) {
+			foreach ($photos as $photo) {
 				$photo->setStatus($status);
 				$photo->save();
 			}
@@ -123,10 +128,12 @@ class PinholePhotoActionsProcessor
 		case 'tags_action':
 			$tag_array = $ui->getWidget('tags')->getSelectedTagArray();
 			if (count($tag_array) > 0) {
-				foreach ($this->getPhotos($view) as $photo)
+				$photos = $this->getPhotos($view);
+				$num = count($photos);
+
+				foreach ($photos as $photo)
 					$photo->addTagsByName($tag_array);
 
-				$num = count($view->getSelection());
 				if (count($tag_array) > 1) {
 					$message = new SwatMessage(sprintf(Pinhole::ngettext(
 						'%s tags have been added to one photo.',
@@ -161,11 +168,19 @@ class PinholePhotoActionsProcessor
 
 		$sql = sprintf('select PinholePhoto.* from PinholePhoto
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
-			where PinholePhoto.id in (%s)
-			and ImageSet.instance %s %s',
-			$app->db->datatype->implodeArray($ids, 'integer'),
+			where ImageSet.instance %s %s',
 			SwatDB::equalityOperator($instance_id),
 			$app->db->quote($instance_id, 'integer'));
+
+		// note the only page with an extended-selection that accesses this
+		// is the pending photos page - so enforce status here.
+		if ($view->isExtendedCheckAllSelected()) {
+			$sql.= sprintf(' and PinholePhoto.status = %s',
+				$app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'));
+		} else {
+			$sql.= sprintf(' and PinholePhoto.id in (%s)',
+				$app->db->datatype->implodeArray($ids, 'integer'));
+		}
 
 		$photos = SwatDB::query($app->db, $sql,
 			SwatDBClassMap::get('PinholePhotoWrapper'));

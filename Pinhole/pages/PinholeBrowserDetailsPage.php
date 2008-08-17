@@ -197,7 +197,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		if ($this->photo->description != '')
 			$this->layout->data->meta_description.=
 				(($this->layout->data->meta_description == '') ? '' : ' ').
-				SwatString::minimizeEntities($this->photo->description);
+				strip_tags($this->photo->description);
 
 		if (count($this->photo->tags) != 0) {
 			$tags = array();

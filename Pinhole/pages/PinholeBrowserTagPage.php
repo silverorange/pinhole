@@ -205,7 +205,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 		foreach ($store as $ds) {
 			if ($part !== $ds->date_part) {
-				if ($part === null)
+				if ($part !== null)
 					$li_tag->close();
 
 				$li_tag->open();

@@ -35,11 +35,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	 */
 	protected $dimension;
 
-	/**
-	 * @var ImageDimensionWrapper
-	 */
-	protected $selectable_dimensions;
-
 	// }}}
 	// {{{ public function __construct()
 
@@ -71,11 +66,28 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function createPhoto($photo_id)
 	{
-		$photo_id = intval($photo_id);
-		$photo_class = SwatDBClassMap::get('PinholePhoto');
-		$this->photo = new $photo_class();
-		$this->photo->setDatabase($this->app->db);
-		if ($this->photo->load($photo_id)) {
+		if (isset($this->app->memcache)) {
+			$cache_key = 'PinholePhoto.'.$photo_id;
+			$photo = $this->app->memcache->getNs('photos', $cache_key);
+			if ($photo !== false) {
+				$this->photo = $photo;
+				$this->photo->setDatabase($this->app->db);
+			}
+		}
+
+		if ($this->photo === null) {
+			$photo_id = intval($photo_id);
+			$photo_class = SwatDBClassMap::get('PinholePhoto');
+			$this->photo = new $photo_class();
+			$this->photo->setDatabase($this->app->db);
+			$this->photo->load($photo_id);
+
+			if (isset($this->app->memcache))
+				$this->app->memcache->setNs(
+					'photos', $cache_key, $this->photo);
+		}
+
+		if ($this->photo !== null) {
 			// ensure we are loading a photo in the current site instance
 			$current_instance_id = $this->app->getInstanceId();
 
@@ -114,6 +126,18 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$shortname = $this->default_dimension;
 		}
 
+		if (isset($this->app->memcache)) {
+			$cache_key = sprintf(
+				'PinholeBrowserDetailsPage.initDimension.%s.%s',
+				$shortname, $this->photo->id);
+
+			$dimension = $this->app->memcache->getNs('photos', $cache_key);
+			if ($dimension !== false) {
+				$dimension->setDatabase($this->app->db);
+				return $dimension;
+			}
+		}
+
 		$class_name = SwatDBClassMap::get('PinholeImageDimension');
 		$display_dimension = new $class_name();
 		$display_dimension->setDatabase($this->app->db);
@@ -127,7 +151,12 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$shortname, strtotime('+1 year'), '/',
 			$this->app->getBaseHref());
 
-		return $this->photo->getClosestSelectableDimensionTo($shortname);
+		$dimension = $this->photo->getClosestSelectableDimensionTo($shortname);
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->setNs('photos', $cache_key, $dimension);
+
+		return $dimension;
 	}
 
 	// }}}
@@ -215,9 +244,27 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function buildMetaData()
 	{
+		$photo_meta_data = false;
+
+		if (isset($this->app->memcache)) {
+			$cache_key = sprintf('PinholeBrowserDetailsPage.MetaData.%s',
+				$this->photo->id);
+
+			$photo_meta_data = $this->app->memcache->getNs(
+				'photos', $cache_key);
+		}
+
+		if ($photo_meta_data === false) {
+			$photo_meta_data = $this->photo->meta_data;
+
+			if (isset($this->app->memcache))
+				$this->app->memcache->setNs('photos', $cache_key,
+					$photo_meta_data);
+		}
+
 		$view = $this->ui->getWidget('photo_details_view');
 
-		foreach ($this->photo->meta_data as $meta_data) {
+		foreach ($photo_meta_data as $meta_data) {
 			$field = new SwatDetailsViewField();
 			$field->title = $meta_data->title;
 
@@ -322,7 +369,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function displayDimensions()
 	{
-		$dimensions = clone $this->photo->getSelectableDimensions();
+		$dimensions = $this->getSelectableDimensions();
 
 		if (count($dimensions) <= 1)
 			return;
@@ -364,6 +411,28 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		echo implode(', ', $list);
 
 		$div_tag->close();
+	}
+
+	// }}}
+	// {{{ protected function getSelectableDimensions()
+
+	protected function getSelectableDimensions()
+	{
+		if (isset($this->app->memcache)) {
+			$cache_key = 'PinholeBrowserDetailsPage.getSelectableDimensions.'.
+				$this->photo->id;
+
+			$dimensions = $this->app->memcache->getNs('photos', $cache_key);
+			if ($dimensions !== false)
+				return $dimensions;
+		}
+
+		$dimensions = clone $this->photo->getSelectableDimensions();
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->setNs('photos', $cache_key, $dimensions);
+
+		return $dimensions;
 	}
 
 	// }}}

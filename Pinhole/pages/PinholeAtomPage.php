@@ -26,7 +26,7 @@ class PinholeAtomPage extends SitePage
 	 *
 	 * @var integer
 	 */
-	protected $max_entries = 50;
+	protected $max_entries = 200;
 
 	/**
 	 * @var string

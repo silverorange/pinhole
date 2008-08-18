@@ -1397,14 +1397,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 	// }}}
 
-	// {{{ protected function resetPhotoInfoCache()
-
-	protected function resetPhotoInfoCache()
-	{
-		$this->photo_info_cache = null;
-	}
-
-	// }}}
+	// caching
 	// {{{ protected function getCacheValue()
 
 	protected function getCacheValue($ns, $key)
@@ -1432,6 +1425,16 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$tags = SiteApplication::initVar('tags');
 		return sprintf('PinholeTagList.%s.%s.%s',
 			(string) $tags, $method_name, md5(serialize($args)));
+	}
+
+	// }}}
+
+	// helper methods
+	// {{{ protected function resetPhotoInfoCache()
+
+	protected function resetPhotoInfoCache()
+	{
+		$this->photo_info_cache = null;
 	}
 
 	// }}}

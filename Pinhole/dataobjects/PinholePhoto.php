@@ -108,20 +108,62 @@ class PinholePhoto extends SiteImage
 	 public $private;
 
 	// }}}
-	// {{{ private properties
+	// {{{ protected properties
 
 	/**
 	 * The instance for this photo - only used for processing.
 	 *
 	 * @var SiteInstance
 	 */
-	private $instance;
+	protected $instance;
 
-	private $selectable_dimensions;
+	protected $selectable_dimensions;
+
+	/**
+	 * Cache of tags for this post
+	 *
+	 * @var PinholeTagDataObjectWrapper
+	 *
+	 * @see PinholePhoto::getTags()
+	 * @see PinholePhoto::setTags()
+	 */
+	protected $tags_cache;
 
 	// }}}
 
 	// dataobject methods
+	// {{{ public function getTags()
+
+	/**
+	 * Gets tags for this photo
+	 *
+	 * @return PinholeTagDataObjectWrapper
+	 */
+	public function getTags()
+	{
+		if ($this->tags_cache === null) {
+			$this->tags_cache = $this->tags;
+		}
+
+		return $this->tags_cache;
+	}
+
+	// }}}
+	// {{{ public function setTags()
+
+	/**
+	 * Sets tags files for this photo
+	 *
+	 * Allows a single query to set tag sets for multiple photos.
+	 *
+	 * @param PinholeTagDataObjectWrapper $photos
+	 */
+	public function setTags(PinholeTagDataObjectWrapper $tags)
+	{
+		$this->tags_cache = $tags;
+	}
+
+	// }}}
 	// {{{ protected function init()
 
 	protected function init()
@@ -167,6 +209,7 @@ class PinholePhoto extends SiteImage
 			'image_set',
 			'photographer',
 			'dimension_bindings',
+			'tags',
 		));
 	}
 
@@ -176,6 +219,7 @@ class PinholePhoto extends SiteImage
 	protected function getSerializablePrivateProperties()
 	{
 		return array_merge(parent::getSerializablePrivateProperties(), array(
+			'tags_cache',
 		));
 	}
 

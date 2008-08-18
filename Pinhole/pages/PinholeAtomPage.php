@@ -26,7 +26,7 @@ class PinholeAtomPage extends SitePage
 	 *
 	 * @var integer
 	 */
-	protected $max_entries = 200;
+	protected $max_entries = 50;
 
 	/**
 	 * @var string
@@ -126,6 +126,8 @@ class PinholeAtomPage extends SitePage
 			$this->app->getInstance(), $tags,
 			$this->app->session->isLoggedIn(),
 			$cache_module);
+
+		$this->tag_list->setLoadTags(true);
 	}
 
 	// }}}
@@ -173,7 +175,7 @@ class PinholeAtomPage extends SitePage
 
 		$this->buildAtomPagination();
 
-		$photos = $this->tag_list->getPhotos(null, null, true);
+		$photos = $this->tag_list->getPhotos();
 		foreach ($photos as $photo)
 			$this->feed->addEntry($this->getEntry($photo));
 	}
@@ -232,6 +234,15 @@ class PinholeAtomPage extends SitePage
 
 	protected function getEntry(PinholePhoto $photo)
 	{
+		if (isset($this->app->memcache)) {
+			$cache_key = sprintf('PinholeAtomPage.entry.%s.%s',
+				$photo->id, $this->dimension->shortname);
+
+			$entry = $this->app->memcache->getNs('photos', $cache_key);
+			if ($entry !== false)
+				return $entry;
+		}
+
 		$uri = sprintf('%sphoto/%s/%s',
 			$this->getPinholeBaseHref(),
 			$photo->id,
@@ -251,7 +262,7 @@ class PinholeAtomPage extends SitePage
 
 		$entry->setContent($this->getPhotoContent($photo, $dimension), 'html');
 
-		foreach ($photo->tags as $tag)
+		foreach ($photo->getTags() as $tag)
 			$entry->addCategory($tag->name, '', $tag->title);
 
 		//$entry->addAuthor($author_name, $author_uri, $author_email);
@@ -268,6 +279,9 @@ class PinholeAtomPage extends SitePage
 		$link->setTitle($photo->getTitle());
 		//$link->setLength();
 		$entry->addLink($link);
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->setNs('photos', $cache_key, $entry);
 
 		return $entry;
 	}

@@ -423,48 +423,82 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	public function getPhotos($dimension_shortname = null, array $fields = null)
 	{
-		$args = func_get_args();
-		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
-		$value = $this->getCacheValue('photos', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		if ($fields === null) {
-			$fields = array('PinholePhoto.id', 'PinholePhoto.title',
-				'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
-				'PinholePhoto.publish_date', 'PinholePhoto.image_set',
-				'PinholePhoto.filename', 'PinholePhoto.status');
-		}
-
-		$sql = sprintf('select %s from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id',
-			implode(', ', $fields));
-
-		$join_clauses = implode(' ', $this->getJoinClauses());
-		if ($join_clauses != '')
-			$sql.= ' '.$join_clauses.' ';
-
-		$where_clause = $this->getWhereClause();
-		if ($where_clause != '')
-			$sql.= ' where '.$where_clause;
-
-		$sql.= ' order by '.$this->getPhotoOrderByClause();
-
-		$range = $this->getRange();
-		if ($range !== null)
-			$this->db->setLimit($range->getLimit(), $range->getOffset());
-
 		if ($dimension_shortname == 'thumbnail')
 			$wrapper = SwatDBClassMap::get('PinholePhotoThumbnailWrapper');
 		else
 			$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
 
-		$photos = SwatDB::query($this->db, $sql, $wrapper);
+		$photos = false;
 
-		if ($this->load_tags)
-			$this->loadPhotoTags($photos);
+		if ($this->memcache !== null) {
+			$args = func_get_args();
+			$key = $this->getCacheKey(__FUNCTION__, $args);
+			$ids = $this->memcache->getNs('photos', $key);
 
-		$this->setCacheValue('photos', $cache_key, $photos);
+			if ($ids !== false) {
+				$photos = new $wrapper();
+
+				if (count($ids) > 0) {
+					$cached_photos = $this->memcache->getNs('photos', $ids);
+
+					if (count($cached_photos) !== count($ids)) {
+						// one or more photos are missing from the cache
+						$photos = false;
+					} else {
+						foreach ($cached_photos as $photo) {
+							$photos->add($photo);
+						}
+					}
+				}
+
+				if ($photos !== false) {
+					$photos->setDatabase($this->db);
+				}
+			}
+		}
+
+		if ($photos === false) {
+			if ($fields === null) {
+				$fields = array('PinholePhoto.id', 'PinholePhoto.title',
+					'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
+					'PinholePhoto.publish_date', 'PinholePhoto.image_set',
+					'PinholePhoto.filename', 'PinholePhoto.status');
+			}
+
+			$sql = sprintf('select %s from PinholePhoto
+				inner join ImageSet on PinholePhoto.image_set = ImageSet.id',
+				implode(', ', $fields));
+
+			$join_clauses = implode(' ', $this->getJoinClauses());
+			if ($join_clauses != '')
+				$sql.= ' '.$join_clauses.' ';
+
+			$where_clause = $this->getWhereClause();
+			if ($where_clause != '')
+				$sql.= ' where '.$where_clause;
+
+			$sql.= ' order by '.$this->getPhotoOrderByClause();
+
+			$range = $this->getRange();
+			if ($range !== null)
+				$this->db->setLimit($range->getLimit(), $range->getOffset());
+
+			$photos = SwatDB::query($this->db, $sql, $wrapper);
+
+			if ($this->load_tags)
+				$this->loadPhotoTags($photos);
+
+			if ($this->memcache !== null) {
+				$ids = array();
+				foreach ($photos as $id => $photo) {
+					$photo_key = $key.'.'.$id;
+					$ids[] = $photo_key;
+					$this->memcache->setNs('photos', $photo_key, $photo);
+				}
+
+				$this->memcache->setNs('photos', $key, $ids);
+			}
+		}
 
 		return $photos;
 	}

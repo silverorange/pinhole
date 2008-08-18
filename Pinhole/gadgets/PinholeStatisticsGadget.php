@@ -32,9 +32,12 @@ class PinholeStatisticsGadget extends SiteGadget
 
 			$li_tag = new SwatHtmlTag('li');
 			$li_tag->setContent(sprintf(
-				Pinhole::_('%s photos have been uploaded since %s'),
+				Pinhole::_('%s photos have been uploaded since '.
+					'<a href="%stag?date.date=%s">%s</a>'),
 				$locale->formatNumber($stats->photo_count),
-				$first_date->format(SwatDate::DF_DATE)));
+				$this->app->config->pinhole->path,
+				$first_date->format('%Y-%m-%d'),
+				$first_date->format(SwatDate::DF_DATE)), 'text/xml');
 
 			$li_tag->display();
 
@@ -49,8 +52,11 @@ class PinholeStatisticsGadget extends SiteGadget
 			$li_tag->display();
 
 			$li_tag->setContent(sprintf(
-				Pinhole::_('Last photo uploaded on %s'),
-				$last_date->format(SwatDate::DF_DATE)));
+				Pinhole::_('Last photo uploaded on '.
+					'<a href="%stag?date=%s">%s</a>'),
+				$this->app->config->pinhole->path,
+				$last_date->format('%Y-%m-%d'),
+				$last_date->format(SwatDate::DF_DATE)), 'text/xml');
 
 			$li_tag->display();
 
@@ -59,8 +65,10 @@ class PinholeStatisticsGadget extends SiteGadget
 			if ($tag_stats->tag_count > 0) {
 				$li_tag = new SwatHtmlTag('li');
 				$li_tag->setContent(sprintf(
-					Pinhole::_('%s tags have been added'),
-					$locale->formatNumber($tag_stats->tag_count)));
+					Pinhole::_('<a href="%s/tags/alphabetical">%s tags</a> '.
+						'have been added'),
+					$this->app->config->pinhole->path,
+					$locale->formatNumber($tag_stats->tag_count)), 'text/xml');
 
 				$li_tag->display();
 
@@ -88,6 +96,13 @@ class PinholeStatisticsGadget extends SiteGadget
 
 	protected function getPhotoStats()
 	{
+		if (isset($this->app->memcache)) {
+			$cache_key = 'PinholeStatisticsGadget.photo_stats';
+			$value = $this->app->memcache->get($cache_key);
+			if ($value !== false)
+				return $value;
+		}
+
 		$sql = "select count(PinholePhoto.id) as photo_count,
 				max(convertTZ(PinholePhoto.photo_date,
 				PinholePhoto.photo_time_zone)) as last_date,
@@ -102,7 +117,11 @@ class PinholeStatisticsGadget extends SiteGadget
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
 
-		return SwatDB::queryRow($this->app->db, $sql);
+		$stats = SwatDB::queryRow($this->app->db, $sql);
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->set($cache_key, $stats);
+		return $stats;
 	}
 
 	// }}}
@@ -110,6 +129,13 @@ class PinholeStatisticsGadget extends SiteGadget
 
 	protected function getTagStats()
 	{
+		if (isset($this->app->memcache)) {
+			$cache_key = 'PinholeStatisticsGadget.tag_stats';
+			$value = $this->app->memcache->get($cache_key);
+			if ($value !== false)
+				return $value;
+		}
+
 		$sql = "select count(distinct PinholePhotoTagBinding.tag) as tag_count
 			from PinholePhotoTagBinding
 			inner join PinholePhoto on
@@ -153,6 +179,10 @@ class PinholeStatisticsGadget extends SiteGadget
 		$stats->popular_tag_title = $popular_tag->title;
 		$stats->popular_tag_name = $popular_tag->name;
 		$stats->popular_tag_count = $popular_tag_info->tag_count;
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->set($cache_key, $stats);
+
 		return $stats;
 	}
 

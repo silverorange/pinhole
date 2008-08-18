@@ -122,6 +122,27 @@ class PinholePhoto extends SiteImage
 	// }}}
 
 	// dataobject methods
+	// {{{ protected function init()
+
+	protected function init()
+	{
+		parent::init();
+
+		$this->table = 'PinholePhoto';
+		$this->image_set_shortname = 'photos';
+
+		$this->registerInternalProperty('image_set',
+			SwatDBClassMap::get('PinholeImageSet'));
+
+		$this->registerInternalProperty('photographer',
+			SwatDBClassMap::get('PinholePhotographer'));
+
+		$this->registerDateProperty('upload_date');
+		$this->registerDateProperty('publish_date');
+		$this->registerDateProperty('photo_date');
+	}
+
+	// }}}
 	// {{{ protected function getImageDimensionBindingClassName()
 
 	protected function getImageDimensionBindingClassName()
@@ -135,6 +156,27 @@ class PinholePhoto extends SiteImage
 	protected function getImageDimensionBindingWrapperClassName()
 	{
 		return SwatDBClassMap::get('PinholePhotoDimensionBindingWrapper');
+	}
+
+	// }}}
+	// {{{ protected function getSerializableSubDataObjects()
+
+	protected function getSerializableSubDataObjects()
+	{
+		return array_merge(parent::getSerializableSubDataObjects(), array(
+			'image_set',
+			'photographer',
+			'dimension_bindings',
+		));
+	}
+
+	// }}}
+	// {{{ protected function getSerializablePrivateProperties()
+
+	protected function getSerializablePrivateProperties()
+	{
+		return array_merge(parent::getSerializablePrivateProperties(), array(
+		));
 	}
 
 	// }}}
@@ -416,27 +458,6 @@ class PinholePhoto extends SiteImage
 			self::STATUS_PENDING =>
 				self::getStatusTitle(self::STATUS_PENDING),
 		);
-	}
-
-	// }}}
-	// {{{ protected function init()
-
-	protected function init()
-	{
-		parent::init();
-
-		$this->table = 'PinholePhoto';
-		$this->image_set_shortname = 'photos';
-
-		$this->registerInternalProperty('image_set',
-			SwatDBClassMap::get('PinholeImageSet'));
-
-		$this->registerInternalProperty('photographer',
-			SwatDBClassMap::get('PinholePhotographer'));
-
-		$this->registerDateProperty('upload_date');
-		$this->registerDateProperty('publish_date');
-		$this->registerDateProperty('photo_date');
 	}
 
 	// }}}

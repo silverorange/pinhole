@@ -41,8 +41,13 @@ class PinholeTagListGadget extends SiteGadget
 	{
 		$range = new SwatDBRange($this->getValue('limit'));
 
+		$cache_module = (isset($this->app->memcache)) ?
+			$this->app->memcache : null;
+
 		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance());
+			$this->app->getInstance(), null,
+			$this->app->session->isLoggedIn(),
+			$cache_module);
 
 		$sub_tag_list = $tag_list->getSubTags($range);
 		$sub_tag_count = $tag_list->getSubTagCount();

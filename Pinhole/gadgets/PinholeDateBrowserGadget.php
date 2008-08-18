@@ -16,34 +16,34 @@ require_once 'SwatI18N/SwatI18NLocale.php';
  */
 class PinholeDateBrowserGadget extends SiteGadget
 {
-	// {{{ private properties
-
-	private $container;
-
-	// }}}
 	// {{{ protected function displayContent()
 
 	protected function displayContent()
 	{
-		$sql = "select count(PinholePhoto.id) as photo_count,
-				max(convertTZ(PinholePhoto.photo_date,
-				PinholePhoto.photo_time_zone)) as photo_date
-			from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
-			where ImageSet.instance %s %s and PinholePhoto.status = %s
-				and PinholePhoto.photo_date is not null
-			group by date_part('year', convertTZ(PinholePhoto.photo_date,
-				PinholePhoto.photo_time_zone)),
-				date_part('month', convertTZ(PinholePhoto.photo_date,
-				PinholePhoto.photo_time_zone))
-			order by photo_date desc";
+		$container = $this->getContainer();
+		$container->display();
 
-		$sql = sprintf($sql,
-			SwatDB::equalityOperator($this->app->getInstanceId()),
-			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
+		$this->html_head_entry_set->addEntrySet(
+			$container->getHtmlHeadEntrySet());
+	}
 
-		$months = SwatDB::query($this->app->db, $sql);
+	// }}}
+	// {{{ protected function getContainer()
+
+	protected function getContainer()
+	{
+		$date = new SwatDate();
+
+		if (isset($this->app->memcache)) {
+			$cache_key = 'PinholeDateBrowserGadget.getContent.'.
+				$date->format('%m/%Y');
+
+			$container = $this->app->memcache->getNs('photos', $cache_key);
+			if ($container !== false)
+				return $container;
+		}
+
+		$months = $this->getMonths();
 
 		if (count($months) == 0) {
 			echo Pinhole::_('No photos have been uploaded yet.');
@@ -58,7 +58,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 			$months_array[$key] = $month;
 		}
 
-		$this->container = new SwatContainer();
+		$container = new SwatContainer();
 		$locale = SwatI18NLocale::get();
 
 		$start_date = new SwatDate($months->getFirst()->photo_date);
@@ -67,8 +67,6 @@ class PinholeDateBrowserGadget extends SiteGadget
 		$index = (count($months) - 1);
 		$end_date = new SwatDate($months->getByIndex($index)->photo_date);
 		$end_year = $end_date->getYear();
-
-		$date = new SwatDate();
 
 		for ($year = $start_year; $year >= $end_year; $year--) {
 			$year_count = 0;
@@ -134,11 +132,51 @@ class PinholeDateBrowserGadget extends SiteGadget
 			$content->content_type = 'text/xml';
 			$content->content = ob_get_clean();
 			$disclosure->add($content);
-			$this->container->add($disclosure);
+			$container->add($disclosure);
 		}
 
-		$this->container->display();
-		$this->html_head_entry_set->addEntrySet($this->container->getHtmlHeadEntrySet());
+		if (isset($this->app->memcache))
+			$this->app->memcache->setNs('photos', $cache_key, $container);
+
+		return $container;
+	}
+
+	// }}}
+	// {{{ protected function getMonths()
+
+	protected function getMonths()
+	{
+		if (isset($this->app->memcache)) {
+			$cache_key = 'PinholeDateBrowserGadget.getMonths';
+			$months = $this->app->memcache->get($cache_key);
+			if ($months !== false)
+				return $months;
+		}
+
+		$sql = "select count(PinholePhoto.id) as photo_count,
+				max(convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone)) as photo_date
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			where ImageSet.instance %s %s and PinholePhoto.status = %s
+				and PinholePhoto.photo_date is not null
+			group by date_part('year', convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone)),
+				date_part('month', convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone))
+			order by photo_date desc";
+
+		$sql = sprintf($sql,
+			SwatDB::equalityOperator($this->app->getInstanceId()),
+			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
+
+		$months = SwatDB::query($this->app->db, $sql);
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->set($cache_key, $months);
+
+		return $months;
 	}
 
 	// }}}

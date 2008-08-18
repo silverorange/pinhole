@@ -25,6 +25,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	public function __construct(SiteApplication $app, SiteLayout $layout = null,
 		array $arguments = array())
 	{
+		$app->timer->startCheckpoint('browser-index-page');
+
 		parent::__construct($app, $layout, $arguments);
 		$this->ui_xml = 'Pinhole/pages/browser-index.xml';
 	}
@@ -74,6 +76,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$view->getGroup('publish_period')->visible =
 			(count($this->tag_list) == 0);
+
+		$this->app->timer->endCheckpoint('browser-index-page');
 	}
 
 	// }}}
@@ -84,6 +88,10 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$date_tag_browser = $this->ui->getWidget('date_tag_browser');
 		$date_tag_browser->setTagList($this->tag_list);
 		$date_tag_browser->setDatabase($this->app->db);
+
+		if (isset($this->app->memcache))
+			$date_tag_browser->setCache($this->app->memcache);
+
 		$date_tag_browser->base =
 			$this->app->config->pinhole->path.$date_tag_browser->base;
 	}
@@ -121,6 +129,15 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$photos = $this->tag_list->getPhotos('thumbnail');
 
+		if (isset($this->app->memcache)) {
+			$cache_key = 'PinholeBrowserIndexPage.table_store.'.
+				(string) $this->tag_list;
+
+			$value = $this->app->memcache->get($cache_key);
+			if ($value !== false)
+				return $value;
+		}
+
 		$store = new SwatTableStore();
 
 		foreach ($photos as $photo) {
@@ -128,6 +145,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$ds->root_path = $this->app->config->pinhole->path;
 			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
+
+			// called so that image_set is stored in the cache
+			$uri = $photo->getUri('thumb');
 
 			$now = new SwatDate();
 			$now->convertTZbyID($this->app->config->date->time_zone);
@@ -156,6 +176,9 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 			$store->add($ds);
 		}
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->set($cache_key, $store);
 
 		return $store;
 	}

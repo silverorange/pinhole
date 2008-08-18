@@ -96,7 +96,6 @@ class PinholePhotoLoaderPage extends SitePage
 			$this->dimension_shortname));
 
 		readfile($this->photo->getFilePath($this->dimension_shortname));
-
 		exit();
 	}
 

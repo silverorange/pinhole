@@ -184,10 +184,15 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$simple_tag_strings = preg_grep('/^[A-Za-z0-9]+$/', $tag_strings);
 
 			if (count($simple_tag_strings) > 0) {
+				// sort array so it can be used as a cache key
+				sort($simple_tag_strings);
+
 				$quoted_tag_strings =
 					$db->datatype->implodeArray($simple_tag_strings, 'text');
 
-				$cache_key = $this->getCacheKey('loadSimpleTags');
+				$cache_key = $this->getCacheKey('loadSimpleTags',
+					$simple_tag_strings);
+
 				$tag_data_objects = $this->getCacheValue('photos', $cache_key);
 				if ($tag_data_objects === false) {
 					// load all simple tags in one query
@@ -197,8 +202,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 						SwatDB::equalityOperator($instance_id),
 						$db->quote($instance_id, 'integer'));
 
-					$tag_data_objects =
-						SwatDB::query($db, $sql, 'PinholeTagDataObjectWrapper');
+					$wrapper = SwatDBClassMap::get(
+						'PinholeTagDataObjectWrapper');
+
+					$tag_data_objects = SwatDB::query($db, $sql, $wrapper);
 
 					$this->setCacheValue('photos', $cache_key,
 						$tag_data_objects);
@@ -246,6 +253,24 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$string = substr($string, 1);
 
 		return $string;
+	}
+
+	// }}}
+	// {{{ public function getEmptyCopy()
+
+	/**
+	 * Gets an empty copy of this tag list
+	 *
+	 * The new tag list has the same site instance, database connection and
+	 * photo filtering options as this tag list.
+	 *
+	 * @return PinholeTagList an empty copy of this tag list.
+	 */
+	public function getEmptyCopy()
+	{
+		$tag_list = clone $this;
+		$tag_list->removeAll();
+		return $tag_list;
 	}
 
 	// }}}
@@ -346,24 +371,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		}
 
 		return $range;
-	}
-
-	// }}}
-	// {{{ public function getEmptyCopy()
-
-	/**
-	 * Gets an empty copy of this tag list
-	 *
-	 * The new tag list has the same site instance, database connection and
-	 * photo filtering options as this tag list.
-	 *
-	 * @return PinholeTagList an empty copy of this tag list.
-	 */
-	public function getEmptyCopy()
-	{
-		$tag_list = clone $this;
-		$tag_list->removeAll();
-		return $tag_list;
 	}
 
 	// }}}
@@ -802,16 +809,16 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function getSubTagCount()
 	{
 		$cache_key = $this->getCacheKey(__FUNCTION__, func_get_args());
-		$value = $this->getCacheValue('tags', $cache_key);
-		if ($value !== false)
-			return $value;
+		$count = $this->getCacheValue('tags', $cache_key);
 
-		$sql = sprintf('select count(PinholeTag.id)
-			from PinholeTag where %s',
-			$this->getSubTagWhereClause());
+		if ($count === false) {
+			$sql = sprintf('select count(PinholeTag.id)
+				from PinholeTag where %s',
+				$this->getSubTagWhereClause());
 
-		$count = SwatDB::queryOne($this->db, $sql);
-		$this->setCacheValue('tags', $cache_key, $count);
+			$count = SwatDB::queryOne($this->db, $sql);
+			$this->setCacheValue('tags', $cache_key, $count);
+		}
 
 		return $count - count($this);
 	}

@@ -95,6 +95,17 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 	protected function buildTags()
 	{
+		if (isset($this->app->memcache)) {
+			$cache_key = sprintf('PinholeBrowserDetailsPage.%s.%s.%s',
+				'buildTags', (string) $this->tag_list, $this->display_type);
+
+			$content = $this->app->memcache->getNs('photos', $cache_key);
+			if ($content !== false) {
+				$this->ui->getWidget('tag_list')->content = $content;
+				return;
+			}
+		}
+
 		ob_start();
 
 		if ($this->display_type == 'alphabetical') {
@@ -117,7 +128,12 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 			$this->displayByPopularity($tag_list);
 		}
 
-		$this->ui->getWidget('tag_list')->content = ob_get_clean();
+		$content = ob_get_clean();
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->setNs('photos', $cache_key, $content);
+
+		$this->ui->getWidget('tag_list')->content = $content;
 	}
 
 	// }}}

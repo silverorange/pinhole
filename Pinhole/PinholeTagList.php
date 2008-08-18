@@ -144,6 +144,13 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 */
 	private $photo_info_cache;
 
+	/**
+	 * @var boolean
+	 *
+	 * @see PinholeTagList::setLoadTags()
+	 */
+	private $load_tags = false;
+
 	// }}}
 	// {{{ public function __construct()
 
@@ -414,8 +421,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @return PinholePhotoWrapper the photos of this tag list.
 	 */
-	public function getPhotos($dimension_shortname = null, array $fields = null,
-		$pre_load_tags = false)
+	public function getPhotos($dimension_shortname = null, array $fields = null)
 	{
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
@@ -453,23 +459,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		else
 			$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
 
-		$query = SwatDB::query($this->db, $sql, $wrapper);
+		$photos = SwatDB::query($this->db, $sql, $wrapper);
 
-		if ($pre_load_tags) {
-			$sql = 'select PinholeTag.*, PinholePhotoTagBinding.photo
-				from PinholeTag
-				inner join PinholePhotoTagBinding on
-					PinholePhotoTagBinding.tag = PinholeTag.id
-				where PinholePhotoTagBinding.photo in (%s)
-				order by photo asc';
+		if ($this->load_tags)
+			$this->loadPhotoTags($photos);
 
-			$query->attachSubRecordsets($sql, 'tags',
-				SwatDBClassMap::get('PinholeTagDataObjectWrapper'),
-				'photo');
-		}
+		$this->setCacheValue('photos', $cache_key, $photos);
 
-		$this->setCacheValue('photos', $cache_key, $query);
-		return $query;
+		return $photos;
 	}
 
 	// }}}
@@ -779,9 +776,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$sql.= ' order by '.$order_by_clause;
 
 		$tag_data_objects = SwatDB::query($this->db, $sql,
-			'PinholeTagDataObjectWrapper');
-
-		$wrapper_class = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
+			SwatDBClassMap::get('PinholeTagDataObjectWrapper'));
 
 		$popular_tags->seek();
 		while ($row = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {
@@ -876,6 +871,21 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function setPhotoRange(SwatDBRange $range)
 	{
 		$this->photo_range = $range;
+	}
+
+	// }}}
+	// {{{ public function setLoadTags()
+
+	/**
+	 * Sets whether or not to efficiently load the tags for loaded photos
+	 *
+	 * Set this to true if the tags are to be displayed, false otherwise.
+	 *
+	 * @param boolean $load_tags
+	 */
+	public function setLoadTags($load_tags)
+	{
+		$this->load_tags = (boolean)$load_tags;
 	}
 
 	// }}}
@@ -1447,6 +1457,61 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	protected function resetPhotoInfoCache()
 	{
 		$this->photo_info_cache = null;
+	}
+
+	// }}}
+	// {{{ protected function loadPhotoTags()
+
+	/**
+	 * Efficiently loads tags for a set of photos
+	 *
+	 * @param PinholePhotoWrapper $photos the photos for which to efficiently load
+	 *                                 tags.
+	 */
+	protected function loadPhotoTags(PinholePhotoWrapper $photos)
+	{
+		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+		$wrapper = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
+
+		// get photo ids
+		$photo_ids = array();
+		foreach ($photos as $photo) {
+			$photo_ids[] = $photo->id;
+		}
+		$photo_ids = $this->db->implodeArray($photo_ids, 'integer');
+
+		// build SQL to select all tags
+		$sql = sprintf('select PinholeTag.*, PinholePhotoTagBinding.photo
+			from PinholeTag
+				inner join PinholePhotoTagBinding on
+					PinholeTag.id = PinholePhotoTagBinding.tag
+			where photo in (%s) and PinholeTag.instance %s %s
+			order by photo, createdate desc',
+			$photo_ids,
+			SwatDB::equalityOperator($instance_id),
+			$this->db->quote($instance_id, 'integer'));
+
+		// get all tags
+		$tags = SwatDB::query($this->db, $sql, $wrapper);
+
+		// assign empty recordsets for all photos
+		foreach ($photos as $photo) {
+			$recordset = new $wrapper();
+			$photo->setTags($recordset);
+		}
+
+		// assign tags to correct photos
+		$current_photo_id = null;
+		$current_recordset = null;
+		foreach ($tags as $tag) {
+			$photo_id = $tag->getInternalValue('photo');
+
+			if ($photo_id !== $current_photo_id) {
+				$current_photo_id = $photo_id;
+				$current_recordset = $photos[$photo_id]->getTags();
+			}
+			$current_recordset->add($tag);
+		}
 	}
 
 	// }}}

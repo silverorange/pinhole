@@ -145,6 +145,9 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 		// read-only
 		$this->registerDateProperty('first_modified');
 		$this->registerDateProperty('last_modified');
+
+		// for efficient loading of tag sets on photo sets
+		$this->registerInternalProperty('photo');
 	}
 
 	// }}}

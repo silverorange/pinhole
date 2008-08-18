@@ -349,6 +349,526 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getEmptyCopy()
+
+	/**
+	 * Gets an empty copy of this tag list
+	 *
+	 * The new tag list has the same site instance, database connection and
+	 * photo filtering options as this tag list.
+	 *
+	 * @return PinholeTagList an empty copy of this tag list.
+	 */
+	public function getEmptyCopy()
+	{
+		$tag_list = clone $this;
+		$tag_list->removeAll();
+		return $tag_list;
+	}
+
+	// }}}
+	// {{{ public function getByType()
+
+	/**
+	 * Gets the tags in this tag list that are of a specified type
+	 *
+	 * @param string $type the class name of the type of tags to get.
+	 *
+	 * @return PinholeTagList a list of tags of the specified type. If this
+	 *                         list does not contain any tags of the specified
+	 *                         type, an empty tag list is returned.
+	 *
+	 * @throws SwatInvalidClassException if the specified <i>$type</i> is not a
+	 *                                    subclass of PinholeAbstractTag.
+	 */
+	public function getByType($type)
+	{
+		if (!is_subclass_of($type, 'PinholeAbstractTag'))
+			throw new SwatInvalidClassException(
+				'$type must be a subclass of PinholeAbstractTag');
+
+		$tag_list = $this->getEmptyCopy();
+
+		foreach ($this->tags as $tag)
+			if ($tag instanceof $type)
+				$tag_list->add($tag);
+
+		return $tag_list;
+	}
+
+	// }}}
+	// {{{ public function getPhotos()
+
+	/**
+	 * Gets the photos of this tag list
+	 *
+	 * Photos are defined as an intersection of all the photos of all the tags
+	 * in this list.
+	 *
+	 * @return PinholePhotoWrapper the photos of this tag list.
+	 */
+	public function getPhotos($dimension_shortname = null, array $fields = null,
+		$pre_load_tags = false)
+	{
+		$cache_key = $this->getCacheKey(__FUNCTION__, func_get_args());
+		$value = $this->getCacheValue('photos', $cache_key);
+		if ($value !== false)
+			return $value;
+
+		if ($fields === null) {
+			$fields = array('PinholePhoto.id', 'PinholePhoto.title',
+				'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
+				'PinholePhoto.publish_date', 'PinholePhoto.image_set',
+				'PinholePhoto.filename', 'PinholePhoto.status');
+		}
+
+		$sql = sprintf('select %s from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id',
+			implode(', ', $fields));
+
+		$join_clauses = implode(' ', $this->getJoinClauses());
+		if ($join_clauses != '')
+			$sql.= ' '.$join_clauses.' ';
+
+		$where_clause = $this->getWhereClause();
+		if ($where_clause != '')
+			$sql.= ' where '.$where_clause;
+
+		$sql.= ' order by '.$this->getPhotoOrderByClause();
+
+		$range = $this->getRange();
+		if ($range !== null)
+			$this->db->setLimit($range->getLimit(), $range->getOffset());
+
+		if ($dimension_shortname == 'thumbnail')
+			$wrapper = SwatDBClassMap::get('PinholePhotoThumbnailWrapper');
+		else
+			$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
+
+		$query = SwatDB::query($this->db, $sql, $wrapper);
+
+		if ($pre_load_tags) {
+			$sql = 'select PinholeTag.*, PinholePhotoTagBinding.photo
+				from PinholeTag
+				inner join PinholePhotoTagBinding on
+					PinholePhotoTagBinding.tag = PinholeTag.id
+				where PinholePhotoTagBinding.photo in (%s)
+				order by photo asc';
+
+			$query->attachSubRecordsets($sql, 'tags',
+				SwatDBClassMap::get('PinholeTagDataObjectWrapper'),
+				'photo');
+		}
+
+		$this->setCacheValue('photos', $cache_key, $query);
+		return $query;
+	}
+
+	// }}}
+	// {{{ public function getPhotoCount()
+
+	/**
+	 * Gets the number of photos of this tag list
+	 *
+	 * The photo count is the number of photos in the intersection of all the
+	 * tags in this list.
+	 *
+	 * @return integer the number of photos in this tag list.
+	 */
+	public function getPhotoCount()
+	{
+		$info = $this->getPhotoInfo();
+		if (count($info) > 0)
+			return $info['count'];
+		else
+			return 0;
+	}
+
+	// }}}
+	// {{{ public function getPhotoInfo()
+
+	/**
+	 * Gets the date range and count of photos of this tag list
+	 *
+	 * @return array a three element array with the keys 'start', 'end', and
+	 *                'count'. If there are no photos in the intersection of
+	 *                the tags in this tag list, an empty array is returned.
+	 */
+	public function getPhotoInfo()
+	{
+		$cache_key = $this->getCacheKey(__FUNCTION__, func_get_args());
+		$value = $this->getCacheValue('photos', $cache_key);
+		if ($value !== false)
+			return $value;
+
+		if (is_array($this->photo_info_cache))
+			return $this->photo_info_cache;
+
+		$sql = 'select count(PinholePhoto.id) as photo_count,
+				max(convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) as last_photo_date,
+				min(convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) as first_photo_date
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
+
+		$join_clauses = implode(' ', $this->getJoinClauses());
+		if ($join_clauses != '')
+			$sql.= ' '.$join_clauses.' ';
+
+		$where_clause = $this->getWhereClause();
+		if ($where_clause != '')
+			$sql.= ' where '.$where_clause;
+
+		$row = SwatDB::queryRow($this->db, $sql);
+
+		if ($row === null) {
+			$this->photo_info_cache = array();
+		} else {
+			$this->photo_info_cache = array(
+				'count' => $row->photo_count,
+				'start' => new SwatDate($row->first_photo_date),
+				'end'   => new SwatDate($row->last_photo_date),
+			);
+		}
+
+		$this->setCacheValue('photos', $cache_key, $this->photo_info_cache);
+		return $this->photo_info_cache;
+	}
+
+	// }}}
+	// {{{ public function getPhotoDateRange()
+
+	/**
+	 * Gets the date range of photos of this tag list
+	 *
+	 * @return array a two element array with the keys 'start' and 'end' and
+	 *                the values being two SwatDate objects. If there are no
+	 *                photos in the intersection of the tags in this tag list,
+	 *                null is returned.
+	 */
+	public function getPhotoDateRange()
+	{
+		$cache_key = $this->getCacheKey(__FUNCTION__, func_get_args());
+		$value = $this->getCacheValue('photos', $cache_key);
+		if ($value !== false)
+			return $value;
+
+		$sql = 'select
+				max(convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) as last_photo_date,
+				min(convertTZ(PinholePhoto.photo_date,
+					PinholePhoto.photo_time_zone)) as first_photo_date
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
+
+		$join_clauses = implode(' ', $this->getJoinClauses());
+		if ($join_clauses != '')
+			$sql.= ' '.$join_clauses.' ';
+
+		$where_clause = $this->getWhereClause();
+		if ($where_clause != '')
+			$sql.= ' where '.$where_clause;
+
+		$range = SwatDB::queryRow($this->db, $sql);
+
+		if ($range !== null) {
+			$returned_range = array(
+				'start' => new SwatDate($range->first_photo_date),
+				'end'   => new SwatDate($range->last_photo_date),
+			);
+		} else {
+			$returned_range = null;
+		}
+
+		$this->setCacheValue('photos', $cache_key, $returned_range);
+
+		return $returned_range;
+	}
+
+	// }}}
+	// {{{ public function getNextPrevPhotos()
+
+	/**
+	 * Gets the photos immediately surrounding the specified photo in this tag
+	 * list
+	 *
+	 * @param PinholePhoto $photo the photo to get the immediately surrounding
+	 *                             photos for.
+	 *
+	 * @return array an array containing two keys 'next' and 'prev' with the
+	 *                values being PinholePhoto objects that are the next and
+	 *                previous photos surrounding the specified photo. If the
+	 *                specified photo does not have a previous photo, the
+	 *                key 'prev' will have a value of null. Similarly, If the
+	 *                specified photo does not have a next photo, the key
+	 *                'next' will have a value of null.
+	 */
+	public function getNextPrevPhotos(PinholePhoto $photo)
+	{
+		$cache_key = $this->getCacheKey(__FUNCTION__, array($photo->id));
+		$value = $this->getCacheValue('photos', $cache_key);
+		if ($value !== false)
+			return $value;
+
+		$return = array(
+			'next' => null,
+			'prev' => null,
+		);
+
+		$sql = 'select PinholePhoto.id from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
+
+		$join_clauses = implode(' ', $this->getJoinClauses());
+		if ($join_clauses != '')
+			$sql.= ' '.$join_clauses.' ';
+
+		$where_clause = $this->getWhereClause();
+		if ($where_clause != '')
+			$sql.= ' where '.$where_clause;
+
+		$sql.= ' order by '.$this->getPhotoOrderByClause();
+
+		$photo_class = SwatDBClassMap::get('PinholePhoto');
+
+		// don't wrap results for speed and to save memory
+		$rs = SwatDB::query($this->db, $sql, null);
+		$prev_id = null;
+
+		// look through photo ids until we find the specified photo
+		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+			if ($row->id === $photo->id) {
+				$next_id = $rs->fetchOne();
+
+				if ($next_id !== null) {
+					$photo = new $photo_class();
+					$photo->setDatabase($this->db);
+					$photo->load($next_id);
+					$return['next'] = $photo;
+				}
+
+				if ($prev_id !== null) {
+					$photo = new $photo_class();
+					$photo->setDatabase($this->db);
+					$photo->load($prev_id);
+					$return['prev'] = $photo;
+				}
+
+				$rs->free();
+				break;
+			}
+			$prev_id = $row->id;
+		}
+
+		$this->setCacheValue('photos', $cache_key, $return);
+
+		return $return;
+	}
+
+	// }}}
+	// {{{ public function getSubTags()
+
+	/**
+	 * Gets a list of tags not in this list that also apply to the photos
+	 * of this list
+	 *
+	 * The list of subtags only includes {@link PinholeTag} objects. If this
+	 * list is empty, the returned list contains all tags.
+	 *
+	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
+	 *                           specified, all tags are loaded.
+	 * @param string $order_by_clause optional. SQL order by clause of the tag
+	 *                                list.
+	 *
+	 * @return PinholeTagList a list of tags not in this list that also apply
+	 *                         to the photos of this list. The list only
+	 *                         contains PinholeTag objects.
+	 *
+	 * @see PinholeTagList::getPhotos()
+	 * @see PinholePhoto::getTags()
+	 */
+	public function getSubTags(SwatDBRange $range = null,
+		$order_by_clause = null)
+	{
+		$tag_data_objects = $this->getSubTagDataObjects($range,
+			$order_by_clause);
+
+		$tag_list = $this->getEmptyCopy();
+
+		foreach ($tag_data_objects as $data_object) {
+			$tag = new PinholeTag($this->instance, $data_object);
+			$tag_list->add($tag);
+		}
+
+		$tag_list = $tag_list->subtract($this);
+
+		return $tag_list;
+	}
+
+	// }}}
+	// {{{ public function getSubTagsByPopularity()
+
+	/**
+	 * Gets a list of tags not in this list that also apply to the photos
+	 * of this list and orders them by the number of photos
+	 *
+	 * The list of subtags only includes {@link PinholeTag} objects. If this
+	 * list is empty, the returned list contains all tags.
+	 *
+	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
+	 *                           specified, all tags are loaded.
+	 * @param string $order_by_clause optional. SQL order by clause of the tag
+	 *                                list.
+	 *
+	 * @return PinholeTagList a list of tags not in this list that also apply
+	 *                         to the photos of this list. The list only
+	 *                         contains PinholeTag objects.
+	 *
+	 * @see PinholeTagList::getSubTags()
+	 */
+	public function getSubTagsByPopularity(SwatDBRange $range = null,
+		$order_by_clause = null)
+	{
+		$cache_key = $this->getCacheKey(__FUNCTION__, func_get_args());
+		$value = $this->getCacheValue('tags', $cache_key);
+		if ($value !== false)
+			return $value;
+
+		$tag_list = $this->getEmptyCopy();
+
+		$sql = sprintf('select count(PinholePhoto.id) as photo_count,
+				PinholePhotoTagBinding.tag
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			inner join PinholePhotoTagBinding on
+				PinholePhotoTagBinding.photo = PinholePhoto.id
+			%s
+			where %s
+			group by PinholePhotoTagBinding.tag
+			order by photo_count desc',
+			implode(' ', $this->getJoinClauses()),
+			$this->getWhereClause());
+
+		if ($range !== null)
+			$this->db->setLimit($range->getLimit(), $range->getOffset());
+
+		$popular_tags = SwatDB::query($this->db, $sql, null);
+
+		$tag_ids = array();
+		while ($tag = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT))
+			$tag_ids[] = $this->db->quote($tag->tag, 'integer');
+
+		if (count($tag_ids) == 0)
+			return $tag_list;
+
+		$sql = sprintf('select PinholeTag.* from PinholeTag where id in (%s)',
+			implode(',', $tag_ids));
+
+		if ($order_by_clause !== null)
+			$sql.= ' order by '.$order_by_clause;
+
+		$tag_data_objects = SwatDB::query($this->db, $sql,
+			'PinholeTagDataObjectWrapper');
+
+		$wrapper_class = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
+
+		$popular_tags->seek();
+		while ($row = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+			foreach ($tag_data_objects as $data_object) {
+				if ($data_object->id == $row->tag) {
+					$tag = new PinholeTag($this->instance, $data_object);
+					$tag->photo_count = $row->photo_count;
+					$tag_list->add($tag);
+				}
+			}
+		}
+
+		$tag_list = $tag_list->subtract($this);
+		$this->setCacheValue('tags', $cache_key, $tag_list);
+		return $tag_list;
+	}
+
+	// }}}
+	// {{{ public function getSubTagCount()
+
+	/**
+	 * Gets a count of tags not in this list that also apply to the photos
+	 * of this list
+	 *
+	 * @return integer Number of sub tags
+	 *
+	 * @see PinholePhoto::getSubTags()
+	 */
+	public function getSubTagCount()
+	{
+		$cache_key = $this->getCacheKey(__FUNCTION__, func_get_args());
+		$value = $this->getCacheValue('tags', $cache_key);
+		if ($value !== false)
+			return $value;
+
+		$sql = sprintf('select count(PinholeTag.id)
+			from PinholeTag where %s',
+			$this->getSubTagWhereClause());
+
+		$count = SwatDB::queryOne($this->db, $sql);
+		$this->setCacheValue('tags', $cache_key, $count);
+
+		return $count - count($this);
+	}
+
+	// }}}
+
+	// modifiers
+	// {{{ public function setPhotoWhereClause()
+
+	/**
+	 * Sets additional where clause to apply to photos in this tag list
+	 *
+	 * This where clause is applied in addition to where clauses specified by
+	 * tags in this tag list. This can be used, for example, to only select
+	 * photos that are published.
+	 *
+	 * @param string $where_clause the additional where clause to apply to
+	 *                              photos in this tag list.
+	 *
+	 * @see PinholeTagList::getWhereClause()
+	 */
+	public function setPhotoWhereClause($where_clause)
+	{
+		if (is_string($where_clause))
+			$this->photo_where_clause = $where_clause;
+	}
+
+	// }}}
+	// {{{ public function setPhotoOrderByClause()
+
+	/**
+	 * Sets the order of photos selected by this tag list
+	 *
+	 * This affects the order of photos returned by
+	 * {@link PinholeTagList::getPhotos()} and
+	 * {@link PinholeTagList::getNextPrevPhotos()}.
+	 *
+	 * @param string $order_by_clause the order-by clause to apply to photos
+	 *                                 selected by this tag list.
+	 */
+	public function setPhotoOrderByClause($order_by_clause)
+	{
+		if (is_string($order_by_clause))
+			$this->photo_order_by_clause = $order_by_clause;
+	}
+
+	// }}}
+	// {{{ public function setPhotoRange()
+
+	public function setPhotoRange(SwatDBRange $range)
+	{
+		$this->photo_range = $range;
+	}
+
+	// }}}
+
+	// set manipulation
 	// {{{ public function get()
 
 	/**
@@ -698,526 +1218,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
-	// {{{ public function getEmptyCopy()
 
-	/**
-	 * Gets an empty copy of this tag list
-	 *
-	 * The new tag list has the same site instance, database connection and
-	 * photo filtering options as this tag list.
-	 *
-	 * @return PinholeTagList an empty copy of this tag list.
-	 */
-	public function getEmptyCopy()
-	{
-		$tag_list = clone $this;
-		$tag_list->removeAll();
-		return $tag_list;
-	}
-
-	// }}}
-	// {{{ public function getByType()
-
-	/**
-	 * Gets the tags in this tag list that are of a specified type
-	 *
-	 * @param string $type the class name of the type of tags to get.
-	 *
-	 * @return PinholeTagList a list of tags of the specified type. If this
-	 *                         list does not contain any tags of the specified
-	 *                         type, an empty tag list is returned.
-	 *
-	 * @throws SwatInvalidClassException if the specified <i>$type</i> is not a
-	 *                                    subclass of PinholeAbstractTag.
-	 */
-	public function getByType($type)
-	{
-		if (!is_subclass_of($type, 'PinholeAbstractTag'))
-			throw new SwatInvalidClassException(
-				'$type must be a subclass of PinholeAbstractTag');
-
-		$tag_list = $this->getEmptyCopy();
-
-		foreach ($this->tags as $tag)
-			if ($tag instanceof $type)
-				$tag_list->add($tag);
-
-		return $tag_list;
-	}
-
-	// }}}
-	// {{{ public function getPhotos()
-
-	/**
-	 * Gets the photos of this tag list
-	 *
-	 * Photos are defined as an intersection of all the photos of all the tags
-	 * in this list.
-	 *
-	 * @return PinholePhotoWrapper the photos of this tag list.
-	 */
-	public function getPhotos($dimension_shortname = null, array $fields = null,
-		$pre_load_tags = false)
-	{
-		$args = func_get_args();
-		$cache_key = $this->getCacheKey('getPhotos', $args);
-		$value = $this->getCacheValue('photos', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		if ($fields === null) {
-			$fields = array('PinholePhoto.id', 'PinholePhoto.title',
-				'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
-				'PinholePhoto.publish_date', 'PinholePhoto.image_set',
-				'PinholePhoto.filename', 'PinholePhoto.status');
-		}
-
-		$sql = sprintf('select %s from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id',
-			implode(', ', $fields));
-
-		$join_clauses = implode(' ', $this->getJoinClauses());
-		if ($join_clauses != '')
-			$sql.= ' '.$join_clauses.' ';
-
-		$where_clause = $this->getWhereClause();
-		if ($where_clause != '')
-			$sql.= ' where '.$where_clause;
-
-		$sql.= ' order by '.$this->getPhotoOrderByClause();
-
-		$range = $this->getRange();
-		if ($range !== null)
-			$this->db->setLimit($range->getLimit(), $range->getOffset());
-
-		if ($dimension_shortname == 'thumbnail')
-			$wrapper = SwatDBClassMap::get('PinholePhotoThumbnailWrapper');
-		else
-			$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
-
-		$query = SwatDB::query($this->db, $sql, $wrapper);
-
-		if ($pre_load_tags) {
-			$sql = 'select PinholeTag.*, PinholePhotoTagBinding.photo
-				from PinholeTag
-				inner join PinholePhotoTagBinding on
-					PinholePhotoTagBinding.tag = PinholeTag.id
-				where PinholePhotoTagBinding.photo in (%s)
-				order by photo asc';
-
-			$query->attachSubRecordsets($sql, 'tags',
-				SwatDBClassMap::get('PinholeTagDataObjectWrapper'),
-				'photo');
-		}
-
-		$this->setCacheValue('photos', $cache_key, $query);
-		return $query;
-	}
-
-	// }}}
-	// {{{ public function getPhotoCount()
-
-	/**
-	 * Gets the number of photos of this tag list
-	 *
-	 * The photo count is the number of photos in the intersection of all the
-	 * tags in this list.
-	 *
-	 * @return integer the number of photos in this tag list.
-	 */
-	public function getPhotoCount()
-	{
-		$info = $this->getPhotoInfo();
-		if (count($info) > 0)
-			return $info['count'];
-		else
-			return 0;
-	}
-
-	// }}}
-	// {{{ public function getPhotoInfo()
-
-	/**
-	 * Gets the date range and count of photos of this tag list
-	 *
-	 * @return array a three element array with the keys 'start', 'end', and
-	 *                'count'. If there are no photos in the intersection of
-	 *                the tags in this tag list, an empty array is returned.
-	 */
-	public function getPhotoInfo()
-	{
-		$cache_key = $this->getCacheKey('getPhotoInfo');
-		$value = $this->getCacheValue('photos', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		if (is_array($this->photo_info_cache))
-			return $this->photo_info_cache;
-
-		$sql = 'select count(PinholePhoto.id) as photo_count,
-				max(convertTZ(PinholePhoto.photo_date,
-					PinholePhoto.photo_time_zone)) as last_photo_date,
-				min(convertTZ(PinholePhoto.photo_date,
-					PinholePhoto.photo_time_zone)) as first_photo_date
-			from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
-
-		$join_clauses = implode(' ', $this->getJoinClauses());
-		if ($join_clauses != '')
-			$sql.= ' '.$join_clauses.' ';
-
-		$where_clause = $this->getWhereClause();
-		if ($where_clause != '')
-			$sql.= ' where '.$where_clause;
-
-		$row = SwatDB::queryRow($this->db, $sql);
-
-		if ($row === null) {
-			$this->photo_info_cache = array();
-		} else {
-			$this->photo_info_cache = array(
-				'count' => $row->photo_count,
-				'start' => new SwatDate($row->first_photo_date),
-				'end'   => new SwatDate($row->last_photo_date),
-			);
-		}
-
-		$this->setCacheValue('photos', $cache_key, $this->photo_info_cache);
-		return $this->photo_info_cache;
-	}
-
-	// }}}
-	// {{{ public function getPhotoDateRange()
-
-	/**
-	 * Gets the date range of photos of this tag list
-	 *
-	 * @return array a two element array with the keys 'start' and 'end' and
-	 *                the values being two SwatDate objects. If there are no
-	 *                photos in the intersection of the tags in this tag list,
-	 *                null is returned.
-	 */
-	public function getPhotoDateRange()
-	{
-		$cache_key = $this->getCacheKey('getPhotoDateRange');
-		$value = $this->getCacheValue('photos', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		$sql = 'select
-				max(convertTZ(PinholePhoto.photo_date,
-					PinholePhoto.photo_time_zone)) as last_photo_date,
-				min(convertTZ(PinholePhoto.photo_date,
-					PinholePhoto.photo_time_zone)) as first_photo_date
-			from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
-
-		$join_clauses = implode(' ', $this->getJoinClauses());
-		if ($join_clauses != '')
-			$sql.= ' '.$join_clauses.' ';
-
-		$where_clause = $this->getWhereClause();
-		if ($where_clause != '')
-			$sql.= ' where '.$where_clause;
-
-		$range = SwatDB::queryRow($this->db, $sql);
-
-		if ($range !== null) {
-			$returned_range = array(
-				'start' => new SwatDate($range->first_photo_date),
-				'end'   => new SwatDate($range->last_photo_date),
-			);
-		} else {
-			$returned_range = null;
-		}
-
-		$this->setCacheValue('photos', $cache_key, $returned_range);
-
-		return $returned_range;
-	}
-
-	// }}}
-	// {{{ public function getNextPrevPhotos()
-
-	/**
-	 * Gets the photos immediately surrounding the specified photo in this tag
-	 * list
-	 *
-	 * @param PinholePhoto $photo the photo to get the immediately surrounding
-	 *                             photos for.
-	 *
-	 * @return array an array containing two keys 'next' and 'prev' with the
-	 *                values being PinholePhoto objects that are the next and
-	 *                previous photos surrounding the specified photo. If the
-	 *                specified photo does not have a previous photo, the
-	 *                key 'prev' will have a value of null. Similarly, If the
-	 *                specified photo does not have a next photo, the key
-	 *                'next' will have a value of null.
-	 */
-	public function getNextPrevPhotos(PinholePhoto $photo)
-	{
-		$cache_key = $this->getCacheKey('getNextPrevPhotos',
-			array($photo->id));
-
-		$value = $this->getCacheValue('photos', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		$return = array(
-			'next' => null,
-			'prev' => null,
-		);
-
-		$sql = 'select PinholePhoto.id from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
-
-		$join_clauses = implode(' ', $this->getJoinClauses());
-		if ($join_clauses != '')
-			$sql.= ' '.$join_clauses.' ';
-
-		$where_clause = $this->getWhereClause();
-		if ($where_clause != '')
-			$sql.= ' where '.$where_clause;
-
-		$sql.= ' order by '.$this->getPhotoOrderByClause();
-
-		$photo_class = SwatDBClassMap::get('PinholePhoto');
-
-		// don't wrap results for speed and to save memory
-		$rs = SwatDB::query($this->db, $sql, null);
-		$prev_id = null;
-
-		// look through photo ids until we find the specified photo
-		while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
-			if ($row->id === $photo->id) {
-				$next_id = $rs->fetchOne();
-
-				if ($next_id !== null) {
-					$photo = new $photo_class();
-					$photo->setDatabase($this->db);
-					$photo->load($next_id);
-					$return['next'] = $photo;
-				}
-
-				if ($prev_id !== null) {
-					$photo = new $photo_class();
-					$photo->setDatabase($this->db);
-					$photo->load($prev_id);
-					$return['prev'] = $photo;
-				}
-
-				$rs->free();
-				break;
-			}
-			$prev_id = $row->id;
-		}
-
-		$this->setCacheValue('photos', $cache_key, $return);
-
-		return $return;
-	}
-
-	// }}}
-	// {{{ public function setPhotoWhereClause()
-
-	/**
-	 * Sets additional where clause to apply to photos in this tag list
-	 *
-	 * This where clause is applied in addition to where clauses specified by
-	 * tags in this tag list. This can be used, for example, to only select
-	 * photos that are published.
-	 *
-	 * @param string $where_clause the additional where clause to apply to
-	 *                              photos in this tag list.
-	 *
-	 * @see PinholeTagList::getWhereClause()
-	 */
-	public function setPhotoWhereClause($where_clause)
-	{
-		if (is_string($where_clause))
-			$this->photo_where_clause = $where_clause;
-	}
-
-	// }}}
-	// {{{ public function setPhotoOrderByClause()
-
-	/**
-	 * Sets the order of photos selected by this tag list
-	 *
-	 * This affects the order of photos returned by
-	 * {@link PinholeTagList::getPhotos()} and
-	 * {@link PinholeTagList::getNextPrevPhotos()}.
-	 *
-	 * @param string $order_by_clause the order-by clause to apply to photos
-	 *                                 selected by this tag list.
-	 */
-	public function setPhotoOrderByClause($order_by_clause)
-	{
-		if (is_string($order_by_clause))
-			$this->photo_order_by_clause = $order_by_clause;
-	}
-
-	// }}}
-	// {{{ public function setPhotoRange()
-
-	public function setPhotoRange(SwatDBRange $range)
-	{
-		$this->photo_range = $range;
-	}
-
-	// }}}
-	// {{{ public function getSubTags()
-
-	/**
-	 * Gets a list of tags not in this list that also apply to the photos
-	 * of this list
-	 *
-	 * The list of subtags only includes {@link PinholeTag} objects. If this
-	 * list is empty, the returned list contains all tags.
-	 *
-	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
-	 *                           specified, all tags are loaded.
-	 * @param string $order_by_clause optional. SQL order by clause of the tag
-	 *                                list.
-	 *
-	 * @return PinholeTagList a list of tags not in this list that also apply
-	 *                         to the photos of this list. The list only
-	 *                         contains PinholeTag objects.
-	 *
-	 * @see PinholeTagList::getPhotos()
-	 * @see PinholePhoto::getTags()
-	 */
-	public function getSubTags(SwatDBRange $range = null,
-		$order_by_clause = null)
-	{
-		$tag_data_objects = $this->getSubTagDataObjects($range,
-			$order_by_clause);
-
-		$tag_list = $this->getEmptyCopy();
-
-		foreach ($tag_data_objects as $data_object) {
-			$tag = new PinholeTag($this->instance, $data_object);
-			$tag_list->add($tag);
-		}
-
-		$tag_list = $tag_list->subtract($this);
-
-		return $tag_list;
-	}
-
-	// }}}
-	// {{{ public function getSubTagsByPopularity()
-
-	/**
-	 * Gets a list of tags not in this list that also apply to the photos
-	 * of this list and orders them by the number of photos
-	 *
-	 * The list of subtags only includes {@link PinholeTag} objects. If this
-	 * list is empty, the returned list contains all tags.
-	 *
-	 * @param SwatDBRange $range optional. Range of tags to retrieve. If not
-	 *                           specified, all tags are loaded.
-	 * @param string $order_by_clause optional. SQL order by clause of the tag
-	 *                                list.
-	 *
-	 * @return PinholeTagList a list of tags not in this list that also apply
-	 *                         to the photos of this list. The list only
-	 *                         contains PinholeTag objects.
-	 *
-	 * @see PinholeTagList::getSubTags()
-	 */
-	public function getSubTagsByPopularity(SwatDBRange $range = null,
-		$order_by_clause = null)
-	{
-		$args = func_get_args();
-		$cache_key = $this->getCacheKey('getSubTagsByPopularity', $args);
-		$value = $this->getCacheValue('tags', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		$tag_list = $this->getEmptyCopy();
-
-		$sql = sprintf('select count(PinholePhoto.id) as photo_count,
-				PinholePhotoTagBinding.tag
-			from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
-			inner join PinholePhotoTagBinding on
-				PinholePhotoTagBinding.photo = PinholePhoto.id
-			%s
-			where %s
-			group by PinholePhotoTagBinding.tag
-			order by photo_count desc',
-			implode(' ', $this->getJoinClauses()),
-			$this->getWhereClause());
-
-		if ($range !== null)
-			$this->db->setLimit($range->getLimit(), $range->getOffset());
-
-		$popular_tags = SwatDB::query($this->db, $sql, null);
-
-		$tag_ids = array();
-		while ($tag = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT))
-			$tag_ids[] = $this->db->quote($tag->tag, 'integer');
-
-		if (count($tag_ids) == 0)
-			return $tag_list;
-
-		$sql = sprintf('select PinholeTag.* from PinholeTag where id in (%s)',
-			implode(',', $tag_ids));
-
-		if ($order_by_clause !== null)
-			$sql.= ' order by '.$order_by_clause;
-
-		$tag_data_objects = SwatDB::query($this->db, $sql,
-			'PinholeTagDataObjectWrapper');
-
-		$wrapper_class = SwatDBClassMap::get('PinholeTagDataObjectWrapper');
-
-		$popular_tags->seek();
-		while ($row = $popular_tags->fetchRow(MDB2_FETCHMODE_OBJECT)) {
-			foreach ($tag_data_objects as $data_object) {
-				if ($data_object->id == $row->tag) {
-					$tag = new PinholeTag($this->instance, $data_object);
-					$tag->photo_count = $row->photo_count;
-					$tag_list->add($tag);
-				}
-			}
-		}
-
-		$tag_list = $tag_list->subtract($this);
-		$this->setCacheValue('tags', $cache_key, $tag_list);
-		return $tag_list;
-	}
-
-	// }}}
-	// {{{ public function getSubTagCount()
-
-	/**
-	 * Gets a count of tags not in this list that also apply to the photos
-	 * of this list
-	 *
-	 * @return integer Number of sub tags
-	 *
-	 * @see PinholePhoto::getSubTags()
-	 */
-	public function getSubTagCount()
-	{
-		$cache_key = $this->getCacheKey('getSubTagCount');
-		$value = $this->getCacheValue('tags', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		$sql = sprintf('select count(PinholeTag.id)
-			from PinholeTag where %s',
-			$this->getSubTagWhereClause());
-
-		$count = SwatDB::queryOne($this->db, $sql);
-		$this->setCacheValue('tags', $cache_key, $count);
-
-		return $count - count($this);
-	}
-
-	// }}}
+	// recordable interface
 	// {{{ public function setDatabase()
 
 	/**
@@ -1310,6 +1312,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+
+	// iterator interface
 	// {{{ public function current()
 
 	/**
@@ -1375,6 +1379,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+
+	// countable interface
 	// {{{ public function count()
 
 	/**
@@ -1390,6 +1396,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+
 	// {{{ protected function resetPhotoInfoCache()
 
 	protected function resetPhotoInfoCache()
@@ -1525,8 +1532,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private function getSubTagDataObjects(SwatDBRange $range = null,
 		$order_by_clause = null)
 	{
-		$args = func_get_args();
-		$cache_key = $this->getCacheKey('getSubTagDataObjects', $args);
+		$cache_key = $this->getCacheKey(__FUNCTION__, func_get_args());
 		$value = $this->getCacheValue('tags', $cache_key);
 		if ($value !== false)
 			return $value;

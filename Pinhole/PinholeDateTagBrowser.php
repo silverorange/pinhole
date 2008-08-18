@@ -50,6 +50,13 @@ class PinholeDateTagBrowser extends SwatControl
 	 */
 	protected $db;
 
+	/**
+	 * The optional memcache module used by this date tag browser
+	 *
+	 * @var SiteMemcacheModule
+	 */
+	protected $memcache;
+
 	// }}}
 	// {{{ public function display()
 
@@ -119,6 +126,20 @@ class PinholeDateTagBrowser extends SwatControl
 	public function setDatabase(MDB2_Driver_Common $db)
 	{
 		$this->db = $db;
+	}
+
+	// }}}
+	// {{{ public function setCache()
+
+	/**
+	 * Optionally specify a memcache module
+	 *
+	 * @param SiteMemcacheModule $memcache the memcache module for this data
+	 *                                  browser
+	 */
+	public function setCache(SiteMemcacheModule $memcache)
+	{
+		$this->memcache = $memcache;
 	}
 
 	// }}}
@@ -382,6 +403,11 @@ class PinholeDateTagBrowser extends SwatControl
 	 */
 	protected function getPhotoCountByDate(PinholeTagList $tag_list, $date_part)
 	{
+		$cache_key = 'getPhotoCountByDate'.((string) $tag_list).'.'.$date_part;
+		$value = $this->memcache->getNs('photos', $cache_key);
+		if ($value !== false)
+			return $value;
+
 		$group_by_parts = array();
 
 		switch ($date_part) {
@@ -448,6 +474,7 @@ class PinholeDateTagBrowser extends SwatControl
 			$dates[$date->format($date_format)] = $row->photo_count;
 		}
 
+		$this->memcache->setNs('photos', $cache_key, $dates);
 		return $dates;
 	}
 

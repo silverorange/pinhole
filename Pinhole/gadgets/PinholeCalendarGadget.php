@@ -93,6 +93,19 @@ class PinholeCalendarGadget extends SiteGadget
 	public static function displayCalendarBody(SiteWebApplication $app,
 		SwatDate $date)
 	{
+		if (isset($app->memcache)) {
+			$cache_key = 'PinholeCalendarGadget.displayCalendarBody.'.
+				$date->getDate();
+
+			$body = $app->memcache->getNs('photos', $cache_key);
+			if ($body !== false) {
+				echo $body;
+				return;
+			}
+		}
+
+		ob_start();
+
 		$day_count = self::getPhotoCountPerDay($app, $date);
 
 		echo '<table>';
@@ -143,6 +156,13 @@ class PinholeCalendarGadget extends SiteGadget
 		}
 
 		echo '</tr></table>';
+
+		$body = ob_get_clean();
+
+		if (isset($app->memcache))
+			$app->memcache->setNs('photos', $cache_key, $body);
+
+		echo $body;
 	}
 
 	// }}}
@@ -151,6 +171,13 @@ class PinholeCalendarGadget extends SiteGadget
 	public static function getPhotoCountPerDay(
 		SiteWebApplication $app, SwatDate $date)
 	{
+		if (isset($app->memcache)) {
+			$cache_key = 'PinholeCalendarGadget.count'.$date->format('%Y-%m');
+			$count = $app->memcache->get($cache_key);
+			if ($count !== false)
+				return $count;
+		}
+
 		$sql = "select count(PinholePhoto.id) as photo_count,
 				date_part('day', max(convertTZ(PinholePhoto.photo_date,
 					PinholePhoto.photo_time_zone))) as photo_day
@@ -187,6 +214,9 @@ class PinholeCalendarGadget extends SiteGadget
 		foreach ($days as $day) {
 			$day_count[$day->photo_day] = $day->photo_count;
 		}
+
+		if (isset($app->memcache))
+			$app->memcache->set($cache_key, $day_count);
 
 		return $day_count;
 	}

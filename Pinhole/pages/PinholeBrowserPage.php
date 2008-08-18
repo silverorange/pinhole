@@ -36,6 +36,7 @@ abstract class PinholeBrowserPage extends SitePage
 	public function __construct(SiteApplication $app, SiteLayout $layout = null,
 		array $arguments = array())
 	{
+		$app->timer->startCheckpoint('browser_page');
 		parent::__construct($app, $layout, $arguments);
 
 		$tags = SiteApplication::initVar('tags');
@@ -47,9 +48,13 @@ abstract class PinholeBrowserPage extends SitePage
 
 	protected function createTagList($tags)
 	{
+		$cache_module = (isset($this->app->memcache)) ?
+			$this->app->memcache : null;
+
 		$this->tag_list = new PinholeTagList($this->app->db,
 			$this->app->getInstance(), $tags,
-			$this->app->session->isLoggedIn());
+			$this->app->session->isLoggedIn(),
+			$cache_module);
 	}
 
 	// }}}
@@ -64,7 +69,7 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->ui->loadFromXML($this->ui_xml);
 
 		$this->initSearchForm();
-		$this->initInternal();
+		$this->initTagList();
 
 		$this->ui->init();
 	}
@@ -86,14 +91,6 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->tag_list->setPhotoWhereClause(sprintf(
 			'PinholePhoto.status = %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
-	}
-
-	// }}}
-	// {{{ protected function initInternal()
-
-	protected function initInternal()
-	{
-		$this->initTagList();
 	}
 
 	// }}}
@@ -166,6 +163,8 @@ abstract class PinholeBrowserPage extends SitePage
 		Pinhole::displayAd($this->app, 'top');
 		$this->displayContent();
 		Pinhole::displayAd($this->app, 'bottom');
+		$this->app->timer->startCheckpoint('browser_page');
+		$this->app->timer->display();
 		$this->layout->endCapture();
 	}
 
@@ -328,10 +327,34 @@ abstract class PinholeBrowserPage extends SitePage
 
 	protected function displayContent()
 	{
+		if (isset($this->app->memcache)) {
+			$tags = SiteApplication::initVar('tags');
+			$cache_key = 'PinholeBrowserPage.displayContent.'.
+				get_class($this).'.'.((string) $tags);
+
+			$content = $this->app->memcache->getNs('photos', $cache_key);
+			// cache the ui so that the $display property of widgets is correct
+			$ui = $this->app->memcache->getNs('photos', $cache_key.'.ui');
+
+			if ($content !== false && $ui !== false) {
+				echo $content;
+				$this->ui = $ui;
+				return;
+			}
+		}
+
+		ob_start();
 		try {
-			$content = $this->ui->getWidget('content');
-			$content->display();
+			$this->ui->getWidget('content')->display();
 		} catch (SwatWidgetNotFoundException $e) {
+		}
+
+		$content = ob_get_clean();
+		echo $content;
+
+		if (isset($this->app->memcache)) {
+			$this->app->memcache->setNs('photos', $cache_key, $content);
+			$this->app->memcache->setNs('photos', $cache_key.'.ui', $this->ui);
 		}
 	}
 

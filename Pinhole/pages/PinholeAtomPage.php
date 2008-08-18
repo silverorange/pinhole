@@ -12,11 +12,6 @@ require_once 'XML/Atom/Entry.php';
  * Displays an Atom feed of photos
  *
  * Photos are displayed reverse-chronologically based on their publish-date.
- * The number of photos is always at least $min_entries, but if a recently
- * published batch of photos (within the time of $recent_period) exceeds
- * $min_entries, up to $max_entries photos will be displayed. This makes it
- * easier to ensure that a subscriber won't miss part of a batch, while
- * limiting server load for the feed.
  *
  * @package   Pinhole
  * @copyright 2008 silverorange
@@ -27,27 +22,11 @@ class PinholeAtomPage extends SitePage
 	// {{{ protected properties
 
 	/**
-	 * The minimum number of entries to display
-	 *
-	 * @var integer
-	 */
-	protected $min_entries = 20;
-
-	/**
 	 * The maximum number of entries to display
 	 *
 	 * @var integer
 	 */
 	protected $max_entries = 200;
-
-	/**
-	 * Period for recently added photos (in seconds)
-	 *
-	 * Default value is two days.
-	 *
-	 * @var interger
-	 */
-	protected $recent_period = 172800;
 
 	/**
 	 * @var string
@@ -140,8 +119,13 @@ class PinholeAtomPage extends SitePage
 
 	protected function createTagList($tags)
 	{
+		$cache_module = isset($this->app->memcache) ?
+			$this->app->memcache : null;
+
 		$this->tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance(), $tags);
+			$this->app->getInstance(), $tags,
+			$this->app->session->isLoggedIn(),
+			$cache_module);
 	}
 
 	// }}}
@@ -187,56 +171,17 @@ class PinholeAtomPage extends SitePage
 		//$this->feed->addAuthor($this->post->author->name, $author_uri,
 		//	$this->post->author->email);
 
-		$photos = $this->tag_list->getPhotos();
+		$this->buildAtomPagination();
 
-		$threshold = new SwatDate();
-		$threshold->toUTC();
-		$threshold->subtractSeconds($this->recent_period);
-
-		$count = 0;
-
-		foreach ($photos as $photo) {
-			if ($count > $this->max_entries ||
-				($count > $this->min_entries) &&
-					$photo->publish_date->before($threshold))
-				break;
-
-			$count++;
-		}
-
-		$this->buildAtomPagination($count);
-
-		if ($this->page > 1) {
-			$this->tag_list->setPhotoRange(
-				new SwatDBRange($this->min_entries,
-					$count + ($this->min_entries * ($this->page - 2))));
-
-			$photos = $this->tag_list->getPhotos();
-			$count = $this->min_entries;
-		}
-
-		$this->addEntries($photos, $count);
-	}
-
-	// }}}
-	// {{{ protected function addEntries()
-
-	protected function addEntries(PinholePhotoWrapper $photos, $num_photos)
-	{
-		$count = 0;
-		foreach ($photos as $photo) {
-			if ($count < $num_photos) {
-				$this->feed->addEntry($this->getEntry($photo));
-			}
-
-			$count++;
-		}
+		$photos = $this->tag_list->getPhotos(null, null, true);
+		foreach ($photos as $photo)
+			$this->feed->addEntry($this->getEntry($photo));
 	}
 
 	// }}}
 	// {{{ protected function buildAtomPagination()
 
-	protected function buildAtomPagination($first_page_size)
+	protected function buildAtomPagination()
 	{
 		// Feed paging. See IETF RFC 5005.
 		$total_photos = $this->tag_list->getPhotoCount();
@@ -257,8 +202,7 @@ class PinholeAtomPage extends SitePage
 		if ($tag_string == '')
 			$uri.= '?';
 
-		$last = (ceil(($total_photos - $first_page_size) / $this->min_entries)
-			+ 1);
+		$last = ceil($total_photos / $this->max_entries);
 
 		$this->feed->addLink($uri.'page.number='.$last,
 			'last', 'application/atom+xml');

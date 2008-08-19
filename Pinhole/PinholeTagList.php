@@ -200,7 +200,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				$cache_key = $this->getCacheKey('loadSimpleTags',
 					$simple_tag_strings);
 
-				$tag_data_objects = $this->getCacheValue('photos', $cache_key);
+				$tag_data_objects = $this->getCacheValue($cache_key);
 				if ($tag_data_objects === false) {
 					// load all simple tags in one query
 					$sql = sprintf('select * from PinholeTag
@@ -214,8 +214,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 					$tag_data_objects = SwatDB::query($db, $sql, $wrapper);
 
-					$this->setCacheValue('photos', $cache_key,
-						$tag_data_objects);
+					$this->setCacheValue($cache_key, $tag_data_objects);
 				}
 			} else {
 				$tag_data_objects = new PinholeTagDataObjectWrapper();
@@ -537,7 +536,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
-		$value = $this->getCacheValue('photos', $cache_key);
+		$value = $this->getCacheValue($cache_key);
 		if ($value !== false)
 			return $value;
 
@@ -572,7 +571,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			);
 		}
 
-		$this->setCacheValue('photos', $cache_key, $this->photo_info_cache);
+		$this->setCacheValue($cache_key, $this->photo_info_cache);
 		return $this->photo_info_cache;
 	}
 
@@ -591,7 +590,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
-		$value = $this->getCacheValue('photos', $cache_key);
+		$value = $this->getCacheValue($cache_key);
 		if ($value !== false)
 			return $value;
 
@@ -622,7 +621,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$returned_range = null;
 		}
 
-		$this->setCacheValue('photos', $cache_key, $returned_range);
+		$this->setCacheValue($cache_key, $returned_range);
 
 		return $returned_range;
 	}
@@ -648,7 +647,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function getNextPrevPhotos(PinholePhoto $photo)
 	{
 		$cache_key = $this->getCacheKey(__FUNCTION__, array($photo->id));
-		$value = $this->getCacheValue('photos', $cache_key);
+		$value = $this->getCacheValue($cache_key);
 		if ($value !== false)
 			return $value;
 
@@ -701,7 +700,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$prev_id = $row->id;
 		}
 
-		$this->setCacheValue('photos', $cache_key, $return);
+		$this->setCacheValue($cache_key, $return);
 
 		return $return;
 	}
@@ -772,7 +771,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
-		$value = $this->getCacheValue('tags', $cache_key);
+		$value = $this->getCacheValue($cache_key);
 		if ($value !== false)
 			return $value;
 
@@ -824,7 +823,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		}
 
 		$tag_list = $tag_list->subtract($this);
-		$this->setCacheValue('tags', $cache_key, $tag_list);
+		$this->setCacheValue($cache_key, $tag_list);
 		return $tag_list;
 	}
 
@@ -843,7 +842,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
-		$count = $this->getCacheValue('tags', $cache_key);
+		$count = $this->getCacheValue($cache_key);
 
 		if ($count === false) {
 			$sql = sprintf('select count(PinholeTag.id)
@@ -851,7 +850,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				$this->getSubTagWhereClause());
 
 			$count = SwatDB::queryOne($this->db, $sql);
-			$this->setCacheValue('tags', $cache_key, $count);
+			$this->setCacheValue($cache_key, $count);
 		}
 
 		return $count - count($this);
@@ -1456,10 +1455,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	// caching
 	// {{{ protected function getCacheValue()
 
-	protected function getCacheValue($ns, $key)
+	protected function getCacheValue($key)
 	{
 		if ($this->memcache !== null)
-			return $this->memcache->getNs($ns, $key);
+			return $this->memcache->getNs('photos', $key);
 		else
 			return false;
 	}
@@ -1467,10 +1466,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	// }}}
 	// {{{ protected function setCacheValue()
 
-	protected function setCacheValue($ns, $key, $value)
+	protected function setCacheValue($key, $value)
 	{
 		if ($this->memcache !== null)
-			$this->memcache->setNs($ns, $key, $value);
+			$this->memcache->setNs('photos', $key, $value);
 	}
 
 	// }}}
@@ -1648,7 +1647,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
-		$value = $this->getCacheValue('tags', $cache_key);
+		$value = $this->getCacheValue($cache_key);
 		if ($value !== false)
 			return $value;
 
@@ -1672,7 +1671,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$tag_data_objects = SwatDB::query($this->db, $sql,
 			'PinholeTagDataObjectWrapper');
 
-		$this->setCacheValue('tags', $cache_key, $tag_data_objects);
+		$this->setCacheValue($cache_key, $tag_data_objects);
 		return $tag_data_objects;
 	}
 

@@ -239,13 +239,11 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		$this->output(str_repeat(chr(8), 3).Pinhole::_('done')."\n",
 			self::VERBOSITY_ALL);
 
-		define('SWATDB_DEBUG', true);
 		$photo_indexer->commit();
-		exit;
-		$tag_indexer->commit();
 		unset($photo_indexer);
-		unset($tag_indexer);
 
+		// TODO: this could well be deleting some rows from the queue that
+		// weren't indexed
 		$sql = sprintf('delete from NateGoSearchQueue where document_type = %s',
 			$this->db->quote($type, 'integer'));
 

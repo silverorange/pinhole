@@ -19,8 +19,10 @@ class PinholePassphraseLoginGadget extends SiteGadget
 
 	protected function displayTitle()
 	{
-		if ($this->app->session->isLoggedIn())
+		if ($this->app->session->isLoggedIn() ||
+			$this->app->config->pinhole->passphrase == '')
 			return;
+
 
 		parent::displayTitle();
 	}
@@ -30,8 +32,9 @@ class PinholePassphraseLoginGadget extends SiteGadget
 
 	protected function displayContent()
 	{
-		if ($this->app->session->isLoggedIn())
-			return; 
+		if ($this->app->session->isLoggedIn() ||
+			$this->app->config->pinhole->passphrase == '')
+			return;
 
 		$login_button = new SwatButton();
 		$login_button->title = Pinhole::_('Login');

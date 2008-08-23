@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Site/SiteMultipleInstanceModule.php';
+require_once 'Site/SiteMemcacheModule.php';
 require_once 'Admin/AdminApplication.php';
 require_once 'Pinhole/Pinhole.php';
 
@@ -34,6 +35,7 @@ class PinholeAdminApplication extends AdminApplication
 	{
 		$modules = parent::getDefaultModuleList();
 		$modules['instance'] = 'SiteMultipleInstanceModule';
+		$modules['memcache'] = 'SiteMemcacheModule';
 
 		return $modules;
 	}
@@ -88,6 +90,9 @@ class PinholeAdminApplication extends AdminApplication
 			new Date_TimeZone($config->date->time_zone);
 
 		$this->default_locale = $config->i18n->locale;
+
+		$this->memcache->server = $config->memcache->server;
+		$this->memcache->app_ns = $config->memcache->app_ns;
 	}
 
 	// }}}

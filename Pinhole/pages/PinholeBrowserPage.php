@@ -36,7 +36,6 @@ abstract class PinholeBrowserPage extends SitePage
 	public function __construct(SiteApplication $app, SiteLayout $layout = null,
 		array $arguments = array())
 	{
-		$app->timer->startCheckpoint('browser_page');
 		parent::__construct($app, $layout, $arguments);
 
 		$tags = SiteApplication::initVar('tags');
@@ -163,8 +162,6 @@ abstract class PinholeBrowserPage extends SitePage
 		Pinhole::displayAd($this->app, 'top');
 		$this->displayContent();
 		Pinhole::displayAd($this->app, 'bottom');
-		$this->app->timer->startCheckpoint('browser_page');
-		$this->app->timer->display();
 		$this->layout->endCapture();
 	}
 

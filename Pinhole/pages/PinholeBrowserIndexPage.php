@@ -25,8 +25,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	public function __construct(SiteApplication $app, SiteLayout $layout = null,
 		array $arguments = array())
 	{
-		$app->timer->startCheckpoint('browser-index-page');
-
 		parent::__construct($app, $layout, $arguments);
 		$this->ui_xml = 'Pinhole/pages/browser-index.xml';
 	}
@@ -76,8 +74,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$view->getGroup('publish_period')->visible =
 			(count($this->tag_list) == 0);
-
-		$this->app->timer->endCheckpoint('browser-index-page');
 	}
 
 	// }}}

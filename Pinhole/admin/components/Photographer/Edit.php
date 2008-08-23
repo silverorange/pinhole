@@ -69,7 +69,14 @@ class PinholePhotographerEdit extends AdminDBEdit
 		$this->photographer->fullname    = $values['fullname'];
 		$this->photographer->description = $values['description'];
 		$this->photographer->status      = $values['status'];
+
+		$flush_cache = ($this->photographer->isModified() &&
+			$this->photographer->id !== null);
+
 		$this->photographer->save();
+
+		if (isset($this->app->memcache) && $flush_cache)
+			$this->app->memcache->flushNs('photos');
 
 		$message = new SwatMessage(sprintf(
 			Pinhole::_('“%s” has been saved.'),

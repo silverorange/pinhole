@@ -238,6 +238,7 @@ class PinholePhotoEdit extends AdminDBEdit
 	protected function saveDBData()
 	{
 		$this->setPhotoValues();
+
 		$this->photo->save();
 
 		$tags = $this->ui->getWidget('tags')->getSelectedTagArray();
@@ -252,6 +253,9 @@ class PinholePhotoEdit extends AdminDBEdit
 		}
 
 		$this->addToSearchQueue();
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->flushNs('photos');
 
 		$message = new SwatMessage(sprintf(
 			Pinhole::_('“%s” has been saved.'),

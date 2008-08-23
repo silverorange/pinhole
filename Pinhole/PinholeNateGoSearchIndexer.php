@@ -90,14 +90,14 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 		$type = NateGoSearch::getDocumentType($this->db, 'photo');
 
-		// clear queue 
+		// clear queue
 		$sql = sprintf('delete from NateGoSearchQueue
 			where document_type = %s',
 			$this->db->quote($type, 'integer'));
 
 		SwatDB::exec($this->db, $sql);
 
-		// fill queue 
+		// fill queue
 		$sql = sprintf('insert into NateGoSearchQueue
 			(document_type, document_id) select %s, id from PinholePhoto',
 			$this->db->quote($type, 'integer'));
@@ -234,20 +234,23 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 			$photo_indexer->index($document);
 			$current_photo_id = $photo->id;
 			$count++;
+
+			$sql = sprintf('delete from NateGoSearchQueue where
+				document_type = %s and document_id = %s',
+				$this->db->quote($type, 'integer'),
+				$this->db->quote($photo->id, 'integer'));
+
+			SwatDB::exec($this->db, $sql);
 		}
+
+		if (count($photos) > 0 && isset($this->app->memcache))
+			$this->app->memcache->flushNs('photos');
 
 		$this->output(str_repeat(chr(8), 3).Pinhole::_('done')."\n",
 			self::VERBOSITY_ALL);
 
 		$photo_indexer->commit();
 		unset($photo_indexer);
-
-		// TODO: this could well be deleting some rows from the queue that
-		// weren't indexed
-		$sql = sprintf('delete from NateGoSearchQueue where document_type = %s',
-			$this->db->quote($type, 'integer'));
-
-		SwatDB::exec($this->db, $sql);
 	}
 
 	// }}}

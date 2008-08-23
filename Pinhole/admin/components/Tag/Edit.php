@@ -119,9 +119,13 @@ class PinholeTagEdit extends AdminDBEdit
 			$this->tag->createdate = $now->getDate();
 		}
 
-		$this->tag->save();
+		$flush_cache = ($this->tag->isModified() && $this->tag->id !== null);
 
+		$this->tag->save();
 		$this->addToSearchQueue();
+
+		if (isset($this->app->memcache) && $flush_cache)
+			$this->app->memcache->flushNs('photos');
 
 		$message = new SwatMessage(
 			sprintf(Pinhole::_('“%s” has been saved.'), $this->tag->title));

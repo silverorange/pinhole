@@ -324,35 +324,7 @@ abstract class PinholeBrowserPage extends SitePage
 
 	protected function displayContent()
 	{
-		if (isset($this->app->memcache)) {
-			$tags = SiteApplication::initVar('tags');
-			$cache_key = 'PinholeBrowserPage.displayContent.'.
-				get_class($this).'.'.((string) $tags);
-
-			$content = $this->app->memcache->getNs('photos', $cache_key);
-			// cache the ui so that the $display property of widgets is correct
-			$ui = $this->app->memcache->getNs('photos', $cache_key.'.ui');
-
-			if ($content !== false && $ui !== false) {
-				echo $content;
-				$this->ui = $ui;
-				return;
-			}
-		}
-
-		ob_start();
-		try {
-			$this->ui->getWidget('content')->display();
-		} catch (SwatWidgetNotFoundException $e) {
-		}
-
-		$content = ob_get_clean();
-		echo $content;
-
-		if (isset($this->app->memcache)) {
-			$this->app->memcache->setNs('photos', $cache_key, $content);
-			$this->app->memcache->setNs('photos', $cache_key.'.ui', $this->ui);
-		}
+		$this->ui->getWidget('content')->display();
 	}
 
 	// }}}

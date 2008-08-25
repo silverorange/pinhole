@@ -60,6 +60,38 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	// }}}
 
 	// build phase
+	// {{{ protected function displayContent()
+
+	protected function displayContent()
+	{
+		if (isset($this->app->memcache)) {
+			$tags = SiteApplication::initVar('tags');
+			$cache_key = 'PinholeBrowserIndexPage.displayContent.'.
+				get_class($this).'.'.((string) $tags);
+
+			$content = $this->app->memcache->getNs('photos', $cache_key);
+			// cache the ui so that the $display property of widgets is correct
+			$ui = $this->app->memcache->getNs('photos', $cache_key.'.ui');
+
+			if ($content !== false && $ui !== false) {
+				echo $content;
+				$this->ui = $ui;
+				return;
+			}
+		}
+
+		ob_start();
+		$this->ui->getWidget('content')->display();
+		$content = ob_get_clean();
+		echo $content;
+
+		if (isset($this->app->memcache)) {
+			$this->app->memcache->setNs('photos', $cache_key, $content);
+			$this->app->memcache->setNs('photos', $cache_key.'.ui', $this->ui);
+		}
+	}
+
+	// }}}
 	// {{{ protected function buildInternal()
 
 	protected function buildInternal()

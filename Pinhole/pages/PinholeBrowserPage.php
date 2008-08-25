@@ -30,6 +30,11 @@ abstract class PinholeBrowserPage extends SitePage
 	 */
 	protected $search_ui_xml = 'Pinhole/pages/browser-search.xml';
 
+	/**
+	 * @var string
+	 */
+	protected $cache_key = '';
+
 	// }}}
 	// {{{ public function __construct()
 
@@ -54,6 +59,8 @@ abstract class PinholeBrowserPage extends SitePage
 			$this->app->getInstance(), $tags,
 			$this->app->session->isLoggedIn(),
 			$cache_module);
+
+		$this->cache_key = get_class($this).'.'.((string) $this->tag_list);
 	}
 
 	// }}}

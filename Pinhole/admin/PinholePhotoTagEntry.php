@@ -116,7 +116,7 @@ class PinholePhotoTagEntry extends SiteTagEntry
 		}
 
 		$this->tag_array[$tag_obj->name] = $tag_obj->title;
-		$this->selected_tag_array[] = $tag_obj->name;
+		$this->selected_tag_array[$tag_obj->name] = $tag_obj->title;
 	}
 
 	// }}}

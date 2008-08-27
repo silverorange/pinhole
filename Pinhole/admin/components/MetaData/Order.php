@@ -33,12 +33,24 @@ class PinholeMetaDataOrder extends AdminDBOrder
 	// }}}
 
 	// process phase
+	// {{{ protected function saveData()
+
+	protected function saveData()
+	{
+		parent::saveData();
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->flushNs('photos');
+	}
+
+	// }}}
 	// {{{ protected function saveIndex()
 
 	protected function saveIndex($id, $index)
 	{
 		SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
 			'integer:displayorder', $index, 'integer:id', array($id));
+
 	}
 
 	// }}}

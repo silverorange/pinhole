@@ -58,10 +58,10 @@ class PinholeTagPhotoOrder extends AdminDBOrder
 		$this->tag->order_manually = ($options_list->value == 'custom');
 		$this->tag->save();
 
+		parent::saveData();
+
 		if (isset($this->app->memcache))
 			$this->app->memcache->flushNs('photos');
-
-		parent::saveData();
 	}
 
 	// }}}

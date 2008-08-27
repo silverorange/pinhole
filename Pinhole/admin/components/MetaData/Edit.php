@@ -68,7 +68,14 @@ class PinholeMetaDataEdit extends AdminDBEdit
 		$this->metadata->title       = $values['title'];
 		$this->metadata->visible     = $values['visible'];
 		$this->metadata->machine_tag = $values['machine_tag'];
+
+		$flush_cache = ($this->metadata->isModified() &&
+			$this->metadata->id !== null);
+
 		$this->metadata->save();
+
+		if (isset($this->app->memcache) && $flush_cache)
+			$this->app->memcache->flushNs('photos');
 
 		$message = new SwatMessage(sprintf(
 			Pinhole::_('“%s” has been saved.'),

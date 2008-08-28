@@ -220,8 +220,22 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->layout->data->yui_grid_class = 'yui-t7';
 
 		// Set photo title.
-		if ($title != '')
+		if ($title != '') {
 			$this->layout->data->title = SwatString::minimizeEntities($title);
+
+			$this->layout->data->html_title.= $title;
+		}
+
+		if (count($this->tag_list) > 0) {
+			if ($title != '')
+				$this->layout->data->html_title.= ' (';
+
+			$this->layout->data->html_title.= $this->tag_list->getAsList();
+
+			if ($title != '')
+				$this->layout->data->html_title.= ')';
+		}
+
 
 		if ($this->photo->description != '')
 			$this->layout->data->meta_description.=

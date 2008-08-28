@@ -110,6 +110,10 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$view->getGroup('publish_period')->visible =
 			(count($this->tag_list) == 0);
+
+		if (count($this->tag_list) > 0) {
+			$this->layout->data->html_title.= $this->tag_list->getAsList();
+		}
 	}
 
 	// }}}

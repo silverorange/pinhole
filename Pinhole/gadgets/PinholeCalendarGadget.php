@@ -173,7 +173,7 @@ class PinholeCalendarGadget extends SiteGadget
 	{
 		if (isset($app->memcache)) {
 			$cache_key = 'PinholeCalendarGadget.count'.$date->format('%Y-%m');
-			$count = $app->memcache->get($cache_key);
+			$count = $app->memcache->getNs('photos', $cache_key);
 			if ($count !== false)
 				return $count;
 		}
@@ -216,7 +216,7 @@ class PinholeCalendarGadget extends SiteGadget
 		}
 
 		if (isset($app->memcache))
-			$app->memcache->set($cache_key, $day_count);
+			$app->memcache->setNs('photos', $cache_key, $day_count);
 
 		return $day_count;
 	}

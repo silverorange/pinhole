@@ -169,7 +169,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$cache_key = 'PinholeBrowserIndexPage.table_store.'.
 				$this->cache_key;
 
-			$value = $this->app->memcache->getNs('photo', $cache_key);
+			$value = $this->app->memcache->getNs('photos', $cache_key);
 			if ($value !== false)
 				return $value;
 		}

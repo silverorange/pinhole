@@ -51,8 +51,6 @@ class PinholePhotoDelete extends AdminDBDelete
 			$sql.= sprintf(' and PinholePhoto.id in (%s)', $item_list);
 		}
 
-		echo $sql; exit;
-
 		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
 		return SwatDB::query($this->app->db, $sql, $wrapper_class);
 	}

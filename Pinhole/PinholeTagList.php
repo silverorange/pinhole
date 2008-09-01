@@ -262,6 +262,23 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getAsList()
+
+	/**
+	 * Gets a displayable comma-list of this tag list
+	 *
+	 * @return string a display list string representation of this tag list.
+	 */
+	public function getAsList()
+	{
+		$list = array();
+		foreach ($this->tags as $tag)
+			$list[] = $tag->getTitle();
+
+		return SwatString::toList($list);
+	}
+
+	// }}}
 	// {{{ public function getEmptyCopy()
 
 	/**

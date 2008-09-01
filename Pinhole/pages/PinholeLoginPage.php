@@ -51,7 +51,7 @@ class PinholeLoginPage extends SitePage
 		$form = $this->ui->getWidget('login_form');
 		$form->process();
 
-		if ($form->isProcessed() && !$form->hasMessage()) {
+		if ($form->isSubmitted() && !$form->hasMessage()) {
 			$passphrase = $this->ui->getWidget('passphrase')->value;
 
 			if ($this->app->session->login($passphrase)) {

@@ -46,7 +46,7 @@ class PinholePassphraseLoginGadget extends SiteGadget
 		$login_form_field->addChild($passphrase);
 		$login_form_field->addChild($login_button);
 
-		$login_form = new SwatForm();
+		$login_form = new SwatForm('login_form');
 		$login_form->addChild($login_form_field);
 		$login_form->action = $this->app->getBaseHref(true).
 			$this->app->config->pinhole->path.'login';

@@ -64,11 +64,15 @@ abstract class PinholeLayout extends SiteLayout
 
 	protected function finalizeTitle()
 	{
-		// build html title (goes in html head)
 		$instance_title = $this->app->config->site->title;
+
+		// build html title (goes in html head)
 		$page_title = $this->data->title;
 
-		if ($page_title == '')
+		if ($this->data->html_title != '')
+			$this->data->html_title = $this->data->html_title.' - '.
+				$instance_title;
+		elseif ($page_title == '')
 			$this->data->html_title = $instance_title;
 		else
 			$this->data->html_title = $page_title.' - '.$instance_title;

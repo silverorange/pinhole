@@ -52,8 +52,6 @@ class PinholeSessionModule extends SiteSessionModule
 	 */
 	public function login($passphrase)
 	{
-		$this->logout();
-
 		// TODO: should passphrase be salted?
 		$passphrase = md5($passphrase);
 		$instance = $this->getInstanceId();
@@ -74,6 +72,8 @@ class PinholeSessionModule extends SiteSessionModule
 				$this->authenticated_instances = array();
 
 			$this->authenticated_instances[$this->getInstanceId()] = true;
+		} else {
+			$this->logout();
 		}
 
 		return $this->isLoggedIn();

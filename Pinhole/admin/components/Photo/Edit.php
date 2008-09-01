@@ -249,7 +249,7 @@ class PinholePhotoEdit extends AdminDBEdit
 			$this->app->config->pinhole->passphrase =
 				md5($this->ui->getWidget('passphrase')->value);
 
-			$this->page->app->config->save(array('pinhole.passphrase'));
+			$this->app->config->save(array('pinhole.passphrase'));
 		}
 
 		$this->addToSearchQueue();

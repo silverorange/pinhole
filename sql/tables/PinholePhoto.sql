@@ -1,7 +1,7 @@
 create table PinholePhoto (
 	-- Image table columns
 	id serial,
-	image_set integer not null references ImageSet(id),
+	image_set integer not null references ImageSet(id) on delete cascade,
 	title varchar(255),
 	filename varchar(255),
 	original_filename varchar(255),
@@ -10,7 +10,7 @@ create table PinholePhoto (
 	-- Pinhole specific columns
 	upload_date timestamp,
 	serialized_exif text,
-	photographer integer references PinholePhotographer(id),
+	photographer integer references PinholePhotographer(id) on delete set null,
 
 	photo_date timestamp,
 	photo_date_parts integer not null default 0,

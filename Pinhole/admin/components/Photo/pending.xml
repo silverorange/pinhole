@@ -15,6 +15,7 @@
 						<property name="link">Photo/Edit?id=%s</property>
 						<property name="link_value" type="data">photo.id</property>
 						<property name="path_prefix">../</property>
+						<property name="classes[]" type="data">class_name</property>
 					</object>
 					<object class="SwatCheckboxCellRenderer" id="items">
 						<property name="value" type="data">photo.id</property>

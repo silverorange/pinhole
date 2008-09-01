@@ -156,7 +156,7 @@ class PinholePhotoIndex extends AdminSearch
 			foreach ($photos as $photo) {
 				$ds = new SwatDetailsStore();
 				$ds->photo = $photo;
-				$ds->class_name = $photo->isPublished() ? null : 'insensitive';
+				$ds->class_name = $this->getTileClasses($photo);
 				$store->add($ds);
 			}
 		}
@@ -197,6 +197,22 @@ class PinholePhotoIndex extends AdminSearch
 					$result->getResultTable(),
 					$this->order_by_clause);
 		}
+	}
+
+	// }}}
+	// {{{ protected function getTileClasses()
+
+	protected function getTileClasses(PinholePhoto $photo)
+	{
+		$classes = array();
+
+		if (!$photo->isPublished())
+			$classes[] = 'insensitive';
+
+		if ($photo->private)
+			$classes[] = 'private';
+
+		return implode(' ', $classes);
 	}
 
 	// }}}

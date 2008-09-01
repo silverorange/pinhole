@@ -104,6 +104,7 @@ class PinholePhotoPending extends AdminIndex
 			foreach ($photos as $photo) {
 				$ds = new SwatDetailsStore();
 				$ds->photo = $photo;
+				$ds->class_name = $this->getTileClasses($photo);
 				$store->add($ds);
 			}
 		}
@@ -123,6 +124,19 @@ class PinholePhotoPending extends AdminIndex
 			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
+	}
+
+	// }}}
+	// {{{ protected function getTileClasses()
+
+	protected function getTileClasses(PinholePhoto $photo)
+	{
+		$classes = array();
+
+		if ($photo->private)
+			$classes[] = 'private';
+
+		return implode(' ', $classes);
 	}
 
 	// }}}

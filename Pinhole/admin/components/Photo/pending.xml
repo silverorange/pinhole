@@ -38,6 +38,20 @@
 				<widget class="SwatActionItem" id="status_action">
 					<property name="title" translatable="yes">publish</property>
 				</widget>
+				<widget class="SwatActionItem" id="private">
+					<property name="title" translatable="yes">set as private</property>
+					<widget class="SwatContainer">
+						<widget class="SwatFormField" id="passphrase_field">
+							<property name="title" translatable="yes">Choose a password for login</property>
+							<property name="note" translatable="yes">You can edit this password later by editing your Site Settings</property>
+							<property name="visible" type="boolean">false</property>
+							<widget class="SwatPasswordEntry" id="passphrase" />
+						</widget>
+					</widget>
+				</widget>
+				<widget class="SwatActionItem" id="public">
+					<property name="title" translatable="yes">set as public</property>
+				</widget>
 			</widget>
 		</widget>
 	</widget>

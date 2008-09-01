@@ -36,6 +36,9 @@ class PinholePhotoPending extends AdminIndex
 		// setup tag entry control
 		$this->ui->getWidget('tags')->setApplication($this->app);
 		$this->ui->getWidget('tags')->setAllTags();
+
+		$this->ui->getWidget('passphrase_field')->visible =
+			($this->app->config->pinhole->passphrase === null);
 	}
 
 	// }}}

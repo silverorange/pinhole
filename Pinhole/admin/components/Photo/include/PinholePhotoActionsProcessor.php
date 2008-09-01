@@ -162,6 +162,9 @@ class PinholePhotoActionsProcessor
 				$this->page->app->messages->add($message);
 			}
 
+			// reset tag list
+			$ui->getWidget('tags')->setSelectedTagArray(array());
+
 			break;
 		}
 	}

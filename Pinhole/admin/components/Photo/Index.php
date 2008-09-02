@@ -173,7 +173,7 @@ class PinholePhotoIndex extends AdminSearch
 
 		$this->join_clause = '';
 		$this->order_by_clause = 'PinholePhoto.publish_date desc,
-			PinholePhoto.photo_date desc, PinholePhoto.id';
+			PinholePhoto.photo_date asc, PinholePhoto.id';
 
 		if (trim($keywords) != '') {
 			$query = new NateGoSearchQuery($this->app->db);

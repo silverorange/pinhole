@@ -183,7 +183,7 @@ class PinholeDateTagBrowser extends SwatControl
 
 		// create base tag list that new date.year tags will be added to
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
-		$photos = $this->getPhotoCountByDate($tag_list, 'year');
+		$photos = $tag_list->getPhotoCountByDate('year');
 
 		// display date.year tags for each year in global date range
 		$div_tag = new SwatHtmlTag('div');
@@ -260,7 +260,7 @@ class PinholeDateTagBrowser extends SwatControl
 		// create base tag list that new date.month tags will be added to
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
 		$tag_list->add(sprintf('date.year=%s', $date->format('%Y')));
-		$photos = $this->getPhotoCountByDate($tag_list, 'month');
+		$photos = $tag_list->getPhotoCountByDate('month');
 
 		// display date.month tags for each month
 		$div_tag = new SwatHtmlTag('div');
@@ -339,7 +339,7 @@ class PinholeDateTagBrowser extends SwatControl
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
 		$tag_list->add(sprintf('date.year=%s', $date->format('%Y')));
 		$tag_list->add(sprintf('date.month=%s', $date->format('%m')));
-		$photos = $this->getPhotoCountByDate($tag_list, 'day');
+		$photos = $tag_list->getPhotoCountByDate('day');
 
 		// Filter again since the day list uses date.date tags instead of
 		// combined date.year, date.month and date.day tags.
@@ -382,100 +382,6 @@ class PinholeDateTagBrowser extends SwatControl
 		}
 
 		$div_tag->close();
-	}
-
-	// }}}
-	// {{{ protected function getPhotoCountByDate()
-
-	/**
-	 * Gets a summary of the number of photos in the specified tag list indexed
-	 * and grouped by the specified date part
-	 *
-	 * @param PinholeTagList $tag_list the tag list to get the photo count from.
-	 * @param string $date_part the date part with which to index and group
-	 *                           photo counts.
-	 *
-	 * @return array an array indexed by the relevant date part with values
-	 *                indicating the number of photos in the specified tag list
-	 *                for the date part index. If the tag list has no photos
-	 *                on a specific date, the returned array does not contain
-	 *                an index at that date.
-	 */
-	protected function getPhotoCountByDate(PinholeTagList $tag_list, $date_part)
-	{
-		$cache_key = 'getPhotoCountByDate'.((string) $tag_list).'.'.$date_part;
-		$value = $this->memcache->getNs('photos', $cache_key);
-		if ($value !== false)
-			return $value;
-
-		$group_by_parts = array();
-
-		switch ($date_part) {
-		case 'day' :
-			$group_by_parts[] = 'day';
-			$group_by_parts[] = 'month';
-			$group_by_parts[] = 'year';
-			$date_format = '%Y-%m-%d';
-			break;
-
-		case 'month' :
-			$group_by_parts[] = 'month';
-			$group_by_parts[] = 'year';
-			$date_format = '%Y-%m';
-			break;
-
-		case 'year' :
-			$group_by_parts[] = 'year';
-			$date_format = '%Y';
-			break;
-		}
-
-		$group_by_clause = '';
-
-		$count = 0;
-		foreach ($group_by_parts as $part) {
-			if ($count > 0)
-				$group_by_clause.= ', ';
-
-			$group_by_clause.= sprintf(
-				'date_part(%s, convertTZ(PinholePhoto.photo_date,
-				PinholePhoto.photo_time_zone))',
-				$this->db->quote($part, 'text'));
-
-			$count++;
-		}
-
-		$sql = 'select
-				count(PinholePhoto.id) as photo_count,
-				max(convertTZ(PinholePhoto.photo_date,
-				PinholePhoto.photo_time_zone)) as photo_date
-			from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
-
-		$join_clauses = implode(' ', $tag_list->getJoinClauses());
-		if ($join_clauses != '')
-			$sql.= ' '.$join_clauses.' ';
-
-		$where_clause = $tag_list->getWhereClause();
-		if ($where_clause != '')
-			$sql.= ' where '.$where_clause;
-
-		if ($group_by_clause != '')
-			$sql.= ' group by '.$group_by_clause;
-
-		$rows = SwatDB::query($this->db, $sql, null);
-
-		$dates = array();
-		while ($row = $rows->fetchRow(MDB2_FETCHMODE_OBJECT)) {
-			if ($row->photo_date === null)
-				continue;
-
-			$date = new SwatDate($row->photo_date);
-			$dates[$date->format($date_format)] = $row->photo_count;
-		}
-
-		$this->memcache->setNs('photos', $cache_key, $dates);
-		return $dates;
 	}
 
 	// }}}

@@ -60,7 +60,8 @@ abstract class PinholeBrowserPage extends SitePage
 			$this->app->session->isLoggedIn(),
 			$cache_module);
 
-		$this->cache_key = get_class($this).'.'.((string) $this->tag_list);
+		$this->cache_key = get_class($this).'.'.((string) $this->tag_list).'.'.
+			($this->app->session->isLoggedIn() ? 'private' : 'public');
 	}
 
 	// }}}

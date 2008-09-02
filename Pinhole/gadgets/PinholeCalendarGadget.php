@@ -94,8 +94,10 @@ class PinholeCalendarGadget extends SiteGadget
 		SwatDate $date)
 	{
 		if (isset($app->memcache)) {
-			$cache_key = 'PinholeCalendarGadget.displayCalendarBody.'.
-				$date->getDate();
+			$cache_key = sprintf('PinholeCalendarGadget.%s.%s.%s',
+				'displayCalendarBody',
+				$date->getDate(),
+				$app->session->isLoggedIn() ? 'private' : 'public');
 
 			$body = $app->memcache->getNs('photos', $cache_key);
 			if ($body !== false) {
@@ -172,7 +174,10 @@ class PinholeCalendarGadget extends SiteGadget
 		SiteWebApplication $app, SwatDate $date)
 	{
 		if (isset($app->memcache)) {
-			$cache_key = 'PinholeCalendarGadget.count'.$date->format('%Y-%m');
+			$cache_key = sprintf('PinholeCalendarGadget.count.%s.%s',
+				$date->format('%Y-%m'),
+				$app->session->isLoggedIn() ? 'private' : 'public');
+
 			$count = $app->memcache->getNs('photos', $cache_key);
 			if ($count !== false)
 				return $count;

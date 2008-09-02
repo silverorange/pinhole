@@ -96,8 +96,8 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	protected function buildTags()
 	{
 		if (isset($this->app->memcache)) {
-			$cache_key = sprintf('PinholeBrowserDetailsPage.%s.%s.%s',
-				'buildTags', (string) $this->tag_list, $this->display_type);
+			$cache_key = sprintf('%s.%s.%s',
+				$this->cache_key, 'buildTags', $this->display_type);
 
 			$content = $this->app->memcache->getNs('photos', $cache_key);
 			if ($content !== false) {

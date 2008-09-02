@@ -540,6 +540,101 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getPhotoCountByDate()
+
+	/**
+	 * Gets a summary of the number of photos in this tag list indexed
+	 * and grouped by the specified date part
+	 *
+	 * @param string $date_part the date part with which to index and group
+	 *                           photo counts.
+	 *
+	 * @return array an array indexed by the relevant date part with values
+	 *                indicating the number of photos in the tag list
+	 *                for the date part index. If the tag list has no photos
+	 *                on a specific date, the returned array does not contain
+	 *                an index at that date.
+	 */
+	public function getPhotoCountByDate($date_part)
+	{
+		$args = func_get_args();
+		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
+		$value = $this->getCacheValue($cache_key);
+		if ($value !== false)
+			return $value;
+
+		$group_by_parts = array();
+
+		switch ($date_part) {
+		case 'day' :
+			$group_by_parts[] = 'day';
+			$group_by_parts[] = 'month';
+			$group_by_parts[] = 'year';
+			$date_format = '%Y-%m-%d';
+			break;
+
+		case 'month' :
+			$group_by_parts[] = 'month';
+			$group_by_parts[] = 'year';
+			$date_format = '%Y-%m';
+			break;
+
+		case 'year' :
+			$group_by_parts[] = 'year';
+			$date_format = '%Y';
+			break;
+		}
+
+		$group_by_clause = '';
+
+		$count = 0;
+		foreach ($group_by_parts as $part) {
+			if ($count > 0)
+				$group_by_clause.= ', ';
+
+			$group_by_clause.= sprintf(
+				'date_part(%s, convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone))',
+				$this->db->quote($part, 'text'));
+
+			$count++;
+		}
+
+		$sql = 'select
+				count(PinholePhoto.id) as photo_count,
+				max(convertTZ(PinholePhoto.photo_date,
+				PinholePhoto.photo_time_zone)) as photo_date
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
+
+		$join_clauses = implode(' ', $this->getJoinClauses());
+		if ($join_clauses != '')
+			$sql.= ' '.$join_clauses.' ';
+
+		$where_clause = $this->getWhereClause();
+		if ($where_clause != '')
+			$sql.= ' where '.$where_clause;
+
+		if ($group_by_clause != '')
+			$sql.= ' group by '.$group_by_clause;
+
+		$rows = SwatDB::query($this->db, $sql, null);
+
+		$dates = array();
+		while ($row = $rows->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+			if ($row->photo_date === null)
+				continue;
+
+			$date = new SwatDate($row->photo_date);
+			$dates[$date->format($date_format)] = $row->photo_count;
+		}
+
+		$this->setCacheValue($cache_key, $dates);
+
+		return $dates;
+	}
+
+	// }}}
 	// {{{ public function getPhotoInfo()
 
 	/**
@@ -553,6 +648,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
+
 		$value = $this->getCacheValue($cache_key);
 		if ($value !== false)
 			return $value;
@@ -1494,9 +1590,17 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 	protected function getCacheKey($method_name, array $args = array())
 	{
+		/*
+		both (string)$this and the tag get var are needed to make the cache
+		key unique. We need the get var for page tags that are removed, and
+		$this->tags for when the tag list is duplicated and manipulated.
+		*/
+
 		$tags = SiteApplication::initVar('tags');
-		return sprintf('PinholeTagList.%s.%s.%s',
-			(string)$tags, $method_name, md5(serialize($args)));
+		return sprintf('PinholeTagList.%s.%s.%s.%s.%s',
+			(string)$this, (string)$tags,
+			$method_name, md5(serialize($args)),
+			$this->show_private_photos ? 'private' : 'public');
 	}
 
 	// }}}

@@ -34,7 +34,9 @@ class PinholeMetaDataGadget extends SiteGadget
 	protected function getContainer()
 	{
 		if (isset($this->app->memcache)) {
-			$cache_key = 'PinholeMetaDataGadget.getContainer';
+			$cache_key = sprintf('PinholeMetaDataGadget.getContainer.%s',
+				$this->app->session->isLoggedIn() ? 'private' : 'public');
+
 			$container = $this->app->memcache->getNs('photos', $cache_key);
 			if ($container !== false)
 				return $container;
@@ -94,7 +96,9 @@ class PinholeMetaDataGadget extends SiteGadget
 	protected function getMetaDataSections()
 	{
 		if (isset($this->app->memcache)) {
-			$cache_key = 'PinholeMetaDataGadget.sections';
+			$cache_key = sprintf('PinholeMetaDataGadget.sections.%s',
+				$this->app->session->isLoggedIn() ? 'private' : 'public');
+
 			$sections = $this->app->memcache->get($cache_key);
 			if ($sections !== false)
 				return $sections;
@@ -123,7 +127,9 @@ class PinholeMetaDataGadget extends SiteGadget
 	protected function getMetaDataValues()
 	{
 		if (isset($this->app->memcache)) {
-			$cache_key = 'PinholeMetaDataGadget.getMetaDataValues';
+			$cache_key = sprintf('PinholeMetaDataGadget.getMetaDataValues.%s',
+				$this->app->session->isLoggedIn() ? 'private' : 'public');
+
 			$values = $this->app->memcache->get($cache_key);
 			if ($values !== false)
 				return $values;

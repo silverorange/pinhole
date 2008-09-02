@@ -35,8 +35,9 @@ class PinholeDateBrowserGadget extends SiteGadget
 		$date = new SwatDate();
 
 		if (isset($this->app->memcache)) {
-			$cache_key = 'PinholeDateBrowserGadget.getContent.'.
-				$date->format('%m/%Y');
+			$cache_key = sprintf('PinholeDateBrowserGadget.getContent.%s.%s',
+				$date->format('%m/%Y'),
+				$this->app->session->isLoggedIn() ? 'private' : 'public');
 
 			$container = $this->app->memcache->getNs('photos', $cache_key);
 			if ($container !== false)

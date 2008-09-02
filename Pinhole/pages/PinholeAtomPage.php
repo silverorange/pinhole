@@ -235,9 +235,10 @@ class PinholeAtomPage extends SitePage
 	protected function getEntry(PinholePhoto $photo)
 	{
 		if (isset($this->app->memcache)) {
-			$cache_key = sprintf('PinholeAtomPage.entry.%s.%s.%s',
+			$cache_key = sprintf('PinholeAtomPage.entry.%s.%s.%s.%s',
 				(string) $this->tag_list, $photo->id,
-				$this->dimension->shortname);
+				$this->dimension->shortname,
+				$this->app->session->isLoggedIn() ? 'private' : 'public');
 
 			$entry = $this->app->memcache->getNs('photos', $cache_key);
 			if ($entry !== false)

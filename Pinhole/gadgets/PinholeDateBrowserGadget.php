@@ -161,16 +161,25 @@ class PinholeDateBrowserGadget extends SiteGadget
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
 			where ImageSet.instance %s %s and PinholePhoto.status = %s
 				and PinholePhoto.photo_date is not null
+				%s
 			group by date_part('year', convertTZ(PinholePhoto.photo_date,
 				PinholePhoto.photo_time_zone)),
 				date_part('month', convertTZ(PinholePhoto.photo_date,
 				PinholePhoto.photo_time_zone))
 			order by photo_date desc";
 
+		if ($this->app->session->isLoggedIn()) {
+			$private_where_clause = sprintf('and PinholePhoto.private = %s',
+				$this->app->db->quote(false, 'boolean'));
+		} else {
+			$private_where_clause = '';
+		}
+
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
+			$private_where_clause);
 
 		$months = SwatDB::query($this->app->db, $sql);
 

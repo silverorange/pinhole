@@ -110,12 +110,21 @@ class PinholeStatisticsGadget extends SiteGadget
 				PinholePhoto.photo_time_zone)) as first_date
 			from PinholePhoto
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
-			where ImageSet.instance %s %s and PinholePhoto.status = %s";
+			where ImageSet.instance %s %s and PinholePhoto.status = %s
+			%s";
+
+		if ($this->app->session->isLoggedIn()) {
+			$private_where_clause = sprintf('and PinholePhoto.private = %s',
+				$this->app->db->quote(false, 'boolean'));
+		} else {
+			$private_where_clause = '';
+		}
 
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
+			$private_where_clause);
 
 		$stats = SwatDB::queryRow($this->app->db, $sql);
 
@@ -158,30 +167,45 @@ class PinholeStatisticsGadget extends SiteGadget
 				PinholePhoto.id = PinholePhotoTagBinding.photo
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
 			where ImageSet.instance %s %s and PinholePhoto.status = %s
+			%s
 			group by PinholeTag.id
 			order by tag_count desc";
+
+		if ($this->app->session->isLoggedIn()) {
+			$private_where_clause = sprintf('and PinholePhoto.private = %s',
+				$this->app->db->quote(false, 'boolean'));
+		} else {
+			$private_where_clause = '';
+		}
 
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'));
+			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
+			$private_where_clause);
 
 		$popular_tag_info = SwatDB::queryRow($this->app->db, $sql);
 
-		$sql = sprintf('select title, name from PinholeTag
-			where PinholeTag.id = %s',
-			$this->app->db->quote($popular_tag_info->id, 'integer'));
+		if ($popular_tag_info === null) {
+			$stats = new StdClass();
+			$stats->tag_count = 0;
+			return $stats;
+		} else {
+			$sql = sprintf('select title, name from PinholeTag
+				where PinholeTag.id = %s',
+				$this->app->db->quote($popular_tag_info->id, 'integer'));
 
-		$popular_tag = SwatDB::queryRow($this->app->db, $sql);
+			$popular_tag = SwatDB::queryRow($this->app->db, $sql);
 
-		$stats = new StdClass();
-		$stats->tag_count = $tag_count;
-		$stats->popular_tag_title = $popular_tag->title;
-		$stats->popular_tag_name = $popular_tag->name;
-		$stats->popular_tag_count = $popular_tag_info->tag_count;
+			$stats = new StdClass();
+			$stats->tag_count = $tag_count;
+			$stats->popular_tag_title = $popular_tag->title;
+			$stats->popular_tag_name = $popular_tag->name;
+			$stats->popular_tag_count = $popular_tag_info->tag_count;
 
-		if (isset($this->app->memcache))
-			$this->app->memcache->set($cache_key, $stats);
+			if (isset($this->app->memcache))
+				$this->app->memcache->set($cache_key, $stats);
+		}
 
 		return $stats;
 	}

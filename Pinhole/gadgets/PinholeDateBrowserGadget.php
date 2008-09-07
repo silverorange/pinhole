@@ -148,7 +148,9 @@ class PinholeDateBrowserGadget extends SiteGadget
 	protected function getMonths()
 	{
 		if (isset($this->app->memcache)) {
-			$cache_key = 'PinholeDateBrowserGadget.getMonths';
+			$cache_key = sprintf('PinholeDateBrowserGadget.getMonths.%s',
+				$this->app->session->isLoggedIn() ? 'private' : 'public');
+
 			$months = $this->app->memcache->getNs('photos', $cache_key);
 			if ($months !== false)
 				return $months;

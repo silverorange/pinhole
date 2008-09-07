@@ -113,7 +113,7 @@ class PinholeStatisticsGadget extends SiteGadget
 			where ImageSet.instance %s %s and PinholePhoto.status = %s
 			%s";
 
-		if ($this->app->session->isLoggedIn()) {
+		if (!$this->app->session->isLoggedIn()) {
 			$private_where_clause = sprintf('and PinholePhoto.private = %s',
 				$this->app->db->quote(false, 'boolean'));
 		} else {
@@ -171,7 +171,7 @@ class PinholeStatisticsGadget extends SiteGadget
 			group by PinholeTag.id
 			order by tag_count desc";
 
-		if ($this->app->session->isLoggedIn()) {
+		if (!$this->app->session->isLoggedIn()) {
 			$private_where_clause = sprintf('and PinholePhoto.private = %s',
 				$this->app->db->quote(false, 'boolean'));
 		} else {

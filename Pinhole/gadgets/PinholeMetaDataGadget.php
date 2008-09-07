@@ -147,7 +147,7 @@ class PinholeMetaDataGadget extends SiteGadget
 				%s
 			group by meta_data, value";
 
-		if ($this->app->session->isLoggedIn()) {
+		if (!$this->app->session->isLoggedIn()) {
 			$private_where_clause = sprintf('and PinholePhoto.private = %s',
 				$this->app->db->quote(false, 'boolean'));
 		} else {

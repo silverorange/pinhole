@@ -194,6 +194,7 @@ class PinholeCalendarGadget extends SiteGadget
 					PinholePhoto.photo_time_zone) >= %s
 				and convertTZ(PinholePhoto.photo_date,
 					PinholePhoto.photo_time_zone) < %s
+				%s
 			group by date_part('day', convertTZ(PinholePhoto.photo_date,
 				PinholePhoto.photo_time_zone))";
 
@@ -205,12 +206,20 @@ class PinholeCalendarGadget extends SiteGadget
 			$end_date->setMonth($end_date->getMonth() + 1);
 		}
 
+		if ($app->session->isLoggedIn()) {
+			$private_where_clause = sprintf('and PinholePhoto.private = %s',
+				$app->db->quote(false, 'boolean'));
+		} else {
+			$private_where_clause = '';
+		}
+
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($app->getInstanceId()),
 			$app->db->quote($app->getInstanceId(), 'integer'),
 			$app->db->quote(PinholePhoto::STATUS_PUBLISHED),
 			$app->db->quote($date->getDate(), 'date'),
-			$app->db->quote($end_date->getDate(), 'date'));
+			$app->db->quote($end_date->getDate(), 'date'),
+			$private_where_clause);
 
 
 		$days = SwatDB::query($app->db, $sql);

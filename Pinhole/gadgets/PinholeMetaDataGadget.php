@@ -144,14 +144,23 @@ class PinholeMetaDataGadget extends SiteGadget
 			where PinholeMetaData.instance %s %s and PinholePhoto.status = %s
 				and PinholeMetaData.visible = %s
 				and PinholeMetaData.machine_tag = %s
+				%s
 			group by meta_data, value";
+
+		if ($this->app->session->isLoggedIn()) {
+			$private_where_clause = sprintf('and PinholePhoto.private = %s',
+				$this->app->db->quote(false, 'boolean'));
+		} else {
+			$private_where_clause = '';
+		}
 
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED),
 			$this->app->db->quote(true, 'boolean'),
-			$this->app->db->quote(true, 'boolean'));
+			$this->app->db->quote(true, 'boolean'),
+			$private_where_clause);
 
 		$values = SwatDB::query($this->app->db, $sql);
 

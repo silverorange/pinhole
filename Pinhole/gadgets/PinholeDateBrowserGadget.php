@@ -149,7 +149,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 	{
 		if (isset($this->app->memcache)) {
 			$cache_key = 'PinholeDateBrowserGadget.getMonths';
-			$months = $this->app->memcache->get($cache_key);
+			$months = $this->app->memcache->getNs('photos', $cache_key);
 			if ($months !== false)
 				return $months;
 		}
@@ -184,7 +184,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 		$months = SwatDB::query($this->app->db, $sql);
 
 		if (isset($this->app->memcache))
-			$this->app->memcache->set($cache_key, $months);
+			$this->app->memcache->setNs('photos', $cache_key, $months);
 
 		return $months;
 	}

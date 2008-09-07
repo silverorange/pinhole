@@ -44,11 +44,16 @@ class PinholeDateBrowserGadget extends SiteGadget
 				return $container;
 		}
 
+		$container = new SwatContainer();
 		$months = $this->getMonths();
 
 		if (count($months) == 0) {
-			echo Pinhole::_('No photos have been uploaded yet.');
-			return;
+			$content = new SwatContentBlock();
+			$content->content =
+				Pinhole::_('No photos have been uploaded yet.');
+			$container->add($content);
+
+			return $container;
 		}
 
 		$months_array = array();
@@ -59,7 +64,6 @@ class PinholeDateBrowserGadget extends SiteGadget
 			$months_array[$key] = $month;
 		}
 
-		$container = new SwatContainer();
 		$locale = SwatI18NLocale::get();
 
 		$start_date = new SwatDate($months->getFirst()->photo_date);

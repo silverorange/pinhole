@@ -206,7 +206,7 @@ class PinholeCalendarGadget extends SiteGadget
 			$end_date->setMonth($end_date->getMonth() + 1);
 		}
 
-		if ($app->session->isLoggedIn()) {
+		if (!$app->session->isLoggedIn()) {
 			$private_where_clause = sprintf('and PinholePhoto.private = %s',
 				$app->db->quote(false, 'boolean'));
 		} else {

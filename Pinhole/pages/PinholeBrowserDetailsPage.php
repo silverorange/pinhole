@@ -108,6 +108,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$message = "Photo is private and user is not logged in.";
 				throw new SiteNotFoundException($message);
 			}
+
+			$this->photo->setInstance($this->app->getInstance());
 		} else {
 			// photo was not found
 			throw new SiteNotFoundException(sprintf(

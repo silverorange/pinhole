@@ -72,6 +72,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			if ($photo !== false) {
 				$this->photo = $photo;
 				$this->photo->setDatabase($this->app->db);
+				$this->photo->setInstance($this->app->getInstance());
 			}
 		}
 

@@ -98,7 +98,7 @@ class PinholeStatisticsGadget extends SiteGadget
 	{
 		if (isset($this->app->memcache)) {
 			$cache_key = 'PinholeStatisticsGadget.photo_stats';
-			$value = $this->app->memcache->get($cache_key);
+			$value = $this->app->memcache->getNs('photos', $cache_key);
 			if ($value !== false)
 				return $value;
 		}
@@ -129,7 +129,7 @@ class PinholeStatisticsGadget extends SiteGadget
 		$stats = SwatDB::queryRow($this->app->db, $sql);
 
 		if (isset($this->app->memcache))
-			$this->app->memcache->set($cache_key, $stats);
+			$this->app->memcache->setNs('photos', $cache_key, $stats);
 		return $stats;
 	}
 
@@ -140,7 +140,7 @@ class PinholeStatisticsGadget extends SiteGadget
 	{
 		if (isset($this->app->memcache)) {
 			$cache_key = 'PinholeStatisticsGadget.tag_stats';
-			$value = $this->app->memcache->get($cache_key);
+			$value = $this->app->memcache->getNs('photos', $cache_key);
 			if ($value !== false)
 				return $value;
 		}
@@ -204,7 +204,7 @@ class PinholeStatisticsGadget extends SiteGadget
 			$stats->popular_tag_count = $popular_tag_info->tag_count;
 
 			if (isset($this->app->memcache))
-				$this->app->memcache->set($cache_key, $stats);
+				$this->app->memcache->setNs('photos', $cache_key, $stats);
 		}
 
 		return $stats;

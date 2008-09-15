@@ -193,10 +193,6 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 		$sql = sprintf('select PinholePhoto.*
 			from PinholePhoto
-				left outer join PinholePhotoTagBinding on
-					PinholePhotoTagBinding.photo = PinholePhoto.id
-				left outer join PinholeTag on
-					PinholeTag.id = PinholePhotoTagBinding.tag
 				inner join NateGoSearchQueue
 					on PinholePhoto.id = NateGoSearchQueue.document_id
 					and NateGoSearchQueue.document_type = %s

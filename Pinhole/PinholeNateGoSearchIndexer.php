@@ -191,7 +191,8 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 		$type = NateGoSearch::getDocumentType($this->db, 'photo');
 
-		$sql = sprintf('select PinholePhoto.*
+		$sql = sprintf('select PinholePhoto.title, PinholePhoto.id,
+				PinholePhoto.description
 			from PinholePhoto
 				inner join NateGoSearchQueue
 					on PinholePhoto.id = NateGoSearchQueue.document_id

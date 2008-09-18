@@ -74,8 +74,8 @@ class PinholePhotoActionsProcessor
 					$photo->save();
 				}
 
-				if (isset($this->app->memcache))
-					$this->app->memcache->flushNs('photos');
+				if (isset($this->page->app->memcache))
+					$this->page->app->memcache->flushNs('photos');
 
 				$message = new SwatMessage(sprintf(Pinhole::ngettext(
 					'One photo has been set as private.',
@@ -96,8 +96,8 @@ class PinholePhotoActionsProcessor
 				$photo->save();
 			}
 
-			if (isset($this->app->memcache))
-				$this->app->memcache->flushNs('photos');
+			if (isset($this->page->app->memcache))
+				$this->page->app->memcache->flushNs('photos');
 
 			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'One photo has been set as public.',
@@ -122,8 +122,8 @@ class PinholePhotoActionsProcessor
 				$photo->save();
 			}
 
-			if (isset($this->app->memcache))
-				$this->app->memcache->flushNs('photos');
+			if (isset($this->page->app->memcache))
+				$this->page->app->memcache->flushNs('photos');
 
 			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'One photo has been updated to “%2$s”.',
@@ -143,8 +143,8 @@ class PinholePhotoActionsProcessor
 				foreach ($photos as $photo)
 					$photo->addTagsByName($tag_array);
 
-				if (isset($this->app->memcache))
-					$this->app->memcache->flushNs('photos');
+				if (isset($this->page->app->memcache))
+					$this->page->app->memcache->flushNs('photos');
 
 				if (count($tag_array) > 1) {
 					$message = new SwatMessage(sprintf(Pinhole::ngettext(

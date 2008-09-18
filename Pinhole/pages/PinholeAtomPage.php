@@ -22,11 +22,11 @@ class PinholeAtomPage extends SitePage
 	// {{{ protected properties
 
 	/**
-	 * The maximum number of entries to display
+	 * The number of entries to display per page
 	 *
 	 * @var integer
 	 */
-	protected $max_entries = 100;
+	protected $page_size = 100;
 
 	/**
 	 * @var string
@@ -36,7 +36,7 @@ class PinholeAtomPage extends SitePage
 	/**
 	 * @var integer
 	 */
-	protected $page;
+	protected $page_number;
 
 	/**
 	 * @var PinholeImageDimension
@@ -69,19 +69,6 @@ class PinholeAtomPage extends SitePage
 		$this->createTagList($tags);
 		$this->dimension = $this->initDimension(
 			$this->getArgument('dimension_shortname'));
-
-		$page_tags = $this->tag_list->getByType('PinholePageTag');
-		if (count($page_tags) == 0) {
-			$this->page = 1;
-		} else {
-			// get first page tag if it exists and set current page
-			$page_tags->rewind();
-			$page_tag = $page_tags->current();
-			$this->page = $page_tag->getPageNumber();
-		}
-
-		foreach ($page_tags as $tag)
-			$this->tag_list->remove($tag);
 	}
 
 	// }}}
@@ -128,6 +115,24 @@ class PinholeAtomPage extends SitePage
 			$cache_module);
 
 		$this->tag_list->setLoadTags(true);
+
+		$page_tags = $this->tag_list->getByType('PinholePageTag');
+		if (count($page_tags) == 0) {
+			$range = new SwatDBRange($this->page_size);
+		} else {
+			// get first page tag if it exists and set current page
+			$page_tags->rewind();
+			$page_tag = $page_tags->current();
+			$range = new SwatDBRange($this->page_size,
+				$this->page_size * ($page_tag->getPageNumber() - 1));
+
+			$this->page_number = $page_tag->getPageNumber();
+		}
+
+		foreach ($page_tags as $tag)
+			$this->tag_list->remove($tag);
+
+		$this->tag_list->setPhotoRange($range);
 	}
 
 	// }}}
@@ -149,8 +154,6 @@ class PinholeAtomPage extends SitePage
 
 	protected function buildAtomFeed()
 	{
-		$this->tag_list->setPhotoRange(new SwatDBRange($this->max_entries));
-
 		$this->tag_list->setPhotoWhereClause(sprintf(
 			'PinholePhoto.status = %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
@@ -175,7 +178,9 @@ class PinholeAtomPage extends SitePage
 
 		$this->buildAtomPagination();
 
-		$photos = $this->tag_list->getPhotos();
+		$photos = $this->tag_list->getPhotos($this->dimension->shortname,
+			array('PinholePhoto.description'));
+
 		foreach ($photos as $photo)
 			$this->feed->addEntry($this->getEntry($photo));
 	}
@@ -204,18 +209,18 @@ class PinholeAtomPage extends SitePage
 		if ($tag_string == '')
 			$uri.= '?';
 
-		$last = ceil($total_photos / $this->max_entries);
+		$last = ceil($total_photos / $this->page_size);
 
 		$this->feed->addLink($uri.'page.number='.$last,
 			'last', 'application/atom+xml');
 
-		if ($this->page != 1) {
-			$this->feed->addLink($uri.'page.number='.($this->page - 1),
+		if ($this->page_number != 1) {
+			$this->feed->addLink($uri.'page.number='.($this->page_number - 1),
 				'previous', 'application/atom+xml');
 		}
 
-		if ($this->page != $last) {
-			$this->feed->addLink($uri.'page.number='.($this->page + 1),
+		if ($this->page_number != $last) {
+			$this->feed->addLink($uri.'page.number='.($this->page_number + 1),
 				'next', 'application/atom+xml');
 		}
 	}

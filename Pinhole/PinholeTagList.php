@@ -384,6 +384,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		foreach ($this->tags as $tag) {
 			$tag_range = $tag->getRange();
+
 			if ($tag_range !== null) {
 				if ($range === null) {
 					$range = $tag_range;
@@ -437,7 +438,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @return PinholePhotoWrapper the photos of this tag list.
 	 */
-	public function getPhotos($dimension_shortname = null, array $fields = null)
+	public function getPhotos($dimension_shortname = null,
+		array $extra_fields = null)
 	{
 		if ($dimension_shortname == 'thumbnail')
 			$wrapper = SwatDBClassMap::get('PinholePhotoThumbnailWrapper');
@@ -474,12 +476,13 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		}
 
 		if ($photos === false) {
-			if ($fields === null) {
-				$fields = array('PinholePhoto.id', 'PinholePhoto.title',
-					'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
-					'PinholePhoto.publish_date', 'PinholePhoto.image_set',
-					'PinholePhoto.filename', 'PinholePhoto.status');
-			}
+			$fields = array('PinholePhoto.id', 'PinholePhoto.title',
+				'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
+				'PinholePhoto.publish_date', 'PinholePhoto.image_set',
+				'PinholePhoto.filename', 'PinholePhoto.status');
+
+			if ($extra_fields !== null)
+				$fields = array_merge($fields, $extra_fields);
 
 			$sql = sprintf('select %s from PinholePhoto
 				inner join ImageSet on PinholePhoto.image_set = ImageSet.id',
@@ -496,6 +499,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$sql.= ' order by '.$this->getPhotoOrderByClause();
 
 			$range = $this->getRange();
+
 			if ($range !== null)
 				$this->db->setLimit($range->getLimit(), $range->getOffset());
 

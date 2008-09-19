@@ -72,7 +72,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			if ($photo !== false) {
 				$this->photo = $photo;
 				$this->photo->setDatabase($this->app->db);
-				$this->photo->setInstance($this->app->getInstance());
 			}
 		}
 
@@ -108,8 +107,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$message = "Photo is private and user is not logged in.";
 				throw new SiteNotFoundException($message);
 			}
-
-			$this->photo->setInstance($this->app->getInstance());
 		} else {
 			// photo was not found
 			throw new SiteNotFoundException(sprintf(
@@ -171,17 +168,29 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	{
 		parent::buildInternal();
 
-		$view = $this->ui->getWidget('photo_details_view');
+		$view = $this->ui->getWidget('photo_date_view');
 		$view->data = $this->getPhotoDetailsStore();
 
-		$this->buildMetaData();
-		$this->buildLayout();
-		$this->buildPhotoNextPrev();
+		//$date = new SwatDate($this->photo->photo_date);
+		//$date->convertTZByID($this->photo->photo_date_time_zone);
 
-		$description = $this->ui->getWidget('description');
-		// Set to text/xml for now pending review in ticket #1159.
-		$description->content_type = 'text/xml';
-		$description->content = $this->photo->description;
+		$photo_date = $view->getField('photo_date');
+
+		if ($this->photo->photo_date === null) {
+			$photo_date->visible = false;
+		} else {
+			$date_links = $photo_date->getRenderer('date_links');
+			$date_links->content_type = 'text/xml';
+			$date_links->text = sprintf(Pinhole::_('<div id="photo_links">
+				View photos taken on the same: '.
+				'<a href="tag?date.date=%1$s-%2$s-%3$s">day</a>, '.
+				'<a href="tag?date.week=%1$s-%2$s-%3$s">week</a>, '.
+				'<a href="tag?date.month=%2$s/date.year=%1$s">month</a>, '.
+				'<a href="tag?date.year=%1$s">year</a>.</div>'),
+				$this->photo->photo_date->format('%Y'),
+				$this->photo->photo_date->format('%m'),
+				$this->photo->photo_date->format('%d'));
+		}
 
 		$tag_array = array();
 		foreach ($this->photo->tags as $tag) {
@@ -192,17 +201,20 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		}
 
 		if (count($tag_array) > 0) {
-			$tags = $this->ui->getWidget('tags');
-			$tags->content = sprintf(Pinhole::_('Tags: %s'),
-				implode(', ', $tag_array));
+			$view->getField('tags')->getFirstRenderer()->text =
+				implode(', ', $tag_array);
 		} else {
-			$this->ui->getWidget('tags_container')->visible = false;
+			$view->getField('tags')->visible = false;
 		}
 
 		$description = $this->ui->getWidget('description');
 		// Set to text/xml for now pending review in ticket #1159.
 		$description->content_type = 'text/xml';
 		$description->content = $this->photo->description;
+
+		$this->buildMetaData();
+		$this->buildLayout();
+		$this->buildPhotoNextPrev();
 	}
 
 	// }}}

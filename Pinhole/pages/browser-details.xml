@@ -11,24 +11,27 @@
 
 	<!-- content -->
 	<widget class="SwatContainer" id="content">
-		<widget class="SwatDisplayableContainer" id="description_container">
-			<widget class="SwatContentBlock" id="description" />
-		</widget>
-		<widget class="SwatDisplayableContainer" id="tags_container">
-			<widget class="SwatContentBlock" id="tags">
-				<property name="content_type">text/xml</property>
+		<widget class="SwatDisplayableContainer" id="photo_content">
+			<widget class="SwatDisplayableContainer" id="description_container">
+				<widget class="SwatContentBlock" id="description" />
 			</widget>
-		</widget>
-		<widget class="SwatDisclosure" id="photo_details">
-			<property name="title">Photo Details</property>
-			<property name="open" type="boolean">false</property>
-			<widget class="SwatDetailsView" id="photo_details_view">
+			<widget class="SwatDetailsView" id="photo_date_view">
+				<object class="SwatDetailsViewField" id="tags">
+					<property name="title">Tags</property>
+					<object class="SwatTextCellRenderer">
+						<property name="content_type">text/xml</property>
+					</object>
+					<object class="SwatTextCellRenderer" id="date_links" />
+				</object>
 				<object class="SwatDetailsViewField" id="photo_date">
 					<property name="title">Taken</property>
-					<object class="PinholeDateTagCellRenderer">
+					<object class="SwatDateCellRenderer">
 						<property name="date" type="data">photo_date</property>
 						<property name="display_time_zone" type="data">photo_time_zone</property>
 						<property name="time_zone_format" type="constant">SwatDate::TZ_SHORT</property>
+					</object>
+					<object class="SwatTextCellRenderer" id="date_links">
+						<property name="content_type">text/xml</property>
 					</object>
 				</object>
 				<object class="SwatDetailsViewField" id="publish_date">
@@ -38,6 +41,11 @@
 						<property name="time_zone_format" type="constant">SwatDate::TZ_SHORT</property>
 					</object>
 				</object>
+			</widget>
+			<widget class="SwatDisclosure" id="photo_details">
+				<property name="title">Photo Metadata</property>
+				<property name="open" type="boolean">false</property>
+				<widget class="SwatDetailsView" id="photo_details_view" />
 			</widget>
 		</widget>
 	</widget>

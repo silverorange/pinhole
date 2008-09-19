@@ -292,6 +292,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		}
 
 		$view = $this->ui->getWidget('photo_details_view');
+		$view->visible = (count($photo_meta_data) > 0);
 
 		foreach ($photo_meta_data as $meta_data) {
 			$field = new SwatDetailsViewField();

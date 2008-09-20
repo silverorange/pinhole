@@ -81,6 +81,17 @@ class PinholePhotoDelete extends AdminDBDelete
 	}
 
 	// }}}
+	// {{{ protected function relocate()
+
+	protected function relocate()
+	{
+		// avoid the silliness in AdminDBDelete relocate that causes this to
+		// always relocate to the component name 'Photo' even when we want
+		// 'Photo/Pending'
+		AdminConfirmation::relocate();
+	}
+
+	// }}}
 
 	// build phase
 	// {{{ protected function buildInternal()

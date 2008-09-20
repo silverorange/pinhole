@@ -97,15 +97,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$photo_instance_id = $this->photo->image_set->instance->id;
 
 			if ($photo_instance_id != $current_instance_id) {
-				// TODO: make exception nicer when instance is null
 				throw new SiteNotFoundException(sprintf(
 					'Photo does not belong to the current instance: %s.',
 					$this->app->getInstance()->shortname));
-			} elseif ($this->photo->private &&
-				!$this->app->session->isLoggedIn()) {
-
-				$message = "Photo is private and user is not logged in.";
-				throw new SiteNotFoundException($message);
 			}
 		} else {
 			// photo was not found
@@ -157,6 +151,29 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$this->app->memcache->setNs('photos', $cache_key, $dimension);
 
 		return $dimension;
+	}
+
+	// }}}
+
+	// {{{ public function process()
+
+	public function process()
+	{
+		parent::process();
+
+		if ($this->photo->private && !$this->app->session->isLoggedIn()) {
+			$this->app->replacePage('login');
+
+			$referer = 'photo/'.$this->photo->id;
+
+			if ($this->getArgument('dimension_shortname') !== null)
+				$referer.= '/'.$this->getArgument('dimension_shortname');
+
+			if (count($this->tag_list))
+				$referer.= '?'.(string)$this->tag_list;
+
+			$this->app->getPage()->setReferer($referer);
+		}
 	}
 
 	// }}}

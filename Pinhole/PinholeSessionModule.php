@@ -72,11 +72,14 @@ class PinholeSessionModule extends SiteSessionModule
 				$this->authenticated_instances = array();
 
 			$this->authenticated_instances[$this->getInstanceId()] = true;
+
+			$logged_in = true;
 		} else {
 			$this->logout();
+			$logged_in = false;
 		}
 
-		return $this->isLoggedIn();
+		return $logged_in;
 	}
 
 	// }}}

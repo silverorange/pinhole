@@ -34,9 +34,18 @@ class PinholeLoginPage extends SitePage
 		$this->ui->loadFromXML($this->ui_xml);
 
 		$form = $this->ui->getWidget('login_form');
-		$form->action = $this->source;
+		$form->action = 'login';
 
 		$this->ui->init();
+	}
+
+	// }}}
+	// {{{ public function setReferer()
+
+	public function setReferer($relative_uri)
+	{
+		$form = $this->ui->getWidget('login_form');
+		$form->addHiddenField('referer', $relative_uri);
 	}
 
 	// }}}
@@ -55,11 +64,10 @@ class PinholeLoginPage extends SitePage
 			$passphrase = $this->ui->getWidget('passphrase')->value;
 
 			if ($this->app->session->login($passphrase)) {
-				if ($form->getHiddenField('referer') === null)
-					$this->app->relocate('');
-				else
-					$this->app->relocate($form->getHiddenField('referer'));
+				$uri = ($form->getHiddenField('referer') === null) ? '' :
+					$form->getHiddenField('referer');
 
+				$this->app->relocate($uri, true);
 			} else {
 				$message = new SwatMessage(Site::_('Login Incorrect'),
 					SwatMessage::WARNING);
@@ -87,10 +95,6 @@ class PinholeLoginPage extends SitePage
 		parent::build();
 
 		$form = $this->ui->getWidget('login_form');
-		if ($form->getHiddenField('referer') === null &&
-			isset($_SERVER['HTTP_REFERER']))
-			$form->addHiddenField('referer', $_SERVER['HTTP_REFERER']);
-
 		$this->layout->startCapture('content', true);
 		$this->ui->display();
 		$this->layout->endCapture();

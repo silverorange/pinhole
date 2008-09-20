@@ -58,7 +58,7 @@ class PinholePhotographerDelete extends AdminDBDelete
 			$this->app->db->quote($instance_id, 'integer'));
 
 		$dep = new AdminListDependency();
-		$dep->setTitle(Admin::_('pinhole photographer'), Admin::_('pinhole photographers'));
+		$dep->setTitle(Admin::_('photographer'), Admin::_('photographers'));
 		$dep->entries = AdminListDependency::queryEntries($this->app->db,
 			'PinholePhotographer', 'integer:id', null, 'text:fullname', 'fullname',
 			$where_clause, AdminDependency::DELETE);

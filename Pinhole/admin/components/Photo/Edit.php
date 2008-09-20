@@ -34,7 +34,7 @@ class PinholePhotoEdit extends AdminDBEdit
 	/**
 	 * @var boolean
 	 */
-	protected $pending_photo = false;
+	protected $pending = false;
 
 	/**
 	 * @var array
@@ -60,10 +60,10 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->initPhoto();
 		$this->initStatuses();
 
-		if ($this->photo->status == PinholePhoto::STATUS_PENDING) {
-			$this->pending_photo = true;
-			$this->pending_photos = $this->getPendingPhotos();
-		}
+		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
+			$this->pending = true;
+
+		$this->pending_photos = $this->getUpcomingPhotos();
 
 		$this->ui->getWidget('passphrase_field')->visible =
 			($this->app->config->pinhole->passphrase === null);
@@ -129,17 +129,41 @@ class PinholePhotoEdit extends AdminDBEdit
 	}
 
 	// }}}
-	// {{{ protected function pendingPhotoCount()
+	// {{{ protected function getUpcomingPhotos()
 
-	protected function pendingPhotoCount()
+	protected function getUpcomingPhotos()
 	{
-		return (count($this->pending_photos));
+		$instance_id = $this->app->getInstanceId();
+
+		if ($this->pending) {
+			$status = sprintf('PinholePhoto.status = %s',
+				$this->app->db->quote(PinholePhoto::STATUS_PENDING,
+				'integer'));
+
+			$order_by = 'PinholePhoto.upload_date, PinholePhoto.id';
+		} else {
+			$status = '1 = 1';
+			$order_by = 'PinholePhoto.publish_date desc,
+				PinholePhoto.photo_date asc, PinholePhoto.id';
+		}
+
+		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title
+			from PinholePhoto
+			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+			where %s and ImageSet.instance %s %s
+			order by %s',
+			$status,
+			SwatDB::equalityOperator($instance_id),
+			$this->app->db->quote($instance_id, 'integer'),
+			$order_by);
+
+		return SwatDB::query($this->app->db, $sql);
 	}
 
 	// }}}
-	// {{{ protected function upcomingPendingPhotoCount()
+	// {{{ protected function getUpcomingPhotoCount()
 
-	protected function upcomingPendingPhotoCount()
+	protected function getUpcomingPhotoCount()
 	{
 		$count = 0;
 		$found = false;
@@ -154,9 +178,17 @@ class PinholePhotoEdit extends AdminDBEdit
 	}
 
 	// }}}
-	// {{{ protected function nextPendingPhoto()
+	// {{{ protected function getPendingPhotoCount()
 
-	protected function nextPendingPhoto()
+	protected function getPendingPhotoCount()
+	{
+		return (count($this->pending_photos));
+	}
+
+	// }}}
+	// {{{ protected function getNextPhoto()
+
+	protected function getNextPhoto()
 	{
 		$found = false;
 
@@ -168,26 +200,6 @@ class PinholePhotoEdit extends AdminDBEdit
 		}
 
 		return false;
-	}
-
-	// }}}
-	// {{{ protected function getPendingPhotos()
-
-	protected function getPendingPhotos()
-	{
-		$instance_id = $this->app->getInstanceId();
-
-		$sql = sprintf('select PinholePhoto.id, PinholePhoto.title
-			from PinholePhoto
-			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
-			where PinholePhoto.status = %s and ImageSet.instance %s %s
-			order by PinholePhoto.upload_date, PinholePhoto.id',
-			$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
-			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer'));
-
-		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
-		return SwatDB::query($this->app->db, $sql, $wrapper_class);
 	}
 
 	// }}}
@@ -326,25 +338,16 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function relocate()
 	{
-		if ($this->pending_photo)
-			$this->relocatePendingPhoto();
+		if ($this->ui->getWidget('proceed_button')->hasBeenClicked() &&
+			$this->getNextPhoto() !== false)
+			$this->app->relocate('Photo/Edit?id='.
+				$this->getNextPhoto()->id);
+		elseif ($this->pending && $this->getPendingPhotoCount() > 0)
+			$this->app->relocate('Photo/Pending');
+		elseif ($this->pending)
+			$this->app->relocate('Photo');
 		else
 			parent::relocate();
-	}
-
-	// }}}
-	// {{{ protected function relocatePendingPhoto()
-
-	protected function relocatePendingPhoto()
-	{
-		if ($this->ui->getWidget('proceed_button')->hasBeenClicked() &&
-			$this->nextPendingPhoto() !== false)
-			$this->app->relocate('Photo/Edit?id='.
-				$this->nextPendingPhoto()->id);
-		elseif ($this->pendingPhotoCount() > 0)
-			$this->app->relocate('Photo/Pending');
-		else
-			$this->app->relocate('Photo');
 	}
 
 	// }}}
@@ -400,14 +403,17 @@ class PinholePhotoEdit extends AdminDBEdit
 
 	protected function buildPendingCount()
 	{
-		if ($this->upcomingPendingPhotoCount() > 0) {
+		if ($this->getUpcomingPhotoCount() > 0) {
 			$this->ui->getWidget('proceed_button')->visible = true;
-			$this->ui->getWidget('status_info')->content =
-				sprintf(Pinhole::ngettext(
-					'%d pending photo left.',
-					'%d pending photos left.',
-					$this->upcomingPendingPhotoCount()),
-					$this->upcomingPendingPhotoCount());
+
+			if ($this->pending) {
+				$this->ui->getWidget('status_info')->content =
+					sprintf(Pinhole::ngettext(
+						'%d pending photo left.',
+						'%d pending photos left.',
+						$this->getUpcomingPhotoCount()),
+						$this->getUpcomingPhotoCount());
+			}
 		}
 	}
 

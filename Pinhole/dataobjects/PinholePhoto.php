@@ -622,6 +622,7 @@ class PinholePhoto extends SiteImage
 	{
 		return array(
 			'zip'  => 'application/x-zip',
+			'mac_zip'  => 'application/zip',
 		);
 	}
 

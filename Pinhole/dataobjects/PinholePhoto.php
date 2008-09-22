@@ -852,7 +852,8 @@ class PinholePhoto extends SiteImage
 		$tag_list = null;
 
 		$sql = sprintf('select * from PinholeTag where id in (
-			select tag from PinholePhotoTagBinding where photo = %s)',
+			select tag from PinholePhotoTagBinding where photo = %s)
+				order by PinholeTag.title',
 			$this->db->quote($this->id, 'integer'));
 
 		$data_objects = SwatDB::query($this->db, $sql,

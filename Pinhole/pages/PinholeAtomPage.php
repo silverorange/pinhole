@@ -274,6 +274,14 @@ class PinholeAtomPage extends SitePage
 
 		//$entry->addAuthor($author_name, $author_uri, $author_email);
 		$entry->addAuthor($this->app->config->site->title);
+
+		$uri = sprintf('%sphoto/%s',
+			$this->getPinholeBaseHref(),
+			$photo->id);
+
+		if (count($this->tag_list) > 0)
+			$uri.= '?'.$this->tag_list->__toString();
+
 		$entry->addLink($uri, 'alternate', 'text/html');
 
 		// add enclosure

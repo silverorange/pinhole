@@ -451,6 +451,14 @@ class PinholePhotoEdit extends AdminDBEdit
 	}
 
 	// }}}
+	// {{{ protected function buildButton()
+
+	protected function buildButton()
+	{
+		// don't do anything here, Admin wants to rename the button
+	}
+
+	// }}}
 	// {{{ protected function loadDBData()
 
 	protected function loadDBData()

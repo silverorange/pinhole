@@ -641,18 +641,22 @@ class PinholePhoto extends SiteImage
 			throw new PinholeProcessingException(
 				'Error opening file archive');
 
+		$files = array();
 		$file_path = sys_get_temp_dir();
 
 		for ($i = 0; $i < $za->numFiles; $i++) {
 			$stat = $za->statIndex($i);
-
 			$ext = strtolower(end(explode('.', $stat['name'])));
 
-			// TODO: we probably need a better way to keep from
-			// extracting sub-dirs (mac archive files contain
-			// sub-dirs with system files)
-			if ($stat['size'] == 0 || strpos($stat['name'], '/') !== false)
+			// don't import files smaller than 100Kb
+			if ($stat['size'] < 102400)
 				continue;
+
+			// don't import files starting with '.' such as mac thumbnails
+			$parts = explode('/', $stat['name']);
+			foreach ($parts as $part)
+				if (substr($part, 0, 1) == '.')
+					continue 2;
 
 			$filename = uniqid('file').'.'.$ext;
 			$files[$filename] = $stat['name'];

@@ -7,6 +7,7 @@
 		<widget class="PinholePhotoUploader" id="file">
 			<property name="action">Photo/Upload</property>
 			<property name="target_action">Photo/UploadStatus</property>
+			<property name="display_maximum_upload_size" type="boolean">true</property>
 		</widget>
 		<widget class="AdminNote">
 			<property name="content" translatable="yes">Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</property>

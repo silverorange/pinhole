@@ -279,9 +279,6 @@ class PinholeAtomPage extends SitePage
 			$this->getPinholeBaseHref(),
 			$photo->id);
 
-		if (count($this->tag_list) > 0)
-			$uri.= '?'.$this->tag_list->__toString();
-
 		$entry->addLink($uri, 'alternate', 'text/html');
 
 		// add enclosure

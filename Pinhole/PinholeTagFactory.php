@@ -202,14 +202,6 @@ class PinholeTagFactory
 			}
 		}
 
-		// load generic machine tag class
-		if ($return === null) {
-			if (!class_exists('PinholeMachineTag'))
-				require_once 'Pinhole/tags/PinholeMachineTag.php';
-
-			$return = 'PinholeMachineTag';
-		}
-
 		return $return;
 	}
 

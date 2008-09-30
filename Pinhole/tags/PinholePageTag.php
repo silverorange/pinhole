@@ -5,7 +5,7 @@ require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
 require_once 'Pinhole/tags/PinholeIterableTag.php';
 
 /**
- * Machine tag for pages 
+ * Machine tag for pages
  *
  * This machine tag has the namespace 'page' and the following names:
  *

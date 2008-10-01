@@ -107,6 +107,13 @@ class PinholePhoto extends SiteImage
 	 */
 	 public $private;
 
+	/**
+	 * For sale
+	 *
+	 * @var boolean
+	 */
+	 public $for_sale;
+
 	// }}}
 	// {{{ protected properties
 

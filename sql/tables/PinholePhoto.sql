@@ -22,6 +22,7 @@ create table PinholePhoto (
 	publish_date timestamp,
 	status integer not null default 0,
 	private boolean not null default false,
+	for_sale boolean not null default false,
 
 	primary key(id)
 );
@@ -30,3 +31,4 @@ CREATE INDEX PinholePhoto_title_index ON PinholePhoto(title);
 CREATE INDEX PinholePhoto_photo_date_index ON PinholePhoto(photo_date);
 CREATE INDEX PinholePhoto_status_index ON PinholePhoto(status);
 CREATE INDEX PinholePhoto_private_index ON PinholePhoto(private);
+CREATE INDEX PinholePhoto_for_sale_index ON PinholePhoto(for_sale);

@@ -68,6 +68,7 @@
 						<property name="show_blank" type="boolean">false</property>
 					</widget>
 				</widget>
+				<widget class="SwatActionItemDivider" />
 				<widget class="SwatActionItem" id="private">
 					<property name="title" translatable="yes">set as private</property>
 					<widget class="SwatContainer">
@@ -81,6 +82,13 @@
 				</widget>
 				<widget class="SwatActionItem" id="public">
 					<property name="title" translatable="yes">set as public</property>
+				</widget>
+				<widget class="SwatActionItemDivider" id="for_sale_divider" />
+				<widget class="SwatActionItem" id="for_sale">
+					<property name="title" translatable="yes">set as for-sale</property>
+				</widget>
+				<widget class="SwatActionItem" id="not_for_sale">
+					<property name="title" translatable="yes">set as not for-sale</property>
 				</widget>
 			</widget>
 		</widget>

@@ -113,6 +113,11 @@ class PinholeTagDetails extends AdminIndex
 		$details_frame->title = Pinhole::_('Tag');
 		$details_frame->subtitle = $this->tag->title;
 
+		$this->ui->getWidget('for_sale')->visible =
+		$this->ui->getWidget('not_for_sale')->visible =
+		$this->ui->getWidget('for_sale_divider')->visible =
+			($this->app->config->clustershot->username !== null);
+
 		$this->buildToolbar();
 	}
 

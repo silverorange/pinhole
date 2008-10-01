@@ -28,6 +28,9 @@
 				<property name="page_size" type="integer">50</property>
 			</widget>
 			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="status_action">
+					<property name="title" translatable="yes">publish</property>
+				</widget>
 				<widget class="SwatActionItem" id="delete">
 					<property name="title" translatable="yes">delete…</property>
 				</widget>
@@ -35,9 +38,7 @@
 					<property name="title" translatable="yes">add tags…</property>
 					<widget class="PinholePhotoTagEntry" id="tags" />
 				</widget>
-				<widget class="SwatActionItem" id="status_action">
-					<property name="title" translatable="yes">publish</property>
-				</widget>
+				<widget class="SwatActionItemDivider" />
 				<widget class="SwatActionItem" id="private">
 					<property name="title" translatable="yes">set as private</property>
 					<widget class="SwatContainer">
@@ -51,6 +52,13 @@
 				</widget>
 				<widget class="SwatActionItem" id="public">
 					<property name="title" translatable="yes">set as public</property>
+				</widget>
+				<widget class="SwatActionItemDivider" id="for_sale_divider" />
+				<widget class="SwatActionItem" id="for_sale">
+					<property name="title" translatable="yes">set as for-sale</property>
+				</widget>
+				<widget class="SwatActionItem" id="not_for_sale">
+					<property name="title" translatable="yes">set as not for-sale</property>
 				</widget>
 			</widget>
 		</widget>

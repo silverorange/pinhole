@@ -65,6 +65,9 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$this->pending_photos = $this->getUpcomingPhotos();
 
+		$this->ui->getWidget('for_sale_field')->visible =
+			($this->app->config->clustershot->username !== null);
+
 		$this->ui->getWidget('passphrase_field')->visible =
 			($this->app->config->pinhole->passphrase === null);
 
@@ -292,6 +295,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->description = $values['description'];
 		$this->photo->photo_date = $photo_date;
 		$this->photo->private = $values['private'];
+		$this->photo->for_sale = $values['for_sale'];
 		$this->photo->photo_time_zone = $values['photo_time_zone'];
 		$this->photo->setStatus($values['status']);
 	}
@@ -308,6 +312,7 @@ class PinholePhotoEdit extends AdminDBEdit
 			'photo_time_zone',
 			'status',
 			'private',
+			'for_sale',
 		));
 	}
 

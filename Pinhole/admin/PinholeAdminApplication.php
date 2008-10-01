@@ -23,6 +23,27 @@ class PinholeAdminApplication extends AdminApplication
 	}
 
 	// }}}
+	// {{{ public function getFrontendBaseHref()
+
+	/**
+	 * Gets the base href of the frontend application administered by this
+	 * admin application
+	 *
+	 * @param boolean $secure whether or not the base href should be a secure
+	 *                         URI. The default value is false.
+	 *
+	 * @return string the base href of the frontend application administered
+	 *                 by this admin application.
+	 */
+	public function getFrontendBaseHref($secure = false)
+	{
+		if (!$secure && $this->config->uri->absolute_base !== null)
+			return $this->config->uri->absolute_base;
+		else
+			return parent::getFrontendBaseHref($secure);
+	}
+
+	// }}}
 	// {{{ protected function getDefaultModuleList()
 
 	/**

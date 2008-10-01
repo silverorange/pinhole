@@ -25,7 +25,6 @@ class PinholePhotoActionsProcessor
 	private $page;
 
 	// }}}
-
 	// {{{ public function __construct()
 
 	/**
@@ -103,6 +102,34 @@ class PinholePhotoActionsProcessor
 				'One photo has been set as public.',
 				'%s photos have been set as public.', $num),
 				SwatString::numberFormat($num)));
+
+			$this->page->app->messages->add($message);
+			break;
+
+		case 'for_sale':
+		case 'not_for_sale':
+			$photos = $this->getPhotos($view);
+			$num = count($photos);
+
+			foreach ($photos as $photo) {
+				$photo->for_sale = ($actions->selected->id == 'for_sale');
+				$photo->save();
+			}
+
+			if (isset($this->page->app->memcache))
+				$this->page->app->memcache->flushNs('photos');
+
+			if ($actions->selected->id == 'for_sale') {
+				$message = new SwatMessage(sprintf(Pinhole::ngettext(
+					'One photo has been set as for-sale.',
+					'%s photos have been set as for-sale.', $num),
+					SwatString::numberFormat($num)));
+			} else {
+				$message = new SwatMessage(sprintf(Pinhole::ngettext(
+					'One photo has been set as not for-sale.',
+					'%s photos have been set as not for-sale.', $num),
+					SwatString::numberFormat($num)));
+			}
 
 			$this->page->app->messages->add($message);
 			break;

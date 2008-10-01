@@ -229,6 +229,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$description->content_type = 'text/xml';
 		$description->content = $this->photo->description;
 
+		$username = $this->app->config->clustershot->username;
+		if ($this->photo->for_sale && $username !== null)
+			$this->appendForSaleLink($description);
+
 		$this->buildMetaData();
 		$this->buildLayout();
 		$this->buildPhotoNextPrev();
@@ -480,6 +484,28 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$this->app->memcache->setNs('photos', $cache_key, $dimensions);
 
 		return $dimensions;
+	}
+
+	// }}}
+	// {{{ protected function appendForSaleLink()
+
+	protected function appendForSaleLink($description)
+	{
+		$uri = $this->app->getBaseHref().'photo/'.$this->photo->id;
+		$username = $this->app->config->clustershot->username;
+
+		ob_start();
+
+		echo '<script src="http://www.clustershot.com/'.
+			'javascript/purchase-link.js" type="text/javascript">'.
+			'</script>';
+
+		Swat::displayInlineJavaScript(sprintf('
+			new ClusterShotPurchaseLink(%s, %s);',
+			SwatString::quoteJavaScriptString($username),
+			SwatString::quoteJavaScriptString($uri)));
+
+		$description->content.= ob_get_clean();
 	}
 
 	// }}}

@@ -146,6 +146,9 @@ class Pinhole
 			// A passphrase for viewing private photos
 			'pinhole.passphrase' => null,
 
+			// An optional clustershot.com username for listing photos for sale
+			'clustershot.username' => null,
+
 			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
 			'pinhole.camera_time_zone' => null,

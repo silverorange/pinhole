@@ -39,6 +39,11 @@ class PinholePhotoPending extends AdminIndex
 
 		$this->ui->getWidget('passphrase_field')->visible =
 			($this->app->config->pinhole->passphrase === null);
+
+		$this->ui->getWidget('for_sale')->visible =
+		$this->ui->getWidget('not_for_sale')->visible =
+		$this->ui->getWidget('for_sale_divider')->visible =
+			($this->app->config->clustershot->username !== null);
 	}
 
 	// }}}

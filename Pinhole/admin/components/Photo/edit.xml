@@ -53,20 +53,21 @@
 					<property name="title" translatable="yes">Status</property>
 					<property name="display_messages" type="boolean">false</property>
 					<widget class="SwatRadioList" id="status" />
-					<widget class="SwatFormField" id="for_sale_field">
-						<property name="title" translatable="yes">For sale on ClusterShot?</property>
-						<property name="visible" type="boolean">false</property>
-						<widget class="SwatCheckbox" id="for_sale" />
-					</widget>
 					<widget class="SwatFormField">
 						<property name="title" translatable="yes">Require login to view</property>
 						<widget class="SwatCheckbox" id="private" />
 					</widget>
 					<widget class="SwatFormField" id="passphrase_field">
 						<property name="title" translatable="yes">Choose a password for login</property>
-						<property name="note" translatable="yes">You can edit this password later by editing your Site Settings</property>
+						<property name="note" translatable="yes"><![CDATA[You can edit this password later by editing<br />your Site Settings]]></property>
+						<property name="note_content_type">text/xml</property>
 						<property name="visible" type="boolean">false</property>
 						<widget class="SwatPasswordEntry" id="passphrase" />
+					</widget>
+					<widget class="SwatFormField" id="for_sale_field">
+						<property name="title" translatable="yes">Add for sale on ClusterShot?</property>
+						<property name="visible" type="boolean">false</property>
+						<widget class="SwatCheckbox" id="for_sale" />
 					</widget>
 				</widget>
 				<widget class="SwatGroupingFormField" id="date_field">

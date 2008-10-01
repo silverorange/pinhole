@@ -15,6 +15,15 @@ body:last-child:not(:root:root) #description {
 	margin-right: 20px;
 }
 
+#status_field .swat-form-field-contents {
+	margin: 0;
+	padding: 0;
+}
+
+#status {
+	margin: 0 0 0.5em 0;
+}
+
 #page_sidebar {
 	float: left;
 }

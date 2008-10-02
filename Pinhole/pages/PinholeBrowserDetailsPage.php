@@ -501,7 +501,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			'</script>';
 
 		Swat::displayInlineJavaScript(sprintf('
-			new ClusterShotPurchaseLink(%s, %s);',
+			ClusterShotLink(%s, %s);',
 			SwatString::quoteJavaScriptString($username),
 			SwatString::quoteJavaScriptString($uri)));
 

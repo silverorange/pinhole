@@ -240,8 +240,8 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 			SwatDB::exec($this->db, $sql);
 		}
 
-		if (count($photos) > 0 && isset($this->app->memcache))
-			$this->app->memcache->flushNs('photos');
+		if (count($photos) > 0 && isset($this->memcache))
+			$this->memcache->flushNs('photos');
 
 		$this->output(str_repeat(chr(8), 3).Pinhole::_('done')."\n",
 			self::VERBOSITY_ALL);

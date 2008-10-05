@@ -30,9 +30,11 @@ class PinholeSubTagListView extends SwatControl
 	{
 		parent::__construct($id);
 
+		/*
 		$this->addStyleSheet(
 			'packages/pinhole/styles/pinhole-sub-tag-list-view.css',
 			Pinhole::PACKAGE_ID);
+		*/
 	}
 
 	// }}}

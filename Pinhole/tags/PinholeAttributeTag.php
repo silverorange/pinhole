@@ -47,10 +47,11 @@ class PinholeAttributeTag extends PinholeAbstractMachineTag
 	public function __toString()
 	{
 		// use value property rather than the getValue() method because
-		// getValue parses the string
+		// getValue parses the string. Also use the name attribute because
+		// getName() maps the db field
 
 		return sprintf('%s.%s=%s',
-			$this->getNamespace(), $this->getName(), $this->value);
+			$this->getNamespace(), $this->name, $this->value);
 	}
 
 	// }}}

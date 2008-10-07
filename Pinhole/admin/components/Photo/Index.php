@@ -48,6 +48,21 @@ class PinholePhotoIndex extends AdminSearch
 		$status_flydown = $this->ui->getWidget('status_flydown');
 		$status_flydown->addOptionsByArray(PinholePhoto::getStatuses());
 
+		$search_status_flydown = $this->ui->getWidget('search_status');
+		$search_status_flydown->addOptionsByArray(array(
+			'published' => PinholePhoto::getStatusTitle(
+				PinholePhoto::STATUS_PUBLISHED),
+
+			'hidden' => PinholePhoto::getStatusTitle(
+				PinholePhoto::STATUS_UNPUBLISHED),
+
+			'private' => Pinhole::_('Private'),
+			'public' => Pinhole::_('Public'),
+
+			'for_sale' => Pinhole::_('For-Sale'),
+			'not_for_sale' => Pinhole::_('Not For-Sale'),
+		));
+
 		$this->ui->getWidget('passphrase_field')->visible =
 			($this->app->config->pinhole->passphrase === null);
 
@@ -113,6 +128,40 @@ class PinholePhotoIndex extends AdminSearch
 			$clause->value = $this->ui->getWidget('search_end_date')->value;
 			$clause->operator = AdminSearchClause::OP_LT;
 			$where.= $clause->getClause($this->app->db, 'and');
+
+			$status = $this->ui->getWidget('search_status')->value;
+			if ($status !== null) {
+				switch ($status) {
+				case 'published' :
+					$where.= sprintf(' and PinholePhoto.status = %s',
+						$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED,
+							'integer'));
+
+					break;
+				case 'hidden' :
+					$where.= sprintf(' and PinholePhoto.status = %s',
+						$this->app->db->quote(PinholePhoto::STATUS_UNPUBLISHED,
+							'integer'));
+
+					break;
+
+				case 'private' :
+				case 'public' :
+					$where.= sprintf(' and PinholePhoto.private = %s',
+						$this->app->db->quote($status == 'private',
+							'boolean'));
+
+					break;
+
+				case 'for_sale' :
+				case 'not_for_sale' :
+					$where.= sprintf(' and PinholePhoto.for_sale = %s',
+						$this->app->db->quote($status == 'for_sale',
+							'boolean'));
+
+					break;
+				}
+			}
 
 			$this->where = $where;
 		}

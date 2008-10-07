@@ -40,9 +40,12 @@ class PinholePhotoIndex extends AdminSearch
 
 		$instance_id = $this->app->getInstanceId();
 
-		// setup tag entry control
+		// setup tag entry controls
 		$this->ui->getWidget('tags')->setApplication($this->app);
 		$this->ui->getWidget('tags')->setAllTags();
+
+		$this->ui->getWidget('search_tags')->setApplication($this->app);
+		$this->ui->getWidget('search_tags')->setAllTags();
 
 		// setup status list
 		$status_flydown = $this->ui->getWidget('status_flydown');
@@ -162,6 +165,14 @@ class PinholePhotoIndex extends AdminSearch
 					break;
 				}
 			}
+
+			$tags = $this->ui->getWidget('search_tags')->getSelectedTagArray();
+			foreach ($tags as $name => $title)
+				$where.= sprintf(' and PinholePhoto.id in (select photo from
+					PinholePhotoTagBinding inner join PinholeTag on
+					PinholeTag.id = PinholePhotoTagBinding.tag
+					where PinholeTag.name = %s)',
+					$this->app->db->quote($name, 'text'));
 
 			$this->where = $where;
 		}

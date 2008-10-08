@@ -36,7 +36,7 @@ class PinholeAtomPage extends SitePage
 	/**
 	 * @var integer
 	 */
-	protected $page_number;
+	protected $page_number = 1;
 
 	/**
 	 * @var PinholeImageDimension

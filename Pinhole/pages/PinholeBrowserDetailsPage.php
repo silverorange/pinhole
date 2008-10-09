@@ -230,7 +230,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$description->content = $this->photo->description;
 
 		$username = $this->app->config->clustershot->username;
-		if ($this->photo->for_sale && $username !== null)
+		if ($this->photo->for_sale && $username !== null || 1==1)
 			$this->appendForSaleLink($description);
 
 		$this->buildMetaData();
@@ -492,10 +492,25 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function appendForSaleLink($description)
 	{
 		$uri = $this->app->getBaseHref().'photo/'.$this->photo->id;
+		$uri = 'http://gallery.whitelands.com/photo/36974';
 		$username = $this->app->config->clustershot->username;
 
 		ob_start();
+		echo '<div id="cluster_shot_price_link">';
 
+		$a_tag = new SwatHtmlTag('a');
+		$a_tag->setContent(Pinhole::_('Buy this photo'));
+		$a_tag->href = 'http://www.clustershot.com/user/'.$username.
+			'/relocate?uri='.urlencode($uri);
+
+		$a_tag->display();
+
+		printf(Pinhole::_(' on %s'),
+			'<a href="http://www.clustershot.com">ClusterShot.com</a>');
+
+		echo '</div>';
+
+		/*
 		echo '<script src="http://www.clustershot.com/'.
 			'javascript/purchase-link.js" type="text/javascript">'.
 			'</script>';
@@ -504,6 +519,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			ClusterShotLink(%s, %s);',
 			SwatString::quoteJavaScriptString($username),
 			SwatString::quoteJavaScriptString($uri)));
+		*/
 
 		$description->content.= ob_get_clean();
 	}

@@ -495,6 +495,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$username = $this->app->config->clustershot->username;
 
 		ob_start();
+		/*
+		// Link to relocate
 		echo '<div id="cluster_shot_price_link">';
 
 		$a_tag = new SwatHtmlTag('a');
@@ -508,8 +510,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			'<a href="http://www.clustershot.com">ClusterShot.com</a>');
 
 		echo '</div>';
+		*/
 
 		/*
+		// Ajax lookup - doesn't work for now because of xss error
 		echo '<script src="http://www.clustershot.com/'.
 			'javascript/purchase-link.js" type="text/javascript">'.
 			'</script>';

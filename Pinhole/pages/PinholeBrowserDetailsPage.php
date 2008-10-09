@@ -492,7 +492,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function appendForSaleLink($description)
 	{
 		$uri = $this->app->getBaseHref().'photo/'.$this->photo->id;
-		$uri = 'http://gallery.whitelands.com/photo/36974';
 		$username = $this->app->config->clustershot->username;
 
 		ob_start();

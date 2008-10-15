@@ -230,7 +230,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$description->content = $this->photo->description;
 
 		$username = $this->app->config->clustershot->username;
-		if ($this->photo->for_sale && $username !== null || 1==1)
+		if ($this->photo->for_sale && $username !== null)
 			$this->appendForSaleLink($description);
 
 		$this->buildMetaData();
@@ -495,7 +495,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$username = $this->app->config->clustershot->username;
 
 		ob_start();
-		/*
 		// Link to relocate
 		echo '<div id="cluster_shot_price_link">';
 
@@ -510,7 +509,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			'<a href="http://www.clustershot.com">ClusterShot.com</a>');
 
 		echo '</div>';
-		*/
 
 		/*
 		// Ajax lookup - doesn't work for now because of xss error

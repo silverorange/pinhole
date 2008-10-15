@@ -211,17 +211,21 @@ class PinholeAtomPage extends SitePage
 
 		$last = ceil($total_photos / $this->page_size);
 
-		$this->feed->addLink($uri.'page.number='.$last,
-			'last', 'application/atom+xml');
+		if ($last > 0) {
+			$this->feed->addLink($uri.'page.number='.$last,
+				'last', 'application/atom+xml');
 
-		if ($this->page_number != 1) {
-			$this->feed->addLink($uri.'page.number='.($this->page_number - 1),
-				'previous', 'application/atom+xml');
-		}
+			$num = $this->page_number;
 
-		if ($this->page_number != $last) {
-			$this->feed->addLink($uri.'page.number='.($this->page_number + 1),
-				'next', 'application/atom+xml');
+			if ($num > 1) {
+				$this->feed->addLink($uri.'page.number='.($num - 1),
+					'previous', 'application/atom+xml');
+			}
+
+			if ($num != $last) {
+				$this->feed->addLink($uri.'page.number='.($num + 1),
+					'next', 'application/atom+xml');
+			}
 		}
 	}
 

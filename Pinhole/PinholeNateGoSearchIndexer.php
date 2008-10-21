@@ -55,12 +55,11 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	 */
 	protected function queueTags()
 	{
-		$this->output(Pinhole::_('Repopulating tag search queue ... '),
-			self::VERBOSITY_ALL);
+		$this->debug(Pinhole::_('Repopulating tag search queue ... ')),
 
 		$type = NateGoSearch::getDocumentType($this->db, 'tag');
 
-		// clear queue 
+		// clear queue
 		$sql = sprintf('delete from NateGoSearchQueue
 			where document_type = %s',
 			$this->db->quote($type, 'integer'));
@@ -74,7 +73,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 		SwatDB::exec($this->db, $sql);
 
-		$this->output(Pinhole::_('done')."\n", self::VERBOSITY_ALL);
+		$this->debug(Pinhole::_('done')."\n");
 	}
 
 	// }}}
@@ -85,8 +84,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	 */
 	protected function queuePhotos()
 	{
-		$this->output(Pinhole::_('Repopulating photo search queue ... '),
-			self::VERBOSITY_ALL);
+		$this->debug(Pinhole::_('Repopulating photo search queue ... '));
 
 		$type = NateGoSearch::getDocumentType($this->db, 'photo');
 
@@ -104,7 +102,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 		SwatDB::exec($this->db, $sql);
 
-		$this->output(Pinhole::_('done')."\n", self::VERBOSITY_ALL);
+		$this->debug(Pinhole::_('done')."\n");
 	}
 
 	// }}}
@@ -137,8 +135,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 				and NateGoSearchQueue.document_type = %s',
 			$this->db->quote($type, 'integer'));
 
-		$this->output(Pinhole::_('Indexing tags ... ').'   ',
-			self::VERBOSITY_ALL);
+		$this->debug(Pinhole::_('Indexing tags ... ').'   ');
 
 		$tags = SwatDB::query($this->db, $sql);
 		$total = count($tags);
@@ -147,9 +144,8 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 			if ($count % 10 == 0) {
 				$indexer->commit();
-				$this->output(str_repeat(chr(8), 3), self::VERBOSITY_ALL);
-				$this->output(sprintf('%2d%%', ($count / $total) * 100),
-					self::VERBOSITY_ALL);
+				$this->debug(str_repeat(chr(8), 3));
+				$this->debug(sprintf('%2d%%', ($count / $total) * 100));
 			}
 
 			$document = new NateGoSearchDocument($tag, 'id');
@@ -158,8 +154,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 			$count++;
 		}
 
-		$this->output(str_repeat(chr(8), 3).Pinhole::_('done')."\n",
-			self::VERBOSITY_ALL);
+		$this->debug(str_repeat(chr(8), 3).Pinhole::_('done')."\n");
 
 		$indexer->commit();
 		unset($indexer);
@@ -200,8 +195,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 			order by PinholePhoto.id',
 			$this->db->quote($type, 'integer'));
 
-		$this->output(Pinhole::_('Indexing photos ... ').'   ',
-			self::VERBOSITY_ALL);
+		$this->debug(Pinhole::_('Indexing photos ... ').'   ');
 
 		$photos = SwatDB::query($this->db, $sql,
 			SwatDBClassMap::get('PinholePhotoWrapper'));
@@ -221,9 +215,8 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 			if ($count % 10 == 0) {
 				$photo_indexer->commit();
-				$this->output(str_repeat(chr(8), 3), self::VERBOSITY_ALL);
-				$this->output(sprintf('%2d%%', ($count / $total) * 100),
-					self::VERBOSITY_ALL);
+				$this->debug(str_repeat(chr(8), 3));
+				$this->debug(sprintf('%2d%%', ($count / $total) * 100));
 			}
 
 			$document = new NateGoSearchDocument($ds, 'id');
@@ -243,8 +236,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 		if (count($photos) > 0 && isset($this->memcache))
 			$this->memcache->flushNs('photos');
 
-		$this->output(str_repeat(chr(8), 3).Pinhole::_('done')."\n",
-			self::VERBOSITY_ALL);
+		$this->debug(str_repeat(chr(8), 3).Pinhole::_('done')."\n");
 
 		$photo_indexer->commit();
 		unset($photo_indexer);

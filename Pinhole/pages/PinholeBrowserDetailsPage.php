@@ -500,7 +500,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$a_tag = new SwatHtmlTag('a');
 		$a_tag->setContent(Pinhole::_('Buy this photo'));
-		$a_tag->href = 'http://www.clustershot.com/user/'.$username.
+		$a_tag->href = 'http://www.clustershot.com/'.$username.
 			'/relocate?uri='.urlencode($uri);
 
 		$a_tag->display();

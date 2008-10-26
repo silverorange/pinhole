@@ -93,7 +93,7 @@ class PinholeCalendarGadget extends SiteGadget
 	public static function displayCalendarBody(SiteWebApplication $app,
 		SwatDate $date)
 	{
-		if (isset($app->memcache)) {
+		if (1 == 2 && isset($app->memcache)) {
 			$cache_key = sprintf('PinholeCalendarGadget.%s.%s.%s',
 				'displayCalendarBody',
 				$date->getDate(),
@@ -125,43 +125,43 @@ class PinholeCalendarGadget extends SiteGadget
 		echo '</tr>';
 
 		$locale = SwatI18NLocale::get();
-		$count = 0;
 		$start = ((-1) * ($date->getDayOfWeek())) + 1;
+
 		$current_date = clone $date;
 
-		for ($i = $start; $i <= $date->getDaysInMonth(); $i++) {
-			if ($i == $start)
+		for ($i = 0; $i <= 41; $i++) {
+			$day = $i + $start;
+
+			if ($i == 0)
 				echo '<tr>';
-			elseif ($count % 7 == 0)
+			elseif ($i % 7 == 0)
 				echo '</tr><tr>';
 
-			if ($i > 0) {
-				$current_date->setDay($i);
+			if ($day > 0 && $day <= $date->getDaysInMonth()) {
+				$current_date->setDay($day);
 
-				if (array_key_exists($i, $day_count)) {
+				if (array_key_exists($day, $day_count)) {
 					printf('<td class="has-photos">'.
 						'<a href="%stag?date.date=%s" '.
 						'title="%s %s">%s</a></td>',
 						$app->config->pinhole->path,
 						$current_date->format('%Y-%m-%d'),
-						$locale->formatNumber($day_count[$i]),
-						Pinhole::ngettext('Photo', 'Photos', $day_count[$i]),
-						$i);
+						$locale->formatNumber($day_count[$day]),
+						Pinhole::ngettext('Photo', 'Photos', $day_count[$day]),
+						$day);
 				} else {
-					echo '<td>'.$i.'</td>';
+					echo '<td>'.$day.'</td>';
 				}
 			} else {
 				echo '<td>&nbsp;</td>';
 			}
-
-			$count++;
 		}
 
 		echo '</tr></table>';
 
 		$body = ob_get_clean();
 
-		if (isset($app->memcache))
+		if (1== 2 && isset($app->memcache))
 			$app->memcache->setNs('photos', $cache_key, $body);
 
 		echo $body;

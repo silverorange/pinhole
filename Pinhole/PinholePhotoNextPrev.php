@@ -1,9 +1,10 @@
 <?php
 
+require_once 'Swat/SwatControl.php';
+require_once 'Swat/SwatLinkHtmlHeadEntry.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Swat/SwatControl.php';
 
 /**
  * @package   Pinhole
@@ -77,14 +78,23 @@ class PinholePhotoNextPrev extends SwatControl
 			$span_tag->setContent(Pinhole::_('Prev'));
 			$span_tag->display();
 		} else {
-			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href = $this->appendTagPath(
+			$href = $this->appendTagPath(
 				sprintf('%sphoto/%s', $this->base, $photo->id));
 
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->href = $href;
 			$a_tag->title = $photo->title;
 			$a_tag->class = 'prev';
 			$a_tag->setContent(Pinhole::_('Prev'));
 			$a_tag->display();
+
+			$this->html_head_entry_set->addEntry(
+				new SwatLinkHtmlHeadEntry($href, 'prefetch', null,
+					null, Pinhole::PACKAGE_ID));
+
+			$this->html_head_entry_set->addEntry(
+				new SwatLinkHtmlHeadEntry($href, 'prev', null,
+					$photo->title, Pinhole::PACKAGE_ID));
 		}
 	}
 
@@ -93,11 +103,17 @@ class PinholePhotoNextPrev extends SwatControl
 
 	protected function displayCurrent(PinholePhoto $photo = null)
 	{
+		$href = $this->appendTagPath($this->base.'tag', $photo->id);
+
 		$a_tag = new SwatHtmlTag('a');
 		$a_tag->setContent(Pinhole::_('Thumbnails'));
-		$a_tag->href = $this->appendTagPath($this->base.'tag', $photo->id);
+		$a_tag->href = $href;
 		$a_tag->class = 'view-all';
 		$a_tag->display();
+
+		$this->html_head_entry_set->addEntry(
+			new SwatLinkHtmlHeadEntry($href, 'index', null,
+				null, Pinhole::PACKAGE_ID));
 	}
 
 	// }}}
@@ -112,13 +128,22 @@ class PinholePhotoNextPrev extends SwatControl
 			$span_tag->display();
 		} else {
 			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href = $this->appendTagPath(
+			$href = $this->appendTagPath(
 				sprintf('%sphoto/%s', $this->base, $photo->id));
 
+			$a_tag->href = $href;
 			$a_tag->title = $photo->title;
 			$a_tag->class = 'next';
 			$a_tag->setContent(Pinhole::_('Next'));
 			$a_tag->display();
+
+			$this->html_head_entry_set->addEntry(
+				new SwatLinkHtmlHeadEntry($href, 'prefetch', null,
+					null, Pinhole::PACKAGE_ID));
+
+			$this->html_head_entry_set->addEntry(
+				new SwatLinkHtmlHeadEntry($href, 'next', null,
+					$photo->title, Pinhole::PACKAGE_ID));
 		}
 	}
 

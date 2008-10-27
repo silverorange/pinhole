@@ -93,7 +93,7 @@ class PinholeCalendarGadget extends SiteGadget
 	public static function displayCalendarBody(SiteWebApplication $app,
 		SwatDate $date)
 	{
-		if (1 == 2 && isset($app->memcache)) {
+		if (isset($app->memcache)) {
 			$cache_key = sprintf('PinholeCalendarGadget.%s.%s.%s',
 				'displayCalendarBody',
 				$date->getDate(),
@@ -161,7 +161,7 @@ class PinholeCalendarGadget extends SiteGadget
 
 		$body = ob_get_clean();
 
-		if (1== 2 && isset($app->memcache))
+		if (isset($app->memcache))
 			$app->memcache->setNs('photos', $cache_key, $body);
 
 		echo $body;

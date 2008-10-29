@@ -55,7 +55,7 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	 */
 	protected function queueTags()
 	{
-		$this->debug(Pinhole::_('Repopulating tag search queue ... ')),
+		$this->debug(Pinhole::_('Repopulating tag search queue ... '));
 
 		$type = NateGoSearch::getDocumentType($this->db, 'tag');
 

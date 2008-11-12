@@ -106,12 +106,11 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		case 'week':
 			if (ctype_digit($this->value)) {
 				// get date by week number
-				$span = new Date_Span();
-				$span->setFromDays(($this->value - 1) * 7);
+				$days = ($this->value - 1) * 7;
 				$start_date = new SwatDate();
 				$start_date->setMonth(1);
 				$start_date->setDay(1);
-				$start_date->addSpan($span);
+				$start_date->addDays($days);
 			} else {
 				$date = new SwatDate($this->value);
 				$start_date = new SwatDate(Date_Calc::beginOfWeek(
@@ -183,12 +182,11 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		case 'week':
 			if (ctype_digit($this->value)) {
 				// get date by week number
-				$span = new Date_Span();
-				$span->setFromDays(($this->value - 1) * 7);
+				$days = ($this->value - 1) * 7;
 				$start_date = new SwatDate();
 				$start_date->setMonth(1);
 				$start_date->setDay(1);
-				$start_date->addSpan($span);
+				$start_date->addDays($days);
 				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
 					$start_date->getDay(), $start_date->getMonth(),
 					$start_date->getYear()));
@@ -274,12 +272,11 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		case 'week':
 			if (ctype_digit($this->value)) {
 				// get date by week number
-				$span = new Date_Span();
-				$span->setFromDays(($this->value - 1) * 7);
+				$days = ($this->value - 1) * 7;
 				$start_date = new SwatDate();
 				$start_date->setMonth(1);
 				$start_date->setDay(1);
-				$start_date->addSpan($span);
+				$start_date->addDays($days);
 				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
 					$start_date->getDay(), $start_date->getMonth(),
 					$start_date->getYear()));

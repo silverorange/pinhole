@@ -144,6 +144,7 @@ class Pinhole
 			'pinhole.search_engine_indexable' => true,
 
 			// A passphrase for viewing private photos
+			'pinhole.enable_private_photos' => true,
 			'pinhole.passphrase' => null,
 
 			// An optional clustershot.com username for listing photos for sale

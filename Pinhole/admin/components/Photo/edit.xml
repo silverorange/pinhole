@@ -53,8 +53,9 @@
 					<property name="title" translatable="yes">Status</property>
 					<property name="display_messages" type="boolean">false</property>
 					<widget class="SwatRadioList" id="status" />
-					<widget class="SwatFormField">
+					<widget class="SwatFormField" id="private_field">
 						<property name="title" translatable="yes">Require login to view</property>
+						<property name="visible" type="boolean">false</property>
 						<widget class="SwatCheckbox" id="private" />
 					</widget>
 					<widget class="SwatFormField" id="passphrase_field">

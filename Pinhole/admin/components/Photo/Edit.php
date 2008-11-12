@@ -68,8 +68,11 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->ui->getWidget('for_sale_field')->visible =
 			($this->app->config->clustershot->username !== null);
 
-		$this->ui->getWidget('passphrase_field')->visible =
-			($this->app->config->pinhole->passphrase === null);
+		if ($this->app->config->pinhole->enable_private_photos) {
+			$this->ui->getWidget('private_field')->visible = true;
+			$this->ui->getWidget('passphrase_field')->visible =
+				($this->app->config->pinhole->passphrase === null);
+		}
 
 		// setup tag entry control
 		$this->ui->getWidget('tags')->setApplication($this->app);

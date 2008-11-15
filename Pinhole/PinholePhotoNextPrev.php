@@ -93,6 +93,11 @@ class PinholePhotoNextPrev extends SwatControl
 					null, Pinhole::PACKAGE_ID));
 
 			$this->html_head_entry_set->addEntry(
+				new SwatLinkHtmlHeadEntry($photo->getUri('large'),
+					'prefetch', null,
+					null, Pinhole::PACKAGE_ID));
+
+			$this->html_head_entry_set->addEntry(
 				new SwatLinkHtmlHeadEntry($href, 'prev', null,
 					$photo->title, Pinhole::PACKAGE_ID));
 		}
@@ -139,6 +144,11 @@ class PinholePhotoNextPrev extends SwatControl
 
 			$this->html_head_entry_set->addEntry(
 				new SwatLinkHtmlHeadEntry($href, 'prefetch', null,
+					null, Pinhole::PACKAGE_ID));
+
+			$this->html_head_entry_set->addEntry(
+				new SwatLinkHtmlHeadEntry($photo->getUri('large'),
+					'prefetch', null,
 					null, Pinhole::PACKAGE_ID));
 
 			$this->html_head_entry_set->addEntry(

@@ -131,7 +131,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		// throw exception or else tags that have only private photos would be
 		// exposed.
-		if (count($photos) == 0) {
+		if (count($this->tag_list->getByType('PinholeTag')) > 0 &&
+			count($photos) == 0) {
 			throw new SiteNotFoundException(sprintf(
 				'There are no photos in the current tag intersection: %s.',
 				(string) $this->tag_list));
@@ -196,35 +197,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 	protected function displayContent()
 	{
-		/*
-		if (isset($this->app->memcache)) {
-			$tags = SiteApplication::initVar('tags');
-			$cache_key = 'PinholeBrowserIndexPage.displayContent.'.
-				$this->cache_key;
-
-			$content = $this->app->memcache->getNs('photos', $cache_key);
-			// cache the ui so that the $display property of widgets is correct
-			$ui = $this->app->memcache->getNs('photos', $cache_key.'.ui');
-
-			if ($content !== false && $ui !== false) {
-				echo $content;
-				$this->ui = $ui;
-				return;
-			}
-		}
-
-		ob_start();
-		*/
 		$this->ui->getWidget('content')->display();
-		/*
-		$content = ob_get_clean();
-		echo $content;
-
-		if (isset($this->app->memcache)) {
-			$this->app->memcache->setNs('photos', $cache_key, $content);
-			$this->app->memcache->setNs('photos', $cache_key.'.ui', $this->ui);
-		}
-		*/
 	}
 
 	// }}}

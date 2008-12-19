@@ -113,9 +113,8 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 	 */
 	protected function indexTags()
 	{
-		$spell_checker = new NateGoSearchPSpellSpellChecker('en');
-		$spell_checker->setCustomWordList($this->getCustomWordList());
-		$spell_checker->loadCustomContent();
+		$spell_checker = new NateGoSearchPSpellSpellChecker('en_US', '', '',
+			$this->getCustomWordList());
 
 		$indexer = new NateGoSearchIndexer('tag', $this->db);
 
@@ -170,9 +169,8 @@ class PinholeNateGoSearchIndexer extends SiteNateGoSearchIndexer
 
 	protected function indexPhotos()
 	{
-		$spell_checker = new NateGoSearchPSpellSpellChecker('en');
-		$spell_checker->setCustomWordList($this->getCustomWordList());
-		$spell_checker->loadCustomContent();
+		$spell_checker = new NateGoSearchPSpellSpellChecker('en_US', '', '',
+			$this->getCustomWordList());
 
 		$photo_indexer = new NateGoSearchIndexer('photo', $this->db);
 		$photo_indexer->setSpellChecker($spell_checker);

@@ -87,7 +87,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 					'photos', $cache_key, $this->photo);
 		}
 
-		if ($this->photo !== null) {
+		if ($this->photo !== null && $this->photo->id !== null) {
 			// ensure we are loading a photo in the current site instance
 			$current_instance_id = $this->app->getInstanceId();
 

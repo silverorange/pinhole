@@ -63,6 +63,8 @@ class PinholeLoginPage extends SitePage
 		if ($form->isSubmitted() && !$form->hasMessage()) {
 			$passphrase = $this->ui->getWidget('passphrase')->value;
 
+			$this->app->session->activate();
+
 			if ($this->app->session->login($passphrase)) {
 				$uri = ($form->getHiddenField('referer') === null) ? '' :
 					$form->getHiddenField('referer');

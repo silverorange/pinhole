@@ -5,9 +5,11 @@ create table PinholeTag (
 	title varchar(255),
 	event boolean not null default false,
 	order_manually boolean not null default false,
+	archived boolean not null default false,
 	createdate timestamp,
 	primary key (id)
 );
 
 CREATE INDEX PinholeTag_name_index ON PinholeTag(name);
 CREATE INDEX PinholeTag_instance_index ON PinholeTag(instance);
+CREATE INDEX PinholeTag_archived_index ON PinholeTag(archived);

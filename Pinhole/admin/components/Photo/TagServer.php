@@ -24,11 +24,13 @@ class PinholePhotoTagServer extends SitePage
 
 		$sql = sprintf('select title, name from PinholeTag
 			where instance %s %s and (title like %s or name like %s)
+				and archived = %s
 			order by title',
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'),
 			$this->app->db->quote($query.'%', 'text'),
-			$this->app->db->quote($query.'%', 'text'));
+			$this->app->db->quote($query.'%', 'text'),
+			$this->app->db->quote(false, 'boolean'));
 
 		$rs = SwatDB::query($this->app->db, $sql, null);
 

@@ -74,23 +74,81 @@ class PinholeTagIndex extends AdminSearch
 
 			break;
 
-		case 'status_action':
-			/* TODO
+		case 'archive':
 			$num = count($view->checked_items);
 
-			$status = $this->ui->getWidget('status_flydown')->value;
+			$sql = sprintf('update PinholeTag set archived = true
+				where PinholeTag.instance = %s and PinholeTag.id in(%s)',
+				$this->app->db->quote($this->app->getInstanceId(), 'integer'),
+				SwatDB::implodeSelection($this->app->db,
+					$view->getSelection()));
 
-			$sql = sprintf('update PinholeTag set status = %s
-				where PinholeTag.instance = %s and %s');
+			SwatDB::exec($this->app->db, $sql);
 
 			$message = new SwatMessage(sprintf(Pinhole::ngettext(
-				'The status of one tag has been changed.',
-				'The status of %s tags has been changed.', $num),
+				'One tag has been archived.',
+				'%s tags have been archived.', $num),
 				SwatString::numberFormat($num)));
 
 			$this->app->messages->add($message);
 			break;
-			*/
+
+		case 'unarchive':
+			$num = count($view->checked_items);
+
+			$sql = sprintf('update PinholeTag set archived = false
+				where PinholeTag.instance = %s and PinholeTag.id in(%s)',
+				$this->app->db->quote($this->app->getInstanceId(), 'integer'),
+				SwatDB::implodeSelection($this->app->db,
+					$view->getSelection()));
+
+			SwatDB::exec($this->app->db, $sql);
+
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
+				'One tag has been set as not archived.',
+				'%s tags have been set as not archived.', $num),
+				SwatString::numberFormat($num)));
+
+			$this->app->messages->add($message);
+			break;
+
+		case 'event':
+			$num = count($view->checked_items);
+
+			$sql = sprintf('update PinholeTag set event = true
+				where PinholeTag.instance = %s and PinholeTag.id in(%s)',
+				$this->app->db->quote($this->app->getInstanceId(), 'integer'),
+				SwatDB::implodeSelection($this->app->db,
+					$view->getSelection()));
+
+			SwatDB::exec($this->app->db, $sql);
+
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
+				'One tag has been set as an event.',
+				'%s tags have been set as events.', $num),
+				SwatString::numberFormat($num)));
+
+			$this->app->messages->add($message);
+			break;
+
+		case 'unevent':
+			$num = count($view->checked_items);
+
+			$sql = sprintf('update PinholeTag set event = false
+				where PinholeTag.instance = %s and PinholeTag.id in(%s)',
+				$this->app->db->quote($this->app->getInstanceId(), 'integer'),
+				SwatDB::implodeSelection($this->app->db,
+					$view->getSelection()));
+
+			SwatDB::exec($this->app->db, $sql);
+
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
+				'One tag has been set as not an event.',
+				'%s tags have been set as not events.', $num),
+				SwatString::numberFormat($num)));
+
+			$this->app->messages->add($message);
+			break;
 		}
 	}
 
@@ -145,6 +203,11 @@ class PinholeTagIndex extends AdminSearch
 			$clause->operator =
 				$this->ui->getWidget('search_title_operator')->value;
 
+			$this->where_clause.= $clause->getClause($this->app->db, 'and');
+
+			$clause = new AdminSearchClause('boolean:archived');
+			$clause->table = 'PinholeTag';
+			$clause->value = $this->ui->getWidget('search_archived')->value;
 			$this->where_clause.= $clause->getClause($this->app->db, 'and');
 		}
 

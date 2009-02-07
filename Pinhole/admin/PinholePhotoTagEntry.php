@@ -32,10 +32,11 @@ class PinholePhotoTagEntry extends SiteTagEntry
 		$tag_array = array();
 
 		$sql = sprintf('select * from PinholeTag
-			where instance %s %s
+			where instance %s %s and archived = %s
 			order by title',
 			SwatDB::equalityOperator($instance_id),
-			$this->app->db->quote($instance_id, 'integer'));
+			$this->app->db->quote($instance_id, 'integer'),
+			$this->app->db->quote(false, 'boolean'));
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');

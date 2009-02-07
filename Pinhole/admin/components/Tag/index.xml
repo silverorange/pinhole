@@ -17,6 +17,14 @@
 				<widget class="AdminSearchOperatorFlydown" id="search_title_operator" />
 				<widget class="SwatEntry" id="search_title" />
 			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Archived?</property>
+				<widget class="SwatYesNoFlydown" id="search_archived" />
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Event?</property>
+				<widget class="SwatYesNoFlydown" id="search_event" />
+			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
 					<property name="title" translatable="yes">Search</property>
@@ -57,6 +65,18 @@
 			<widget class="SwatActions" id="index_actions">
 				<widget class="SwatActionItem" id="delete">
 					<property name="title" translatable="yes">delete…</property>
+				</widget>
+				<widget class="SwatActionItem" id="archive">
+					<property name="title" translatable="yes">set as archived</property>
+				</widget>
+				<widget class="SwatActionItem" id="unarchive">
+					<property name="title" translatable="yes">set as not archived</property>
+				</widget>
+				<widget class="SwatActionItem" id="event">
+					<property name="title" translatable="yes">set as an event</property>
+				</widget>
+				<widget class="SwatActionItem" id="unevent">
+					<property name="title" translatable="yes">set as not an event</property>
 				</widget>
 			</widget>
 		</widget>

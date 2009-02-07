@@ -24,6 +24,11 @@
 				<property name="note" translatable="yes">If a tag is an event, its photos will be listed chronologically on its tag page.</property>
 				<widget class="SwatCheckbox" id="event" />
 			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Archived?</property>
+				<property name="note" translatable="yes">If checked, this tag will not appear in the “add tag” tool. Photos with this tag will remain unchanged.</property>
+				<widget class="SwatCheckbox" id="event" />
+			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button" />
 			</widget>

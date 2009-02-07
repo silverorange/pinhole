@@ -108,11 +108,12 @@ class PinholeTagEdit extends AdminDBEdit
 	protected function saveDBData()
 	{
 		$values = $this->ui->getValues(array(
-			'title', 'name', 'event'));
+			'title', 'name', 'event', 'archived'));
 
-		$this->tag->title = $values['title'];
-		$this->tag->name  = $values['name'];
-		$this->tag->event = $values['event'];
+		$this->tag->title    = $values['title'];
+		$this->tag->name     = $values['name'];
+		$this->tag->event    = $values['event'];
+		$this->tag->archived = $values['archived'];
 
 		if ($this->id === null) {
 			$now = new SwatDate();

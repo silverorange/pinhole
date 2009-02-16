@@ -135,17 +135,17 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$class_name = SwatDBClassMap::get('PinholeImageDimension');
 		$display_dimension = new $class_name();
 		$display_dimension->setDatabase($this->app->db);
-		$display_dimension->loadByShortname('photos', $shortname);
+		$found = $display_dimension->loadByShortname('photos', $shortname);
 
-		if ($display_dimension === null || !$display_dimension->selectable)
+		if ($found && !$display_dimension->selectable)
 			throw new SiteNotFoundException(sprintf('Dimension “%s” is not '.
 				'a selectable photo dimension', $shortname));
 
-		$this->app->cookie->setCookie('display_dimension',
-			$shortname, strtotime('+1 year'), '/',
-			$this->app->getBaseHref());
-
 		$dimension = $this->photo->getClosestSelectableDimensionTo($shortname);
+
+		$this->app->cookie->setCookie('display_dimension',
+			$dimension->shortname, strtotime('+1 year'), '/',
+			$this->app->getBaseHref());
 
 		if (isset($this->app->memcache))
 			$this->app->memcache->setNs('photos', $cache_key, $dimension);

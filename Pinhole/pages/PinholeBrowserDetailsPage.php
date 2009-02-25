@@ -128,6 +128,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$dimension = $this->app->memcache->getNs('photos', $cache_key);
 			if ($dimension !== false) {
 				$dimension->setDatabase($this->app->db);
+
+				$this->app->cookie->setCookie('display_dimension',
+					$dimension->shortname, strtotime('+1 year'), '/',
+					$this->app->getBaseHref());
+
 				return $dimension;
 			}
 		}

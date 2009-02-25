@@ -120,23 +120,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$shortname = $this->default_dimension;
 		}
 
-		if (isset($this->app->memcache)) {
-			$cache_key = sprintf(
-				'PinholeBrowserDetailsPage.initDimension.%s.%s',
-				$shortname, $this->photo->id);
-
-			$dimension = $this->app->memcache->getNs('photos', $cache_key);
-			if ($dimension !== false) {
-				$dimension->setDatabase($this->app->db);
-
-				$this->app->cookie->setCookie('display_dimension',
-					$dimension->shortname, strtotime('+1 year'), '/',
-					$this->app->getBaseHref());
-
-				return $dimension;
-			}
-		}
-
 		$class_name = SwatDBClassMap::get('PinholeImageDimension');
 		$display_dimension = new $class_name();
 		$display_dimension->setDatabase($this->app->db);
@@ -151,9 +134,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->app->cookie->setCookie('display_dimension',
 			$dimension->shortname, strtotime('+1 year'), '/',
 			$this->app->getBaseHref());
-
-		if (isset($this->app->memcache))
-			$this->app->memcache->setNs('photos', $cache_key, $dimension);
 
 		return $dimension;
 	}

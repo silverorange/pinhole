@@ -766,8 +766,12 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$cache_key = $this->getCacheKey(__FUNCTION__, array($photo->id));
 		$value = $this->getCacheValue($cache_key);
 		if ($value !== false) {
-			$value['next']->setDatabase($this->db);
-			$value['prev']->setDatabase($this->db);
+			if ($value['next'] !== null)
+				$value['next']->setDatabase($this->db);
+
+			if ($value['prev'] !== null)
+				$value['prev']->setDatabase($this->db);
+
 			return $value;
 		}
 

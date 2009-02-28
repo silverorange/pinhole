@@ -56,6 +56,15 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	public $event;
 
 	/**
+	 * Whether this tag is archived in the admin or not
+	 *
+	 * Archived tags don't show up in the add-tag tool.
+	 *
+	 * @var boolean
+	 */
+	public $archived;
+
+	/**
 	 * Whether this tag's photos can be ordered manually
 	 *
 	 * @var boolean

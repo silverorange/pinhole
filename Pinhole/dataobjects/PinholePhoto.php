@@ -8,6 +8,7 @@ require_once 'Pinhole/dataobjects/PinholeImageSet.php';
 require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/exceptions/PinholeUploadException.php';
 require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
@@ -753,13 +754,10 @@ class PinholePhoto extends SiteImage
 	{
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;
 
-		if (isset($meta_data['createdate'])) {
-			$photo_date = $this->parseMetaDataDate(
-				$meta_data['createdate']->value);
-
-			if ($photo_date !== null && $photo_date->isPast())
-				$this->photo_date = $photo_date;
-		}
+		$this->setPhotoDateByMetaData($meta_data);
+		$this->setTitleByMetaData($meta_data);
+		$this->setDescriptionByMetaData($meta_data);
+		$this->setTagsByMetaData($meta_data);
 
 		$where_clause = sprintf('PinholeMetaData.instance %s %s',
 			SwatDB::equalityOperator($instance_id),
@@ -805,6 +803,136 @@ class PinholePhoto extends SiteImage
 					'meta_data' => $meta_data_id,
 					'value' => $value));
 		}
+	}
+
+	// }}}
+
+	// parse meta data
+	// {{{ protected function setPhotoDateByMetaData()
+
+	protected function setPhotoDateByMetaData($meta_data)
+	{
+		$date_fields = array('createdate', 'datetimeoriginal');
+		foreach ($date_fields as $field) {
+			if (isset($meta_data[$field])) {
+				$photo_date = $this->parseMetaDataDate(
+					$meta_data['createdate']->value);
+
+				if ($photo_date !== null && $photo_date->isPast()) {
+					$this->photo_date = $photo_date;
+					break;
+				}
+			}
+		}
+	}
+
+	// }}}
+	// {{{ protected function setTitleByMetaData()
+
+	protected function setTitleByMetaData($meta_data)
+	{
+		$title_fields = array('object', 'headline');
+		foreach ($title_fields as $field) {
+			if (isset($meta_data[$field]) &&
+					strlen($meta_data[$field]->value)) {
+
+				$this->title = $meta_data[$field]->value;
+				break;
+			}
+		}
+	}
+
+	// }}}
+	// {{{ protected function setDescriptionByMetaData()
+
+	protected function setDescriptionByMetaData($meta_data)
+	{
+		$description_fields = array('description', 'caption-abstract');
+		foreach ($description_fields as $field) {
+			if (isset($meta_data[$field]) &&
+				strlen($meta_data[$field]->value)) {
+				$this->description = $meta_data[$field]->value;
+				break;
+			}
+		}
+	}
+
+	// }}}
+	// {{{ protected function setTagsByMetaData()
+
+	protected function setTagsByMetaData($meta_data)
+	{
+		$tag_fields = array('city', 'location', 'sub-location');
+		$merged_tags = array();
+		foreach ($tag_fields as $field) {
+			if (isset($meta_data[$field]) &&
+				strlen($meta_data[$field]->value)) {
+				$merged_tags[] = $meta_data[$field]->value;
+			}
+		}
+
+		// keywords need to be split up
+		if (isset($meta_data['keywords'])) {
+			$string = $meta_data['keywords']->value;
+
+			// use file wrapper hack because str_getcsv is only in
+			// php >= 5.3.0
+			$data = fopen('data://text/plain,'.$string, 'r');
+
+			// check for any comma outside of quotes
+			if (preg_match('/^(?:("[^"]*")*[^"]*)*,/u', $string) === 1) {
+				// comma delimited tags
+				$tags = fgetcsv($data);
+			} else {
+				// space delimited tags
+				$tags = fgetcsv($data, 0, ' ');
+			}
+
+			$merged_tags = array_merge($merged_tags, $tags);
+		}
+
+		if (count($merged_tags) > 0) {
+			$added_tags = array();
+
+			foreach ($merged_tags as $tag) {
+				$tag_obj = $this->addMetaDataTag($tag);
+				$added_tags[$tag_obj->name] = $tag_obj->title;
+			}
+
+			$this->addTagsByName($added_tags);
+		}
+	}
+
+	// }}}
+	// {{{ private function addMetaDataTag()
+
+	private function addMetaDataTag($title)
+	{
+		$title = trim($title);
+
+		// check to see if the tag already exists
+		$instance_id = $this->instance->id;
+		$sql = sprintf('select * from
+			PinholeTag where lower(title) = lower(%1$s)
+				and instance %2$s %3$s',
+			$this->db->quote($title, 'text'),
+			SwatDB::equalityOperator($instance_id),
+			$this->db->quote($instance_id, 'integer'));
+
+		$tags = SwatDB::query($this->db, $sql,
+			SwatDBClassMap::get('PinholeTagDataObjectWrapper'));
+
+		if (count($tags) > 0) {
+			$tag_obj = $tags->getFirst();
+		} else {
+			$tag_obj = new PinholeTagDataObject();
+			$tag_obj->setDatabase($this->db);
+			$tag_obj->instance = $instance_id;
+			$tag_obj->title = $title;
+			$tag_obj->save();
+		}
+
+		return $tag_obj;
 	}
 
 	// }}}

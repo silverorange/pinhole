@@ -755,9 +755,7 @@ class PinholePhoto extends SiteImage
 		$instance_id = ($this->instance === null) ? null : $this->instance->id;
 
 		$this->setPhotoDateByMetaData($meta_data);
-		$this->setTitleByMetaData($meta_data);
-		$this->setDescriptionByMetaData($meta_data);
-		$this->setTagsByMetaData($meta_data);
+		$this->setContentByMetaData($meta_data);
 
 		$where_clause = sprintf('PinholeMetaData.instance %s %s',
 			SwatDB::equalityOperator($instance_id),
@@ -808,6 +806,19 @@ class PinholePhoto extends SiteImage
 	// }}}
 
 	// parse meta data
+	// {{{ protected function setContentByMetaData()
+
+	/**
+	 * Set the photo title, description, and tags based on meta-data
+	 */
+	protected function setContentByMetaData($meta_data)
+	{
+		$this->setTitleByMetaData($meta_data);
+		$this->setDescriptionByMetaData($meta_data);
+		$this->setTagsByMetaData($meta_data);
+	}
+
+	// }}}
 	// {{{ protected function setPhotoDateByMetaData()
 
 	protected function setPhotoDateByMetaData($meta_data)

@@ -873,8 +873,9 @@ class PinholePhoto extends SiteImage
 
 	protected function setTagsByMetaData($meta_data)
 	{
-		$tag_fields = array('city', 'location', 'sub-location');
 		$merged_tags = array();
+
+		$tag_fields = array('city', 'location', 'sub-location');
 		foreach ($tag_fields as $field) {
 			if (isset($meta_data[$field]) &&
 				strlen($meta_data[$field]->value)) {
@@ -882,24 +883,19 @@ class PinholePhoto extends SiteImage
 			}
 		}
 
-		// keywords need to be split up
-		if (isset($meta_data['keywords'])) {
-			$string = $meta_data['keywords']->value;
+		// tags stored in lists
+		$tag_fields = array('subject', 'keywords');
+		foreach ($tag_fields as $field) {
+			if (isset($meta_data[$field])) {
+				$string = $meta_data[$field]->value;
 
-			// use file wrapper hack because str_getcsv is only in
-			// php >= 5.3.0
-			$data = fopen('data://text/plain,'.$string, 'r');
-
-			// check for any comma outside of quotes
-			if (preg_match('/^(?:("[^"]*")*[^"]*)*,/u', $string) === 1) {
-				// comma delimited tags
+				// use file wrapper hack because str_getcsv is only in
+				// php >= 5.3.0
+				$data = fopen('data://text/plain,'.$string, 'r');
 				$tags = fgetcsv($data);
-			} else {
-				// space delimited tags
-				$tags = fgetcsv($data, 0, ' ');
-			}
 
-			$merged_tags = array_merge($merged_tags, $tags);
+				$merged_tags = array_merge($merged_tags, $tags);
+			}
 		}
 
 		if (count($merged_tags) > 0) {

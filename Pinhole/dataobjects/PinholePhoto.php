@@ -827,7 +827,7 @@ class PinholePhoto extends SiteImage
 		foreach ($date_fields as $field) {
 			if (isset($meta_data[$field])) {
 				$photo_date = $this->parseMetaDataDate(
-					$meta_data['createdate']->value);
+					$meta_data[$field]->value);
 
 				if ($photo_date !== null && $photo_date->isPast()) {
 					$this->photo_date = $photo_date;

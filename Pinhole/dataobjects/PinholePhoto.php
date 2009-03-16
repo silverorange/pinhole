@@ -656,10 +656,6 @@ class PinholePhoto extends SiteImage
 			$stat = $za->statIndex($i);
 			$ext = strtolower(end(explode('.', $stat['name'])));
 
-			// don't import files smaller than 100Kb
-			if ($stat['size'] < 102400)
-				continue;
-
 			// don't import files starting with '.' such as mac thumbnails
 			$parts = explode('/', $stat['name']);
 			foreach ($parts as $part)

@@ -78,6 +78,9 @@ class PinholePhotoDelete extends AdminDBDelete
 			$num), SwatString::numberFormat($num)), SwatMessage::NOTIFICATION);
 
 		$this->app->messages->add($message);
+
+		if (isset($this->app->memcache))
+			$this->app->memcache->flushNs('photos');
 	}
 
 	// }}}

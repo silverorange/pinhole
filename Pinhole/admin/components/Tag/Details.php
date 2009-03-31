@@ -167,7 +167,7 @@ class PinholeTagDetails extends AdminIndex
 	protected function getTableModel(SwatView $view)
 	{
 		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance(), $this->tag->name);
+			$this->app->getInstance(), $this->tag->name, true);
 
 		$photos = $tag_list->getPhotos();
 		$store = new SwatTableStore();

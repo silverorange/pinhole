@@ -5,4 +5,6 @@ create table PinholePhotoMetaDataBinding (
 	primary key (photo, meta_data)
 );
 
+CREATE INDEX PinholePhotoMetaDataBinding_photo_index ON PinholePhotoMetaDataBinding(photo);
+CREATE INDEX PinholePhotoMetaDataBinding_meta_data_index ON PinholePhotoMetaDataBinding(meta_data);
 CREATE INDEX PinholePhotoMetaDataBinding_value_index ON PinholePhotoMetaDataBinding(value);

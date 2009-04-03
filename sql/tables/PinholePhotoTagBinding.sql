@@ -4,3 +4,6 @@ create table PinholePhotoTagBinding (
 	displayorder int,
 	primary key (photo, tag)
 );
+
+CREATE INDEX PinholePhotoTagBinding_photo_index ON PinholePhotoTagBinding(photo);
+CREATE INDEX PinholePhotoTagBinding_tag_index ON PinholePhotoTagBinding(tag);

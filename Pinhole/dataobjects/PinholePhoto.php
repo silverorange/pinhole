@@ -23,6 +23,7 @@ class PinholePhoto extends SiteImage
 {
 	// {{{ constants
 
+	const STATUS_UNPROCESSED = 3;
 	const STATUS_PENDING     = 0;
 	const STATUS_PUBLISHED   = 1;
 	const STATUS_UNPUBLISHED = 2;
@@ -43,6 +44,15 @@ class PinholePhoto extends SiteImage
 	 * @var Date
 	 */
 	public $upload_date;
+
+	/**
+	 * Temp filename
+	 *
+	 * The filename of the temporary file used for processing
+	 *
+	 * @var string
+	 */
+	public $temp_filename;
 
 	/**
 	 * Raw exif data
@@ -86,7 +96,8 @@ class PinholePhoto extends SiteImage
 	 * Visibility status
 	 *
 	 * Set using class contstants:
-	 * STATUS_PENDING - uploaded but not yet added to the site
+	 * STATUS_UNPROCESSED - uploaded but not yet procesed
+	 * STATUS_PENDING - processed but not yet added to the site
 	 * STATUS_PUBLISHED - photo info added and shown on site
 	 * STATUS_UNPUBLISHED - not shown on the site
 	 *
@@ -128,7 +139,7 @@ class PinholePhoto extends SiteImage
 	protected $selectable_dimensions;
 
 	/**
-	 * Cache of tags for this post
+	 * Cache of tags for this photo
 	 *
 	 * @var PinholeTagDataObjectWrapper
 	 *
@@ -218,6 +229,7 @@ class PinholePhoto extends SiteImage
 			'photographer',
 			'dimension_bindings',
 			'tags',
+			'meta_data',
 		));
 	}
 

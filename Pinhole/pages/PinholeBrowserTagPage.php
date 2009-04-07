@@ -95,15 +95,13 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 	protected function buildTags()
 	{
-		if (isset($this->app->memcache)) {
-			$cache_key = sprintf('%s.%s.%s',
-				$this->cache_key, 'buildTags', $this->display_type);
+		$cache_key = sprintf('%s.%s.%s',
+			$this->cache_key, 'buildTags', $this->display_type);
 
-			$content = $this->app->memcache->getNs('photos', $cache_key);
-			if ($content !== false) {
-				$this->ui->getWidget('tag_list')->content = $content;
-				return;
-			}
+		$content = $this->getCacheValue($cache_key, 'photos');
+		if ($content !== false) {
+			$this->ui->getWidget('tag_list')->content = $content;
+			return;
 		}
 
 		ob_start();
@@ -130,9 +128,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 		$content = ob_get_clean();
 
-		if (isset($this->app->memcache))
-			$this->app->memcache->setNs('photos', $cache_key, $content);
-
+		$this->addCacheValue($content, $cache_key, 'photos');
 		$this->ui->getWidget('tag_list')->content = $content;
 	}
 

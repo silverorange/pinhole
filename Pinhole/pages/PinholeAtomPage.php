@@ -243,16 +243,14 @@ class PinholeAtomPage extends SitePage
 
 	protected function getEntry(PinholePhoto $photo)
 	{
-		if (isset($this->app->memcache)) {
-			$cache_key = sprintf('PinholeAtomPage.entry.%s.%s.%s.%s',
-				(string) $this->tag_list, $photo->id,
-				$this->dimension->shortname,
-				$this->app->session->isLoggedIn() ? 'private' : 'public');
+		$cache_key = sprintf('PinholeAtomPage.entry.%s.%s.%s.%s',
+			(string) $this->tag_list, $photo->id,
+			$this->dimension->shortname,
+			$this->app->session->isLoggedIn() ? 'private' : 'public');
 
-			$entry = $this->app->memcache->getNs('photos', $cache_key);
-			if ($entry !== false)
-				return $entry;
-		}
+		$entry = $this->getCacheValue($cache_key, 'photos');
+		if ($entry !== false)
+			return $entry;
 
 		$uri = sprintf('%sphoto/%s/%s',
 			$this->getPinholeBaseHref(),
@@ -264,6 +262,8 @@ class PinholeAtomPage extends SitePage
 
 		$entry = new XML_Atom_Entry($uri, $photo->getTitle(),
 			$photo->publish_date);
+
+		$this->addCacheValue($entry, $cache_key, 'photos');
 
 		if ($photo->hasDimension($this->dimension->shortname))
 			$dimension = $this->dimension;
@@ -295,9 +295,6 @@ class PinholeAtomPage extends SitePage
 		$link->setTitle($photo->getTitle());
 		//$link->setLength();
 		$entry->addLink($link);
-
-		if (isset($this->app->memcache))
-			$this->app->memcache->setNs('photos', $cache_key, $entry);
 
 		return $entry;
 	}

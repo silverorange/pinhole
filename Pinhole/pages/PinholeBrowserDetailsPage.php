@@ -66,13 +66,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function createPhoto($photo_id)
 	{
-		if (isset($this->app->memcache)) {
-			$cache_key = 'PinholePhoto.'.$photo_id;
-			$photo = $this->app->memcache->getNs('photos', $cache_key);
-			if ($photo !== false) {
-				$this->photo = $photo;
-				$this->photo->setDatabase($this->app->db);
-			}
+		$cache_key = 'PinholePhoto.'.$photo_id;
+		$photo = $this->getCacheValue($cache_key, 'photos');
+		if ($photo !== false) {
+			$this->photo = $photo;
+			$this->photo->setDatabase($this->app->db);
 		}
 
 		if ($this->photo === null) {
@@ -81,10 +79,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$this->photo = new $photo_class();
 			$this->photo->setDatabase($this->app->db);
 			$this->photo->load($photo_id);
-
-			if (isset($this->app->memcache))
-				$this->app->memcache->setNs(
-					'photos', $cache_key, $this->photo);
+			$this->addCacheValue($this->photo, $cache_key, 'photos');
 		}
 
 		if ($this->photo !== null && $this->photo->id !== null) {
@@ -279,23 +274,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function buildMetaData()
 	{
-		$photo_meta_data = false;
-
-		if (isset($this->app->memcache)) {
-			$cache_key = sprintf('PinholeBrowserDetailsPage.MetaData.%s',
-				$this->photo->id);
-
-			$photo_meta_data = $this->app->memcache->getNs(
-				'photos', $cache_key);
-		}
-
-		if ($photo_meta_data === false) {
-			$photo_meta_data = $this->photo->meta_data;
-
-			if (isset($this->app->memcache))
-				$this->app->memcache->setNs('photos', $cache_key,
-					$photo_meta_data);
-		}
+		$photo_meta_data = $this->photo->meta_data;
 
 		$this->ui->getWidget('photo_details')->visible =
 			(count($photo_meta_data) > 0);

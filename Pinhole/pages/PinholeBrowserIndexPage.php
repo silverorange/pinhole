@@ -138,14 +138,12 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 				(string) $this->tag_list));
 		}
 
-		if (isset($this->app->memcache)) {
-			$cache_key = 'PinholeBrowserIndexPage.table_store.'.
-				$this->cache_key;
+		$cache_key = 'PinholeBrowserIndexPage.table_store.'.
+			$this->cache_key;
 
-			$value = $this->app->memcache->getNs('photos', $cache_key);
-			if ($value !== false)
-				return $value;
-		}
+		$store = $this->getCacheValue($cache_key, 'photos');
+		if ($store !== false)
+			return $store;
 
 		$store = new SwatTableStore();
 
@@ -154,9 +152,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$ds->root_path = $this->app->config->pinhole->path;
 			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
-
-			// called so that image_set is stored in the cache
-			$uri = $photo->getUri('thumb');
 
 			$now = new SwatDate();
 			$now->convertTZbyID($this->app->config->date->time_zone);
@@ -186,8 +181,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$store->add($ds);
 		}
 
-		if (isset($this->app->memcache))
-			$this->app->memcache->setNs('photos', $cache_key, $store);
+		$this->addCacheValue($store, $cache_key, 'photos');
 
 		return $store;
 	}

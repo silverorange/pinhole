@@ -40,12 +40,12 @@ class PinholeLoginPage extends SitePage
 	}
 
 	// }}}
-	// {{{ public function setReferer()
+	// {{{ public function setReferrer()
 
-	public function setReferer($relative_uri)
+	public function setReferrer($relative_uri)
 	{
 		$form = $this->ui->getWidget('login_form');
-		$form->addHiddenField('referer', $relative_uri);
+		$form->addHiddenField('referrer', $relative_uri);
 	}
 
 	// }}}
@@ -60,14 +60,25 @@ class PinholeLoginPage extends SitePage
 		$form = $this->ui->getWidget('login_form');
 		$form->process();
 
+		if (!$form->isSubmitted() && isset($_GET['source'])) {
+			$referrer = $form->getHiddenField('referrer');
+			if ($referrer === null) {
+				$referrer = $_GET['source'];
+				if (isset($_GET['tags']))
+					$referrer.= '?'.$_GET['tags'];
+
+				$this->setReferrer($referrer);
+			}
+		}
+
 		if ($form->isSubmitted() && !$form->hasMessage()) {
 			$passphrase = $this->ui->getWidget('passphrase')->value;
 
 			$this->app->session->activate();
 
 			if ($this->app->session->login($passphrase)) {
-				$uri = ($form->getHiddenField('referer') === null) ? '' :
-					$form->getHiddenField('referer');
+				$uri = ($form->getHiddenField('referrer') === null) ? '' :
+					$form->getHiddenField('referrer');
 
 				$this->app->relocate($uri, true);
 			} else {

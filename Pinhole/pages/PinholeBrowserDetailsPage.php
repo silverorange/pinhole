@@ -157,7 +157,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			if (count($this->tag_list))
 				$referer.= '?'.(string)$this->tag_list;
 
-			$this->app->getPage()->setReferer($referer);
+			$this->app->getPage()->setReferrer($referer);
 		}
 	}
 

@@ -168,14 +168,14 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$view = $this->ui->getWidget('photo_date_view');
 		$view->data = $this->getPhotoDetailsStore();
 
-		//$date = new SwatDate($this->photo->photo_date);
-		//$date->convertTZByID($this->photo->photo_date_time_zone);
-
 		$photo_date = $view->getField('photo_date');
 
 		if ($this->photo->photo_date === null) {
 			$photo_date->visible = false;
 		} else {
+			$date = new SwatDate($this->photo->photo_date);
+			$date->convertTZByID($this->photo->photo_time_zone);
+
 			$date_links = $photo_date->getRenderer('date_links');
 			$date_links->content_type = 'text/xml';
 			$date_links->text = sprintf(Pinhole::_('<div id="photo_links">
@@ -184,9 +184,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				'<a href="tag?date.week=%1$s-%2$s-%3$s">week</a>, '.
 				'<a href="tag?date.month=%2$s/date.year=%1$s">month</a>, '.
 				'<a href="tag?date.year=%1$s">year</a>.</div>'),
-				$this->photo->photo_date->format('%Y'),
-				$this->photo->photo_date->format('%m'),
-				$this->photo->photo_date->format('%d'));
+				$date->format('%Y'),
+				$date->format('%m'),
+				$date->format('%d'));
 		}
 
 		$tag_array = array();

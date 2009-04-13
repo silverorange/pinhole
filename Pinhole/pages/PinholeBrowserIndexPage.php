@@ -36,6 +36,12 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 	{
 		parent::createTagList($tags);
 
+		// if no tags and not the front page, redirect to the front page
+		$source = substr($_GET['source'], -3);
+		if (count($this->tag_list) == 0 && $source == 'tag') {
+			$this->app->relocate($this->app->config->pinhole->path);
+		}
+
 		$page_size = $this->app->config->pinhole->photos_per_page;
 
 		$page_tags = $this->tag_list->getByType('PinholePageTag');

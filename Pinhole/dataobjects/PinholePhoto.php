@@ -699,7 +699,7 @@ class PinholePhoto extends SiteImage
 	 * The ZIP file specification specifies that filenames are encoded using
 	 * IBM Code Page 437. In 2008, an addition to the specification was made to
 	 * also allow UTF-8 encoded filenames. This method checks if the filename
-	 * is UFT-8 and it not, converts from IBM Code Page 437 to UTF-8.
+	 * is UFT-8 and if not, converts from IBM Code Page 437 to UTF-8.
 	 *
 	 * @param string $filename
 	 *

@@ -82,7 +82,7 @@ abstract class PinholeBrowserPage extends SitePage
 	}
 
 	// }}}
-	// {{{ protected function initSearch()
+	// {{{ protected function initSearchForm()
 
 	protected function initSearchForm()
 	{

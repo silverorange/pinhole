@@ -694,11 +694,12 @@ class PinholePhoto extends SiteImage
 	// {{{ private static function normalizeArchiveFileFilename()
 
 	/**
-	 * Coverts filenames from ZIP archives to UTF-8 if they are encoded
-	 * using IBM CP 437
+	 * Normalizes filenames in ZIP archives to UTF-8 encoding
 	 *
-	 * ZIP files may encode filenames using either UTF-8 (since 2008) or,
-	 * by default, IBM CP 437.
+	 * The ZIP file specification specifies that filenames are encoded using
+	 * IBM Code Page 437. In 2008, an addition to the specification was made to
+	 * also allow UTF-8 encoded filenames. This method checks if the filename
+	 * is UFT-8 and it not, converts from IBM Code Page 437 to UTF-8.
 	 *
 	 * @param string $filename
 	 *

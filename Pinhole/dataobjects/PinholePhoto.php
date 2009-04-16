@@ -675,7 +675,8 @@ class PinholePhoto extends SiteImage
 					continue 2;
 
 			$filename = uniqid('file').'.'.$ext;
-			$files[$filename] = $stat['name'];
+			$files[$filename] = self::normalizeArchiveFileFilename(
+				$stat['name']);
 
 			$za->renameIndex($i, $filename);
 			$za->extractTo($file_path, $filename);
@@ -687,6 +688,30 @@ class PinholePhoto extends SiteImage
 		unlink($file);
 
 		return $files;
+	}
+
+	// }}}
+	// {{{ private static function normalizeArchiveFileFilename()
+
+	/**
+	 * Coverts filenames from ZIP archives to UTF-8 if they are encoded
+	 * using IBM CP 437
+	 *
+	 * ZIP files may encode filenames using either UTF-8 (since 2008) or,
+	 * by default, IBM CP 437.
+	 *
+	 * @param string $filename
+	 *
+	 * @return string
+	 */
+	private static function normalizeArchiveFileFilename($filename)
+	{
+		// if not UTF-8, convert from IBM CP 437
+		if (!SwatString::validateUtf8($filename)) {
+			$filename = iconv('CP437', 'UTF-8', $filename);
+		}
+
+		return $filename;
 	}
 
 	// }}}

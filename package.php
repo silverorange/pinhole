@@ -59,6 +59,7 @@ $package->addPackageDepWithChannel('required', 'MDB2', 'pear.php.net', '2.2.2');
 $package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.6');
 $package->addPackageDepWithChannel('required', 'NateGoSearch', 'pear.silverorange.com', '1.0.19');
 $package->addExtensionDep('required', 'imagick', '2.0.0');
+$package->addExtensionDep('required', 'iconv');
 $package->generateContents();
 
 if (isset($_GET['make']) || (isset($_SERVER['argv']) && @$_SERVER['argv'][1] == 'make')) {

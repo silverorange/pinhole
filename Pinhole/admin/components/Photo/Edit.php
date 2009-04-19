@@ -302,8 +302,10 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->photo_time_zone = $values['photo_time_zone'];
 		$this->photo->setStatus($values['status']);
 
-		if ($photo->photo_time_zone === null)
-			$photo->photo_time_zone = $this->app->default_time_zone->getID();
+		if ($this->photo->photo_time_zone === null) {
+			$this->photo->photo_time_zone =
+				$this->app->default_time_zone->getID();
+		}
 	}
 
 	// }}}

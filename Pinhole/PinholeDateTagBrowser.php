@@ -196,18 +196,17 @@ class PinholeDateTagBrowser extends SwatControl
 			$tag_string = sprintf('date.year=%s', $date->format('%Y'));
 			$tag_list->add($tag_string);
 
-			if (array_key_exists($i, $photos)) {
+			if ($selected_year === $i) {
+				$span_tag = new SwatHtmlTag('span');
+				$span_tag->class = 'selected';
+				$span_tag->setContent($date->format('%Y'));
+				$span_tag->display();
+			} elseif (array_key_exists($i, $photos)) {
 				$a_tag = new SwatHtmlTag('a');
-
+				$a_tag->href = $this->base.'?'.$tag_list->__toString();
 				$a_tag->title = sprintf(Pinhole::ngettext(
 					'1 photo', '%s photos', $photos[$i]),
 					SwatString::numberFormat($photos[$i]));
-
-				$a_tag->href = $this->base.'?'.$tag_list->__toString();
-
-				if ($selected_year === $i) {
-					$a_tag->class = 'selected';
-				}
 
 				$a_tag->setContent($date->format('%Y'));
 				$a_tag->display();
@@ -274,17 +273,17 @@ class PinholeDateTagBrowser extends SwatControl
 			$tag_string = sprintf('date.month=%s', $date->format('%m'));
 			$tag_list->add($tag_string);
 
-			if (array_key_exists($key, $photos)) {
+			if ($selected_month === $i) {
+				$span_tag = new SwatHtmlTag('span');
+				$span_tag->class = 'selected';
+				$span_tag->setContent($date->format('%B'));
+				$span_tag->display();
+			} elseif (array_key_exists($key, $photos)) {
 				$a_tag = new SwatHtmlTag('a');
+				$a_tag->href = $this->base.'?'.$tag_list->__toString();
 				$a_tag->title = sprintf(Pinhole::ngettext(
 					'1 photo', '%s photos', $photos[$key]),
 					SwatString::numberFormat($photos[$key]));
-
-				if ($selected_month === $i) {
-					$a_tag->class = 'selected';
-				}
-
-				$a_tag->href = $this->base.'?'.$tag_list->__toString();
 
 				$a_tag->setContent($date->format('%B'));
 				$a_tag->display();
@@ -358,17 +357,17 @@ class PinholeDateTagBrowser extends SwatControl
 			$tag_string = sprintf('date.date=%s', $date->format('%Y-%m-%d'));
 			$tag_list->add($tag_string);
 
-			if (array_key_exists($key, $photos)) {
+			if ($selected_day === $i) {
+				$span_tag = new SwatHtmlTag('span');
+				$span_tag->setContent($date->format('%d'));
+				$span_tag->class = 'selected';
+				$span_tag->display();
+			} elseif (array_key_exists($key, $photos)) {
 				$a_tag = new SwatHtmlTag('a');
+				$a_tag->href = $this->base.'?'.$tag_list->__toString();
 				$a_tag->title = sprintf(Pinhole::ngettext(
 					'1 photo', '%s photos', $photos[$key]),
 					SwatString::numberFormat($photos[$key]));
-
-				if ($selected_day === $i) {
-					$a_tag->class = 'selected';
-				}
-
-				$a_tag->href = $this->base.'?'.$tag_list->__toString();
 
 				$a_tag->setContent($date->format('%d'));
 				$a_tag->display();

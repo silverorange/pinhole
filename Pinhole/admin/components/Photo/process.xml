@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame" id="index_frame">
+		<property name="title" translatable="yes">Processing Photos (Step 2)</property>
+		<property name="classes[]">clearfix</property>
+		<widget class="SwatForm" id="processing_form">
+			<property name="action">Photo/Process</property>
+			<widget class="SwatDisplayableContainer" id="processing_message" />
+			<widget class="SwatButton" id="manual_process">
+				<property name="title">Process Photos</property>
+			</widget>
+		</widget>
+		<widget class="SwatDisplayableContainer" id="processing_errors" />
+		<widget class="SwatDisplayableContainer" id="processing_div">
+			<property name="classes[]">clearfix</property>
+		</widget>
+	</widget>
+</swatml>

@@ -69,7 +69,6 @@ class PinholePhotoDelete extends AdminDBDelete
 
 		foreach ($photos as $photo) {
 			$photo->setFileBase('../../photos');
-			$photo->setInstance($this->app->getInstance());
 			$photo->delete();
 		}
 

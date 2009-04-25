@@ -155,6 +155,7 @@ class PinholePhotoPending extends AdminIndex
 	public function finalize()
 	{
 		parent::finalize();
+
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/admin/styles/pinhole-photo-tile.css',
 			Pinhole::PACKAGE_ID));

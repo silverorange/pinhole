@@ -4,8 +4,6 @@
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame" id="index_frame">
 		<property name="title" translatable="yes">Pending Photos</property>
-		<widget class="SwatContentBlock" id="results_message" />
-
 		<widget class="SwatForm" id="index_form">
 			<widget class="SwatTileView" id="index_view">
 				<object class="SwatTile">

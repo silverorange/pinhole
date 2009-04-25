@@ -3,38 +3,56 @@
 <swatml>
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame">
-		<property name="title" translatable="yes">Upload Photos</property>
-		<widget class="PinholePhotoUploader" id="file">
+		<property name="title" translatable="yes">Upload Photos (Step 1)</property>
+		<widget class="SiteUploadProgressForm" id="form">
 			<property name="action">Photo/Upload</property>
-			<property name="target_action">Photo/UploadStatus</property>
-			<property name="display_maximum_upload_size" type="boolean">true</property>
-		</widget>
-		<widget class="AdminNote">
-			<property name="content_type">text/xml</property>
-			<property name="content" translatable="yes"><![CDATA[<p>Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</p><p><strong>NEW!</strong> Photo titles, descriptions, and tags can also be imported via photo meta-data. Most popular photo management tools will embed this information for you. The fields are mapped as follows:<ul><li><strong>title</strong> = 'object' or 'headline'</li><li><strong>description</strong> = 'description' or 'caption-abstract'</li><li><strong>tags</strong> = 'city', 'location', 'sub-location', and 'subject' or 'keywords'</li></ul></p>]]></property>
-		</widget>
-		<widget class="SwatFormField" id="photo_processing">
-			<widget class="SwatDisplayableContainer" id="photo_container" />
-		</widget>
-		<widget class="SwatForm" id="time_zone_form">
-			<property name="action">Photo/Upload</property>
-			<widget class="SwatFormField">
-				<widget class="SwatFormField">
-					<property name="title">Time Zone for Photo(s)</property>
-					<property name="note">This is the time zone of the location this photo/set was taken. Photos time will be displayed using this time zone.</property>
-					<widget class="SwatTimeZoneEntry" id="photo_time_zone" />
+			<property name="upload_status_server">Photo/UploadStatusServer</property>
+			<widget class="SwatFormField" id="file_field">
+				<property name="title">Image File or Zip File</property>
+				<widget class="SwatFileEntry" id="file">
+					<property name="display_maximum_upload_size" type="boolean">true</property>
 				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title">Publish photos automatically?</property>
+				<property name="note">Leave this unchecked if you would like to add photo content and tags manually.</property>
+				<widget class="SwatCheckbox" id="auto_publish" />
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title">Time Zone</property>
+				<property name="note">This is the time zone of the location this photo/set was taken. Photos time will be displayed using this time zone.</property>
+				<widget class="SwatTimeZoneEntry" id="photo_time_zone" />
+			</widget>
+			<widget class="SwatDisclosure">
+				<property name="title">Advanced Options</property>
+				<property name="open" type="boolean">false</property>
 				<widget class="SwatFormField">
 					<property name="title">Time Zone for Camera</property>
 					<property name="note">This is the time zone of the camera when it took this photo/set. Often the same as above, unless the camera was set to the wrong time zone.</property>
 					<widget class="SwatTimeZoneEntry" id="camera_time_zone" />
 				</widget>
+				<widget class="SwatFormField">
+					<property name="title">Set photo content from meta-data</property>
+					<widget class="SwatCheckbox" id="set_content_by_meta_data">
+						<property name="value" type="boolean">true</property>
+					</widget>
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title">Set photo tags from meta-data</property>
+					<widget class="SwatCheckbox" id="set_tags_by_meta_data">
+						<property name="value" type="boolean">true</property>
+					</widget>
+				</widget>
 			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
-					<property name="title" type="string">Continue Publishing Photos</property>
+					<property name="title" type="string">Upload Photos</property>
 				</widget>
 			</widget>
 		</widget>
+	</widget>
+	<widget class="AdminNote">
+		<property name="content_type">text/xml</property>
+		<property name="content" translatable="yes"><![CDATA[<p>Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</p><p><strong>NEW!</strong> Photo titles, descriptions, and tags can also be imported via photo meta-data. Most popular photo management tools will embed this information for you. The fields are mapped as follows:<ul><li><strong>title</strong> = 'object' or 'headline'</li><li><strong>description</strong> = 'description' or 'caption-abstract'</li><li><strong>tags</strong> = 'city', 'location', 'sub-location', and 'subject' or 'keywords'</li></ul></p>]]></property>
 	</widget>
 </swatml>

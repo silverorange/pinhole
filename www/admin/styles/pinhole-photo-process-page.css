@@ -1,0 +1,11 @@
+#processing_message {
+	font-size: 200%;
+}
+
+#processing_errors {
+	color: #900;
+}
+
+#processing_div {
+	margin: 1em 0;
+}

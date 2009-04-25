@@ -2,6 +2,8 @@ create table PinholePhoto (
 	-- Image table columns
 	id serial,
 	image_set integer not null references ImageSet(id) on delete cascade,
+	upload_set integer references PinholePhotoUploadSet(id) on delete cascade,
+
 	title varchar(255),
 	filename varchar(255),
 	original_filename varchar(255),
@@ -23,6 +25,11 @@ create table PinholePhoto (
 	status integer not null default 0,
 	private boolean not null default false,
 	for_sale boolean not null default false,
+
+	-- import settings
+	auto_publish boolean not null default false,
+	set_content_by_meta_data boolean not null default false,
+	set_tags_by_meta_data boolean not null default false,
 
 	primary key(id)
 );

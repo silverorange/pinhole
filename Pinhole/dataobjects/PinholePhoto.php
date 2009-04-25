@@ -5,6 +5,7 @@ require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Site/dataobjects/SiteImage.php';
 require_once 'Pinhole/dataobjects/PinholeImageSet.php';
+require_once 'Pinhole/dataobjects/PinholePhotoUploadSet.php';
 require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
@@ -23,15 +24,39 @@ class PinholePhoto extends SiteImage
 {
 	// {{{ constants
 
-	const STATUS_UNPROCESSED = 3;
-	const STATUS_PENDING     = 0;
-	const STATUS_PUBLISHED   = 1;
-	const STATUS_UNPUBLISHED = 2;
+	/**
+	 * Not yet processed
+	 */
+	const STATUS_UNPROCESSED  = 3;
+
+	/**
+	 * Error occured while processing
+	 */
+	const STATUS_PROCESSING_ERROR = 5;
+
+	/**
+	 * Processed, but awaiting content editing
+	 */
+	const STATUS_PENDING      = 0;
+
+	/**
+	 * Published and displayed on the front-end
+	 */
+	const STATUS_PUBLISHED    = 1;
+
+	/**
+	 * Published but hidden on the front-end
+	 */
+	const STATUS_UNPUBLISHED  = 2;
 
 	const DATE_PART_YEAR     = 1;
 	const DATE_PART_MONTH    = 2;
 	const DATE_PART_DAY      = 4;
 	const DATE_PART_TIME     = 8;
+
+	const META_DATA_TITLE       = 1;
+	const META_DATA_DESCRIPTION = 2;
+	const META_DATA_TAGS        = 4;
 
 	// }}}
 	// {{{ public properties
@@ -120,6 +145,27 @@ class PinholePhoto extends SiteImage
 	 public $private;
 
 	/**
+	 * Auto-publish
+	 *
+	 * @var boolean
+	 */
+	 public $auto_publish;
+
+	/**
+	 * Set content by meta-data when processing
+	 *
+	 * @var boolean
+	 */
+	 public $set_content_by_meta_data;
+
+	/**
+	 * Set tags by meta-data when processing
+	 *
+	 * @var boolean
+	 */
+	 public $set_tags_by_meta_data;
+
+	/**
 	 * For sale
 	 *
 	 * @var boolean
@@ -128,13 +174,6 @@ class PinholePhoto extends SiteImage
 
 	// }}}
 	// {{{ protected properties
-
-	/**
-	 * The instance for this photo - only used for processing.
-	 *
-	 * @var SiteInstance
-	 */
-	protected $instance;
 
 	protected $selectable_dimensions;
 
@@ -198,6 +237,9 @@ class PinholePhoto extends SiteImage
 		$this->registerInternalProperty('photographer',
 			SwatDBClassMap::get('PinholePhotographer'));
 
+		$this->registerInternalProperty('upload_set',
+			SwatDBClassMap::get('PinholePhotoUploadSet'));
+
 		$this->registerDateProperty('upload_date');
 		$this->registerDateProperty('publish_date');
 		$this->registerDateProperty('photo_date');
@@ -255,8 +297,10 @@ class PinholePhoto extends SiteImage
 	 */
 	public function publish($set_publish_date = true)
 	{
-		if ($set_publish_date)
+		if ($set_publish_date) {
 			$this->publish_date = new SwatDate();
+			$this->publish_date->toUTC();
+		}
 
 		$this->status = self::STATUS_PUBLISHED;
 
@@ -323,21 +367,6 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
-	// {{{ public function setInstance()
-
-	/**
-	 * Sets the instance for this photo
-	 *
-	 * Not for reading, only used for processing.
-	 *
-	 * param SiteInstance $instance The instance for this photo
-	 */
-	public function setInstance(SiteInstance $instance = null)
-	{
-		$this->instance = $instance;
-	}
-
-	// }}}
 	// {{{ public function addTagsByName()
 
 	public function addTagsByName(array $tag_names,
@@ -345,7 +374,9 @@ class PinholePhoto extends SiteImage
 	{
 		$this->checkDB();
 
-		$instance_id = ($this->instance === null) ? null : $this->instance->id;
+		$instance_id = ($this->image_set->instance === null) ? null :
+			$this->image_set->instance->id;
+
 		$tag_names = array_keys($tag_names);
 
 		$sql = sprintf('delete from PinholePhotoTagBinding
@@ -404,6 +435,19 @@ class PinholePhoto extends SiteImage
 	public function isPublished()
 	{
 		return ($this->status == self::STATUS_PUBLISHED);
+	}
+
+	// }}}
+	// {{{ public function isProcessed()
+
+	/**
+	 * Whether or not this photo has been processed
+	 *
+	 * @return boolean
+	 */
+	public function isProcessed()
+	{
+		return ($this->status !== self::STATUS_UNPROCESSED);
 	}
 
 	// }}}
@@ -522,28 +566,6 @@ class PinholePhoto extends SiteImage
 			self::STATUS_PENDING =>
 				self::getStatusTitle(self::STATUS_PENDING),
 		);
-	}
-
-	// }}}
-	// {{{ protected function getImageSet()
-
-	protected function getImageSet()
-	{
-		if ($this->image_set_shortname === null)
-			throw new SwatException('To process images, an image type '.
-				'shortname must be defined in the image dataobject.');
-
-		$class_name = SwatDBClassMap::get('PinholeImageSet');
-		$image_set = new $class_name();
-		$image_set->setDatabase($this->db);
-		$image_set->instance = $this->instance;
-		$found = $image_set->loadByShortname($this->image_set_shortname);
-
-		if (!$found)
-			throw new SwatException(sprintf('Image set “%s” does not exist.',
-				$this->image_set_shortname));
-
-		return $image_set;
 	}
 
 	// }}}
@@ -772,6 +794,7 @@ class PinholePhoto extends SiteImage
 
 		$meta_data = self::getMetaDataFromFile($image_file);
 		$this->saveMetaData($meta_data);
+		$this->setContentByMetaData($meta_data);
 	}
 
 	// }}}
@@ -786,10 +809,8 @@ class PinholePhoto extends SiteImage
 	 */
 	protected function saveMetaData($meta_data)
 	{
-		$instance_id = ($this->instance === null) ? null : $this->instance->id;
-
-		$this->setPhotoDateByMetaData($meta_data);
-		$this->setContentByMetaData($meta_data);
+		$instance_id = ($this->image_set->instance === null) ? null :
+			$this->image_set->instance->id;
 
 		$where_clause = sprintf('PinholeMetaData.instance %s %s',
 			SwatDB::equalityOperator($instance_id),
@@ -838,18 +859,20 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
-
-	// parse meta data
 	// {{{ protected function setContentByMetaData()
 
-	/**
-	 * Set the photo title, description, and tags based on meta-data
-	 */
 	protected function setContentByMetaData($meta_data)
 	{
-		$this->setTitleByMetaData($meta_data);
-		$this->setDescriptionByMetaData($meta_data);
-		$this->setTagsByMetaData($meta_data);
+		$this->setPhotoDateByMetaData($meta_data);
+
+		if ($this->set_content_by_meta_data) {
+			$this->setTitleByMetaData($meta_data);
+			$this->setDescriptionByMetaData($meta_data);
+		}
+
+		if ($this->set_tags_by_meta_data) {
+			$this->setTagsByMetaData($meta_data);
+		}
 	}
 
 	// }}}
@@ -952,7 +975,9 @@ class PinholePhoto extends SiteImage
 		$title = trim($title);
 
 		// check to see if the tag already exists
-		$instance_id = $this->instance->id;
+		$instance_id = ($this->image_set->instance === null) ? null :
+			$this->image_set->instance->id;
+
 		$sql = sprintf('select * from
 			PinholeTag where lower(title) = lower(%1$s)
 				and instance %2$s %3$s',

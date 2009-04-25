@@ -2,6 +2,8 @@
 
 require_once 'Admin/pages/AdminPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
+require_once 'Pinhole/dataobjects/PinholeImageSet.php';
+require_once 'Pinhole/dataobjects/PinholePhotoUploadSet.php';
 require_once 'include/PinholePhotoUploader.php';
 
 /**
@@ -10,8 +12,6 @@ require_once 'include/PinholePhotoUploader.php';
  * @package   Pinhole
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @todo      When there is no JavaScript, this page is responsible for
- *            processing photos. It should use UploadProcessor to achieve this.
  */
 class PinholePhotoUpload extends AdminPage
 {
@@ -28,9 +28,8 @@ class PinholePhotoUpload extends AdminPage
 	{
 		parent::initInternal();
 		$this->ui->loadFromXML($this->ui_xml);
-		$button = $this->ui->getWidget('submit_button');
-		$button->sensitive = false;
 
+		$button = $this->ui->getWidget('submit_button');
 		$camera_time_zone = $this->app->config->pinhole->camera_time_zone;
 
 		$time_zone = ($camera_time_zone === null) ?
@@ -47,47 +46,77 @@ class PinholePhotoUpload extends AdminPage
 
 	protected function processInternal()
 	{
-		$form = $this->ui->getWidget('time_zone_form');
+		$form = $this->ui->getWidget('form');
 		$form->process();
 
-		if ($form->isProcessed() && (isset($_POST['number_of_photos']))) {
-			$number_of_photos = $_POST['number_of_photos'];
-			$counter = 0;
+		if ($form->isProcessed() && $form->isAuthenticated()) {
+			ini_set('memory_limit', -1);
+			set_time_limit(300);
 
-			while ($counter < $number_of_photos) {
-				$counter ++;
-				$field_name = sprintf('photo_id%s', $counter);
-				$photo_id = $_POST[$field_name];
-				$this->processTimeZone($photo_id);
+			$class_name = SwatDBClassMap::get('PinholeImageSet');
+			$image_set = new $class_name();
+			$image_set->setDatabase($this->app->db);
+			$image_set->loadByShortname('photos');
+
+			$class_name = SwatDBClassMap::get('PinholePhotoUploadSet');
+			$upload_set = new $class_name();
+			$upload_set->setDatabase($this->app->db);
+			$upload_set->createdate = new SwatDate();
+			$upload_set->createdate->toUTC();
+			$upload_set->save();
+
+			$files = PinholePhoto::saveUploadedFile('file');
+
+			foreach ($files as $temp_filename => $original_filename) {
+				$this->saveTempPhoto($upload_set, $image_set, $temp_filename,
+					$original_filename);
 			}
 
-			$this->app->replacePage('Photo/Pending');
+			$this->app->relocate('Photo/Process');
 		}
 	}
 
 	// }}}
-	// {{{ protected function processTimeZone()
+	// {{{ protected function saveTempPhoto()
 
-	protected function processTimeZone($photo_id)
+	/**
+	 * Process a given image file
+	 *
+	 * @param PinholePhotoUploadSet $upload_set The upload set that photo
+	 *                              belongs to
+	 * @param SiteImageSet $image_set The image set that photo belongs to
+	 * @param string $file The file path to the image file
+	 * @param string $original_filename The original name of the file
+	 */
+	protected function saveTempPhoto(PinholePhotoUploadSet $upload_set,
+		SiteImageSet $image_set, $filename, $original_filename)
 	{
 		$class_name = SwatDBClassMap::get('PinholePhoto');
 		$photo = new $class_name();
 		$photo->setDatabase($this->app->db);
+		$photo->image_set = $image_set;
+		$photo->upload_set = $upload_set;
+		$photo->original_filename = $original_filename;
+		$photo->temp_filename = $filename;
+		$photo->image_set = $this->getImageSet();
+		$photo->status = PinholePhoto::STATUS_UNPROCESSED;
+		$photo->auto_publish = $this->ui->getWidget('auto_publish')->value;
 
-		$instance_id = $this->app->getInstanceId();
+		$photo->set_content_by_meta_data =
+			$this->ui->getWidget('set_content_by_meta_data')->value;
 
-		if (!$photo->load($photo_id)) {
-			throw new AdminNotFoundException(
-				sprintf(Pinhole::_('Photo with id “%s” not found.'),
-				$this->id));
-		} elseif ($photo->image_set->instance !== null &&
-			$photo->image_set->instance->id != $instance_id) {
-			throw new AdminNotFoundException(
-				sprintf(Pinhole::_('Photo with id “%s” loaded '.
-					'in the wrong instance.'),
-				$photo->id));
-		}
+		$photo->set_tags_by_meta_data =
+			$this->ui->getWidget('set_tags_by_meta_data')->value;
 
+		$this->setTimeZone($photo);
+		$photo->save();
+	}
+
+	// }}}
+	// {{{ protected function setTimeZone()
+
+	protected function setTimeZone(PinholePhoto $photo)
+	{
 		// save the photo time zone
 		$photo->photo_time_zone =
 			$this->ui->getWidget('photo_time_zone')->value;
@@ -108,8 +137,24 @@ class PinholePhotoUpload extends AdminPage
 
 		$photo->photo_date->setTZbyID($camera_time_zone);
 		$photo->photo_date->toUTC();
+	}
 
-		$photo->save();
+	// }}}
+	// {{{ protected function getImageSet()
+
+	protected function getImageSet()
+	{
+		$class_name = SwatDBClassMap::get('PinholeImageSet');
+		$image_set = new $class_name();
+		$image_set->setDatabase($this->app->db);
+		$image_set->instance = $this->app->instance->getInstance();
+		$found = $image_set->loadByShortname('photos');
+
+		if (!$found)
+			throw new SwatException(sprintf('Image set “%s” does not exist.',
+				$this->image_set_shortname));
+
+		return $image_set;
 	}
 
 	// }}}
@@ -128,9 +173,7 @@ class PinholePhotoUpload extends AdminPage
 
 	protected function getInlineJavaScript()
 	{
-		$uploader_object = 'file_obj';
-		return sprintf("var page = new PinholePhotoUploadPage(%s);",
-			$uploader_object);
+		return "new PinholePhotoUploadPage();";
 	}
 
 	// }}}
@@ -143,6 +186,10 @@ class PinholePhotoUpload extends AdminPage
 		parent::finalize();
 		$this->layout->addHtmlHeadEntry(new SwatJavaScriptHtmlHeadEntry(
 			'packages/pinhole/admin/javascript/pinhole-photo-upload-page.js',
+			Pinhole::PACKAGE_ID));
+
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/admin/styles/pinhole-photo-upload-page.css',
 			Pinhole::PACKAGE_ID));
 	}
 

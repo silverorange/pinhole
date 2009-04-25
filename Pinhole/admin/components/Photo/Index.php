@@ -114,9 +114,10 @@ class PinholePhotoIndex extends AdminSearch
 		if ($this->where_clause === null) {
 			$instance_id = $this->app->getInstanceId();
 
-			$where = sprintf('PinholePhoto.status != %s
+			$where = sprintf('PinholePhoto.status in (%s, %s)
 				and ImageSet.instance %s %s',
-				$this->app->db->quote(PinholePhoto::STATUS_PENDING, 'integer'),
+				$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
+				$this->app->db->quote(PinholePhoto::STATUS_UNPUBLISHED, 'integer'),
 				SwatDB::equalityOperator($instance_id),
 				$this->app->db->quote($instance_id, 'integer'));
 

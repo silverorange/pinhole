@@ -3,7 +3,7 @@
 <swatml>
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame">
-		<property name="title" translatable="yes">Upload Photos (Step 1)</property>
+		<property name="title" translatable="yes">Upload Photos</property>
 		<widget class="SiteUploadProgressForm" id="form">
 			<property name="action">Photo/Upload</property>
 			<property name="upload_status_server">Photo/UploadStatusServer</property>

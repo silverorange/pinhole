@@ -134,15 +134,6 @@ class PinholePhotoDelete extends AdminDBDelete
 	}
 
 	// }}}
-	// {{{ protected function buildNavBar()
-
-	protected function buildNavBar()
-	{
-		parent::buildNavBar();
-		$this->navbar->addEntry(new SwatNavBarEntry(Pinhole::_('Delete')));
-	}
-
-	// }}}
 
 	// finalize phase
 	// {{{ public function finalize()

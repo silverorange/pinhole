@@ -95,7 +95,6 @@ class PinholePhotoEdit extends AdminDBEdit
 		$class_name = SwatDBClassMap::get('PinholePhoto');
 		$this->photo = new $class_name();
 		$this->photo->setDatabase($this->app->db);
-		$this->photo->setInstance($this->app->getInstance());
 
 		if ($this->id === null) {
 			throw new AdminNoAccessException(

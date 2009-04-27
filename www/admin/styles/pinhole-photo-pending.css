@@ -6,6 +6,15 @@
 	color: #900;
 }
 
+#processing_errors div {
+	margin-bottom: 0.5em;
+}
+
 #processing_div {
 	margin: 1em 0;
+}
+
+a.disabled-link {
+	text-decoration: none;
+	color: #999;
 }

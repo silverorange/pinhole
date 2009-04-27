@@ -72,7 +72,7 @@ class PinholePhotoUpload extends AdminPage
 					$original_filename);
 			}
 
-			$this->app->relocate('Photo/Process');
+			$this->app->relocate('Photo/LastUpload');
 		}
 	}
 

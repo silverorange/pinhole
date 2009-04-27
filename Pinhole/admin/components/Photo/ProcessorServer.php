@@ -4,6 +4,12 @@ require_once 'Pinhole/dataobjects/PinholePhoto.php';
 require_once 'Admin/pages/AdminXMLRPCServer.php';
 require_once 'NateGoSearch/NateGoSearch.php';
 
+// for the UI
+require_once 'Swat/SwatTableStore.php';
+require_once 'Swat/SwatDetailsStore.php';
+require_once 'Admin/AdminUI.php';
+require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
+
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
@@ -11,6 +17,12 @@ require_once 'NateGoSearch/NateGoSearch.php';
  */
 class PinholePhotoProcessorServer extends AdminXMLRPCServer
 {
+	// {{{ protected properties
+
+	protected $ui_xml = 'Pinhole/admin/components/Photo/pending.xml';
+
+	// }}}
+
 	// process phase
 	// {{{ public function processPhoto()
 
@@ -140,11 +152,56 @@ class PinholePhotoProcessorServer extends AdminXMLRPCServer
 			$response['status'] = 'processed';
 			$response['auto_publish'] = $photo->auto_publish;
 			$response['image_uri'] = $photo->getUri('thumb');
+			$response['tile'] = $this->getTile($photo);
 		} else {
 			$response['status'] = 'unknown';
 		}
 
 		return $response;
+	}
+
+	// }}}
+
+	// display tile
+	// {{{ protected function getTile()
+
+	protected function getTile(PinholePhoto $photo)
+	{
+		$ui = new AdminUI();
+		$ui->loadFromXML($this->ui_xml);
+
+		$store = new SwatTableStore();
+		$ds = new SwatDetailsStore();
+		$ds->photo = $photo;
+		$ds->class_name = $this->getTileClasses($photo);
+		$store->add($ds);
+
+		$ui->getWidget('index_view')->model = $store;
+
+		ob_start();
+		$ui->getWidget('index_view')->display();
+		$string = ob_get_clean();
+
+		// only pass back the tile element, not the whole view
+		$dom = new DomDocument();
+		$dom->loadXML('<xml>'.$string.'</xml>');
+		$divs = $dom->getElementsByTagName('div');
+		foreach ($divs as $div)
+			if (trim($div->getAttribute('class')) == 'swat-tile')
+				return $dom->saveXML($div);
+	}
+
+	// }}}
+	// {{{ protected function getTileClasses()
+
+	protected function getTileClasses(PinholePhoto $photo)
+	{
+		$classes = array();
+
+		if ($photo->private)
+			$classes[] = 'private';
+
+		return implode(' ', $classes);
 	}
 
 	// }}}

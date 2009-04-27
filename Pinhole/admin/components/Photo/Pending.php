@@ -49,6 +49,17 @@ class PinholePhotoPending extends AdminIndex
 	}
 
 	// }}}
+	// {{{ protected function buildNavBar()
+
+	protected function buildNavBar()
+	{
+		parent::buildNavBar();
+
+		$this->layout->navbar->createEntry(Pinhole::_('Pending Photos'),
+			'Pinhole/Pending');
+	}
+
+	// }}}
 	// {{{ protected function getUnProcessedPhotos()
 
 	protected function getUnProcessedPhotos()

@@ -175,11 +175,27 @@ class PinholeTagDetails extends AdminIndex
 		foreach ($photos as $photo) {
 			$ds = new SwatDetailsStore();
 			$ds->photo = $photo;
-			$ds->class_name = $photo->isPublished() ? null : 'insensitive';
+			$ds->class_name = $this->getTileClasses($photo);
 			$store->add($ds);
 		}
 
 		return $store;
+	}
+
+	// }}}
+	// {{{ protected function getTileClasses()
+
+	protected function getTileClasses(PinholePhoto $photo)
+	{
+		$classes = array();
+
+		if (!$photo->isPublished())
+			$classes[] = 'insensitive';
+
+		if ($photo->private)
+			$classes[] = 'private';
+
+		return implode(' ', $classes);
 	}
 
 	// }}}

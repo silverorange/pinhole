@@ -67,7 +67,7 @@ class PinholePhotoPending extends AdminIndex
 		$instance_id = $this->app->getInstanceId();
 
 		// load unprocessed photos (if any)
-		$sql = sprintf('select PinholePhoto.id from PinholePhoto
+		$sql = sprintf('select PinholePhoto.* from PinholePhoto
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id
 			where PinholePhoto.status = %s and ImageSet.instance %s %s
 			order by PinholePhoto.upload_date desc, PinholePhoto.id',
@@ -75,7 +75,8 @@ class PinholePhotoPending extends AdminIndex
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
 
-		return SwatDB::query($this->app->db, $sql);
+		return SwatDB::query($this->app->db, $sql,
+			SwatDBClassMap::get('PinholePhotoWrapper'));
 	}
 
 	// }}}
@@ -116,7 +117,66 @@ class PinholePhotoPending extends AdminIndex
 	{
 		parent::buildInternal();
 
+		$this->buildTagsContent();
 		$this->buildErrorsContent();
+	}
+
+	// }}}
+	// {{{ protected function buildTagsContent()
+
+	protected function buildTagsContent()
+	{
+		$sql = sprintf('select * from PinholeTag
+			where PinholeTag.id in (
+				select tag from PinholePhotoTagBinding
+				inner join PinholePhoto on
+					PinholePhoto.id = PinholePhotoTagBinding.photo
+				inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+				where %1$s)
+			and PinholeTag.id not in (
+				select tag from PinholePhotoTagBinding
+				where photo not in (select PinholePhoto.id from PinholePhoto
+				inner join ImageSet on PinholePhoto.image_set = ImageSet.id
+				where %1$s)
+			)',
+			$this->getWhereClause());
+
+		$tags = SwatDB::query($this->app->db, $sql,
+			SwatDBClassMap::get('PinholeTagDataObjectWrapper'));
+
+		if (count($tags) == 0)
+			$this->ui->getWidget('processing_tags')->classes[] =
+				'swat-hidden';
+
+		ob_start();
+		foreach ($tags as $tag) {
+			$div_tag = new SwatHtmlTag('div');
+			$div_tag->open();
+			echo SwatString::minimizeEntities($tag->title).' (';
+
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->setContent('edit');
+			$a_tag->href = 'Tag/Edit?id='.$tag->id;
+			$a_tag->display();
+			echo ', ';
+
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->setContent('merge');
+			$a_tag->href = 'Tag/Merge?id='.$tag->id;
+			$a_tag->display();
+			echo ', ';
+
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->setContent('delete');
+			$a_tag->href = 'Tag/Delete?id='.$tag->id;
+			$a_tag->display();
+			echo ')';
+
+			$div_tag->close();
+		}
+
+		$this->ui->getWidget(
+			'processing_tags_content')->content = ob_get_clean();
 	}
 
 	// }}}
@@ -136,6 +196,10 @@ class PinholePhotoPending extends AdminIndex
 
 		$errors = SwatDB::query($this->app->db, $sql,
 			SwatDBClassMap::get('PinholePhotoWrapper'));
+
+		if (count($errors) == 0)
+			$this->ui->getWidget('processing_errors')->classes[] =
+				'swat-hidden';
 
 		ob_start();
 		foreach ($errors as $error) {

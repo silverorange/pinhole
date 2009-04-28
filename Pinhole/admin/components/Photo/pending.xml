@@ -4,12 +4,12 @@
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame" id="index_frame">
 		<property name="title" translatable="yes">Pending Photos</property>
+		<widget class="SwatDisplayableContainer" id="processing_message">
+			<widget class="SwatContentBlock" id="processing_message_content" />
+		</widget>
 		<widget class="SwatForm" id="processing_form">
 			<property name="visible" type="boolean">false</property>
 			<property name="action">Photo/LastUpload</property>
-			<widget class="SwatDisplayableContainer">
-				<widget class="SwatContentBlock" id="processing_message" />
-			</widget>
 			<widget class="SwatButton" id="manual_process">
 				<property name="title">Process Photos</property>
 			</widget>

@@ -18,7 +18,7 @@ if (typeof Pinhole.page == 'undefined') {
 		if (!unprocessed_photos)
 			unprocessed_photos = [];
 
-		document.getElementById('manual_process').style.display = 'none';
+		document.getElementById('processing_form').style.display = 'none';
 		this.toggleCheckAll(false);
 
 		this.unprocessed_photos = unprocessed_photos;
@@ -298,7 +298,7 @@ if (typeof Pinhole.page == 'undefined') {
 		var dom = parser.loadXML(tile_string);
 		var div_xml = dom.getElementsByTagName('div')[0];
 
-		if (document.importNode && !Pinhole.page.PendingPhotosPage.is_webkit) {
+		if (1==2 && document.importNode && !Pinhole.page.PendingPhotosPage.is_webkit) {
 			var div_dom = document.importNode(div_xml, true);
 		} else {
 			/*
@@ -307,12 +307,33 @@ if (typeof Pinhole.page == 'undefined') {
 			 * IE does not implement importNode() and Safari's importNode()
 			 * implementation is broken.
 			 */
-			// TODO
-			//var dest_tr = this.table.insertRow(this.enter_row.rowIndex);
-			//SwatTableViewInputRow_parseTableRow(source_tr, dest_tr);
+			var div_dom = this.convertXmlToDom(div_xml);
 		}
 
 		return div_dom;
+	}
+
+	// }}}
+	// {{{ proto.convertXmlToDom
+
+	proto.convertXmlToDom = function(xml_node)
+	{
+		if (xml_node.nodeType == 3) {
+			var dom_node = document.createTextNode(xml_node.nodeValue);
+		} else {
+			var dom_node = document.createElement(xml_node.nodeName);
+			dom_node.innerHTML = xml_node.nodeValue;
+
+			for (var i = 0; i < xml_node.attributes.length; i++) {
+				dom_node.setAttribute(xml_node.attributes[i].name,
+					xml_node.attributes[i].value);
+			}
+
+			for (var i = 0; i < xml_node.childNodes.length; i++)
+				dom_node.appendChild(this.convertXmlToDom(xml_node.childNodes[i]));
+		}
+
+		return dom_node;
 	}
 
 	// }}}

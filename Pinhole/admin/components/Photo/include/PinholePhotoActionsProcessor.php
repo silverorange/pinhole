@@ -227,9 +227,6 @@ class PinholePhotoActionsProcessor
 		$photos = SwatDB::query($app->db, $sql,
 			SwatDBClassMap::get('PinholePhotoWrapper'));
 
-		foreach ($photos as $photo)
-			$photo->setInstance($app->getInstance());
-
 		return $photos;
 	}
 

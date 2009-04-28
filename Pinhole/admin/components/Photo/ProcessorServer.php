@@ -114,9 +114,11 @@ class PinholePhotoProcessorServer extends AdminXMLRPCServer
 		$dom = new DomDocument();
 		$dom->loadXML('<xml>'.$string.'</xml>');
 		$divs = $dom->getElementsByTagName('div');
-		foreach ($divs as $div)
-			if (trim($div->getAttribute('class')) == 'swat-tile')
+		foreach ($divs as $div) {
+			$classes = explode(' ', $div->getAttribute('class'));
+			if (in_array('swat-tile', $classes))
 				return $dom->saveXML($div);
+		}
 	}
 
 	// }}}
@@ -126,8 +128,12 @@ class PinholePhotoProcessorServer extends AdminXMLRPCServer
 	{
 		$classes = array();
 
-		if ($photo->private)
+		if ($photo->private && $photo->isPublished())
+			$classes[] = 'published-private';
+		elseif ($photo->private)
 			$classes[] = 'private';
+		elseif ($photo->isPublished())
+			$classes[] = 'published';
 
 		return implode(' ', $classes);
 	}

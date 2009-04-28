@@ -27,6 +27,7 @@
 	padding: 3px;
 	background: #eeeeec;
 	color: #888a85;
+	text-align: left;
 }
 
 .swat-tile label:hover {
@@ -67,3 +68,31 @@
 	display: block;
 	margin: 0 auto;
 }
+
+/* {{{ label icons */
+
+.private label {
+	background: #eee url(../images/private.png) no-repeat 100px 5px;
+}
+
+.private label:hover {
+	background: #d3d7cf url(../images/private.png) no-repeat 100px 5px;
+}
+
+.published label {
+	background: #eee url(../images/published.png) no-repeat 100px 5px;
+}
+
+.published label:hover {
+	background: #d3d7cf url(../images/published.png) no-repeat 100px 5px;
+}
+
+.published-private label {
+	background: #eee url(../images/published-private.png) no-repeat 80px 5px;
+}
+
+.published-private label:hover {
+	background: #d3d7cf url(../images/published-private.png) no-repeat 100px 5px;
+}
+
+/* }}} */

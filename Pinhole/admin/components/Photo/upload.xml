@@ -31,6 +31,10 @@
 					<property name="note">This is the time zone of the camera when it took this photo/set. Often the same as above, unless the camera was set to the wrong time zone.</property>
 					<widget class="SwatTimeZoneEntry" id="camera_time_zone" />
 				</widget>
+				<widget class="SwatFormField" id="private_field">
+					<property name="title">Mark photos as private</property>
+					<widget class="SwatCheckbox" id="private" />
+				</widget>
 				<widget class="SwatFormField">
 					<property name="title">Set photo content from meta-data</property>
 					<widget class="SwatCheckbox" id="set_content_by_meta_data">

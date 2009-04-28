@@ -43,7 +43,7 @@
 					</object>
 					<object class="SwatCheckboxCellRenderer" id="items">
 						<property name="value" type="data">photo.id</property>
-						<property name="title" translatable="yes">select photo</property>
+						<property name="title" translatable="yes">select</property>
 					</object>
 				</object>
 			</widget>

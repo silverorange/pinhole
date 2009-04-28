@@ -37,6 +37,9 @@ class PinholePhotoUpload extends AdminPage
 
 		$this->ui->getWidget('photo_time_zone')->value = $time_zone;
 		$this->ui->getWidget('camera_time_zone')->value = $time_zone;
+
+		$this->ui->getWidget('private_field')->visible =
+			$this->app->config->pinhole->enable_private_photos;
 	}
 
 	// }}}
@@ -101,6 +104,7 @@ class PinholePhotoUpload extends AdminPage
 		$photo->image_set = $this->getImageSet();
 		$photo->status = PinholePhoto::STATUS_UNPROCESSED;
 		$photo->auto_publish = $this->ui->getWidget('auto_publish')->value;
+		$photo->private = $this->ui->getWidget('private')->value;
 
 		$photo->set_content_by_meta_data =
 			$this->ui->getWidget('set_content_by_meta_data')->value;

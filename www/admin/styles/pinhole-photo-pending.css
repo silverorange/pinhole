@@ -3,11 +3,28 @@
 }
 
 #processing_errors {
-	color: #900;
+	width: 500px;
+	font-weight: bold;
+	margin: 1em 0;
 }
 
 #processing_errors div {
-	margin-bottom: 0.5em;
+	font-weight: normal;
+	color: #900;
+	padding-top: 0.5em;
+	border-top: 1px solid #ccc;
+}
+
+#processing_tags {
+	width: 500px;
+	font-weight: bold;
+	margin: 1em 0;
+}
+
+#processing_tags div {
+	font-weight: normal;
+	padding-top: 0.5em;
+	border-top: 1px solid #ccc;
 }
 
 #processing_div {

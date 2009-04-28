@@ -7,12 +7,25 @@
 		<widget class="SwatForm" id="processing_form">
 			<property name="visible" type="boolean">false</property>
 			<property name="action">Photo/LastUpload</property>
-			<widget class="SwatDisplayableContainer" id="processing_message" />
+			<widget class="SwatDisplayableContainer">
+				<widget class="SwatContentBlock" id="processing_message" />
+			</widget>
 			<widget class="SwatButton" id="manual_process">
 				<property name="title">Process Photos</property>
 			</widget>
 		</widget>
+		<widget class="SwatDisplayableContainer" id="processing_tags">
+			<widget class="SwatContentBlock">
+				<property name="content" translatable="yes">Newly added tags:</property>
+			</widget>
+			<widget class="SwatContentBlock" id="processing_tags_content">
+				<property name="content_type">text/xml</property>
+			</widget>
+		</widget>
 		<widget class="SwatDisplayableContainer" id="processing_errors">
+			<widget class="SwatContentBlock">
+				<property name="content" translatable="yes">Errors:</property>
+			</widget>
 			<widget class="SwatContentBlock" id="processing_errors_content">
 				<property name="content_type">text/xml</property>
 			</widget>

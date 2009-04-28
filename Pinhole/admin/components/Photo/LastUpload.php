@@ -45,6 +45,41 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 
 	// }}}
 
+	// init phase
+	// {{{ protected function processInternal()
+
+	protected function processInternal()
+	{
+		parent::processInternal();
+
+		$form = $this->ui->getWidget('processing_form');
+		if ($form->isSubmitted() && $form->isAuthenticated())
+			$this->processPhotos();
+	}
+
+	// }}}
+	// {{{ protected function processPhotos()
+
+	protected function processPhotos()
+	{
+		/* NOTE: this only normally runs if the user doesn't have javacript
+		         enabled or doesn't support ajax. Otherwise, the processing
+		         form is hidden and in-line processing calls are handled via
+		         javascript.
+		*/
+
+		require_once 'Pinhole/PinholePhotoProcessor.php';
+		$processor = new PinholePhotoProcessor($this->app);
+
+		foreach ($this->unprocessed_photos as $photo) {
+			$processor->processPhoto($photo);
+		}
+
+		$this->app->relocate('Photo/LastUpload');
+	}
+
+	// }}}
+
 	// build phase
 	// {{{ protected function display()
 

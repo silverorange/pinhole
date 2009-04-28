@@ -10,6 +10,10 @@
 				<property name="link">Tag/Edit?id=%s</property>
 				<property name="stock_id">edit</property>
 			</widget>
+			<widget class="SwatToolLink" id="merge_tool_link">
+				<property name="title" translatable="yes">Merge with Existing Tag</property>
+				<property name="link">Tag/Merge?id=%s</property>
+			</widget>
 			<widget class="SwatToolLink" id="delete_tool_link">
 				<property name="title" translatable="yes">Delete Tag</property>
 				<property name="link">Tag/Delete?id=%s</property>

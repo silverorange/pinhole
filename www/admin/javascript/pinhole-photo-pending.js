@@ -23,13 +23,14 @@ if (typeof Pinhole.page == 'undefined') {
 
 		this.unprocessed_photos = unprocessed_photos;
 		this.total_count = unprocessed_photos.length;
-		this.processing_message = document.getElementById('processing_message');
-		this.processing_errors = document.getElementById('processing_errors');
 
 		// for display
 		this.current_photo = null;
 		this.spacer_div = document.createElement('div');
 		this.container = document.getElementById('index_view');
+		this.processing_message = document.getElementById('processing_message');
+		this.processing_errors = document.getElementById('processing_errors');
+		this.processing_tags = document.getElementById('processing_tags');
 
 		this.updateMessage();
 
@@ -74,10 +75,12 @@ if (typeof Pinhole.page == 'undefined') {
 		function callBack(response) {
 			self.updateMessage();
 
-			if (response.status == 'processed')
+			if (response.status == 'processed') {
 				self.displayPhoto(response.tile);
-			else
+				self.displayNewTags(response.new_tags);
+			} else {
 				self.displayError(response.error_message);
+			}
 
 			if (self.unprocessed_photos.length > 0)
 				self.processPhoto(self.unprocessed_photos.shift());
@@ -104,14 +107,56 @@ if (typeof Pinhole.page == 'undefined') {
 	}
 
 	// }}}
+	// {{{ proto.displayNewTags
+
+	proto.displayNewTags = function(tags)
+	{
+		for (var i = 0; i < tags.length; i++) {
+			this.displayNewTag(tags[i]);
+		}
+	}
+
+	// }}}
+	// {{{ proto.displayNewTag
+
+	proto.displayNewTag = function(tag)
+	{
+		var div_tag = document.createElement('div');
+		div_tag.appendChild(document.createTextNode(tag.title + ' ('));
+
+		var a_tag = document.createElement('a');
+		a_tag.href = 'Tag/Details?id=' + tag.id;
+		a_tag.innerHTML = 'edit';
+		div_tag.appendChild(a_tag);
+
+		div_tag.appendChild(document.createTextNode(', '));
+
+		var a_tag = document.createElement('a');
+		a_tag.href = 'Tag/Merge?id=' + tag.id;
+		a_tag.innerHTML = 'merge';
+		div_tag.appendChild(a_tag);
+
+		div_tag.appendChild(document.createTextNode(', '));
+
+		var a_tag = document.createElement('a');
+		a_tag.href = 'Tag/Delete?id=' + tag.id;
+		a_tag.innerHTML = 'delete';
+		div_tag.appendChild(a_tag);
+
+		this.processing_tags.appendChild(div_tag);
+		YAHOO.util.Dom.removeClass(this.processing_tags, 'swat-hidden');
+	}
+
+	// }}}
 	// {{{ proto.displayError
 
 	proto.displayError = function(error_message)
 	{
 		var div = document.createElement('div');
-		div.className = 'processing-error';
 		div.innerHTML = error_message;
 		this.processing_errors.appendChild(div);
+
+		YAHOO.util.Dom.removeClass(this.processing_errors, 'swat-hidden');
 	}
 
 	// }}}
@@ -166,6 +211,79 @@ if (typeof Pinhole.page == 'undefined') {
 	}
 
 	// }}}
+	// {{{ proto.toggleCheckAll
+
+	proto.toggleCheckAll = function(visible)
+	{
+		var check_all = YAHOO.util.Dom.getElementsByClassName(
+			'swat-check-all', 'div')
+
+		check_all[0].style.display = (visible) ? 'block' : 'none';
+	}
+
+	// }}}
+
+	// sensitivity
+	// {{{ proto.updateSensitivity
+
+	proto.updateSensitivity = function()
+	{
+		var frame = document.getElementById('index_frame');
+
+		if (this.unprocessed_photos.length == 0) {
+			this.sensitize(frame);
+		} else {
+			this.desensitize(frame);
+		}
+	}
+
+	// }}}
+	// {{{ proto.desensitize
+
+	proto.desensitize = function(element)
+	{
+		var inputs = element.getElementsByTagName('input');
+		var links =  element.getElementsByTagName('a');
+
+		for (var i = 0; i < inputs.length; i++)
+			inputs[i].disabled = true;
+
+		for (var i = 0; i < links.length; i++) {
+			YAHOO.util.Dom.addClass(links[i], 'disabled-link');
+			YAHOO.util.Event.addListener(links[i], 'click',
+				this.handleLinkCallback);
+		}
+	}
+
+	// }}}
+	// {{{ proto.sensitize
+
+	proto.sensitize = function(element)
+	{
+		var inputs = element.getElementsByTagName('input');
+		var links =  element.getElementsByTagName('a');
+
+		for (var i = 0; i < inputs.length; i++)
+			inputs[i].disabled = false;
+
+		for (var i = 0; i < links.length; i++) {
+			YAHOO.util.Dom.removeClass(links[i], 'disabled-link');
+			YAHOO.util.Event.removeListener(links[i], 'click',
+				this.handleLinkCallback);
+		}
+	}
+
+	// }}}
+	// {{{ proto.handleLinkCallback
+
+	proto.handleLinkCallback = function(e, obj)
+	{
+		YAHOO.util.Event.preventDefault(e);
+	}
+
+	// }}}
+
+	// tile building
 	// {{{ proto.getTile
 
 	proto.getTile = function()
@@ -247,75 +365,6 @@ if (typeof Pinhole.page == 'undefined') {
 		}
 
 		return parser;
-	}
-
-	// }}}
-	// {{{ proto.toggleCheckAll
-
-	proto.toggleCheckAll = function(visible)
-	{
-		var check_all = YAHOO.util.Dom.getElementsByClassName(
-			'swat-check-all', 'div')
-
-		check_all[0].style.display = (visible) ? 'block' : 'none';
-	}
-
-	// }}}
-	// {{{ proto.updateSensitivity
-
-	proto.updateSensitivity = function()
-	{
-		var frame = document.getElementById('index_frame');
-
-		if (this.unprocessed_photos.length == 0) {
-			this.sensitize(frame);
-		} else {
-			this.desensitize(frame);
-		}
-	}
-
-	// }}}
-	// {{{ proto.desensitize
-
-	proto.desensitize = function(element)
-	{
-		var inputs = element.getElementsByTagName('input');
-		var links =  element.getElementsByTagName('a');
-
-		for (var i = 0; i < inputs.length; i++)
-			inputs[i].disabled = true;
-
-		for (var i = 0; i < links.length; i++) {
-			YAHOO.util.Dom.addClass(links[i], 'disabled-link');
-			YAHOO.util.Event.addListener(links[i], 'click',
-				this.handleLinkCallback);
-		}
-	}
-
-	// }}}
-	// {{{ proto.sensitize
-
-	proto.sensitize = function(element)
-	{
-		var inputs = element.getElementsByTagName('input');
-		var links =  element.getElementsByTagName('a');
-
-		for (var i = 0; i < inputs.length; i++)
-			inputs[i].disabled = false;
-
-		for (var i = 0; i < links.length; i++) {
-			YAHOO.util.Dom.removeClass(links[i], 'disabled-link');
-			YAHOO.util.Event.removeListener(links[i], 'click',
-				this.handleLinkCallback);
-		}
-	}
-
-	// }}}
-	// {{{ proto.handleLinkCallback
-
-	proto.handleLinkCallback = function(e, obj)
-	{
-		YAHOO.util.Event.preventDefault(e);
 	}
 
 	// }}}

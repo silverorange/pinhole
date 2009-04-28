@@ -44,8 +44,6 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 	}
 
 	// }}}
-
-	// init phase
 	// {{{ protected function processInternal()
 
 	protected function processInternal()
@@ -98,13 +96,20 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 	{
 		parent::buildInternal();
 
+		if (count($this->ui->getWidget('index_view')->model) == 0 &&
+			count($this->unprocessed_photos) == 0)
+			$this->app->relocate('Photo/Pending');
+
 		$this->ui->getWidget('index_frame')->title = Pinhole::_('Last Upload');
-		$this->ui->getWidget('processing_message_content')->content =
-			sprintf(Pinhole::ngettext(
-				count($this->unprocessed_photos),
-				'You have one photo waiting to be processed',
-				'You have %s photos waiting to be processed'),
-				count($this->unprocessed_photos));
+
+		if (count($this->unprocessed_photos) > 0) {
+			$this->ui->getWidget('processing_message_content')->content =
+				sprintf(Pinhole::ngettext(
+					count($this->unprocessed_photos),
+					'You have one photo waiting to be processed',
+					'You have %s photos waiting to be processed'),
+					count($this->unprocessed_photos));
+		}
 
 		$tile_view = $this->ui->getWidget('index_view');
 		$tile_view->check_all_visible_count +=
@@ -130,6 +135,17 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 			$this->ui->getWidget('index_actions')->visible = true;
 			$this->ui->getWidget('processing_form')->visible = true;
 		}
+	}
+
+	// }}}
+	// {{{ protected function buildNavBar()
+
+	protected function buildNavBar()
+	{
+		parent::buildNavBar();
+
+		$this->layout->navbar->createEntry(Pinhole::_('Pending Photos'),
+			'Photo/Pending');
 	}
 
 	// }}}

@@ -318,19 +318,29 @@ if (typeof Pinhole.page == 'undefined') {
 
 	proto.convertXmlToDom = function(xml_node)
 	{
+		var dom_node = false;
+
+		// text nodes
 		if (xml_node.nodeType == 3) {
-			var dom_node = document.createTextNode(xml_node.nodeValue);
-		} else {
+			var dom_node = document.createTextNode(xml_node.data);
+
+		// elements
+		} else if (xml_node.nodeType == 1) {
 			var dom_node = document.createElement(xml_node.nodeName);
-			dom_node.innerHTML = xml_node.nodeValue;
 
 			for (var i = 0; i < xml_node.attributes.length; i++) {
+				if (xml_node.attributes[i].name == 'class') {
+					dom_node.className = xml_node.attributes[i].value;
+				}
 				dom_node.setAttribute(xml_node.attributes[i].name,
 					xml_node.attributes[i].value);
 			}
 
-			for (var i = 0; i < xml_node.childNodes.length; i++)
-				dom_node.appendChild(this.convertXmlToDom(xml_node.childNodes[i]));
+			for (var i = 0; i < xml_node.childNodes.length; i++) {
+				var dom_child = this.convertXmlToDom(xml_node.childNodes[i]);
+				if (dom_child != false)
+					dom_node.appendChild(dom_child);
+			}
 		}
 
 		return dom_node;

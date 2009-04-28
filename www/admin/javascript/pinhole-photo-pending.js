@@ -300,7 +300,7 @@ if (typeof Pinhole.page == 'undefined') {
 		var dom = parser.loadXML(tile_string);
 		var div_xml = dom.getElementsByTagName('div')[0];
 
-		if (1==2 && document.importNode && !Pinhole.page.PendingPhotosPage.is_webkit) {
+		if (document.importNode && !Pinhole.page.PendingPhotosPage.is_webkit) {
 			var div_dom = document.importNode(div_xml, true);
 		} else {
 			/*

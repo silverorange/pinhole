@@ -99,7 +99,7 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 		parent::buildInternal();
 
 		$this->ui->getWidget('index_frame')->title = Pinhole::_('Last Upload');
-		$this->ui->getWidget('processing_message')->content =
+		$this->ui->getWidget('processing_message_content')->content =
 			sprintf(Pinhole::ngettext(
 				count($this->unprocessed_photos),
 				'You have one photo waiting to be processed',

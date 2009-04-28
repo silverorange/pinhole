@@ -143,6 +143,8 @@ if (typeof Pinhole.page == 'undefined') {
 		a_tag.innerHTML = 'delete';
 		div_tag.appendChild(a_tag);
 
+		div_tag.appendChild(document.createTextNode(')'));
+
 		this.processing_tags.appendChild(div_tag);
 		YAHOO.util.Dom.removeClass(this.processing_tags, 'swat-hidden');
 	}

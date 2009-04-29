@@ -46,6 +46,19 @@ if (typeof Pinhole.page == 'undefined') {
 	var proto = Pinhole.page.PendingPhotosPage.prototype;
 
 	Pinhole.page.PendingPhotosPage.fade_duration = 1;
+	Pinhole.page.PendingPhotosPage.tag_component = 'Tag';
+	Pinhole.page.PendingPhotosPage.processor_server =
+		'Photo/ProcessorServer';
+
+	Pinhole.page.PendingPhotosPage.processing_complete_text =
+		'Processing complete!';
+
+	Pinhole.page.PendingPhotosPage.processing_text =
+		'Procssing photo %s of %s';
+
+	Pinhole.page.PendingPhotosPage.edit_tag_text = 'edit';
+	Pinhole.page.PendingPhotosPage.merge_tag_text = 'merge';
+	Pinhole.page.PendingPhotosPage.delete_tag_text = 'delete';
 
 	/**
 	 * Check if the browser is Safari
@@ -57,16 +70,6 @@ if (typeof Pinhole.page == 'undefined') {
 	 */
 	Pinhole.page.PendingPhotosPage.is_webkit =
 		(/AppleWebKit|Konqueror|KHTML/gi).test(navigator.userAgent);
-
-	Pinhole.page.PendingPhotosPage.processing_complete_text =
-		'Processing complete!';
-
-	Pinhole.page.PendingPhotosPage.processing_text =
-		'Procssing photo %s of %s';
-
-	Pinhole.page.PendingPhotosPage.edit_tag_text = 'edit';
-	Pinhole.page.PendingPhotosPage.merge_tag_text = 'merge';
-	Pinhole.page.PendingPhotosPage.delete_tag_text = 'delete';
 
 	// }}}
 	// {{{ proto.processPhoto
@@ -135,21 +138,21 @@ if (typeof Pinhole.page == 'undefined') {
 		div_tag.appendChild(document.createTextNode(tag.title + ' ('));
 
 		var a_tag = document.createElement('a');
-		a_tag.href = 'Tag/Details?id=' + tag.id;
+		a_tag.href = this.tag_component + '/Details?id=' + tag.id;
 		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.edit_tag_text;
 		div_tag.appendChild(a_tag);
 
 		div_tag.appendChild(document.createTextNode(', '));
 
 		var a_tag = document.createElement('a');
-		a_tag.href = 'Tag/Merge?id=' + tag.id;
+		a_tag.href = this.tag_component + '/Merge?id=' + tag.id;
 		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.merge_tag_text;
 		div_tag.appendChild(a_tag);
 
 		div_tag.appendChild(document.createTextNode(', '));
 
 		var a_tag = document.createElement('a');
-		a_tag.href = 'Tag/Delete?id=' + tag.id;
+		a_tag.href = this.tag_component + '/Delete?id=' + tag.id;
 		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.delete_tag_text;
 		div_tag.appendChild(a_tag);
 

@@ -26,7 +26,7 @@ if (typeof Pinhole.page == 'undefined') {
 
 		// for display
 		this.current_photo = null;
-		this.spacer_div = document.createElement('div');
+		this.spacer_div = this.getSpacer();
 		this.container = document.getElementById('index_view');
 		this.processing_message = document.getElementById('processing_message');
 		this.processing_errors = document.getElementById('processing_errors');
@@ -46,11 +46,6 @@ if (typeof Pinhole.page == 'undefined') {
 	var proto = Pinhole.page.PendingPhotosPage.prototype;
 
 	Pinhole.page.PendingPhotosPage.fade_duration = 1;
-	Pinhole.page.PendingPhotosPage.tile_width = 100;
-	Pinhole.page.PendingPhotosPage.tile_height = 100;
-	Pinhole.page.PendingPhotosPage.tile_margin_y = 5;
-	Pinhole.page.PendingPhotosPage.tile_margin_x = 10;
-	Pinhole.page.PendingPhotosPage.tile_padding = 10;
 
 	/**
 	 * Check if the browser is Safari
@@ -80,11 +75,14 @@ if (typeof Pinhole.page == 'undefined') {
 				self.displayNewTags(response.new_tags);
 			} else {
 				self.displayError(response.error_message);
+				self.updateSensitivity();
 			}
 
 			if (self.unprocessed_photos.length > 0)
 				self.processPhoto(self.unprocessed_photos.shift());
 		}
+
+		this.displaySpacer();
 
 		var client = new XML_RPC_Client('Photo/ProcessorServer');
 		client.callProcedure('processPhoto', callBack, [id], 'int');
@@ -162,54 +160,56 @@ if (typeof Pinhole.page == 'undefined') {
 	}
 
 	// }}}
-	// {{{ proto.displayPhoto
+	// {{{ proto.displaySpacer
 
-	proto.displayPhoto = function(tile)
+	proto.displaySpacer = function()
 	{
-		this.current_tile = tile;
-
 		this.spacer_div.style.width = '0';
-		this.spacer_div.style.height =
-			(Pinhole.page.PendingPhotosPage.tile_height +
-			Pinhole.page.PendingPhotosPage.tile_margin_y * 2 +
-			Pinhole.page.PendingPhotosPage.tile_padding * 2) + 'px';
-
-		this.spacer_div.style.cssFloat = 'left';
-		this.spacer_div.style.margin = '0';
 		this.container.insertBefore(this.spacer_div,
 			this.container.firstChild);
 
 		var animation = new YAHOO.util.Anim(this.spacer_div,
-			{ width: { to:
-				Pinhole.page.PendingPhotosPage.tile_width +
-				Pinhole.page.PendingPhotosPage.tile_margin_x * 2 +
-				Pinhole.page.PendingPhotosPage.tile_padding * 2 } },
+			{ width: { to: 126 } },
 			1, YAHOO.util.Easing.easeOutStrong);
 
-		animation.onComplete.subscribe(this.fadeInTile, this, true);
 		animation.animate();
 	}
 
 	// }}}
-	// {{{ proto.fadeInTile
+	// {{{ proto.getSpacer
 
-	proto.fadeInTile = function()
+	proto.getSpacer = function()
 	{
-		var tile = this.getTile();
-		tile.style.opacity = 0;
+		var spacer_div = document.createElement('div');
+		spacer_div.className = 'loading swat-tile';
+		spacer_div.style.height = '180px';
+		spacer_div.style.border = '0';
+		return spacer_div;
+	}
+
+	// }}}
+	// {{{ proto.displayPhoto
+
+	proto.displayPhoto = function(tile_xml)
+	{
+		var tile = this.getTile(tile_xml);
 		this.desensitize(tile);
 
 		this.container.replaceChild(tile, this.spacer_div);
+
+		/*
 		var animation = new YAHOO.util.Anim(tile, {opacity: { to:  1} },
 			Pinhole.page.PendingPhotosPage.fade_duration,
 			YAHOO.util.Easing.easeInStrong);
 
 		animation.onComplete.subscribe(this.updateSensitivity, this, true);
 		animation.animate();
+		*/
 
 		index_view.init();
 		items.init();
 		this.toggleCheckAll(true);
+		this.updateSensitivity();
 	}
 
 	// }}}
@@ -234,6 +234,7 @@ if (typeof Pinhole.page == 'undefined') {
 
 		if (this.unprocessed_photos.length == 0) {
 			this.sensitize(frame);
+			this.spacer_div.style.display = 'none';
 		} else {
 			this.desensitize(frame);
 		}
@@ -288,12 +289,12 @@ if (typeof Pinhole.page == 'undefined') {
 	// tile building
 	// {{{ proto.getTile
 
-	proto.getTile = function()
+	proto.getTile = function(tile_xml)
 	{
 		var tile_string = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 			'<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">' +
 			'<head><title>tile</title></head><body>' +
-			this.current_tile +
+			tile_xml +
 			'</body></html>';
 
 		var parser = this.getXMLParser();

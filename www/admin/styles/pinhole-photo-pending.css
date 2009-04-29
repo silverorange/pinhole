@@ -35,3 +35,7 @@ a.disabled-link {
 	text-decoration: none;
 	color: #999;
 }
+
+div.loading {
+	background: url(../../../swat/images/swat-button-throbber.gif) no-repeat 50% 50%;
+}

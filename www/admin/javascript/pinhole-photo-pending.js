@@ -58,6 +58,16 @@ if (typeof Pinhole.page == 'undefined') {
 	Pinhole.page.PendingPhotosPage.is_webkit =
 		(/AppleWebKit|Konqueror|KHTML/gi).test(navigator.userAgent);
 
+	Pinhole.page.PendingPhotosPage.processing_complete_text =
+		'Processing complete!';
+
+	Pinhole.page.PendingPhotosPage.processing_text =
+		'Procssing photo %s of %s';
+
+	Pinhole.page.PendingPhotosPage.edit_tag_text = 'edit';
+	Pinhole.page.PendingPhotosPage.merge_tag_text = 'merge';
+	Pinhole.page.PendingPhotosPage.delete_tag_text = 'delete';
+
 	// }}}
 	// {{{ proto.processPhoto
 
@@ -93,15 +103,17 @@ if (typeof Pinhole.page == 'undefined') {
 
 	proto.updateMessage = function()
 	{
-		// TODO: make translatable
 		var photo_count = this.total_count - this.unprocessed_photos.length;
 
 		if (photo_count == this.total_count) {
-			this.processing_message.innerHTML = 'Processing complete!';
+			var message = Pinhole.page.PendingPhotosPage.processing_complete_text;
 		} else {
-			this.processing_message.innerHTML =
-				'Processing photo ' + (photo_count + 1) + ' of ' + this.total_count;
+			var message = Pinhole.page.PendingPhotosPage.processing_text;
+			message = message.replace(/%s/, photo_count + 1);
+			message = message.replace(/%s/, this.total_count);
 		}
+
+		this.processing_message.innerHTML = message;
 	}
 
 	// }}}
@@ -124,21 +136,21 @@ if (typeof Pinhole.page == 'undefined') {
 
 		var a_tag = document.createElement('a');
 		a_tag.href = 'Tag/Details?id=' + tag.id;
-		a_tag.innerHTML = 'edit';
+		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.edit_tag_text;
 		div_tag.appendChild(a_tag);
 
 		div_tag.appendChild(document.createTextNode(', '));
 
 		var a_tag = document.createElement('a');
 		a_tag.href = 'Tag/Merge?id=' + tag.id;
-		a_tag.innerHTML = 'merge';
+		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.merge_tag_text;
 		div_tag.appendChild(a_tag);
 
 		div_tag.appendChild(document.createTextNode(', '));
 
 		var a_tag = document.createElement('a');
 		a_tag.href = 'Tag/Delete?id=' + tag.id;
-		a_tag.innerHTML = 'delete';
+		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.delete_tag_text;
 		div_tag.appendChild(a_tag);
 
 		div_tag.appendChild(document.createTextNode(')'));

@@ -352,12 +352,12 @@ class PinholePhotoEdit extends AdminDBEdit
 	{
 		if ($this->ui->getWidget('proceed_button')->hasBeenClicked() &&
 			$this->getNextPhoto() !== false)
-			$this->app->relocate('Photo/Edit?id='.
+			$this->app->relocate($this->getComponentName().'/Edit?id='.
 				$this->getNextPhoto()->id);
 		elseif ($this->pending && $this->getPendingPhotoCount() > 0)
-			$this->app->relocate('Photo/Pending');
+			$this->app->relocate($this->getComponentName().'/Pending');
 		elseif ($this->pending)
-			$this->app->relocate('Photo');
+			$this->app->relocate($this->getComponentName());
 		else
 			parent::relocate();
 	}

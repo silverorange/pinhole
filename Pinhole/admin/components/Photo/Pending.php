@@ -33,7 +33,7 @@ class PinholePhotoPending extends AdminIndex
 
 		if (!($this instanceof PinholePhotoLastUpload) &&
 			count($this->getUnProcessedPhotos()) > 0)
-			$this->app->relocate('Photo/LastUpload');
+			$this->app->relocate($this->getComponentName().'/LastUpload');
 
 		// setup tag entry control
 		$this->ui->getWidget('tags')->setApplication($this->app);

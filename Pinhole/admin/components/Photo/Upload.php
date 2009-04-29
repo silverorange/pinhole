@@ -87,7 +87,7 @@ class PinholePhotoUpload extends AdminPage
 
 			$this->saveConfigSettings();
 
-			$this->app->relocate('Photo/LastUpload');
+			$this->app->relocate($this->getComponentName().'/LastUpload');
 		}
 	}
 
@@ -205,6 +205,12 @@ class PinholePhotoUpload extends AdminPage
 			if ($value !== null)
 				$this->ui->getWidget($id)->value = $value;
 		}
+
+		$this->ui->getWidget('form')->action =
+			$this->getComponentName().'/Upload';
+
+		$this->ui->getWidget('form')->upload_status_server =
+			$this->getComponentName().'/UploadStatusServer';
 	}
 
 	// }}}

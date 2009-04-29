@@ -73,7 +73,7 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 			$processor->processPhoto($photo);
 		}
 
-		$this->app->relocate('Photo/LastUpload');
+		$this->app->relocate($this->getComponentName().'/LastUpload');
 	}
 
 	// }}}
@@ -98,7 +98,7 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 
 		if (count($this->ui->getWidget('index_view')->model) == 0 &&
 			count($this->unprocessed_photos) == 0)
-			$this->app->relocate('Photo/Pending');
+			$this->app->relocate($this->getComponentName().'/Pending');
 
 		$this->ui->getWidget('index_frame')->title = Pinhole::_('Last Upload');
 
@@ -196,6 +196,11 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 		$javascript.= sprintf(
 			"Pinhole.page.PendingPhotosPage.merge_tag_text = %s;\n",
 			SwatString::quoteJavaScriptString(Pinhole::_('merge')));
+
+		$javascript.= sprintf(
+			"Pinhole.page.PendingPhotosPage.processor_server = %s;\n",
+			SwatString::quoteJavaScriptString(
+				$this->getComponentName().'/ProcessorServer'));
 
 		$javascript.= sprintf(
 			"var page = new Pinhole.page.PendingPhotosPage([%s]);\n",

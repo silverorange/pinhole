@@ -5,8 +5,6 @@
 	<widget class="SwatFrame">
 		<property name="title" translatable="yes">Upload Photos</property>
 		<widget class="SiteUploadProgressForm" id="form">
-			<property name="action">Photo/Upload</property>
-			<property name="upload_status_server">Photo/UploadStatusServer</property>
 			<widget class="SwatDisplayableContainer">
 				<property name="classes[]">clearfix</property>
 				<widget class="SwatDisplayableContainer">

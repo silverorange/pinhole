@@ -7,21 +7,25 @@
 		<widget class="SiteUploadProgressForm" id="form">
 			<property name="action">Photo/Upload</property>
 			<property name="upload_status_server">Photo/UploadStatusServer</property>
-			<widget class="SwatFormField" id="file_field">
-				<property name="title">Image File or Zip File</property>
-				<widget class="SwatFileEntry" id="file">
-					<property name="display_maximum_upload_size" type="boolean">true</property>
+			<widget class="SwatDisplayableContainer">
+				<property name="classes[]">clearfix</property>
+				<widget class="SwatDisplayableContainer">
+					<property name="classes[]">left-column</property>
+					<widget class="SwatFormField" id="file_field">
+						<property name="title">Image File or Zip File</property>
+						<widget class="SwatFileEntry" id="file">
+							<property name="size" type="integer">20</property>
+							<property name="display_maximum_upload_size" type="boolean">true</property>
+						</widget>
+					</widget>
 				</widget>
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title">Publish photos automatically?</property>
-				<property name="note">Leave this unchecked if you would like to add photo content and tags manually.</property>
-				<widget class="SwatCheckbox" id="auto_publish" />
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title">Time Zone</property>
-				<property name="note">This is the time zone of the location this photo/set was taken. Photos time will be displayed using this time zone.</property>
-				<widget class="SwatTimeZoneEntry" id="photo_time_zone" />
+				<widget class="SwatDisplayableContainer">
+					<property name="classes[]">right-column</property>
+					<widget class="SwatFormField">
+						<property name="title">Photo Time Zone</property>
+						<widget class="SwatTimeZoneEntry" id="photo_time_zone" />
+					</widget>
+				</widget>
 			</widget>
 			<widget class="SwatDisclosure">
 				<property name="title">Advanced Options</property>
@@ -32,7 +36,7 @@
 					<widget class="SwatTimeZoneEntry" id="camera_time_zone" />
 				</widget>
 				<widget class="SwatFormField" id="private_field">
-					<property name="title">Mark photos as private</property>
+					<property name="title">Set photos as private</property>
 					<widget class="SwatCheckbox" id="private" />
 				</widget>
 				<widget class="SwatFormField">
@@ -51,6 +55,10 @@
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
 					<property name="title" type="string">Upload Photos</property>
+				</widget>
+				<widget class="SwatFormField">
+					<property name="title">Leave photos unpublished so I can add photo content and tags.</property>
+					<widget class="SwatCheckbox" id="auto_publish" />
 				</widget>
 			</widget>
 		</widget>

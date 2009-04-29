@@ -173,8 +173,35 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 		foreach ($this->unprocessed_photos as $photo)
 			$unprocessed_photos_array[] = $photo->id;
 
-		return sprintf('var page = new Pinhole.page.PendingPhotosPage([%s]);',
+		$javascript = '';
+
+		$javascript.= sprintf(
+			"Pinhole.page.PendingPhotosPage.processing_complete_text = %s;\n",
+			SwatString::quoteJavaScriptString(
+				Pinhole::_('Processing complete!')));
+
+		$javascript.= sprintf(
+			"Pinhole.page.PendingPhotosPage.processing_text = %s;\n",
+			SwatString::quoteJavaScriptString(
+				Pinhole::_('Procssing photo %s of %s')));
+
+		$javascript.= sprintf(
+			"Pinhole.page.PendingPhotosPage.edit_tag_text = %s;\n",
+			SwatString::quoteJavaScriptString(Pinhole::_('edit')));
+
+		$javascript.= sprintf(
+			"Pinhole.page.PendingPhotosPage.merge_tag_text = %s;\n",
+			SwatString::quoteJavaScriptString(Pinhole::_('merge')));
+
+		$javascript.= sprintf(
+			"Pinhole.page.PendingPhotosPage.merge_tag_text = %s;\n",
+			SwatString::quoteJavaScriptString(Pinhole::_('merge')));
+
+		$javascript.= sprintf(
+			"var page = new Pinhole.page.PendingPhotosPage([%s]);\n",
 			implode(', ', $unprocessed_photos_array));
+
+		return $javascript;
 	}
 
 	// }}}

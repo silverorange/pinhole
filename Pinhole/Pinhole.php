@@ -152,7 +152,13 @@ class Pinhole
 
 			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
+
+			// Save upload form data
 			'pinhole.camera_time_zone' => null,
+			'pinhole.auto_publish' => null,
+			'pinhole.set_private_photos' => null,
+			'pinhole.set_content_by_meta_data' => null,
+			'pinhole.set_tags_by_meta_data' => null,
 
 			'pinhole.ad_top' => '',
 			'pinhole.ad_bottom' => '',

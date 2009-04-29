@@ -18,6 +18,7 @@ class PinholePhotoUpload extends AdminPage
 	// {{{ protected properties
 
 	protected $ui_xml = 'Pinhole/admin/components/Photo/upload.xml';
+	protected $config_ui_map = array();
 
 	// }}}
 
@@ -40,6 +41,15 @@ class PinholePhotoUpload extends AdminPage
 
 		$this->ui->getWidget('private_field')->visible =
 			$this->app->config->pinhole->enable_private_photos;
+
+		$this->config_ui_map = array(
+			'camera_time_zone' => 'photo_time_zone',
+			'auto_publish' => 'auto_publish',
+			'set_private_photos' => 'private',
+			'set_content_by_meta_data' => 'set_content_by_meta_data',
+			'set_tags_by_meta_data' => 'set_tags_by_meta_data',
+		);
+
 	}
 
 	// }}}
@@ -74,6 +84,8 @@ class PinholePhotoUpload extends AdminPage
 				$this->saveTempPhoto($upload_set, $image_set, $temp_filename,
 					$original_filename);
 			}
+
+			$this->saveConfigSettings();
 
 			$this->app->relocate('Photo/LastUpload');
 		}
@@ -113,6 +125,7 @@ class PinholePhotoUpload extends AdminPage
 			$this->ui->getWidget('set_tags_by_meta_data')->value;
 
 		$this->setTimeZone($photo);
+
 		$photo->save();
 	}
 
@@ -131,8 +144,6 @@ class PinholePhotoUpload extends AdminPage
 		if ($photo->photo_time_zone === null)
 			$photo->photo_time_zone = $this->app->default_time_zone->getID();
 
-		$this->app->config->save(array('pinhole.camera_time_zone'));
-
 		// convert the photo date to UTC using the camera time zone
 		$photo->photo_date = new SwatDate($photo->photo_date);
 		$camera_time_zone = $this->ui->getWidget('camera_time_zone')->value;
@@ -141,6 +152,25 @@ class PinholePhotoUpload extends AdminPage
 
 		$photo->photo_date->setTZbyID($camera_time_zone);
 		$photo->photo_date->toUTC();
+	}
+
+	// }}}
+	// {{{ protected function saveConfigSettings()
+
+	protected function saveConfigSettings()
+	{
+		$config_paths = array();
+		foreach ($this->config_ui_map as $config_name => $id) {
+			$value = $this->ui->getWidget($id)->value;
+			if (is_bool($value))
+				$value = ($value) ? '1' : '0';
+
+			$this->app->config->pinhole->$config_name = $value;
+
+			$config_paths[] = 'pinhole.'.$config_name;
+		}
+
+		$this->app->config->save($config_paths);
 	}
 
 	// }}}
@@ -164,6 +194,20 @@ class PinholePhotoUpload extends AdminPage
 	// }}}
 
 	// build phase
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
+	{
+		parent::buildInternal();
+
+		foreach ($this->config_ui_map as $config_name => $id) {
+			$value = $this->app->config->pinhole->$config_name;
+			if ($value !== null)
+				$this->ui->getWidget($id)->value = $value;
+		}
+	}
+
+	// }}}
 	// {{{ protected function display()
 
 	protected function display()

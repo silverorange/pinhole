@@ -44,7 +44,7 @@ class PinholePhotoUpload extends AdminPage
 
 		$this->config_ui_map = array(
 			'camera_time_zone' => 'photo_time_zone',
-			'auto_publish' => 'auto_publish',
+			'set_pending' => 'set_pending',
 			'set_private_photos' => 'private',
 			'set_content_by_meta_data' => 'set_content_by_meta_data',
 			'set_tags_by_meta_data' => 'set_tags_by_meta_data',
@@ -115,7 +115,7 @@ class PinholePhotoUpload extends AdminPage
 		$photo->temp_filename = $filename;
 		$photo->image_set = $this->getImageSet();
 		$photo->status = PinholePhoto::STATUS_UNPROCESSED;
-		$photo->auto_publish = $this->ui->getWidget('auto_publish')->value;
+		$photo->auto_publish = (!$this->ui->getWidget('set_pending')->value);
 		$photo->private = $this->ui->getWidget('private')->value;
 
 		$photo->set_content_by_meta_data =

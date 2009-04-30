@@ -56,7 +56,7 @@
 				</widget>
 				<widget class="SwatFormField">
 					<property name="title">Leave photos unpublished so I can add photo content and tags.</property>
-					<widget class="SwatCheckbox" id="auto_publish" />
+					<widget class="SwatCheckbox" id="set_pending" />
 				</widget>
 			</widget>
 		</widget>

@@ -155,7 +155,7 @@ class Pinhole
 
 			// Save upload form data
 			'pinhole.camera_time_zone' => null,
-			'pinhole.auto_publish' => null,
+			'pinhole.set_pending' => null,
 			'pinhole.set_private_photos' => null,
 			'pinhole.set_content_by_meta_data' => null,
 			'pinhole.set_tags_by_meta_data' => null,

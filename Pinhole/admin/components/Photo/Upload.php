@@ -113,7 +113,6 @@ class PinholePhotoUpload extends AdminPage
 		$photo->upload_set = $upload_set;
 		$photo->original_filename = $original_filename;
 		$photo->temp_filename = $filename;
-		$photo->image_set = $this->getImageSet();
 		$photo->status = PinholePhoto::STATUS_UNPROCESSED;
 		$photo->auto_publish = (!$this->ui->getWidget('set_pending')->value);
 		$photo->private = $this->ui->getWidget('private')->value;

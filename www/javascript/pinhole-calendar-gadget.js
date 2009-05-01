@@ -28,8 +28,11 @@ function PinholeCalendarGadget(id, year, month)
 	this.cached_month = {};
 	this.cached_body = {};
 
-	this.cached_month[this.getCacheKey()] = this.calendar_month.innerHTML;
-	this.cached_body[this.getCacheKey()] = this.calendar_body.innerHTML;
+	var cache_key = year + '_' + month;
+	this.cached_month[cache_key] = this.calendar_month.innerHTML;
+	this.cached_body[cache_key] = this.calendar_body.innerHTML;
+
+	this.preloadPrevMonth();
 
 	YAHOO.util.Event.addListener(this.next_link, 'click', this.getNextMonth,
 		this, true);
@@ -47,7 +50,7 @@ PinholeCalendarGadget.prototype.getNextMonth = function(e)
 		this.month++;
 	}
 
-	this.loadCalendar();
+	this.loadCalendar(this.month, this.year, true);
 	e.preventDefault();
 }
 
@@ -60,36 +63,41 @@ PinholeCalendarGadget.prototype.getPrevMonth = function(e)
 		this.month--;
 	}
 
-	this.loadCalendar();
+	this.loadCalendar(this.month, this.year, true);
+	this.preloadPrevMonth();
 	e.preventDefault();
 }
 
-PinholeCalendarGadget.prototype.loadCalendar = function()
+PinholeCalendarGadget.prototype.preloadPrevMonth = function()
+{
+	var month = (this.month == 1) ? 12 : this.month - 1;
+	var year = (this.month == 1) ? this.year - 1 : this.year;
+	this.loadCalendar(month, year, false);
+}
+
+PinholeCalendarGadget.prototype.loadCalendar = function(month, year, redraw)
 {
 	var self = this;
 
-	var cache_key = this.getCacheKey();
+	var cache_key = year + '_' + month;
 
-	function callBack(response)
+	function callback(response)
 	{
-		self.calendar_month.innerHTML = response['calendar_month'];
-		self.calendar_body.innerHTML = response['calendar_body'];
+		if (redraw) {
+			self.calendar_month.innerHTML = response['calendar_month'];
+			self.calendar_body.innerHTML = response['calendar_body'];
+		}
 
 		self.cached_month[cache_key] = response['calendar_month'];
 		self.cached_body[cache_key] = response['calendar_body'];
 	}
 
-	if (this.cached_month[cache_key] && this.cached_body[cache_key]) {
+	if (this.cached_month[cache_key] && this.cached_body[cache_key] && redraw) {
 		self.calendar_month.innerHTML = this.cached_month[cache_key];
 		self.calendar_body.innerHTML = this.cached_body[cache_key];
 	} else {
-		this.client.callProcedure('getCalendar', callBack,
-			[this.year, this.month],
-			['int', 'int']);
+		this.client.callProcedure('getCalendar', callback,
+			[year, month], ['int', 'int']);
 	}
 }
 
-PinholeCalendarGadget.prototype.getCacheKey = function()
-{
-	return this.year + '_' + this.month;
-}

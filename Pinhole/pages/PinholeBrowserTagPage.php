@@ -98,7 +98,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		$cache_key = sprintf('%s.%s.%s',
 			$this->cache_key, 'buildTags', $this->display_type);
 
-		$content = $this->getCacheValue($cache_key, 'photos');
+		$content = $this->app->getCacheValue($cache_key, 'photos');
 		if ($content !== false) {
 			$this->ui->getWidget('tag_list')->content = $content;
 			return;
@@ -128,7 +128,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 
 		$content = ob_get_clean();
 
-		$this->addCacheValue($content, $cache_key, 'photos');
+		$this->app->addCacheValue($content, $cache_key, 'photos');
 		$this->ui->getWidget('tag_list')->content = $content;
 	}
 

@@ -248,7 +248,7 @@ class PinholeAtomPage extends SitePage
 			$this->dimension->shortname,
 			$this->app->session->isLoggedIn() ? 'private' : 'public');
 
-		$entry = $this->getCacheValue($cache_key, 'photos');
+		$entry = $this->app->getCacheValue($cache_key, 'photos');
 		if ($entry !== false)
 			return $entry;
 
@@ -263,7 +263,7 @@ class PinholeAtomPage extends SitePage
 		$entry = new XML_Atom_Entry($uri, $photo->getTitle(),
 			$photo->publish_date);
 
-		$this->addCacheValue($entry, $cache_key, 'photos');
+		$this->app->addCacheValue($entry, $cache_key, 'photos');
 
 		if ($photo->hasDimension($this->dimension->shortname))
 			$dimension = $this->dimension;

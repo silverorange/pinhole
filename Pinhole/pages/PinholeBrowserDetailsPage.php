@@ -67,7 +67,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function createPhoto($photo_id)
 	{
 		$cache_key = 'PinholePhoto.'.$photo_id;
-		$photo = $this->getCacheValue($cache_key, 'photos');
+		$photo = $this->app->getCacheValue($cache_key, 'photos');
 		if ($photo !== false) {
 			$this->photo = $photo;
 			$this->photo->setDatabase($this->app->db);
@@ -79,7 +79,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$this->photo = new $photo_class();
 			$this->photo->setDatabase($this->app->db);
 			$this->photo->load($photo_id);
-			$this->addCacheValue($this->photo, $cache_key, 'photos');
+			$this->app->addCacheValue($this->photo, $cache_key, 'photos');
 		}
 
 		if ($this->photo !== null && $this->photo->id !== null) {

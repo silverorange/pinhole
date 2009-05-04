@@ -183,7 +183,7 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 		$javascript.= sprintf(
 			"Pinhole.page.PendingPhotosPage.processing_text = %s;\n",
 			SwatString::quoteJavaScriptString(
-				Pinhole::_('Procssing photo %s of %s')));
+				Pinhole::_('Processing photo %s of %s')));
 
 		$javascript.= sprintf(
 			"Pinhole.page.PendingPhotosPage.edit_tag_text = %s;\n",

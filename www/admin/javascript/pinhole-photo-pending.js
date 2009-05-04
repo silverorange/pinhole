@@ -61,7 +61,7 @@ if (typeof Pinhole.page == 'undefined') {
 		'Processing complete!';
 
 	Pinhole.page.PendingPhotosPage.processing_text =
-		'Procssing photo %s of %s';
+		'Processing photo %s of %s';
 
 	Pinhole.page.PendingPhotosPage.edit_tag_text = 'edit';
 	Pinhole.page.PendingPhotosPage.merge_tag_text = 'merge';

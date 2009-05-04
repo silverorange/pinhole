@@ -80,6 +80,9 @@ class PinholeLoginPage extends SitePage
 				$uri = ($form->getHiddenField('referrer') === null) ? '' :
 					$form->getHiddenField('referrer');
 
+				if ($uri == 'login' || $uri == 'login?')
+					$uri = '';
+
 				$this->app->relocate($uri, true);
 			} else {
 				$message = new SwatMessage(Site::_('Login Incorrect'),

@@ -56,7 +56,7 @@ class PinholeSessionModule extends SiteSessionModule
 		$passphrase = md5($passphrase);
 		$instance = $this->getInstanceId();
 
-		$sql = sprintf('select instance from instanceconfigsetting
+		$sql = sprintf('select instance from InstanceConfigSetting
 			where instance %s %s and name = %s and value = %s',
 			SwatDB::equalityOperator($instance),
 			$this->app->db->quote($instance, 'integer'),
@@ -68,8 +68,9 @@ class PinholeSessionModule extends SiteSessionModule
 		if ($id !== null) {
 			$this->activate();
 
-			if (!isset($this->authenticated_instances))
-				$this->authenticated_instances = array();
+			if (!isset($this->authenticated_instances) ||
+				!($this->authenticated_instances instanceof ArrayObject))
+				$this->authenticated_instances = new ArrayObject();
 
 			$this->authenticated_instances[$this->getInstanceId()] = true;
 
@@ -113,8 +114,6 @@ class PinholeSessionModule extends SiteSessionModule
 	public function isLoggedIn()
 	{
 		if (!$this->isActive()) {
-			return false;
-		} elseif (!$this->app->isSecure()) {
 			return false;
 		} elseif (isset($this->authenticated_instances) &&
 			array_key_exists($this->getInstanceId(),

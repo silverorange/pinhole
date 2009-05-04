@@ -1,5 +1,6 @@
 /**
- * @copyright 2007 silverorange
+ * @copyright 2007-2009 silverorange
+ * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 
 if (typeof Pinhole == 'undefined') {
@@ -11,6 +12,12 @@ if (typeof Pinhole.page == 'undefined') {
 }
 
 (function () {
+
+	var Dom    = YAHOO.util.Dom;
+	var Event  = YAHOO.util.Event;
+	var Anim   = YAHOO.util.Anim;
+	var Easing = YAHOO.util.Easing;
+
 	// {{{ Pinhole.page.PendingPhotosPage
 
 	Pinhole.page.PendingPhotosPage = function(unprocessed_photos)
@@ -159,7 +166,7 @@ if (typeof Pinhole.page == 'undefined') {
 		div_tag.appendChild(document.createTextNode(')'));
 
 		this.processing_tags.appendChild(div_tag);
-		YAHOO.util.Dom.removeClass(this.processing_tags, 'swat-hidden');
+		Dom.removeClass(this.processing_tags, 'swat-hidden');
 	}
 
 	// }}}
@@ -171,7 +178,7 @@ if (typeof Pinhole.page == 'undefined') {
 		div.innerHTML = error_message;
 		this.processing_errors.appendChild(div);
 
-		YAHOO.util.Dom.removeClass(this.processing_errors, 'swat-hidden');
+		Dom.removeClass(this.processing_errors, 'swat-hidden');
 	}
 
 	// }}}
@@ -183,9 +190,9 @@ if (typeof Pinhole.page == 'undefined') {
 		this.container.insertBefore(this.spacer_div,
 			this.container.firstChild);
 
-		var animation = new YAHOO.util.Anim(this.spacer_div,
+		var animation = new Anim(this.spacer_div,
 			{ width: { to: 126 } },
-			1, YAHOO.util.Easing.easeOutStrong);
+			1, Easing.easeOutStrong);
 
 		animation.animate();
 	}
@@ -213,9 +220,9 @@ if (typeof Pinhole.page == 'undefined') {
 		this.container.replaceChild(tile, this.spacer_div);
 
 		/*
-		var animation = new YAHOO.util.Anim(tile, {opacity: { to:  1} },
+		var animation = new Anim(tile, {opacity: { to:  1} },
 			Pinhole.page.PendingPhotosPage.fade_duration,
-			YAHOO.util.Easing.easeInStrong);
+			Easing.easeInStrong);
 
 		animation.onComplete.subscribe(this.updateSensitivity, this, true);
 		animation.animate();
@@ -232,9 +239,7 @@ if (typeof Pinhole.page == 'undefined') {
 
 	proto.toggleCheckAll = function(visible)
 	{
-		var check_all = YAHOO.util.Dom.getElementsByClassName(
-			'swat-check-all', 'div')
-
+		var check_all = Dom.getElementsByClassName('swat-check-all', 'div');
 		check_all[0].style.display = (visible) ? 'block' : 'none';
 	}
 
@@ -267,9 +272,8 @@ if (typeof Pinhole.page == 'undefined') {
 			inputs[i].disabled = true;
 
 		for (var i = 0; i < links.length; i++) {
-			YAHOO.util.Dom.addClass(links[i], 'disabled-link');
-			YAHOO.util.Event.addListener(links[i], 'click',
-				this.handleLinkCallback);
+			Dom.addClass(links[i], 'disabled-link');
+			Event.on(links[i], 'click', this.handleLinkCallback);
 		}
 	}
 
@@ -285,9 +289,8 @@ if (typeof Pinhole.page == 'undefined') {
 			inputs[i].disabled = false;
 
 		for (var i = 0; i < links.length; i++) {
-			YAHOO.util.Dom.removeClass(links[i], 'disabled-link');
-			YAHOO.util.Event.removeListener(links[i], 'click',
-				this.handleLinkCallback);
+			Dom.removeClass(links[i], 'disabled-link');
+			Event.removeListener(links[i], 'click', this.handleLinkCallback);
 		}
 	}
 
@@ -296,7 +299,7 @@ if (typeof Pinhole.page == 'undefined') {
 
 	proto.handleLinkCallback = function(e, obj)
 	{
-		YAHOO.util.Event.preventDefault(e);
+		Event.preventDefault(e);
 	}
 
 	// }}}

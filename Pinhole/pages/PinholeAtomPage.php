@@ -106,13 +106,8 @@ class PinholeAtomPage extends SitePage
 
 	protected function createTagList($tags)
 	{
-		$cache_module = isset($this->app->memcache) ?
-			$this->app->memcache : null;
-
-		$this->tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance(), $tags,
-			$this->app->session->isLoggedIn(),
-			$cache_module);
+		$this->tag_list = new PinholeTagList($this->app, $tags,
+			$this->app->session->isLoggedIn());
 
 		$this->tag_list->setLoadTags(true);
 
@@ -273,7 +268,7 @@ class PinholeAtomPage extends SitePage
 
 		$entry->setContent($this->getPhotoContent($photo, $dimension), 'html');
 
-		foreach ($photo->getTags() as $tag)
+		foreach ($photo->tags as $tag)
 			$entry->addCategory($tag->name, '', $tag->title);
 
 		//$entry->addAuthor($author_name, $author_uri, $author_email);

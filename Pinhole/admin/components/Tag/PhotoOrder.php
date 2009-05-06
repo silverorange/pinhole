@@ -99,9 +99,7 @@ class PinholeTagPhotoOrder extends AdminDBOrder
 
 	protected function loadData()
 	{
-		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance(), $this->tag->name);
-
+		$tag_list = new PinholeTagList($this->app, $this->tag->name, true);
 		$photos = $tag_list->getPhotos();
 
 		$order_array = array();

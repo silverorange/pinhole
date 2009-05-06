@@ -81,8 +81,10 @@ class PinholePhotoUpload extends AdminPage
 			$files = PinholePhoto::saveUploadedFile('file');
 
 			foreach ($files as $temp_filename => $original_filename) {
-				$this->saveTempPhoto($upload_set, $image_set, $temp_filename,
-					$original_filename);
+				$photo = $this->getTempPhoto($upload_set, $image_set,
+					$temp_filename,	$original_filename);
+
+				$photo->save();
 			}
 
 			$this->saveConfigSettings();
@@ -92,7 +94,7 @@ class PinholePhotoUpload extends AdminPage
 	}
 
 	// }}}
-	// {{{ protected function saveTempPhoto()
+	// {{{ protected function getTempPhoto()
 
 	/**
 	 * Process a given image file
@@ -103,7 +105,7 @@ class PinholePhotoUpload extends AdminPage
 	 * @param string $file The file path to the image file
 	 * @param string $original_filename The original name of the file
 	 */
-	protected function saveTempPhoto(PinholePhotoUploadSet $upload_set,
+	protected function getTempPhoto(PinholePhotoUploadSet $upload_set,
 		SiteImageSet $image_set, $filename, $original_filename)
 	{
 		$class_name = SwatDBClassMap::get('PinholePhoto');
@@ -125,7 +127,7 @@ class PinholePhotoUpload extends AdminPage
 
 		$this->setTimeZone($photo);
 
-		$photo->save();
+		return $photo;
 	}
 
 	// }}}

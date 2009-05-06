@@ -7,6 +7,7 @@ create table PinholePhoto (
 	title varchar(255),
 	filename varchar(255),
 	original_filename varchar(255),
+	temp_filename varchar(255),
 	description text,
 
 	-- Pinhole specific columns

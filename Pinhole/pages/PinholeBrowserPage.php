@@ -55,10 +55,8 @@ abstract class PinholeBrowserPage extends SitePage
 		$cache_module = (isset($this->app->memcache)) ?
 			$this->app->memcache : null;
 
-		$this->tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance(), $tags,
-			$this->app->session->isLoggedIn(),
-			$cache_module);
+		$this->tag_list = new PinholeTagList($this->app, $tags,
+			$this->app->session->isLoggedIn());
 
 		$this->cache_key = get_class($this).'.'.((string) $this->tag_list).'.'.
 			($this->app->session->isLoggedIn() ? 'private' : 'public');

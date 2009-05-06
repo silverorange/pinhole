@@ -44,10 +44,8 @@ class PinholeTagListGadget extends SiteGadget
 		$cache_module = (isset($this->app->memcache)) ?
 			$this->app->memcache : null;
 
-		$tag_list = new PinholeTagList($this->app->db,
-			$this->app->getInstance(), null,
-			$this->app->session->isLoggedIn(),
-			$cache_module);
+		$tag_list = new PinholeTagList($this->app, null,
+			$this->app->session->isLoggedIn());
 
 		$sub_tag_list = $tag_list->getSubTags($range);
 		$sub_tag_count = $tag_list->getSubTagCount();

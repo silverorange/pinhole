@@ -177,51 +177,9 @@ class PinholePhoto extends SiteImage
 
 	protected $selectable_dimensions;
 
-	/**
-	 * Cache of tags for this photo
-	 *
-	 * @var PinholeTagDataObjectWrapper
-	 *
-	 * @see PinholePhoto::getTags()
-	 * @see PinholePhoto::setTags()
-	 */
-	protected $tags_cache;
-
 	// }}}
 
 	// dataobject methods
-	// {{{ public function getTags()
-
-	/**
-	 * Gets tags for this photo
-	 *
-	 * @return PinholeTagDataObjectWrapper
-	 */
-	public function getTags()
-	{
-		if ($this->tags_cache === null) {
-			$this->tags_cache = $this->tags;
-		}
-
-		return $this->tags_cache;
-	}
-
-	// }}}
-	// {{{ public function setTags()
-
-	/**
-	 * Sets tags files for this photo
-	 *
-	 * Allows a single query to set tag sets for multiple photos.
-	 *
-	 * @param PinholeTagDataObjectWrapper $photos
-	 */
-	public function setTags(PinholeTagDataObjectWrapper $tags)
-	{
-		$this->tags_cache = $tags;
-	}
-
-	// }}}
 	// {{{ protected function init()
 
 	protected function init()
@@ -272,16 +230,6 @@ class PinholePhoto extends SiteImage
 			'dimension_bindings',
 			'tags',
 			'meta_data',
-		));
-	}
-
-	// }}}
-	// {{{ protected function getSerializablePrivateProperties()
-
-	protected function getSerializablePrivateProperties()
-	{
-		return array_merge(parent::getSerializablePrivateProperties(), array(
-			'tags_cache',
 		));
 	}
 
@@ -505,6 +453,22 @@ class PinholePhoto extends SiteImage
 		}
 
 		return $this->selectable_dimensions;
+	}
+
+	// }}}
+	// {{{ public function getTagsAsTagList()
+
+	public function getTagsAsTagList(SiteApplication $app)
+	{
+		// require statements are here to prevent circular dependency issues
+		require_once 'Pinhole/tags/PinholeTag.php';
+		require_once 'Pinhole/PinholeTagList.php';
+
+		$tag_list = new PinholeTagList($this->app);
+		foreach ($this->tags as $tag)
+			$tag_list->add(new PinholeTag($this->image_set->instance, $tag));
+
+		return $tag_list;
 	}
 
 	// }}}
@@ -1049,26 +1013,16 @@ class PinholePhoto extends SiteImage
 
 	protected function loadTags()
 	{
-		// require statements are here to prevent circular dependency issues
-		require_once 'Pinhole/tags/PinholeTag.php';
-		require_once 'Pinhole/PinholeTagList.php';
+		// require statement is here to prevent circular dependency issues
 		require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-
-		$tag_list = null;
 
 		$sql = sprintf('select * from PinholeTag where id in (
 			select tag from PinholePhotoTagBinding where photo = %s)
 				order by PinholeTag.title',
 			$this->db->quote($this->id, 'integer'));
 
-		$data_objects = SwatDB::query($this->db, $sql,
-			'PinholeTagDataObjectWrapper');
-
-		$tag_list = new PinholeTagList($this->db, $this->image_set->instance);
-		foreach ($data_objects as $object)
-			$tag_list->add(new PinholeTag($this->image_set->instance, $object));
-
-		return $tag_list;
+		return SwatDB::query($this->db, $sql,
+			SwatDBClassMap::get('PinholeTagDataObjectWrapper'));
 	}
 
 	// }}}

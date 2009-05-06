@@ -74,7 +74,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		}
 
 		if ($this->photo === null) {
-			$photo_id = intval($photo_id);
 			$photo_class = SwatDBClassMap::get('PinholePhoto');
 			$this->photo = new $photo_class();
 			$this->photo->setDatabase($this->app->db);
@@ -193,7 +192,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		foreach ($this->photo->tags as $tag) {
 			$a_tag = new SwatHtmlTag('a');
 			$a_tag->href = $this->app->config->pinhole->path.'tag?'.$tag->name;
-			$a_tag->setContent($tag->getTitle());
+			$a_tag->setContent($tag->title);
 			$tag_array[] = (string) $a_tag;
 		}
 

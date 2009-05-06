@@ -61,7 +61,7 @@ class PinholeSubTagListView extends SwatControl
 		if (count($this->tag_list) > 0) {
 			$titles = array();
 			foreach ($this->tag_list as $tag)
-				$titles[] = $tag->getTitle();
+				$titles[] = $tag->title;
 
 			$header_tag = new SwatHtmlTag('h2');
 			$header_tag->setContent(sprintf(
@@ -91,7 +91,7 @@ class PinholeSubTagListView extends SwatControl
 			$add_anchor_tag->class = 'pinhole-tag-list-view-tag';
 			$add_anchor_tag->rel = 'tag';
 			$add_anchor_tag->href = $this->base.'?'.$add_list->__toString();
-			$add_anchor_tag->setContent($tag->getTitle());
+			$add_anchor_tag->setContent($tag->title);
 
 			if ($tag->photo_count !== null) {
 				$add_anchor_tag->title = sprintf('%s %s',

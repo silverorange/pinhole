@@ -1137,6 +1137,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if (is_string($tag)) {
 			$tag = PinholeTagFactory::get($tag, $this->db,
 				$this->app->getInstance());
+		} elseif ($tag instanceof PinholeTagDataObject) {
+			$tag = new PinholeTag($this->app->getInstance(), $tag);
 		} elseif (!($tag instanceof PinholeAbstractTag)) {
 			throw new SwatInvalidClassException(
 				'$tag must be either a string or a PinholeAbstractTag',

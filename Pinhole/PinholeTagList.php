@@ -760,7 +760,6 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *                         contains PinholeTag objects.
 	 *
 	 * @see PinholeTagList::getPhotos()
-	 * @see PinholePhoto::getTags()
 	 */
 	public function getSubTags(SwatDBRange $range = null,
 		$order_by_clause = null)

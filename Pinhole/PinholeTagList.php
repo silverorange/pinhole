@@ -1622,9 +1622,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 			if ($photo_id !== $current_photo_id) {
 				$current_photo_id = $photo_id;
-				$current_recordset = $photos[$photo_id]->getTags();
+				$current_recordset = new $wrapper();
+				$photos[$photo_id]->tags = new $wrapper();
 			}
-			$current_recordset->add($tag);
+
+			$photos[$photo_id]->tags->add($tag);
 		}
 	}
 

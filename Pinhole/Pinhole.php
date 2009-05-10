@@ -153,6 +153,14 @@ class Pinhole
 			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
 
+			// Comments
+			// optional Wordpress API key for Akismet spam filtering.
+			'pinhole.akismet_key' => null,
+			// tri-state: null = set per photo,
+			//            true/false = on/off for all photos
+			'pinhole.global_comment_status' => null,
+			'pinhole.default_comment_status' => null,
+
 			// Save upload form data
 			'pinhole.camera_time_zone' => null,
 			'pinhole.set_pending' => null,

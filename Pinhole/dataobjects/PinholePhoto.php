@@ -10,6 +10,7 @@ require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
 require_once 'Pinhole/exceptions/PinholeUploadException.php';
 require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
@@ -54,9 +55,27 @@ class PinholePhoto extends SiteImage
 	const DATE_PART_DAY      = 4;
 	const DATE_PART_TIME     = 8;
 
-	const META_DATA_TITLE       = 1;
-	const META_DATA_DESCRIPTION = 2;
-	const META_DATA_TAGS        = 4;
+	/**
+	 * New comments are allowed, and are automatically show on the site as long
+	 * as they are not detected as spam.
+	 */
+	const COMMENT_STATUS_OPEN      = 0;
+
+	/**
+	 * New comments are allowed, but must be approved by an admin user before
+	 * being shown.
+	 */
+	const COMMENT_STATUS_MODERATED = 1;
+
+	/**
+	 * No new comments are allowed, but exisiting comments are shown.
+	 */
+	const COMMENT_STATUS_LOCKED    = 2;
+
+	/**
+	 * No new comments are allowed, and existing comments are no longer shown.
+	 */
+	const COMMENT_STATUS_CLOSED    = 3;
 
 	// }}}
 	// {{{ public properties
@@ -129,6 +148,13 @@ class PinholePhoto extends SiteImage
 	 * @var integer
 	 */
 	public $status;
+
+	/**
+	 * The status of comments on this photo.
+	 *
+	 * @var integer
+	 */
+	public $comment_status;
 
 	/**
 	 * Time-zone of the photo
@@ -231,6 +257,147 @@ class PinholePhoto extends SiteImage
 			'tags',
 			'meta_data',
 		));
+	}
+
+	// }}}
+
+	// comment methods
+	// {{{ public static function getCommentStatusTitle()
+
+	public static function getCommentStatusTitle($status)
+	{
+		switch ($status) {
+		case self::COMMENT_STATUS_OPEN :
+			$title = Pinhole::_('Open');
+			break;
+
+		case self::COMMENT_STATUS_LOCKED :
+			$title = Pinhole::_('Locked');
+			break;
+
+		case self::COMMENT_STATUS_MODERATED :
+			$title = Pinhole::_('Moderated');
+			break;
+
+		case self::COMMENT_STATUS_CLOSED :
+			$title = Pinhole::_('Closed');
+			break;
+
+		default:
+			$title = Pinhole::_('Unknown Comment Status');
+			break;
+		}
+
+		return $title;
+	}
+
+	// }}}
+	// {{{ public static function getCommentStatuses()
+
+	public static function getCommentStatuses()
+	{
+		return array(
+			self::COMMENT_STATUS_OPEN =>
+				self::getCommentStatusTitle(self::COMMENT_STATUS_OPEN),
+			self::COMMENT_STATUS_MODERATED =>
+				self::getCommentStatusTitle(self::COMMENT_STATUS_MODERATED),
+			self::COMMENT_STATUS_LOCKED =>
+				self::getCommentStatusTitle(self::COMMENT_STATUS_LOCKED),
+			self::COMMENT_STATUS_CLOSED =>
+				self::getCommentStatusTitle(self::COMMENT_STATUS_CLOSED),
+		);
+	}
+
+	// }}}
+	// {{{ public function getCommentCount()
+
+	public function getCommentCount()
+	{
+		if ($this->hasInternalValue('comment_count') &&
+			$this->getInternalValue('comment_count') !== null) {
+			$comment_count = $this->getInternalValue('comment_count');
+		} else {
+			$this->checkDB();
+
+			$sql = sprintf('select comment_count
+				from PinholePhotoCommentCountView
+				where photo = %s',
+				$this->db->quote($this->id, 'integer'));
+
+			$comment_count = SwatDB::queryOne($this->db, $sql);
+		}
+
+		return $comment_count;
+	}
+
+	// }}}
+	// {{{ public function getVisibleComments()
+
+	/**
+	 * Note: The results of this method are intentionally not cached or
+	 * serialized. Because the comment object serializes its photo reference,
+	 * serializing the visible comments results in at best oversized serialized
+	 * data structures (to the point of crashing PHP) and at worst infinite
+	 * recursion upon serialization.
+	 */
+	public function getVisibleComments($limit = null, $offset = 0)
+	{
+		$this->checkDB();
+
+		$sql = sprintf('select * from PinholeComment
+			where photo = %s and status = %s and spam = %s
+			order by createdate',
+			$this->db->quote($this->id, 'integer'),
+			$this->db->quote(SiteComment::STATUS_PUBLISHED, 'integer'),
+			$this->db->quote(false, 'boolean'));
+
+		$wrapper = SwatDBClassMap::get('PinholeCommentWrapper');
+
+		if ($limit !== null) {
+			$this->db->setLimit($limit, $offset);
+		}
+
+		$comments = SwatDB::query($this->db, $sql, $wrapper);
+
+		// set photo on comment objects so they don't have to query it again
+		foreach ($comments as $comment) {
+			$comment->photo = $this;
+		}
+
+		return $comments;
+	}
+
+	// }}}
+	// {{{ public function getVisibleCommentCount()
+
+	public function getVisibleCommentCount()
+	{
+		if ($this->hasInternalValue('visible_comment_count') &&
+			$this->getInternalValue('visible_comment_count') !== null) {
+			$comment_count = $this->getInternalValue('visible_comment_count');
+		} else {
+			$this->checkDB();
+
+			$sql = sprintf('select visible_comment_count
+				from PinholePhotoVisibleCommentCountView
+				where photo = %s',
+				$this->db->quote($this->id, 'integer'));
+
+			$comment_count = SwatDB::queryOne($this->db, $sql);
+		}
+
+		return $comment_count;
+	}
+
+	// }}}
+	// {{{ public function hasVisibleCommentStatus()
+
+	public function hasVisibleCommentStatus()
+	{
+		return ($this->comment_status == self::COMMENT_STATUS_OPEN ||
+			$this->comment_status == self::COMMENT_STATUS_MODERATED ||
+			($this->comment_status == self::COMMENT_STATUS_LOCKED &&
+			$this->getVisibleCommentCount() > 0));
 	}
 
 	// }}}
@@ -757,12 +924,12 @@ class PinholePhoto extends SiteImage
 		parent::processInternal($image_file);
 
 		$meta_data = self::getMetaDataFromFile($image_file);
-		$this->saveMetaData($meta_data);
+		$this->saveMetaDataInternal($meta_data);
 		$this->setContentByMetaData($meta_data);
 	}
 
 	// }}}
-	// {{{ protected function saveMetaData()
+	// {{{ protected function saveMetaDataInternal()
 
 	/**
 	 * Get the meta data from a photo
@@ -771,7 +938,7 @@ class PinholePhoto extends SiteImage
 	 *               with $shortname as the key of the array.
 	 * @return array An array of PinholeMetaData dataobjects
 	 */
-	protected function saveMetaData($meta_data)
+	protected function saveMetaDataInternal($meta_data)
 	{
 		$instance_id = ($this->image_set->instance === null) ? null :
 			$this->image_set->instance->id;
@@ -988,6 +1155,29 @@ class PinholePhoto extends SiteImage
 	// }}}
 
 	// loader methods
+	// {{{ protected function loadComments()
+
+	/**
+	 * Loads comments for this photo, this never includes spam
+	 *
+	 * @return PinholeCommentWrapper
+	 */
+	protected function loadComments()
+	{
+		$sql = 'select PinholeComment.*
+			from PinholeComment
+			where PinholeComment.photo = %s and spam = %s
+			order by createdate';
+
+		$sql = sprintf($sql,
+			$this->db->quote($this->id, 'integer'),
+			$this->db->quote(false, 'boolean'));
+
+		return SwatDB::query($this->db, $sql,
+			SwatDBClassMap::get('PinholeCommentWrapper'));
+	}
+
+	// }}}
 	// {{{ protected function loadDimensionBindings()
 
 	/**
@@ -1032,6 +1222,23 @@ class PinholePhoto extends SiteImage
 	{
 		return PinholePhotoMetaDataBindingWrapper::loadSetFromDB(
 			$this->db, $this->id);
+	}
+
+	// }}}
+
+	// saver methods
+	// {{{ protected function saveComments()
+
+	/**
+	 * Automatically saves comments on this photo when this photo is saved
+	 */
+	protected function saveComments()
+	{
+		foreach ($this->comments as $comment)
+			$comment->photo = $this;
+
+		$this->comments->setDatabase($this->db);
+		$this->comments->save();
 	}
 
 	// }}}

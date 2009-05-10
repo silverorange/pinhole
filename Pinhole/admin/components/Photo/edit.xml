@@ -3,18 +3,24 @@
 <swatml>
 	<widget class="SwatFrame" id="edit_frame">
 		<property name="title" translatable="yes">Photo</property>
-		<!--widget class="SwatToolbar" id="edit_toolbar">
+		<widget class="SwatToolbar" id="toolbar">
 			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">Edit Photo</property>
+				<property name="link">Photo/Edit?id=%s</property>
+				<property name="stock_id">edit</property>
+				<property name="sensitive" type="boolean">false</property>
+			</widget>
+			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">Manage Comments</property>
+				<property name="link">Photo/Comments?id=%s</property>
+				<property name="stock_id">edit</property>
+			</widget>
+			<!--widget class="SwatToolLink">
 				<property name="title" translatable="yes">Edit Meta-Data</property>
 				<property name="link">Photo/MetaData?id=%s</property>
 				<property name="stock_id">edit</property>
-			</widget>
-			<widget class="SwatToolLink">
-				<property name="title" translatable="yes">Delete Photo</property>
-				<property name="link">Photo/Delete?id=%s</property>
-				<property name="stock_id">delete</property>
-			</widget>
-		</widget-->
+			</widget-->
+		</widget>
 		<widget class="SwatMessageDisplay" id="message_display" />
 		<widget class="SwatForm" id="edit_form">
 			<!-- {{{ Primary Form Area -->
@@ -82,12 +88,17 @@
 						<widget class="SwatTimeZoneEntry" id="photo_time_zone" />
 					</widget>
 				</widget>
+				<widget class="SwatGroupingFormField" id="comment_status_field">
+					<property name="title" translatable="yes">Comment Status</property>
+					<widget class="PinholeCommentStatusSlider" id="comment_status" />
+				</widget>
 				<widget class="SwatGroupingFormField" id="tag_field">
 					<property name="title" translatable="yes">Photo Tags</property>
 					<widget class="PinholePhotoTagEntry" id="tags" />
 				</widget>
 			</widget>
 			<!-- }}} -->
+		<!-- {{{ Footer -->
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">
 					<property name="title" translatable="yes">Update</property>
@@ -97,6 +108,7 @@
 					<property name="visible" type="boolean">false</property>
 				</widget>
 			</widget>
+		<!-- }}} -->
 		</widget>
 	</widget>
 </swatml>

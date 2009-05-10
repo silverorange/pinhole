@@ -1,0 +1,25 @@
+.pinhole-comment-status-slider {
+	position: relative;
+	background: url(../images/pinhole-comment-status-slider-bg.gif) 5px 0 no-repeat;
+	height: 50px;
+	width: 228px;
+}
+
+.pinhole-comment-status-slider-thumb {
+	position: absolute;
+}
+
+img.pinhole-comment-status-slider-image {
+	position: relative;
+	top: 3px;
+}
+
+.pinhole-comment-status-slider-legend {
+	color: #666;
+	font-size: 85%;
+}
+
+.pinhole-comment-status-slider-legend-selected {
+	color: #333;
+	font-weight: bold;
+}

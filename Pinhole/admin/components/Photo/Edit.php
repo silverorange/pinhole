@@ -12,6 +12,7 @@ require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
+require_once 'Pinhole/admin/PinholeCommentStatusSlider.php';
 
 /**
  * Page for viewing photo details and editing
@@ -59,6 +60,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$this->initPhoto();
 		$this->initStatuses();
+		$this->initCommentStatuses();
 
 		if ($this->photo->status == PinholePhoto::STATUS_PENDING)
 			$this->pending = true;
@@ -85,6 +87,9 @@ class PinholePhotoEdit extends AdminDBEdit
 			$replicators[$dimension->id] = $dimension->title;
 
 		$replicator->replicators = $replicators;
+
+		$this->ui->getWidget('comment_status')->visible =
+			($this->app->config->pinhole->global_comment_status !== false);
 	}
 
 	// }}}
@@ -131,6 +136,72 @@ class PinholePhotoEdit extends AdminDBEdit
 			PinholePhoto::getStatusTitle(PinholePhoto::STATUS_PUBLISHED));
 		$status->addOption(PinholePhoto::STATUS_UNPUBLISHED,
 			PinholePhoto::getStatusTitle(PinholePhoto::STATUS_UNPUBLISHED));
+	}
+
+	// }}}
+	// {{{ protected function initCommentStatuses()
+
+	protected function initCommentStatuses()
+	{
+		$status = $this->ui->getWidget('comment_status');
+
+		// open
+		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_OPEN,
+			PinholePhoto::getCommentStatusTitle(PinholePhoto::COMMENT_STATUS_OPEN));
+
+		$status->addOption($option);
+		$status->addContextNote($option, Pinhole::_(
+			'Comments can be added by anyone and are immediately visible on '.
+			'this post.'));
+
+		// moderated
+		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_MODERATED,
+			PinholePhoto::getCommentStatusTitle(
+				PinholePhoto::COMMENT_STATUS_MODERATED));
+
+		$status->addOption($option);
+		$status->addContextNote($option, Pinhole::_(
+			'Comments can be added by anyone but must be approved by a site '.
+			'photographer before being visible on this post.'));
+
+		// locked
+		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_LOCKED,
+			PinholePhoto::getCommentStatusTitle(PinholePhoto::COMMENT_STATUS_LOCKED));
+
+		$status->addOption($option);
+		$status->addContextNote($option, Pinhole::_(
+			'Comments can only be added by an photographer. Existing comments are '.
+			'still visible on this post.'));
+
+		// closed
+		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_CLOSED,
+			PinholePhoto::getCommentStatusTitle(PinholePhoto::COMMENT_STATUS_CLOSED));
+
+		$status->addOption($option);
+		$status->addContextNote($option, Pinhole::_(
+			'Comments can only be added by an photographer. No comments are visible '.
+			'on this post.'));
+
+		if ($this->id === null) {
+			switch ($this->app->config->blorg->default_comment_status) {
+			case 'open':
+				$status->value = PinholePhoto::COMMENT_STATUS_OPEN;
+				break;
+
+			case 'moderated':
+				$status->value = PinholePhoto::COMMENT_STATUS_MODERATED;
+				break;
+
+			case 'locked':
+				$status->value = PinholePhoto::COMMENT_STATUS_LOCKED;
+				break;
+
+			case 'closed':
+			default:
+				$status->value = PinholePhoto::COMMENT_STATUS_CLOSED;
+				break;
+			}
+		}
 	}
 
 	// }}}
@@ -301,6 +372,9 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->photo_time_zone = $values['photo_time_zone'];
 		$this->photo->setStatus($values['status']);
 
+		if ($this->ui->getWidget('comment_status')->visible)
+			$this->photo->comment_status = $values['comment_status'];
+
 		if ($this->photo->photo_time_zone === null) {
 			$this->photo->photo_time_zone =
 				$this->app->default_time_zone->getID();
@@ -320,6 +394,7 @@ class PinholePhotoEdit extends AdminDBEdit
 			'status',
 			'private',
 			'for_sale',
+			'comment_status',
 		));
 	}
 
@@ -387,10 +462,8 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->buildPendingCount();
 		$this->buildSiteLinks();
 
-		/*
-		$toolbar = $this->ui->getWidget('edit_toolbar');
+		$toolbar = $this->ui->getWidget('toolbar');
 		$toolbar->setToolLinkValues($this->photo->id);
-		*/
 	}
 
 	// }}}

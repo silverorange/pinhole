@@ -9,6 +9,7 @@ create table PinholePhoto (
 	original_filename varchar(255),
 	temp_filename varchar(255),
 	description text,
+	comment_status integer not null default 0,
 
 	-- Pinhole specific columns
 	upload_date timestamp,

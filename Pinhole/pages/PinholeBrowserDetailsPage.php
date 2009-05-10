@@ -11,6 +11,11 @@ require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/pages/PinholeBrowserPage.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
 
+// comments
+require_once 'Pinhole/dataobjects/PinholeComment.php';
+require_once 'Services/Akismet.php';
+require_once 'NateGoSearch/NateGoSearch.php';
+
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
@@ -18,6 +23,11 @@ require_once 'Pinhole/dataobjects/PinholePhoto.php';
  */
 class PinholeBrowserDetailsPage extends PinholeBrowserPage
 {
+	// {{{ class constants
+
+	const THANK_YOU_ID = 'thank-you';
+
+	// }}}
 	// {{{ protected properties
 
 	/**
@@ -35,6 +45,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	 */
 	protected $dimension;
 
+	/**
+	 * @var PinholeComment
+	 */
+	protected $comment;
+
 	// }}}
 	// {{{ public function __construct()
 
@@ -46,8 +61,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->ui_xml = 'Pinhole/pages/browser-details.xml';
 
 		$this->createPhoto($this->getArgument('photo_id'));
-		$this->dimension = $this->initDimension(
-			$this->getArgument('dimension_shortname'));
 	}
 
 	// }}}
@@ -103,14 +116,27 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
+
+	// init phase
+	// {{{ public function init()
+
+	public function init()
+	{
+		parent::init();
+
+		$this->dimension = $this->initDimension(
+			$this->getArgument('dimension_shortname'));
+	}
+
+	// }}}
 	// {{{ protected function initDimension()
 
 	protected function initDimension($shortname = null)
 	{
 		if ($shortname === null) {
-			if (isset($this->app->cookie->display_dimension))
+			if (isset($this->app->cookie->display_dimension)) {
 				$shortname = $this->app->cookie->display_dimension;
-			else
+			} else
 				$shortname = $this->default_dimension;
 		}
 
@@ -134,11 +160,13 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	// }}}
 
+	// process phase
 	// {{{ public function process()
 
 	public function process()
 	{
 		parent::process();
+		$this->processCommentUi();
 
 		if ($this->photo->private && !$this->app->session->isLoggedIn()) {
 			$this->app->replacePage('login');
@@ -153,6 +181,256 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 			$this->app->getPage()->setReferrer($referer);
 		}
+	}
+
+	// }}}
+	// {{{ protected function processCommentUi()
+
+	protected function processCommentUi()
+	{
+		$form = $this->ui->getWidget('comment_edit_form');
+
+		// wrap form processing in try/catch to catch bad input from spambots
+		try {
+			$form->process();
+		} catch (SwatInvalidSerializedDataException $e) {
+			$this->app->replacePage('httperror');
+			$this->app->getPage()->setStatus(400);
+			return;
+		}
+
+		$comment_status = $this->photo->comment_status;
+		if (($comment_status == PinholePhoto::COMMENT_STATUS_OPEN ||
+			$comment_status == PinholePhoto::COMMENT_STATUS_MODERATED) &&
+			$form->isProcessed() && !$form->hasMessage()) {
+
+			$this->processComment();
+
+			if ($this->ui->getWidget('post_button')->hasBeenClicked()) {
+				$uri = 'photo/'.$this->photo->id;
+				$get_vars = array();
+				$target = null;
+
+				if (count($this->tag_list) > 0)
+					$get_vars[] = $this->tag_list->__toString();
+
+				$this->saveComment();
+
+				switch ($this->photo->comment_status) {
+				case PinholePhoto::COMMENT_STATUS_OPEN:
+					if (count($get_vars) == 0)
+						$get_vars[] = '';
+
+					$get_vars[] = self::THANK_YOU_ID;
+					$target = 'comment'.$this->comment->id;
+					break;
+
+				case PinholePhoto::COMMENT_STATUS_MODERATED:
+					if (count($get_vars) == 0)
+						$get_vars[] = '';
+
+					$get_vars[] = self::THANK_YOU_ID;
+					$target = 'submit_comment';
+					break;
+				}
+
+				if (count($get_vars) > 0)
+					$uri.= '?'.implode('&', $get_vars);
+
+				if ($target !== null)
+					$uri.= '#'.$target;
+
+				$this->app->relocate($uri);
+			}
+		}
+	}
+
+	// }}}
+	// {{{ protected function processComment()
+
+	protected function processComment()
+	{
+		$now = new SwatDate();
+		$now->toUTC();
+
+		$fullname   = $this->ui->getWidget('fullname');
+		$link       = $this->ui->getWidget('link');
+		$email      = $this->ui->getWidget('email');
+		$bodytext   = $this->ui->getWidget('bodytext');
+
+		if (isset($_SERVER['REMOTE_ADDR'])) {
+			$ip_address = substr($_SERVER['REMOTE_ADDR'], 0, 15);
+		} else {
+			$ip_address = null;
+		}
+
+		if (isset($_SERVER['HTTP_USER_AGENT'])) {
+			$user_agent = substr($_SERVER['HTTP_USER_AGENT'], 0, 255);
+		} else {
+			$user_agent = null;
+		}
+
+		$class_name = SwatDBClassMap::get('PinholeComment');
+		$this->comment = new $class_name();
+
+		$this->comment->fullname   = $fullname->value;
+		$this->comment->link       = $link->value;
+		$this->comment->email      = $email->value;
+		$this->comment->bodytext   = $bodytext->value;
+		$this->comment->createdate = $now;
+		$this->comment->ip_address = $ip_address;
+		$this->comment->user_agent = $user_agent;
+
+		switch ($this->photo->comment_status) {
+		case PinholePhoto::COMMENT_STATUS_OPEN:
+			$this->comment->status = SiteComment::STATUS_PUBLISHED;
+			break;
+
+		case PinholePhoto::COMMENT_STATUS_MODERATED:
+			$this->comment->status = SiteComment::STATUS_PENDING;
+			break;
+		}
+
+		$this->comment->photo = $this->photo;
+	}
+
+	// }}}
+	// {{{ protected function saveComment()
+
+	protected function saveComment()
+	{
+		if ($this->ui->getWidget('remember_me')->value) {
+			$this->saveCommentCookie();
+		} else {
+			$this->deleteCommentCookie();
+		}
+
+		$this->comment->spam = $this->isCommentSpam($this->comment);
+
+		$this->photo->comments->add($this->comment);
+		$this->photo->save();
+		$this->addToSearchQueue();
+
+		// clear photos cache if comment is visible
+		if (isset($this->app->memcache) && !$this->comment->spam &&
+			$this->comment->status === SiteComment::STATUS_PUBLISHED) {
+			$this->app->memcache->flushNs('photos');
+		}
+	}
+
+	// }}}
+	// {{{ protected function saveCommentCookie()
+
+	protected function saveCommentCookie()
+	{
+		$fullname = $this->ui->getWidget('fullname')->value;
+		$link     = $this->ui->getWidget('link')->value;
+		$email    = $this->ui->getWidget('email')->value;
+
+		$value = array(
+			'fullname' => $fullname,
+			'link'     => $link,
+			'email'    => $email,
+		);
+
+		$this->app->cookie->setCookie('comment_credentials', $value);
+	}
+
+	// }}}
+	// {{{ protected function deleteCommentCookie()
+
+	protected function deleteCommentCookie()
+	{
+		$this->app->cookie->removeCookie('comment_credentials');
+	}
+
+	// }}}
+	// {{{ protected function isCommentSpam()
+
+	protected function isCommentSpam(PinholeComment $comment)
+	{
+		$is_spam = false;
+
+		if ($this->app->config->pinhole->akismet_key !== null) {
+			$uri = $this->app->getBaseHref().$this->app->config->pinhole->path;
+			$permalink = sprintf('%sphoto/%s', $uri, $this->photo->id);
+
+			try {
+				$akismet = new Services_Akismet($uri,
+					$this->app->config->pinhole->akismet_key);
+
+				$akismet_comment = new Services_Akismet_Comment();
+				$akismet_comment->setAuthor($comment->fullname);
+				$akismet_comment->setAuthorEmail($comment->email);
+				$akismet_comment->setAuthorUri($comment->link);
+				$akismet_comment->setContent($comment->bodytext);
+				$akismet_comment->setPostPermalink($permalink);
+
+				$is_spam = $akismet->isSpam($akismet_comment);
+			} catch (Exception $e) {
+			}
+		}
+
+		return $is_spam;
+	}
+
+	// }}}
+	// {{{ protected function addToSearchQueue()
+
+	protected function addToSearchQueue()
+	{
+		$this->addPhotoToSearchQueue();
+		$this->addCommentToSearchQueue();
+	}
+
+	// }}}
+	// {{{ protected function addPhotoToSearchQueue()
+
+	protected function addPhotoToSearchQueue()
+	{
+		$type = NateGoSearch::getDocumentType($this->app->db, 'photo');
+
+		if ($type === null)
+			return;
+
+		$sql = sprintf('delete from NateGoSearchQueue
+			where document_id = %s and document_type = %s',
+			$this->app->db->quote($this->photo->id, 'integer'),
+			$this->app->db->quote($type, 'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
+
+		$sql = sprintf('insert into NateGoSearchQueue
+			(document_id, document_type) values (%s, %s)',
+			$this->app->db->quote($this->photo->id, 'integer'),
+			$this->app->db->quote($type, 'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
+	}
+
+	// }}}
+	// {{{ protected function addCommentToSearchQueue()
+
+	protected function addCommentToSearchQueue()
+	{
+		$type = NateGoSearch::getDocumentType($this->app->db, 'comment');
+
+		if ($type === null)
+			return;
+
+		$sql = sprintf('delete from NateGoSearchQueue
+			where document_id = %s and document_type = %s',
+			$this->app->db->quote($this->comment->id, 'integer'),
+			$this->app->db->quote($type, 'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
+
+		$sql = sprintf('insert into NateGoSearchQueue
+			(document_id, document_type) values (%s, %s)',
+			$this->app->db->quote($this->comment->id, 'integer'),
+			$this->app->db->quote($type, 'integer'));
+
+		SwatDB::exec($this->app->db, $sql);
 	}
 
 	// }}}
@@ -212,6 +490,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		if ($this->photo->for_sale && $username !== null)
 			$this->appendForSaleLink($description);
 
+		$this->buildComments();
 		$this->buildMetaData();
 		$this->buildLayout();
 		$this->buildPhotoNextPrev();
@@ -493,12 +772,318 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	// }}}
 
+	// display comments
+	// {{{ protected function buildComments()
+
+	protected function buildComments()
+	{
+		if ($this->app->config->pinhole->global_comment_status === false) {
+			$this->ui->getWidget('comment_edit_form')->visible = false;
+			$this->ui->getWidget('comments')->visible = false;
+			return;
+		}
+
+		// Comment form submits to the top of the comment form if there are
+		// error messages or if the new comment is not immediately visible.
+		// Otherwise the comment form submits to the new comment.
+		$comment_status = $this->photo->comment_status;
+		if ($this->ui->getWidget('comment_edit_form')->hasMessage() ||
+			$comment_status == PinholePhoto::COMMENT_STATUS_MODERATED ||
+			$comment_status == PinholePhoto::COMMENT_STATUS_LOCKED ||
+			$this->ui->getWidget('preview_button')->hasBeenClicked()) {
+			$this->ui->getWidget('submit_comment')->visible = true;
+		}
+
+		ob_start();
+
+		if ($this->photo->comment_status !=
+			PinholePhoto::COMMENT_STATUS_CLOSED) {
+
+			$div_tag = new SwatHtmlTag('div');
+			$div_tag->id = 'comments';
+			$div_tag->class = 'photo-comments';
+			$div_tag->open();
+
+			$comments = $this->photo->getVisibleComments();
+
+			if (count($comments) > 0) {
+				echo '<h3 class="comments-title">',
+					Pinhole::_('Comments'), '</h3>';
+			}
+
+			foreach ($comments as $comment) {
+				$this->displayComment($comment);
+			}
+
+			$div_tag->close();
+		}
+
+		$this->ui->getWidget('comments')->content = ob_get_clean();
+
+		$this->buildCommentUi();
+	}
+
+	// }}}
+	// {{{ protected function buildCommentUi()
+
+	protected function buildCommentUi()
+	{
+		$ui              = $this->ui;
+		$form            = $ui->getWidget('comment_edit_form');
+		$show_thank_you  = array_key_exists(self::THANK_YOU_ID, $_GET);
+
+		$uri = 'photo/'.$this->photo->id;
+		if (count($this->tag_list) > 0)
+			$uri.= '?'.$this->tag_list->__toString();
+
+		switch ($this->photo->comment_status) {
+		case PinholePhoto::COMMENT_STATUS_OPEN:
+		case PinholePhoto::COMMENT_STATUS_MODERATED:
+			$form->action = $uri.'#submit_comment';
+			try {
+				if (isset($this->app->cookie->comment_credentials)) {
+					$values = $this->app->cookie->comment_credentials;
+					$ui->getWidget('fullname')->value    = $values['fullname'];
+					$ui->getWidget('link')->value        = $values['link'];
+					$ui->getWidget('email')->value       = $values['email'];
+					$ui->getWidget('remember_me')->value = true;
+				}
+			} catch (SiteCookieException $e) {
+				// ignore cookie errors, but delete the bad cookie
+				$this->app->cookie->removeCookie('comment_credentials');
+			}
+			break;
+
+		case PinholePhoto::COMMENT_STATUS_LOCKED:
+			$form->visible = false;
+			$message = new SwatMessage(Pinhole::_('Comments are Locked'));
+			$message->secondary_content =
+				Pinhole::_('No new comments may be posted for this photo.');
+
+			$ui->getWidget('message_display')->add($message,
+				SwatMessageDisplay::DISMISS_OFF);
+
+			break;
+
+		case PinholePhoto::COMMENT_STATUS_CLOSED:
+			$form->visible = false;
+			$ui->getWidget('comments')->visible = false;
+			break;
+		}
+
+		if ($show_thank_you) {
+			switch ($this->photo->comment_status) {
+			case PinholePhoto::COMMENT_STATUS_OPEN:
+				$message = new SwatMessage(
+					Pinhole::_('Your comment has been published.'));
+
+				$this->ui->getWidget('message_display')->add($message,
+					SwatMessageDisplay::DISMISS_OFF);
+
+				break;
+
+			case PinholePhoto::COMMENT_STATUS_MODERATED:
+				$message = new SwatMessage(
+					Pinhole::_('Your comment has been submitted.'));
+
+				$message->secondary_content =
+					Pinhole::_('Your comment will be published after being '.
+						'approved by the site moderator.');
+
+				$this->ui->getWidget('message_display')->add($message,
+					SwatMessageDisplay::DISMISS_OFF);
+
+				break;
+			}
+		}
+
+		$this->buildCommentPreview();
+	}
+
+	// }}}
+	// {{{ protected function buildCommentPreview()
+
+	protected function buildCommentPreview()
+	{
+		if ($this->comment instanceof PinholeComment &&
+			$this->ui->getWidget('preview_button')->hasBeenClicked()) {
+
+			$button_tag = new SwatHtmlTag('input');
+			$button_tag->type = 'submit';
+			$button_tag->name = 'post_button';
+			$button_tag->value = Pinhole::_('Post');
+
+			$message = new SwatMessage(Pinhole::_(
+				'Your comment has not yet been published.'));
+
+			$message->secondary_content = sprintf(Pinhole::_(
+				'Review your comment and press the <em>Post</em> button when '.
+				'it’s ready to publish. %s'),
+				$button_tag);
+
+			$message->content_type = 'text/xml';
+
+			$message_display =
+				$this->ui->getWidget('preview_message_display');
+
+			$message_display->add($message, SwatMessageDisplay::DISMISS_OFF);
+
+			ob_start();
+
+			$this->displayComment($this->comment);
+
+			$comment_preview = $this->ui->getWidget('comment_preview');
+			$comment_preview->content = ob_get_clean();
+			$comment_preview->content_type = 'text/xml';
+
+			$container = $this->ui->getWidget(
+				'comment_preview_container');
+
+			$container->visible = true;
+		}
+	}
+
+	// }}}
+	// {{{ protected function displayComment()
+
+	protected function displayComment(PinholeComment $comment)
+	{
+		$div_tag = new SwatHtmlTag('div');
+		$div_tag->id = 'comment'.$comment->id;
+		$div_tag->class = 'comment';
+
+		if ($comment->photographer !== null) {
+			$div_tag->class .= ' comment-photographer';
+		}
+
+		$div_tag->open();
+		$this->displayCommentBody($comment);
+		$div_tag->close();
+	}
+
+	// }}}
+	// {{{ protected function displayCommentBody()
+
+	protected function displayCommentBody(PinholeComment $comment)
+	{
+		$heading_tag = new SwatHtmlTag('h4');
+		$heading_tag->class = 'comment-title';
+		$heading_tag->open();
+
+		ob_start();
+		$this->displayCommentAuthor($comment);
+		$author = ob_get_clean();
+
+		if ($author != '') {
+			$elements[] = $author;
+		}
+
+		ob_start();
+		$this->displayCommentPermalink($comment);
+		$permalink = ob_get_clean();
+
+		if ($permalink != '') {
+			$elements[] = $permalink;
+		}
+
+		echo implode(' - ', $elements);
+
+		$heading_tag->close();
+
+		$this->displayCommentLink($comment);
+		$this->displayCommentBodytext($comment);
+	}
+
+	// }}}
+	// {{{ protected function displayCommentAuthor()
+
+	protected function displayCommentAuthor(PinholeComment $comment)
+	{
+		if ($comment->photographer === null) {
+			$span_tag = new SwatHtmlTag('span');
+			$span_tag->setContent($comment->fullname);
+			$span_tag->display();
+		} else {
+			$span_tag = new SwatHtmlTag('span');
+			$span_tag->class = 'comment-photographer';
+			$span_tag->setContent($comment->photographer->name);
+			$span_tag->display();
+		}
+	}
+
+	// }}}
+	// {{{ protected function displayCommentLink()
+
+	protected function displayCommentLink(PinholeComment $comment)
+	{
+		if ($comment->link != '') {
+			$div_tag = new SwatHtmlTag('div');
+			$div_tag->class = 'comment-link';
+			$div_tag->open();
+
+			$anchor_tag = new SwatHtmlTag('a');
+			$anchor_tag->href = $comment->link;
+			$anchor_tag->class = 'comment-link';
+			$anchor_tag->setContent($comment->link);
+			$anchor_tag->display();
+
+			$div_tag->close();
+		}
+	}
+
+	// }}}
+	// {{{ protected function displayCommentPermalink()
+
+	protected function displayCommentPermalink(PinholeComment $comment)
+	{
+		$uri = 'photo/'.$this->photo->id;
+		if (count($this->tag_list) > 0)
+			$uri.= '?'.$this->tag_list->__toString();
+
+		$uri.= '#comment'.$comment->id;
+
+		$permalink_tag = new SwatHtmlTag('a');
+		$permalink_tag->class = 'permalink';
+		$permalink_tag->href = $uri;
+		$permalink_tag->open();
+
+		// display machine-readable date in UTC
+		$abbr_tag = new SwatHtmlTag('abbr');
+		$abbr_tag->class = 'comment-published';
+		$abbr_tag->title =
+			$comment->createdate->getDate(DATE_FORMAT_ISO_EXTENDED);
+
+		// display human-readable date in local time
+		$date = clone $comment->createdate;
+		$date->convertTZ($this->app->default_time_zone);
+		$abbr_tag->setContent($date->format(SwatDate::DF_DATE_TIME));
+		$abbr_tag->display();
+
+		$permalink_tag->close();
+	}
+
+	// }}}
+	// {{{ protected function displayCommentBodytext()
+
+	protected function displayCommentBodytext(PinholeComment $comment)
+	{
+		$div_tag = new SwatHtmlTag('div');
+		$div_tag->class = 'comment-content';
+		$div_tag->setContent(
+			SiteCommentFilter::toXhtml($comment->bodytext), 'text/xml');
+
+		$div_tag->display();
+	}
+
+	// }}}
+
 	// finalize phase
 	// {{{ public function finalize()
 
 	public function finalize()
 	{
 		parent::finalize();
+
 		$this->layout->addHtmlHeadEntrySet(
 			$this->ui->getRoot()->getHtmlHeadEntrySet());
 	}

@@ -183,7 +183,7 @@ class PinholePhotoEdit extends AdminDBEdit
 			'on this post.'));
 
 		if ($this->id === null) {
-			switch ($this->app->config->blorg->default_comment_status) {
+			switch ($this->app->config->pinhole->default_comment_status) {
 			case 'open':
 				$status->value = PinholePhoto::COMMENT_STATUS_OPEN;
 				break;

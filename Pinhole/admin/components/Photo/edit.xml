@@ -4,13 +4,13 @@
 	<widget class="SwatFrame" id="edit_frame">
 		<property name="title" translatable="yes">Photo</property>
 		<widget class="SwatToolbar" id="toolbar">
-			<widget class="SwatToolLink">
+			<widget class="SwatToolLink" id="edit_link">
 				<property name="title" translatable="yes">Edit Photo</property>
 				<property name="link">Photo/Edit?id=%s</property>
 				<property name="stock_id">edit</property>
 				<property name="sensitive" type="boolean">false</property>
 			</widget>
-			<widget class="SwatToolLink">
+			<widget class="SwatToolLink" id="comments_link">
 				<property name="title" translatable="yes">Manage Comments</property>
 				<property name="link">Photo/Comments?id=%s</property>
 				<property name="stock_id">edit</property>

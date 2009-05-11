@@ -777,7 +777,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function buildComments()
 	{
-		if ($this->app->config->pinhole->global_comment_status === false) {
+		if ($this->app->config->pinhole->global_comment_status !== null &&
+			$this->app->config->pinhole->global_comment_status == false) {
 			$this->ui->getWidget('comment_edit_form')->visible = false;
 			$this->ui->getWidget('comments')->visible = false;
 			return;

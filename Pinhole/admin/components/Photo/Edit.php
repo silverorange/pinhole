@@ -151,8 +151,8 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
-			'Comments can be added by anyone and are immediately visible on '.
-			'this post.'));
+			'Comments can be added by anyone and are immediately visible with '.
+			'this photo.'));
 
 		// moderated
 		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_MODERATED,
@@ -162,7 +162,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
 			'Comments can be added by anyone but must be approved by a site '.
-			'photographer before being visible on this post.'));
+			'photographer before being visible with this photo.'));
 
 		// locked
 		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_LOCKED,
@@ -171,7 +171,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
 			'Comments can only be added by an photographer. Existing comments are '.
-			'still visible on this post.'));
+			'still visible with this photo.'));
 
 		// closed
 		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_CLOSED,
@@ -180,7 +180,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
 			'Comments can only be added by an photographer. No comments are visible '.
-			'on this post.'));
+			'with this photo.'));
 
 		if ($this->id === null) {
 			switch ($this->app->config->pinhole->default_comment_status) {

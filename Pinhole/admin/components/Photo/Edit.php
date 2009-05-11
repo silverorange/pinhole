@@ -88,7 +88,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$replicator->replicators = $replicators;
 
-		$this->ui->getWidget('comment_status')->visible =
+		$this->ui->getWidget('comment_status_field')->visible =
 			($this->app->config->pinhole->global_comment_status === null);
 	}
 
@@ -372,7 +372,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->photo->photo_time_zone = $values['photo_time_zone'];
 		$this->photo->setStatus($values['status']);
 
-		if ($this->ui->getWidget('comment_status')->visible)
+		if ($this->ui->getWidget('comment_status_field')->visible)
 			$this->photo->comment_status = $values['comment_status'];
 
 		if ($this->photo->photo_time_zone === null) {

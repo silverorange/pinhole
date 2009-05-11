@@ -89,7 +89,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		$replicator->replicators = $replicators;
 
 		$this->ui->getWidget('comment_status')->visible =
-			($this->app->config->pinhole->global_comment_status !== false);
+			($this->app->config->pinhole->global_comment_status === null);
 	}
 
 	// }}}

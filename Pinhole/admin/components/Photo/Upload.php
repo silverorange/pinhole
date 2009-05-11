@@ -66,11 +66,6 @@ class PinholePhotoUpload extends AdminPage
 			ini_set('memory_limit', -1);
 			set_time_limit(300);
 
-			$class_name = SwatDBClassMap::get('PinholeImageSet');
-			$image_set = new $class_name();
-			$image_set->setDatabase($this->app->db);
-			$image_set->loadByShortname('photos');
-
 			$class_name = SwatDBClassMap::get('PinholePhotoUploadSet');
 			$upload_set = new $class_name();
 			$upload_set->setDatabase($this->app->db);
@@ -79,6 +74,7 @@ class PinholePhotoUpload extends AdminPage
 			$upload_set->save();
 
 			$files = PinholePhoto::saveUploadedFile('file');
+			$image_set = $this->getImageSet();
 
 			foreach ($files as $temp_filename => $original_filename) {
 				$photo = $this->getTempPhoto($upload_set, $image_set,
@@ -135,21 +131,25 @@ class PinholePhotoUpload extends AdminPage
 
 	protected function setTimeZone(PinholePhoto $photo)
 	{
+		$exif_date = exif_read_data(
+			sys_get_temp_dir().'/'.$photo->temp_filename, 'IFD0', 0);
+
+		$photo->photo_date = $this->parseMetaDataDate($exif_date['DateTime']);
+
 		// save the photo time zone
 		$photo->photo_time_zone =
 			$this->ui->getWidget('photo_time_zone')->value;
 
-		$this->app->config->pinhole->camera_time_zone =
-			$photo->photo_time_zone;
-
 		if ($photo->photo_time_zone === null)
 			$photo->photo_time_zone = $this->app->default_time_zone->getID();
 
+		$this->app->config->pinhole->camera_time_zone =
+			$photo->photo_time_zone;
+
 		// convert the photo date to UTC using the camera time zone
-		$photo->photo_date = new SwatDate($photo->photo_date);
 		$camera_time_zone = $this->ui->getWidget('camera_time_zone')->value;
 		if ($camera_time_zone === null)
-			$camera_time_zone = $this->app->default_time_zone->getID();
+			$camera_time_zone = $photo->photo_time_zone;
 
 		$photo->photo_date->setTZbyID($camera_time_zone);
 		$photo->photo_date->toUTC();
@@ -190,6 +190,28 @@ class PinholePhotoUpload extends AdminPage
 				$this->image_set_shortname));
 
 		return $image_set;
+	}
+
+	// }}}
+	// {{{ private function parseMetaDataDate()
+
+	private function parseMetaDataDate($date_string)
+	{
+		list($year, $month, $day, $hour, $minute, $second) =
+			sscanf($date_string, "%d:%d:%d %d:%d:%d");
+
+		$date = new SwatDate();
+		$error = $date->setDayMonthYear($day, $month, $year);
+		if (PEAR::isError($error))
+			return null;
+
+		$error = $date->setHourMinuteSecond($hour, $minute, $second);
+		if (PEAR::isError($error))
+			return null;
+
+		$date->toUTC();
+
+		return $date;
 	}
 
 	// }}}

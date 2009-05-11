@@ -994,8 +994,6 @@ class PinholePhoto extends SiteImage
 
 	protected function setContentByMetaData($meta_data)
 	{
-		$this->setPhotoDateByMetaData($meta_data);
-
 		if ($this->set_content_by_meta_data) {
 			$this->setTitleByMetaData($meta_data);
 			$this->setDescriptionByMetaData($meta_data);
@@ -1003,25 +1001,6 @@ class PinholePhoto extends SiteImage
 
 		if ($this->set_tags_by_meta_data) {
 			$this->setTagsByMetaData($meta_data);
-		}
-	}
-
-	// }}}
-	// {{{ protected function setPhotoDateByMetaData()
-
-	protected function setPhotoDateByMetaData($meta_data)
-	{
-		$date_fields = array('createdate', 'datetimeoriginal');
-		foreach ($date_fields as $field) {
-			if (isset($meta_data[$field])) {
-				$photo_date = $this->parseMetaDataDate(
-					$meta_data[$field]->value);
-
-				if ($photo_date !== null && $photo_date->isPast()) {
-					$this->photo_date = $photo_date;
-					break;
-				}
-			}
 		}
 	}
 
@@ -1130,26 +1109,6 @@ class PinholePhoto extends SiteImage
 		}
 
 		return $tag_obj;
-	}
-
-	// }}}
-	// {{{ private function parseMetaDataDate()
-
-	private function parseMetaDataDate($date)
-	{
-		list($year, $month, $day, $hour, $minute, $second) =
-			sscanf($date, "%d:%d:%d %d:%d:%d");
-
-		$date = new SwatDate();
-		$error = $date->setDayMonthYear($day, $month, $year);
-		if (PEAR::isError($error))
-			return null;
-
-		$error = $date->setHourMinuteSecond($hour, $minute, $second);
-		if (PEAR::isError($error))
-			return null;
-
-		return $date;
 	}
 
 	// }}}

@@ -115,44 +115,22 @@ class PinholePhotoUpload extends AdminPage
 		$photo->auto_publish = (!$this->ui->getWidget('set_pending')->value);
 		$photo->private = $this->ui->getWidget('private')->value;
 
+		$photo->photo_time_zone =
+			$this->ui->getWidget('photo_time_zone')->value;
+
+		$camera_time_zone = $this->ui->getWidget('camera_time_zone')->value;
+		if ($camera_time_zone === null)
+			$camera_time_zone = $photo->photo_time_zone;
+
+		$photo->camera_time_zone = $camera_time_zone;
+
 		$photo->set_content_by_meta_data =
 			$this->ui->getWidget('set_content_by_meta_data')->value;
 
 		$photo->set_tags_by_meta_data =
 			$this->ui->getWidget('set_tags_by_meta_data')->value;
 
-		$this->setTimeZone($photo);
-
 		return $photo;
-	}
-
-	// }}}
-	// {{{ protected function setTimeZone()
-
-	protected function setTimeZone(PinholePhoto $photo)
-	{
-		$exif_date = exif_read_data(
-			sys_get_temp_dir().'/'.$photo->temp_filename, 'IFD0', 0);
-
-		$photo->photo_date = $this->parseMetaDataDate($exif_date['DateTime']);
-
-		// save the photo time zone
-		$photo->photo_time_zone =
-			$this->ui->getWidget('photo_time_zone')->value;
-
-		if ($photo->photo_time_zone === null)
-			$photo->photo_time_zone = $this->app->default_time_zone->getID();
-
-		$this->app->config->pinhole->camera_time_zone =
-			$photo->photo_time_zone;
-
-		// convert the photo date to UTC using the camera time zone
-		$camera_time_zone = $this->ui->getWidget('camera_time_zone')->value;
-		if ($camera_time_zone === null)
-			$camera_time_zone = $photo->photo_time_zone;
-
-		$photo->photo_date->setTZbyID($camera_time_zone);
-		$photo->photo_date->toUTC();
 	}
 
 	// }}}
@@ -190,28 +168,6 @@ class PinholePhotoUpload extends AdminPage
 				$this->image_set_shortname));
 
 		return $image_set;
-	}
-
-	// }}}
-	// {{{ private function parseMetaDataDate()
-
-	private function parseMetaDataDate($date_string)
-	{
-		list($year, $month, $day, $hour, $minute, $second) =
-			sscanf($date_string, "%d:%d:%d %d:%d:%d");
-
-		$date = new SwatDate();
-		$error = $date->setDayMonthYear($day, $month, $year);
-		if (PEAR::isError($error))
-			return null;
-
-		$error = $date->setHourMinuteSecond($hour, $minute, $second);
-		if (PEAR::isError($error))
-			return null;
-
-		$date->toUTC();
-
-		return $date;
 	}
 
 	// }}}

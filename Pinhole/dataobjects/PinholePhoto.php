@@ -164,6 +164,17 @@ class PinholePhoto extends SiteImage
 	 public $photo_time_zone;
 
 	/**
+	 * Time-zone of the camera
+	 *
+	 * If the camera time zone and the photo time zone are not the same,
+	 * the date of the photo will be converted to the camera time zone
+	 * when processed.
+	 *
+	 * @var string
+	 */
+	 public $camera_time_zone;
+
+	/**
 	 * Private
 	 *
 	 * @var boolean
@@ -994,6 +1005,8 @@ class PinholePhoto extends SiteImage
 
 	protected function setContentByMetaData($meta_data)
 	{
+		$this->setPhotoDateByMetaData($meta_data);
+
 		if ($this->set_content_by_meta_data) {
 			$this->setTitleByMetaData($meta_data);
 			$this->setDescriptionByMetaData($meta_data);
@@ -1078,6 +1091,30 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
+	// {{{ protected function setPhotoDateByMetaData()
+
+	protected function setPhotoDateByMetaData($meta_data)
+	{
+		$date_fields = array('createdate', 'datetimeoriginal');
+		foreach ($date_fields as $field) {
+			if (isset($meta_data[$field])) {
+				$photo_date = $this->parseMetaDataDate(
+					$meta_data[$field]->value);
+
+				if ($photo_date !== null && $photo_date->isPast()) {
+					$this->photo_date = $photo_date;
+					break;
+				}
+			}
+		}
+
+		if ($this->camera_time_zone !== null)
+			$this->photo_date->setTZByID($this->camera_time_zone);
+
+		$this->photo_date->toUTC();
+	}
+
+	// }}}
 	// {{{ private function addMetaDataTag()
 
 	private function addMetaDataTag($title)
@@ -1109,6 +1146,28 @@ class PinholePhoto extends SiteImage
 		}
 
 		return $tag_obj;
+	}
+
+	// }}}
+	// {{{ private function parseMetaDataDate()
+
+	private function parseMetaDataDate($date_string)
+	{
+		list($year, $month, $day, $hour, $minute, $second) =
+			sscanf($date_string, "%d:%d:%d %d:%d:%d");
+
+		$date = new SwatDate();
+		$error = $date->setDayMonthYear($day, $month, $year);
+		if (PEAR::isError($error))
+			return null;
+
+		$error = $date->setHourMinuteSecond($hour, $minute, $second);
+		if (PEAR::isError($error))
+			return null;
+
+		$date->toUTC();
+
+		return $date;
 	}
 
 	// }}}

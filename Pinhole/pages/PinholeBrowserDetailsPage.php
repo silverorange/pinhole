@@ -56,6 +56,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	public function __construct(SiteApplication $app, SiteLayout $layout,
 		array $arguments)
 	{
+		$app->memcache->flush();
+
 		parent::__construct($app, $layout, $arguments);
 
 		$this->ui_xml = 'Pinhole/pages/browser-details.xml';
@@ -777,29 +779,29 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function buildComments()
 	{
-		if ($this->app->config->pinhole->global_comment_status !== null &&
-			$this->app->config->pinhole->global_comment_status == false) {
+		$global_status = $this->app->config->pinhole->global_comment_status;
+		if ($global_status === null) {
+			$status = $this->photo->comment_status;
+		} elseif ($global_status == true) {
+			// comments are globally turned on
+			$status = $this->app->config->default_comment_status;
+		} else {
+			// comments are globally turned off
 			$this->ui->getWidget('comment_edit_form')->visible = false;
 			$this->ui->getWidget('comments')->visible = false;
 			return;
 		}
 
-		// Comment form submits to the top of the comment form if there are
-		// error messages or if the new comment is not immediately visible.
-		// Otherwise the comment form submits to the new comment.
-		$comment_status = $this->photo->comment_status;
 		if ($this->ui->getWidget('comment_edit_form')->hasMessage() ||
-			$comment_status == PinholePhoto::COMMENT_STATUS_MODERATED ||
-			$comment_status == PinholePhoto::COMMENT_STATUS_LOCKED ||
+			$status == PinholePhoto::COMMENT_STATUS_MODERATED ||
+			$status == PinholePhoto::COMMENT_STATUS_LOCKED ||
 			$this->ui->getWidget('preview_button')->hasBeenClicked()) {
 			$this->ui->getWidget('submit_comment')->visible = true;
 		}
 
 		ob_start();
 
-		if ($this->photo->comment_status !=
-			PinholePhoto::COMMENT_STATUS_CLOSED) {
-
+		if ($status != PinholePhoto::COMMENT_STATUS_CLOSED) {
 			$div_tag = new SwatHtmlTag('div');
 			$div_tag->id = 'comments';
 			$div_tag->class = 'photo-comments';

@@ -24,6 +24,12 @@
 					</object>
 					<object class="SwatTextCellRenderer" id="date_links" />
 				</object>
+				<object class="SwatDetailsViewField" id="dimensions">
+					<property name="title">Dimensions</property>
+					<object class="SwatTextCellRenderer">
+						<property name="content_type">text/xml</property>
+					</object>
+				</object>
 				<object class="SwatDetailsViewField" id="photo_date">
 					<property name="title">Taken</property>
 					<object class="SwatDateCellRenderer">

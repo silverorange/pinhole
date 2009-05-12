@@ -28,8 +28,7 @@ class PinholeCommentsGadget extends SiteGadget
 			echo '<ul>';
 
 			foreach ($comments as $comment) {
-				$li_tag = new SwatHtmlTag('li');
-				$li_tag->open();
+				echo '<li>';
 
 				$date = new SwatDate($comment->createdate);
 				$date->convertTZById($this->app->config->date->time_zone);
@@ -58,7 +57,7 @@ class PinholeCommentsGadget extends SiteGadget
 
 				$div_tag->display();
 
-				$li_tag->close();
+				echo '</li>';
 			}
 
 			echo '</ul>';

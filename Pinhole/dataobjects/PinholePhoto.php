@@ -795,6 +795,39 @@ class PinholePhoto extends SiteImage
 	}
 
 	// }}}
+	// {{{ protected function fitToDimension()
+
+	/**
+	 * Resizes an image to fit in a given dimension
+	 *
+	 * @param Imagick $imagick the imagick instance to work with.
+	 * @param SiteImageDimension $dimension the dimension to process.
+	 */
+	protected function fitToDimension(Imagick $imagick,
+		SiteImageDimension $dimension)
+	{
+		$max_width = $dimension->max_width;
+		$max_height = $dimension->max_height;
+
+		if ($dimension->shortname == 'large') {
+			// handle panoramas
+			$width = $imagick->getImageWidth();
+			$height = $imagick->getImageHeight();
+
+			if (($width / $height) > 3) {
+				$dimension->max_width = null;
+			} elseif (($height / $width) > 3) {
+				$dimension->max_height = null;
+			}
+		}
+
+		parent::fitToDimension($imagick, $dimension);
+
+		$dimension->max_width = $max_width;
+		$dimension->max_height = $max_height;
+	}
+
+	// }}}
 	// {{{ protected static function getArchiveMimeTypes()
 
 	/**
@@ -1108,10 +1141,12 @@ class PinholePhoto extends SiteImage
 			}
 		}
 
-		if ($this->camera_time_zone !== null)
-			$this->photo_date->setTZByID($this->camera_time_zone);
+		if ($this->photo_date !== null) {
+			if ($this->camera_time_zone !== null)
+				$this->photo_date->setTZByID($this->camera_time_zone);
 
-		$this->photo_date->toUTC();
+			$this->photo_date->toUTC();
+		}
 	}
 
 	// }}}

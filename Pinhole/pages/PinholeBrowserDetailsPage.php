@@ -444,44 +444,11 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	{
 		parent::buildInternal();
 
-		$view = $this->ui->getWidget('photo_date_view');
-		$view->data = $this->getPhotoDetailsStore();
-
-		$photo_date = $view->getField('photo_date');
-
-		if ($this->photo->photo_date === null) {
-			$photo_date->visible = false;
-		} else {
-			$date = new SwatDate($this->photo->photo_date);
-			$date->convertTZByID($this->photo->photo_time_zone);
-
-			$date_links = $photo_date->getRenderer('date_links');
-			$date_links->content_type = 'text/xml';
-			$date_links->text = sprintf(Pinhole::_('<div id="photo_links">
-				View photos taken on the same: '.
-				'<a href="tag?date.date=%1$s-%2$s-%3$s">day</a>, '.
-				'<a href="tag?date.week=%1$s-%2$s-%3$s">week</a>, '.
-				'<a href="tag?date.month=%2$s/date.year=%1$s">month</a>, '.
-				'<a href="tag?date.year=%1$s">year</a>.</div>'),
-				$date->format('%Y'),
-				$date->format('%m'),
-				$date->format('%d'));
-		}
-
-		$tag_array = array();
-		foreach ($this->photo->tags as $tag) {
-			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href = $this->app->config->pinhole->path.'tag?'.$tag->name;
-			$a_tag->setContent($tag->title);
-			$tag_array[] = (string) $a_tag;
-		}
-
-		if (count($tag_array) > 0) {
-			$view->getField('tags')->getFirstRenderer()->text =
-				implode(', ', $tag_array);
-		} else {
-			$view->getField('tags')->visible = false;
-		}
+		$this->buildDetailsView();
+		$this->buildComments();
+		$this->buildMetaData();
+		$this->buildLayout();
+		$this->buildPhotoNextPrev();
 
 		$description = $this->ui->getWidget('description');
 		// Set to text/xml for now pending review in ticket #1159.
@@ -491,11 +458,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$username = $this->app->config->clustershot->username;
 		if ($this->photo->for_sale && $username !== null)
 			$this->appendForSaleLink($description);
-
-		$this->buildComments();
-		$this->buildMetaData();
-		$this->buildLayout();
-		$this->buildPhotoNextPrev();
 	}
 
 	// }}}
@@ -630,14 +592,23 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function displayPhoto()
 	{
-		$original_width = $this->photo->getWidth('original');
-		$large_width = $this->photo->getWidth('large');
-		$link_to_original = ($original_width > $large_width * 1.1);
+		$width = $this->photo->getWidth($this->dimension->shortname);
+		$height = $this->photo->getHeight($this->dimension->shortname);
 
-		if ($link_to_original) {
+		$panorama = ($width > $this->dimension->max_width ||
+			$height > $this->dimension->max_height);
+
+		$next_prev = $this->tag_list->getNextPrevPhotos($this->photo);
+		if ($next_prev['next'] !== null) {
+			$href = sprintf('%sphoto/%s', $this->app->config->pinhole->path,
+				$next_prev['next']->id);
+
+			if (count($this->tag_list) > 0)
+				$href.= '?'.$this->tag_list->__toString();
+
 			$a_tag = new SwatHtmlTag('a');
-			$a_tag->href = $this->photo->getUri('original');
-			$a_tag->title = Pinhole::_('View full-size image');
+			$a_tag->href = $href;
+			$a_tag->title = Pinhole::_('View next image');
 			$a_tag->open();
 		}
 
@@ -647,7 +618,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$img_tag->class = 'pinhole-photo pinhole-photo-primary';
 		$img_tag->display();
 
-		if ($link_to_original)
+		if ($next_prev['next'] !== null)
 			$a_tag->close();
 	}
 
@@ -657,25 +628,83 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	protected function displayContent()
 	{
 		$this->displayPhoto();
-		$this->displayDimensions();
 		parent::displayContent();
 	}
 
 	// }}}
-	// {{{ protected function displayDimensions()
 
-	protected function displayDimensions()
+	// build details view
+	// {{{ protected function buildDetailsView()
+
+	protected function buildDetailsView()
+	{
+		$view = $this->ui->getWidget('photo_date_view');
+		$view->data = $this->getPhotoDetailsStore();
+
+		$this->buildDimensions($view);
+		$this->buildPhotoDate($view);
+		$this->buildTags($view);
+	}
+
+	// }}}
+	// {{{ protected function buildPhotoDate()
+
+	protected function buildPhotoDate(SwatDetailsView $view)
+	{
+		$photo_date = $view->getField('photo_date');
+
+		if ($this->photo->photo_date === null) {
+			$photo_date->visible = false;
+		} else {
+			$date = new SwatDate($this->photo->photo_date);
+			$date->convertTZByID($this->photo->photo_time_zone);
+
+			$date_links = $photo_date->getRenderer('date_links');
+			$date_links->content_type = 'text/xml';
+			$date_links->text = sprintf(Pinhole::_('<div id="photo_links">
+				View photos taken on the same: '.
+				'<a href="tag?date.date=%1$s-%2$s-%3$s">day</a>, '.
+				'<a href="tag?date.week=%1$s-%2$s-%3$s">week</a>, '.
+				'<a href="tag?date.month=%2$s/date.year=%1$s">month</a>, '.
+				'<a href="tag?date.year=%1$s">year</a>.</div>'),
+				$date->format('%Y'),
+				$date->format('%m'),
+				$date->format('%d'));
+		}
+	}
+
+	// }}}
+	// {{{ protected function buildTags()
+
+	protected function buildTags(SwatDetailsView $view)
+	{
+		$tag_array = array();
+		foreach ($this->photo->tags as $tag) {
+			$a_tag = new SwatHtmlTag('a');
+			$a_tag->href = $this->app->config->pinhole->path.'tag?'.$tag->name;
+			$a_tag->setContent($tag->title);
+			$tag_array[] = (string) $a_tag;
+		}
+
+		if (count($tag_array) > 0) {
+			$view->getField('tags')->getFirstRenderer()->text =
+				implode(', ', $tag_array);
+		} else {
+			$view->getField('tags')->visible = false;
+		}
+	}
+
+	// }}}
+	// {{{ protected function buildDimensions()
+
+	protected function buildDimensions(SwatDetailsView $view)
 	{
 		$dimensions = $this->getSelectableDimensions();
 
-		if (count($dimensions) <= 1)
+		if (count($dimensions) <= 1) {
+			$view->getField('dimensions')->visible = false;
 			return;
-
-		$div_tag = new SwatHtmlTag('div');
-		$div_tag->class = 'pinhole-photo-dimensions';
-		$div_tag->open();
-
-		echo Pinhole::_('Dimensions: ');
+		}
 
 		$list = array();
 
@@ -701,14 +730,19 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 				$a_tag->setContent($dimension->title);
 				$a_tag->display();
+
+				if ($dimension->shortname == 'original') {
+					printf(' (%d × %d pixels)',
+						$this->photo->getWidth($dimension->shortname),
+						$this->photo->getHeight($dimension->shortname));
+				}
 			}
 
 			$list[] = ob_get_clean();
 		}
 
-		echo implode(', ', $list);
-
-		$div_tag->close();
+		$view->getField('dimensions')->getFirstRenderer()->text =
+			implode(', ', $list);
 	}
 
 	// }}}

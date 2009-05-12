@@ -32,8 +32,7 @@ class PinholeCommentsGadget extends SiteGadget
 
 				$date = new SwatDate($comment->createdate);
 				$date->convertTZById($this->app->config->date->time_zone);
-				$now = new SwatDate();
-				$days_ago = $now->dateDiff($date, true);
+				$date_diff = $date->getHumanReadableDateDiff();
 
 				$author = ($comment->photographer === null) ?
 					$comment->fullname : $comment->photographer->fullname;
@@ -43,11 +42,8 @@ class PinholeCommentsGadget extends SiteGadget
 					$comment->getInternalValue('photo'),
 					$comment->id);
 
-				if ($days_ago > 0)
-					$a_tag->setContent(sprintf('%s days ago by %s',
-						$days_ago, $author));
-				else
-					$a_tag->setContent(sprintf('Today by %s', $author));
+				$a_tag->setContent(sprintf('%s ago by %s',
+					$date_diff, $author));
 
 				$a_tag->display();
 

@@ -57,20 +57,24 @@
 		</widget>
 		<!-- }}} -->
 		<!-- {{{ Comments -->
-		<widget class="SwatContentBlock" id="comments">
-			<property name="content_type">text/xml</property>
-		</widget>
-		<widget class="SwatDisplayableContainer" id="submit_comment">
+		<widget class="SwatFrame" id="comments_frame">
 			<property name="visible" type="boolean">false</property>
-		</widget>
-		<widget class="SwatForm" id="comment_edit_form">
-			<widget class="SwatMessageDisplay" id="preview_message_display" />
-			<widget class="SwatContainer" id="comment_preview_container">
-				<property name="visible" type="boolean">false</property>
-				<widget class="SwatContentBlock" id="comment_preview" />
+			<property name="title" translatable="yes">Visitor Comments</property>
+			<widget class="SwatContentBlock" id="comments">
+				<property name="content_type">text/xml</property>
 			</widget>
-			<widget class="SwatDisclosure" id="comment_edit_disclosure">
-				<property name="title" translatable="yes">Post a Comment</property>
+			<widget class="SwatDisplayableContainer" id="submit_comment">
+				<property name="visible" type="boolean">false</property>
+			</widget>
+		</widget>
+		<widget class="SwatFrame" id="comment_edit_frame">
+			<property name="title" translatable="yes">Add a Comment</property>
+			<widget class="SwatForm" id="comment_edit_form">
+				<widget class="SwatMessageDisplay" id="preview_message_display" />
+				<widget class="SwatContainer" id="comment_preview_container">
+					<property name="visible" type="boolean">false</property>
+					<widget class="SwatContentBlock" id="comment_preview" />
+				</widget>
 				<widget class="SwatMessageDisplay" id="message_display" />
 				<widget class="SwatDisplayableContainer" id="comment_edit_details">
 					<widget class="SwatFormField" id="fullname_field">

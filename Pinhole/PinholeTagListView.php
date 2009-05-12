@@ -54,8 +54,12 @@ class PinholeTagListView extends SwatControl
 
 		$this->displayHomeLink();
 
+		echo 'Browsing: ';
+
 		if (count($this->tag_list) > 0)
 			$this->displayTagList($this->tag_list);
+		else
+			echo Pinhole::_('All Photos');
 
 		$this->displayCount();
 		echo ' ';

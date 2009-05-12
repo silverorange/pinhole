@@ -821,8 +821,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$status = $this->app->config->default_comment_status;
 		} else {
 			// comments are globally turned off
-			$this->ui->getWidget('comment_edit_form')->visible = false;
-			$this->ui->getWidget('comments')->visible = false;
+			$this->ui->getWidget('comment_frame')->visible = false;
+			$this->ui->getWidget('comment_edit_frame')->visible = false;
 			return;
 		}
 
@@ -833,29 +833,26 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$this->ui->getWidget('submit_comment')->visible = true;
 		}
 
-		ob_start();
-
 		if ($status != PinholePhoto::COMMENT_STATUS_CLOSED) {
-			$div_tag = new SwatHtmlTag('div');
-			$div_tag->id = 'comments';
-			$div_tag->class = 'photo-comments';
-			$div_tag->open();
-
 			$comments = $this->photo->getVisibleComments();
 
 			if (count($comments) > 0) {
-				echo '<h3 class="comments-title">',
-					Pinhole::_('Comments'), '</h3>';
-			}
+				$this->ui->getWidget('comments_frame')->visible = true;
 
-			foreach ($comments as $comment) {
-				$this->displayComment($comment);
-			}
+				ob_start();
+				$div_tag = new SwatHtmlTag('div');
+				$div_tag->id = 'comments';
+				$div_tag->class = 'photo-comments';
+				$div_tag->open();
 
-			$div_tag->close();
+				foreach ($comments as $comment) {
+					$this->displayComment($comment);
+				}
+
+				$div_tag->close();
+				$this->ui->getWidget('comments')->content = ob_get_clean();
+			}
 		}
-
-		$this->ui->getWidget('comments')->content = ob_get_clean();
 
 		$this->buildCommentUi();
 	}
@@ -973,10 +970,10 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$comment_preview->content = ob_get_clean();
 			$comment_preview->content_type = 'text/xml';
 
-			$container = $this->ui->getWidget(
-				'comment_preview_container');
-
+			$container = $this->ui->getWidget('comment_preview_container');
 			$container->visible = true;
+
+			$this->ui->getWidget('comments_frame')->visible = true;
 		}
 	}
 

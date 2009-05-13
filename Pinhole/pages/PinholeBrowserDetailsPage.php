@@ -811,6 +811,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function buildComments()
 	{
+		if (!$this->ui->hasWidget('comment_frame'))
+			return;
+
 		$global_status = $this->app->config->pinhole->global_comment_status;
 		if ($global_status === null) {
 			$status = $this->photo->comment_status;

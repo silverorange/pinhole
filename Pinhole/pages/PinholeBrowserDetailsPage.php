@@ -811,9 +811,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function buildComments()
 	{
-		if (!$this->ui->hasWidget('comment_frame'))
-			return;
-
 		$global_status = $this->app->config->pinhole->global_comment_status;
 		if ($global_status === null) {
 			$status = $this->photo->comment_status;
@@ -822,7 +819,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$status = $this->app->config->default_comment_status;
 		} else {
 			// comments are globally turned off
-			$this->ui->getWidget('comment_frame')->visible = false;
+			$this->ui->getWidget('comments_frame')->visible = false;
 			$this->ui->getWidget('comment_edit_frame')->visible = false;
 			return;
 		}

@@ -444,14 +444,28 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$this->buildDetailsView();
 		$this->buildComments();
-		$this->buildMetaData();
 		$this->buildLayout();
 		$this->buildPhotoNextPrev();
+
+		ob_start();
+
+		$title = $this->photo->getTitle();
+		if ($title != '') {
+			$h1 = new SwatHtmlTag('h1');
+			$h1->setContent($title);
+			$h1->display();
+		}
+
+		if ($this->photo->description != '') {
+			$div = new SwatHtmlTag('div');
+			$div->setContent($this->photo->description);
+			$div->display();
+		}
 
 		$description = $this->ui->getWidget('description');
 		// Set to text/xml for now pending review in ticket #1159.
 		$description->content_type = 'text/xml';
-		$description->content = $this->photo->description;
+		$description->content = ob_get_clean();
 
 		$username = $this->app->config->clustershot->username;
 		if ($this->photo->for_sale && $username !== null)
@@ -477,8 +491,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		// Set photo title.
 		if ($title != '') {
-			$this->layout->data->title = SwatString::minimizeEntities($title);
-
 			$this->layout->data->html_title.= $title;
 		}
 
@@ -512,14 +524,33 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	// }}}
 	// {{{ protected function buildMetaData()
 
-	protected function buildMetaData()
+	protected function buildMetaData(SwatDetailsView $view)
 	{
 		$photo_meta_data = $this->photo->meta_data;
+		$field = $view->getField('meta_data');
 
-		$this->ui->getWidget('photo_details')->visible =
-			(count($photo_meta_data) > 0);
+		$camera = null;
+		foreach ($this->photo->meta_data as $meta_data) {
+			if ($meta_data->shortname == 'model') {
+				$camera = $meta_data->value;
+			}
+		}
 
-		$view = $this->ui->getWidget('photo_details_view');
+		$camera_renderer = $field->getRenderer('meta_data_camera');
+
+		if ($camera === null)
+			$camera_renderer->visible = false;
+		else
+			$camera_renderer->text = sprintf(Pinhole::_('Taken with a %s'),
+				$camera).' | ';
+
+
+		$renderer = $field->getRenderer('meta_data_widget');
+		$widget = $renderer->getPrototypeWidget();
+
+		$widget->visible = (count($photo_meta_data) > 0);
+
+		$meta_data_view = $widget->getChild('meta_data_disclosure')->getChild('meta_data_view');
 
 		foreach ($photo_meta_data as $meta_data) {
 			$field = new SwatDetailsViewField();
@@ -536,7 +567,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 			$renderer->text = $meta_data->value;
 
-			$view->appendField($field);
+			$meta_data_view->appendField($field);
 			$field->addRenderer($renderer);
 		}
 
@@ -636,12 +667,13 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function buildDetailsView()
 	{
-		$view = $this->ui->getWidget('photo_date_view');
+		$view = $this->ui->getWidget('photo_details_view');
 		$view->data = $this->getPhotoDetailsStore();
 
 		$this->buildDimensions($view);
 		$this->buildPhotoDate($view);
 		$this->buildTags($view);
+		$this->buildMetaData($view);
 	}
 
 	// }}}
@@ -659,12 +691,12 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 			$date_links = $photo_date->getRenderer('date_links');
 			$date_links->content_type = 'text/xml';
-			$date_links->text = sprintf(Pinhole::_('<div id="photo_links">
-				View photos taken on the same: '.
+			$date_links->text = sprintf(Pinhole::_('
+				(view photos taken on the same: '.
 				'<a href="tag?date.date=%1$s-%2$s-%3$s">day</a>, '.
 				'<a href="tag?date.week=%1$s-%2$s-%3$s">week</a>, '.
 				'<a href="tag?date.month=%2$s/date.year=%1$s">month</a>, '.
-				'<a href="tag?date.year=%1$s">year</a>.</div>'),
+				'<a href="tag?date.year=%1$s">year</a>)'),
 				$date->format('%Y'),
 				$date->format('%m'),
 				$date->format('%d'));

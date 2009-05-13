@@ -16,7 +16,7 @@
 			<widget class="SwatDisplayableContainer" id="description_container">
 				<widget class="SwatContentBlock" id="description" />
 			</widget>
-			<widget class="SwatDetailsView" id="photo_date_view">
+			<widget class="SwatDetailsView" id="photo_details_view">
 				<object class="SwatDetailsViewField" id="tags">
 					<property name="title">Tags</property>
 					<object class="SwatTextCellRenderer">
@@ -31,7 +31,7 @@
 					</object>
 				</object>
 				<object class="SwatDetailsViewField" id="photo_date">
-					<property name="title">Taken</property>
+					<property name="title">Photo Taken On</property>
 					<object class="SwatDateCellRenderer">
 						<property name="date" type="data">photo_date</property>
 						<property name="display_time_zone" type="data">photo_time_zone</property>
@@ -42,17 +42,25 @@
 					</object>
 				</object>
 				<object class="SwatDetailsViewField" id="publish_date">
-					<property name="title">Published</property>
+					<property name="title">Photo Published On</property>
 					<object class="SwatDateCellRenderer">
 						<property name="date" type="data">publish_date</property>
 						<property name="time_zone_format" type="constant">SwatDate::TZ_SHORT</property>
 					</object>
 				</object>
-			</widget>
-			<widget class="SwatDisclosure" id="photo_details">
-				<property name="title">Photo Metadata</property>
-				<property name="open" type="boolean">false</property>
-				<widget class="SwatDetailsView" id="photo_details_view" />
+				<object class="SwatDetailsViewField" id="meta_data">
+					<property name="title">Photo Details</property>
+					<object class="SwatTextCellRenderer" id="meta_data_camera" />
+					<object class="SwatWidgetCellRenderer" id="meta_data_widget">
+						<widget class="SwatContainer" id="meta_data_container">
+							<widget class="SwatDisclosure" id="meta_data_disclosure">
+								<property name="title">Photo Metadata</property>
+								<property name="open" type="boolean">false</property>
+								<widget class="SwatDetailsView" id="meta_data_view" />
+							</widget>
+						</widget>
+					</object>
+				</object>
 			</widget>
 		</widget>
 		<!-- }}} -->
@@ -104,7 +112,8 @@
 				</widget>
 				<widget class="SwatFormField" id="comment_bodytext_field">
 					<property name="title" translatable="yes">Comment</property>
-					<property name="note" translatable="yes"><![CDATA[Allowed tags are: <em>, <strong>, <code> and <a href="url">. All other tags will be displayed as plain text.]]></property>
+					<property name="note_content_type">text/xml</property>
+					<property name="note" translatable="yes"><![CDATA[Allowed tags are: &lt;em&gt;, &lt;strong&gt;, &lt;code&gt; and &lt;a href="url"&gt;.<br />All other tags will be displayed as plain text.]]></property>
 					<widget class="SwatTextarea" id="bodytext">
 						<property name="required" type="boolean">true</property>
 						<property name="rows" type="integer">8</property>

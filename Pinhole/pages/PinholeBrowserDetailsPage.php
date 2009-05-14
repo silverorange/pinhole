@@ -848,7 +848,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$status = $this->photo->comment_status;
 		} elseif ($global_status == true) {
 			// comments are globally turned on
-			$status = $this->app->config->default_comment_status;
+			$status = $this->app->config->pinhole->default_comment_status;
 		} else {
 			// comments are globally turned off
 			$this->ui->getWidget('comments_frame')->visible = false;

@@ -98,7 +98,9 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 	public function getTitle()
 	{
 		return sprintf(Pinhole::_('%s: %s'),
-			$this->meta_data->title, $this->value);
+			$this->meta_data->title,
+			PinholePhotoMetaDataBinding::getFormattedValue(
+				$this->getName(), $this->getValue()));
 	}
 
 	// }}}

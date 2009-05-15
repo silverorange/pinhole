@@ -53,12 +53,15 @@
 					<property name="title" translatable="yes">don't display in photo details</property>
 				</widget>
 				<widget class="SwatActionItem" id="show_machine">
-					<property name="title" translatable="yes">display machine tag</property>
+					<property name="title" translatable="yes">display as link</property>
+					<widget class="SwatContentBlock">
+						<property name="content" translatable="yes">Note: only set as a link if many photos share the same value.</property>
+					</widget>
 				</widget>
 				<widget class="SwatActionItem" id="dont_show_machine">
-					<property name="title" translatable="yes">don't display machine tag</property>
+					<property name="title" translatable="yes">don't display as link</property>
 				</widget>
-			</widget>	
+			</widget>
 		</widget>
 	</widget>
 </swatml>

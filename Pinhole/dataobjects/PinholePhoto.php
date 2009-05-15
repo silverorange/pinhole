@@ -941,7 +941,8 @@ class PinholePhoto extends SiteImage
 
 			$meta_data = new PinholePhotoMetaDataBinding();
 			$meta_data->shortname = strtolower($ret[0]);
-			$meta_data->value = $ret[1];
+			$meta_data->value = self::normalizeMetaDataValue(
+				$meta_data->shortname, $ret[1]);
 
 			$ret = explode("\t", $tag_names[$i]);
 			$meta_data->title = $ret[0];
@@ -950,6 +951,27 @@ class PinholePhoto extends SiteImage
 		}
 
 		return $data_objects;
+	}
+
+	// }}}
+	// {{{ protected static function normalizeMetaDataValue()
+
+	protected static function normalizeMetaDataValue($name, $value)
+	{
+		switch ($name) {
+		case 'exposuretime' :
+			// matches any fraction:
+				// 0.004 s (1/274)
+				// 1073742/1073741824
+			if (preg_match('/(?<numerator>\d+)\/(?<denominator>\d+)/',
+				$value, $regs)) {
+
+				return ((float) $regs['numerator'] /
+					(float) $regs['denominator']);
+			}
+		default:
+			return $value;
+		}
 	}
 
 	// }}}

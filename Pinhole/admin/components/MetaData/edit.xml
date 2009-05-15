@@ -16,7 +16,8 @@
 				<widget class="SwatCheckbox" id="visible" />
 			</widget>
 			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Display Machine Tag</property>
+				<property name="title" translatable="yes">Display As Link</property>
+				<property name="note" translatable="yes">Note: only set as a link if many photos share the same value.</property>
 				<widget class="SwatCheckbox" id="machine_tag" />
 			</widget>
 			<widget class="SwatFooterFormField">

@@ -565,7 +565,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$renderer = new SwatTextCellRenderer();
 			}
 
-			$renderer->text = $meta_data->value;
+			$renderer->text = PinholePhotoMetaDataBinding::getFormattedValue(
+				$meta_data->shortname, $meta_data->value);
 
 			$meta_data_view->appendField($field);
 			$field->addRenderer($renderer);

@@ -2,6 +2,8 @@
 
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'SwatDB/SwatDBDataObject.php';
+require_once 'Math/Fraction.php';
+require_once 'Math/FractionOp.php';
 
 /**
  * A dataobject class for photo meta data
@@ -66,6 +68,82 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 			$value);
 
 		return $uri;
+	}
+
+	// }}}
+	// {{{ public static function getFormattedValue()
+
+	/**
+	 * Gets a formatted value
+	 *
+	 * @return string The formatted value.
+	 */
+	public static function getFormattedValue($name, $value)
+	{
+		switch ($name) {
+		case 'aperture' :
+			return sprintf('ƒ/%s', (float) $value);
+		case 'exposuretime' :
+			return self::formatExposureTime($value);
+		default :
+			return $value;
+		}
+	}
+
+	// }}}
+	// {{{ private static function formatExposureTime()
+
+	/**
+	 * Gets a formatted value
+	 *
+	 * @return string The formatted value.
+	 */
+	private static function formatExposureTime($value)
+	{
+		$values = explode('/', $value);
+		if (count($values) == 2 && $values[1] > 0)
+			$seconds = ((float) $values[0]) / ((float) $values[1]);
+		else
+			$seconds = (float) $value;
+
+		if ($seconds > 1) {
+			$whole_number = floor($seconds);
+			$decimals = $seconds - $whole_number;
+		} else {
+			$whole_number = 0;
+			$decimals = $seconds;
+		}
+
+		$locale = SwatI18NLocale::get();
+
+		$output = sprintf(
+			Pinhole::ngettext('%s second', '%s seconds',
+			($whole_number == 1 && $decimals == 0) ? 1 : 0),
+			$locale->formatNumber(round($seconds, 4)));
+
+		$fraction = new Math_Fraction($decimals);
+		// needs the @ because it doesn't handle references properly
+		@$fraction = Math_FractionOp::simplify($fraction);
+
+		$numerator = $fraction->getNum();
+		$denominator = $fraction->getDen();
+
+		if ($denominator > 100000) {
+			// check for common denominators for values like: 0.66666667
+			for ($i = 2; $i <= 600; $i++) {
+				$trunc = (round($decimals * $i, 3));
+				if ((int) $trunc == $trunc) {
+					$numerator = $trunc;
+					$denominator = $i;
+					break;
+				}
+			}
+		}
+
+		if ($denominator != 1)
+			$output.= ' ('.$numerator.'/'.$denominator.')';
+
+		return $output;
 	}
 
 	// }}}

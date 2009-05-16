@@ -83,6 +83,14 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 		switch ($name) {
 		case 'aperture' :
 			return sprintf('ƒ/%s', (float) $value);
+		case 'focallength' :
+			return sprintf('%s mm', (float) $value);
+		case 'exposurecompensation' :
+			$fraction = self::formatAsFraction($value);
+			if ($fraction === null)
+				return $value;
+			else
+				return $fraction;
 		case 'exposuretime' :
 			return self::formatExposureTime($value);
 		default :
@@ -106,20 +114,30 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 		else
 			$seconds = (float) $value;
 
-		if ($seconds > 1) {
-			$whole_number = floor($seconds);
-			$decimals = $seconds - $whole_number;
-		} else {
-			$whole_number = 0;
-			$decimals = $seconds;
-		}
-
 		$locale = SwatI18NLocale::get();
 
 		$output = sprintf(
 			Pinhole::ngettext('%s second', '%s seconds',
-			($whole_number == 1 && $decimals == 0) ? 1 : 0),
-			$locale->formatNumber(round($seconds, 4)));
+			($seconds == 1) ? 1 : 0),
+			$locale->formatNumber(round($seconds, 6)));
+
+		$fraction = self::formatAsFraction($value);
+		if ($fraction !== null)
+			$output = $fraction.' ('.$output.')';
+
+		return $output;
+	}
+
+	// }}}
+	// {{{ private static function formatAsFraction()
+
+	private static function formatAsFraction($value)
+	{
+		$sign = ($value < 0) ? '-' : '';
+		$value = abs($value);
+
+		$whole_number = floor($value);
+		$decimals = $value - $whole_number;
 
 		$fraction = new Math_Fraction($decimals);
 		// needs the @ because it doesn't handle references properly
@@ -140,10 +158,18 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 			}
 		}
 
-		if ($denominator != 1)
-			$output.= ' ('.$numerator.'/'.$denominator.')';
+		if ($denominator != 1 && $denominator < 32000) {
+			$fraction_string = $sign;
 
-		return $output;
+			if ($whole_number > 0)
+				$fraction_string.= $whole_number.' ';
+
+			$fraction_string.= $numerator.'/'.$denominator;
+		} else {
+			$fraction_string = null;
+		}
+
+		return $fraction_string;
 	}
 
 	// }}}

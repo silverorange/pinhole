@@ -969,6 +969,10 @@ class PinholePhoto extends SiteImage
 				return ((float) $regs['numerator'] /
 					(float) $regs['denominator']);
 			}
+		case 'focallength' :
+			if (strpos($value, 'mm')) {
+				$value = trim(str_replace('mm', '', $value));
+			}
 		default:
 			return $value;
 		}

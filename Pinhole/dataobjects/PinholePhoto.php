@@ -960,19 +960,27 @@ class PinholePhoto extends SiteImage
 	{
 		switch ($name) {
 		case 'exposuretime' :
+		case 'exposurecompensation' :
 			// matches any fraction:
 				// 0.004 s (1/274)
 				// 1073742/1073741824
-			if (preg_match('/(?<numerator>\d+)\/(?<denominator>\d+)/',
+				// -1/4
+			if (preg_match('/(?<numerator>[\d-]+)\/(?<denominator>\d+)/',
 				$value, $regs)) {
 
-				return ((float) $regs['numerator'] /
-					(float) $regs['denominator']);
+				return (((float) $regs['numerator'] /
+					(float) $regs['denominator']) * $sign);
 			}
 		case 'focallength' :
 			if (strpos($value, 'mm')) {
 				$value = trim(str_replace('mm', '', $value));
 			}
+
+			$value = round($value, 1);
+			if (intval($value) == $value)
+				$value = intval($value);
+
+			return $value;
 		default:
 			return $value;
 		}

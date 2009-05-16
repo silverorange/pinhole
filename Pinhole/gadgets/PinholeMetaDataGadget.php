@@ -66,7 +66,10 @@ class PinholeMetaDataGadget extends SiteGadget
 						PinholePhotoMetaDataBinding::escapeValue(
 							$value->value));
 
-					$a_tag->setContent($value->value);
+					$a_tag->setContent(
+						PinholePhotoMetaDataBinding::getFormattedValue(
+							$section->shortname, $value->value));
+
 					$a_tag->display();
 
 					echo ' <span>'.$locale->formatNumber(
@@ -107,7 +110,7 @@ class PinholeMetaDataGadget extends SiteGadget
 		$sql = sprintf("select PinholeMetaData.* from PinholeMetaData
 			where PinholeMetaData.instance %s %s and visible = %s
 				and machine_tag = %s
-			order by title",
+			order by displayorder, title",
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
 			$this->app->db->quote(true, 'boolean'),
@@ -135,7 +138,8 @@ class PinholeMetaDataGadget extends SiteGadget
 				return $values;
 		}
 
-		$sql = "select count(photo) as photo_count, meta_data, value
+		$sql = "select count(photo) as photo_count, meta_data, value,
+				PinholeMetaData.shortname
 			from PinholePhotoMetaDataBinding
 			inner join PinholeMetaData on PinholeMetaData.id =
 				PinholePhotoMetaDataBinding.meta_data
@@ -145,7 +149,7 @@ class PinholeMetaDataGadget extends SiteGadget
 				and PinholeMetaData.visible = %s
 				and PinholeMetaData.machine_tag = %s
 				%s
-			group by meta_data, value";
+			group by meta_data, value, shortname";
 
 		if (!$this->app->session->isLoggedIn()) {
 			$private_where_clause = sprintf('and PinholePhoto.private = %s',
@@ -162,11 +166,12 @@ class PinholeMetaDataGadget extends SiteGadget
 			$this->app->db->quote(true, 'boolean'),
 			$private_where_clause);
 
-		$values = SwatDB::query($this->app->db, $sql);
+		$rows = SwatDB::query($this->app->db, $sql);
 
 		$sorted_values = array();
-		foreach ($values as $value)
-			$sorted_values[] = $value;
+		foreach ($rows as $row) {
+			$sorted_values[] = $row;
+		}
 
 		usort($sorted_values, array(get_class($this), 'sortMetaData'));
 
@@ -192,7 +197,7 @@ class PinholeMetaDataGadget extends SiteGadget
 
 	private static function sortMetaData($a, $b)
 	{
-		if (floatval($a->value) > 0 && floatval($b->value) > 0) {
+		if (floatval($a->value) != 0 && floatval($b->value) != 0) {
 			$al = floatval($a->value);
 			$bl = floatval($b->value);
 		} else {

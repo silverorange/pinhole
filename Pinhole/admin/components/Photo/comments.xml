@@ -15,13 +15,12 @@
 				<property name="stock_id">edit</property>
 				<property name="sensitive" type="boolean">false</property>
 			</widget>
-			<!--widget class="SwatToolLink">
+			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">Edit Meta-Data</property>
 				<property name="link">Photo/MetaData?id=%s</property>
 				<property name="stock_id">edit</property>
-			</widget-->
+			</widget>
 		</widget>
-		<widget class="SwatMessageDisplay" id="message_display" />
 		<widget class="SwatForm" id="comments_form">
 			<widget class="SwatToolbar" id="comments_toolbar">
 				<widget class="SwatToolLink">
@@ -30,6 +29,7 @@
 					<property name="stock_id">create</property>
 				</widget>
 			</widget>
+			<widget class="SwatMessageDisplay" id="message_display" />
 			<widget class="SwatTableView" id="comments_view">
 				<object class="SwatTableViewCheckboxColumn" id="checkbox">
 					<object class="SwatCheckboxCellRenderer" id="comments">

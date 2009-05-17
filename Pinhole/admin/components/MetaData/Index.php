@@ -40,54 +40,58 @@ class PinholeMetaDataIndex extends AdminIndex
 		$message = null;
 
 		switch ($actions->selected->id) {
-			case 'show_details':
-				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
-					'boolean:visible', true, 'id', $view->getSelection());
+		case 'delete':
+			$this->app->replacePage('MetaData/Delete');
+			$this->app->getPage()->setItems($view->checked_items);
+			break;
+		case 'show_details':
+			SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
+				'boolean:visible', true, 'id', $view->getSelection());
 
-				$message = new SwatMessage(sprintf(Admin::ngettext(
-					"%d detail has been enabled.",
-					"%d details have been enabled.", $num),
-					SwatString::numberFormat($num)));
+			$message = new SwatMessage(sprintf(Admin::ngettext(
+				"%d detail has been enabled.",
+				"%d details have been enabled.", $num),
+				SwatString::numberFormat($num)));
 
-				break;
+			break;
 
-			case 'dont_show_details':
-				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
-					'boolean:visible', false, 'id',
-					$view->getSelection());
+		case 'dont_show_details':
+			SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
+				'boolean:visible', false, 'id',
+				$view->getSelection());
 
-				$message = new SwatMessage(sprintf(Admin::ngettext(
-					"%d detail has been disabled.",
-					"%d details have been disabled.", $num),
-					SwatString::numberFormat($num)));
+			$message = new SwatMessage(sprintf(Admin::ngettext(
+				"%d detail has been disabled.",
+				"%d details have been disabled.", $num),
+				SwatString::numberFormat($num)));
 
-				break;
+			break;
 
-			case 'show_machine':
-				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
-					'boolean:machine_tag', true, 'id', $view->getSelection());
+		case 'show_machine':
+			SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
+				'boolean:machine_tag', true, 'id', $view->getSelection());
 
-				$message = new SwatMessage(sprintf(Admin::ngettext(
-					"%d machine tag has been enabled.",
-					"%d machine tags have been enabled.", $num),
-					SwatString::numberFormat($num)));
+			$message = new SwatMessage(sprintf(Admin::ngettext(
+				"%d machine tag has been enabled.",
+				"%d machine tags have been enabled.", $num),
+				SwatString::numberFormat($num)));
 
-				break;
+			break;
 
-			case 'dont_show_machine':
-				SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
-					'boolean:machine_tag', false, 'id', 
-					$view->getSelection());
+		case 'dont_show_machine':
+			SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
+				'boolean:machine_tag', false, 'id',
+				$view->getSelection());
 
-				$message = new SwatMessage(sprintf(Admin::ngettext(
-					"%d machine tag has been disabled.", 
-					"%d machine tags have been disabled.", $num),
-					SwatString::numberFormat($num)));
+			$message = new SwatMessage(sprintf(Admin::ngettext(
+				"%d machine tag has been disabled.",
+				"%d machine tags have been disabled.", $num),
+				SwatString::numberFormat($num)));
 
-				break;
+			break;
 
 		}
-		
+
 		if ($message !== null)
 			$this->app->messages->add($message);
 	}

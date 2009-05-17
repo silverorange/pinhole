@@ -50,6 +50,11 @@ class PinholePhotoUpload extends AdminPage
 			'set_tags_by_meta_data' => 'set_tags_by_meta_data',
 		);
 
+		foreach ($this->config_ui_map as $config_name => $id) {
+			$value = $this->app->config->pinhole->$config_name;
+			if ($value !== null)
+				$this->ui->getWidget($id)->value = $value;
+		}
 	}
 
 	// }}}
@@ -178,12 +183,6 @@ class PinholePhotoUpload extends AdminPage
 	protected function buildInternal()
 	{
 		parent::buildInternal();
-
-		foreach ($this->config_ui_map as $config_name => $id) {
-			$value = $this->app->config->pinhole->$config_name;
-			if ($value !== null)
-				$this->ui->getWidget($id)->value = $value;
-		}
 
 		$this->ui->getWidget('form')->action =
 			$this->getComponentName().'/Upload';

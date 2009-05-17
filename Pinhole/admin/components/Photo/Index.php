@@ -86,6 +86,9 @@ class PinholePhotoIndex extends AdminSearch
 
 		$pager = $this->ui->getWidget('pager');
 		$pager->process();
+
+		if ($this->hasSearch())
+			$this->ui->getWidget('search_disclosure')->open = true;
 	}
 
 	// }}}
@@ -102,6 +105,25 @@ class PinholePhotoIndex extends AdminSearch
 	{
 		$processor = new PinholePhotoActionsProcessor($this);
 		$processor->process($view, $actions, $this->ui);
+	}
+
+	// }}}
+	// {{{ protected function hasSearch()
+
+	protected function hasSearch()
+	{
+		$keywords   = trim($this->ui->getWidget('search_keywords')->value);
+		$start_date = $this->ui->getWidget('search_start_date')->value;
+		$end_date   = $this->ui->getWidget('search_end_date')->value;
+		$tags       = $this->ui->getWidget('search_tags')->getSelectedTagArray();
+		$status     = $this->ui->getWidget('search_status')->value;
+
+
+		return ($keywords != ''
+			|| $start_date != null
+			|| $end_date != null
+			|| count($tags)
+			|| $status != null);
 	}
 
 	// }}}

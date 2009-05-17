@@ -15,11 +15,11 @@
 				<property name="link">Photo/Comments?id=%s</property>
 				<property name="stock_id">edit</property>
 			</widget>
-			<!--widget class="SwatToolLink">
+			<widget class="SwatToolLink">
 				<property name="title" translatable="yes">Edit Meta-Data</property>
 				<property name="link">Photo/MetaData?id=%s</property>
 				<property name="stock_id">edit</property>
-			</widget-->
+			</widget>
 		</widget>
 		<widget class="SwatMessageDisplay" id="message_display" />
 		<widget class="SwatForm" id="edit_form">

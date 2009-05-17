@@ -1,0 +1,57 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrame" id="index_frame">
+		<property name="title" translatable="yes">MetaData</property>
+		<widget class="SwatToolbar" id="toolbar">
+			<widget class="SwatToolLink" id="edit_link">
+				<property name="title" translatable="yes">Edit Photo</property>
+				<property name="link">Photo/Edit?id=%s</property>
+				<property name="stock_id">edit</property>
+			</widget>
+			<widget class="SwatToolLink" id="comments_link">
+				<property name="title" translatable="yes">Manage Comments</property>
+				<property name="link">Photo/Comments?id=%s</property>
+				<property name="stock_id">edit</property>
+			</widget>
+			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">Edit Meta-Data</property>
+				<property name="link">Photo/MetaData?id=%s</property>
+				<property name="stock_id">edit</property>
+				<property name="sensitive" type="boolean">false</property>
+			</widget>
+		</widget>
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTableView" id="index_view">
+                <object class="SwatTableViewGroup">
+					<property name="id">visible</property>
+					<property name="group_by">visible</property>
+					<object class="SwatTextCellRenderer">
+						<property name="text" type="data">group_title</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="title">
+					<property name="title" translatable="yes">Title</property>
+					<object class="SwatTextCellRenderer">
+						<property name="text" type="data">title</property>
+					</object>
+				</object>
+				<object class="SwatTableViewColumn" id="value_column">
+					<property name="title" translatable="yes">Value</property>
+					<object class="SwatWidgetCellRenderer" id="value">
+						<property name="replicator_id" type="data">id</property>
+						<widget class="SwatEntry" id="value_entry">
+							<property name="value" type="data">value</property>
+						</widget>
+					</object>
+				</object>
+			</widget>
+			<widget class="SwatFooterFormField">
+				<widget class="SwatButton" id="submit_button">
+					<property name="title" translatable="yes">Apply</property>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

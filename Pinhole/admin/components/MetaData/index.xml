@@ -47,6 +47,10 @@
 				</object>
 			</widget>
 			<widget class="SwatActions" id="index_actions">
+				<widget class="SwatActionItem" id="delete">
+					<property name="title" translatable="yes">delete</property>
+				</widget>
+				<widget class="SwatActionItemDivider" />
 				<widget class="SwatActionItem" id="show_details">
 					<property name="title" translatable="yes">display in photo details</property>
 				</widget>

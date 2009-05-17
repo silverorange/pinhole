@@ -69,6 +69,11 @@ class PinholeMetaDataEdit extends AdminDBEdit
 		$this->metadata->visible     = $values['visible'];
 		$this->metadata->machine_tag = $values['machine_tag'];
 
+		if ($this->metadata->id === null) {
+			$this->metadata->shortname = $this->generateShortname(
+				$this->metadata->title);
+		}
+
 		$flush_cache = ($this->metadata->isModified() &&
 			$this->metadata->id !== null);
 
@@ -82,6 +87,27 @@ class PinholeMetaDataEdit extends AdminDBEdit
 			$this->metadata->title));
 
 		$this->app->messages->add($message);
+	}
+
+	// }}}
+	// {{{ protected function validateShortname()
+
+	protected function validateShortname($shortname)
+	{
+		$valid = true;
+
+		$class_name = SwatDBClassMap::get('PinholeMetaData');
+		$metadata = new $class_name();
+		$metadata->setDatabase($this->app->db);
+
+		if ($metadata->loadByShortname($shortname,
+			$this->app->getInstance())) {
+			if ($metadata->id !== $this->metadata->id) {
+				$valid = false;
+			}
+		}
+
+		return $valid;
 	}
 
 	// }}}

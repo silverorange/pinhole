@@ -5,12 +5,12 @@ require_once 'SwatDB/SwatDB.php';
 require_once 'Admin/AdminListDependency.php';
 
 /**
- * Delete confirmation page for PinholePhotographer component
+ * Delete confirmation page for PinholeMetaData component
  *
  * @package   Pinhole
  * @copyright 2007 silverorange
  */
-class PinholePhotographerDelete extends AdminDBDelete
+class PinholeMetaDataDelete extends AdminDBDelete
 {
 	// process phase
 	// {{{ protected function processDBData()
@@ -21,7 +21,7 @@ class PinholePhotographerDelete extends AdminDBDelete
 
 		$instance_id = $this->app->getInstanceId();
 
-		$sql = 'delete from PinholePhotographer where id in (%s)
+		$sql = 'delete from PinholeMetaData where id in (%s)
 			and instance %s %s';
 
 		$item_list = $this->getItemList('integer');
@@ -32,8 +32,8 @@ class PinholePhotographerDelete extends AdminDBDelete
 		$num = SwatDB::exec($this->app->db, $sql);
 
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
-			'One photographer has been deleted.',
-			'%d photographers have been deleted.', $num),
+			'One metadata section has been deleted.',
+			'%d metadata sections have been deleted.', $num),
 			SwatString::numberFormat($num)),
 			SwatMessage::NOTIFICATION);
 
@@ -58,9 +58,11 @@ class PinholePhotographerDelete extends AdminDBDelete
 			$this->app->db->quote($instance_id, 'integer'));
 
 		$dep = new AdminListDependency();
-		$dep->setTitle(Pinhole::_('photographer'), Pinhole::_('photographers'));
+		$dep->setTitle(Pinhole::_('metadata section'),
+			Pinhole::_('metadata sections'));
+
 		$dep->entries = AdminListDependency::queryEntries($this->app->db,
-			'PinholePhotographer', 'integer:id', null, 'text:fullname', 'fullname',
+			'PinholeMetaData', 'integer:id', null, 'text:title', 'title',
 			$where_clause, AdminDependency::DELETE);
 
 		$message = $this->ui->getWidget('confirmation_message');

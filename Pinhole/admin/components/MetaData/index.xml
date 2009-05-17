@@ -3,7 +3,14 @@
 <swatml>
 	<widget class="SwatMessageDisplay" id="message_display" />
 	<widget class="SwatFrame" id="index_frame">
-		<property name="title" translatable="yes">MetaData</property>
+		<property name="title" translatable="yes">Metadata</property>
+		<widget class="SwatToolbar" id="toolbar">
+			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">Add Custom Metadata Section</property>
+				<property name="link">MetaData/Edit</property>
+				<property name="stock_id">create</property>
+			</widget>
+		</widget>
 		<widget class="SwatForm" id="index_form">
 			<widget class="SwatTableView" id="index_view">
                 <object class="SwatTableViewGroup">

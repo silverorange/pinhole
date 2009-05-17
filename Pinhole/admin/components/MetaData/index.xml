@@ -33,13 +33,7 @@
 					</object>
 				</object>
 				<object class="SwatTableViewColumn">
-					<property name="title" translatable="yes">Display in Photo Details</property>
-					<object class="SwatBooleanCellRenderer">
-						<property name="value" type="data">visible</property>
-					</object>
-				</object>
-				<object class="SwatTableViewColumn">
-					<property name="title" translatable="yes">Display Machine Tag</property>
+					<property name="title" translatable="yes">Display As Link</property>
 					<object class="SwatBooleanCellRenderer">
 						<property name="value" type="data">machine_tag</property>
 					</object>

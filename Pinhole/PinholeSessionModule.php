@@ -114,9 +114,7 @@ class PinholeSessionModule extends SiteSessionModule
 	 */
 	public function isLoggedIn()
 	{
-		if (!$this->isActive()) {
-			return false;
-		} elseif (isset($this->authenticated_instances) &&
+		if ($this->isActive() && isset($this->authenticated_instances) &&
 			array_key_exists($this->getInstanceId(),
 				$this->authenticated_instances)) {
 

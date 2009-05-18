@@ -88,7 +88,8 @@ class PinholeSessionModule extends SiteSessionModule
 
 	public function logout()
 	{
-		unset($this->authenticated_instances[$this->getInstanceId()]);
+		if (isset($this->authenticated_instances))
+			unset($this->authenticated_instances[$this->getInstanceId()]);
 	}
 
 	// }}}

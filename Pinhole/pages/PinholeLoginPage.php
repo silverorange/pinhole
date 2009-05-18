@@ -34,7 +34,7 @@ class PinholeLoginPage extends SitePage
 		$this->ui->loadFromXML($this->ui_xml);
 
 		$form = $this->ui->getWidget('login_form');
-		$form->action = 'login';
+		$form->action = $this->app->getBaseHref(true).'login';
 
 		$this->ui->init();
 	}
@@ -83,7 +83,7 @@ class PinholeLoginPage extends SitePage
 				if ($uri == 'login' || $uri == 'login?')
 					$uri = '';
 
-				$this->app->relocate($uri, true);
+				$this->app->relocate($uri, true, true);
 			} else {
 				$message = new SwatMessage(Site::_('Login Incorrect'),
 					SwatMessage::WARNING);

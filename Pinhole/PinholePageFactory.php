@@ -142,6 +142,7 @@ class PinholePageFactory extends SitePageFactory
 			'^(tags)/(popular)$'          => 'PinholeBrowserTagPage',
 			'^(tags)/(cloud)$'            => 'PinholeBrowserTagPage',
 			'^(feed)$'                    => 'PinholeAtomPage',
+			'^(feed/comments)(?:/page(\d+))?$' => 'PinholeCommentsAtomPage',
 			'^(feed)/([\w\d*]+)$'         => 'PinholeAtomPage',
 			'^(loadphoto)/(.+)/(.+).jpg$' => 'PinholePhotoLoaderPage',
 			'^(login)$'                   => 'PinholeLoginPage',

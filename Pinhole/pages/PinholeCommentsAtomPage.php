@@ -69,19 +69,9 @@ class PinholeCommentsAtomPage extends SitePage
 		// get comments for this page
 		$this->comments = false;
 
-		if (isset($this->app->memcache)) {
-			$key = $this->getCommentsCacheKey();
-			$this->comments = $this->app->memcache->getNs('photos', $key);
-
-			/*
-			 * Note: The limit of comments per page is somewhat important here.
-			 * In extreme cases, we could run over the 1M size limit for cached
-			 * values. This would occur when every comment is close to the
-			 * maximum size in bodytext (8K) and the associated photos also have
-			 * a very large bodytext (about 8K each). In these rare cases,
-			 * caching will fail.
-			 */
-		}
+		$key = $this->getCommentsCacheKey();
+		$this->comments = $this->app->getCacheRecordset('photos',
+			SwatDBClassMap::get('PinholeCommentWrapper'), $key);
 
 		if ($this->comments === false) {
 			$sql = sprintf('select PinholeComment.* from
@@ -112,9 +102,7 @@ class PinholeCommentsAtomPage extends SitePage
 			$this->comments->loadAllSubDataObjects('photographer', $this->app->db,
 				$photographer_sql, $photographer_wrapper);
 
-			if (isset($this->app->memcache)) {
-				$this->app->memcache->setNs('photos', $key, $this->comments);
-			}
+			$this->app->addCacheRecordset($this->comments, $key, 'photos');
 		} else {
 			$this->comments->setDatabase($this->app->db);
 		}
@@ -127,11 +115,8 @@ class PinholeCommentsAtomPage extends SitePage
 		// get total number of comments
 		$this->total_count = false;
 
-		if (isset($this->app->memcache)) {
-			$total_key = $this->getTotalCountCacheKey();
-			$this->total_count = $this->app->memcache->getNs('photos',
-				$total_key);
-		}
+		$total_key = $this->getTotalCountCacheKey();
+		$this->total_count = $this->app->getCacheValue('photos', $total_key);
 
 		if ($this->total_count === false) {
 			$sql = sprintf('select count(1) from PinholeComment %s where %s',
@@ -139,11 +124,7 @@ class PinholeCommentsAtomPage extends SitePage
 				$this->getWhereClause());
 
 			$this->total_count = SwatDB::queryOne($this->app->db, $sql);
-
-			if (isset($this->app->memcache)) {
-				$this->app->memcache->setNs('photos', $total_key,
-					$this->total_count);
-			}
+			$this->app->addCacheValue($this->total_count, 'photos', $total_key);
 		}
 	}
 

@@ -852,36 +852,50 @@ class PinholePhoto extends SiteImage
 	private static function getArchivedFiles($file, $type)
 	{
 		$za = new ZipArchive();
-		$opened = $za->open($file);
 
-		if ($opened !== true)
-			throw new PinholeProcessingException(
-				'Error opening file archive');
+		if ($za->open($file) !== true) {
+			throw new PinholeProcessingException(sprintf(
+				'Error opening file archive  “%s”', $file));
+		}
 
 		$files = array();
 		$file_path = sys_get_temp_dir();
 
 		for ($i = 0; $i < $za->numFiles; $i++) {
 			$stat = $za->statIndex($i);
-			$ext = strtolower(end(explode('.', $stat['name'])));
 
-			// don't import files starting with '.' such as mac thumbnails
-			$parts = explode('/', $stat['name']);
-			foreach ($parts as $part)
-				if (substr($part, 0, 1) == '.')
-					continue 2;
+			$filename = self::normalizeArchiveFileFilename($stat['name']);
+			$new_filename = uniqid('file');
 
-			$filename = uniqid('file').'.'.$ext;
-			$files[$filename] = self::normalizeArchiveFileFilename(
-				$stat['name']);
+			// ignore hidden files
+			if (preg_match('@(^\.|/\.)@', $filename) === 1) {
+				continue;
+			}
 
-			$za->renameIndex($i, $filename);
-			$za->extractTo($file_path, $filename);
-			chmod($file_path.'/'.$filename, 0666);
+			// ignore directories
+			if (preg_match('@/$@', $filename) === 1) {
+				continue;
+			}
+
+			// get extension
+			if (strpos('.', $filename) !== false) {
+				$ext = strtolower(end(explode('.', $filename)));
+				$new_filename.= '.'.$ext;
+			}
+
+			$files[$new_filename] = $filename;
+
+			// extract file to temp dir
+			$za->renameIndex($i, $new_filename);
+			$za->extractTo($file_path, $new_filename);
+
+			// set file permissions
+			chmod($file_path.'/'.$new_filename, 0666);
 		}
 
 		$za->close();
 
+		// remove the zip file
 		unlink($file);
 
 		return $files;

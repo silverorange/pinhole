@@ -152,6 +152,7 @@ class Pinhole
 
 			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
+			'pinhole.browser_index_titles' => true,
 
 			// Comments
 			// optional Wordpress API key for Akismet spam filtering.

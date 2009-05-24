@@ -158,6 +158,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$ds->root_path = $this->app->config->pinhole->path;
 			$ds->path = $photo->id.$tag_path;
 			$ds->photo = $photo;
+			$ds->display_title =
+				$this->app->config->pinhole->browser_index_titles;
 
 			$now = new SwatDate();
 			$now->convertTZbyID($this->app->config->date->time_zone);

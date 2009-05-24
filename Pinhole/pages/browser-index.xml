@@ -35,6 +35,7 @@
 					<property name="link_value[0]" type="data">root_path</property>
 					<property name="link_value[1]" type="data">path</property>
 					<property name="classes[]">photo-tile</property>
+					<property name="display_title" type="data">display_title</property>
 				</object>
 			</object>
 		</widget>

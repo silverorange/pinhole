@@ -165,7 +165,7 @@ class PinholePhotoUpload extends AdminPage
 		$class_name = SwatDBClassMap::get('PinholeImageSet');
 		$image_set = new $class_name();
 		$image_set->setDatabase($this->app->db);
-		$image_set->instance = $this->app->instance->getInstance();
+		$image_set->instance = $this->app->getInstance();
 		$found = $image_set->loadByShortname('photos');
 
 		if (!$found)

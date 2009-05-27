@@ -458,16 +458,15 @@ class PinholePhoto extends SiteImage
 	// }}}
 	// {{{ public function getFilePath()
 
-	public function getFilePath($shortname)
+	public function getFileDirectory($shortname)
 	{
 		$dimension = $this->image_set->getDimensionByShortname(
 			$shortname);
 
-		return sprintf('%s/%s/%s/%s',
+		return sprintf('%s/%s/%s',
 			$this->getFileBase(),
 			($dimension->publicly_accessible) ? 'public' : 'private',
-			$dimension->shortname,
-			$this->getFilename($shortname));
+			$dimension->shortname);
 	}
 
 	// }}}

@@ -4,7 +4,7 @@ require_once 'Site/pages/SiteXMLRPCServer.php';
 require_once 'Site/layouts/SiteXMLRPCServerLayout.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Pinhole/dataobjects/PinholeComment.php';
-require_once 'Services/Akismet.php';
+require_once 'Services/Akismet2.php';
 
 /**
  * Performs actions on comments via AJAX
@@ -43,15 +43,10 @@ class PinholeCommentAjaxServer extends SiteXMLRPCServer
 						$uri, $comment->photo->id);
 
 					try {
-						$akismet = new Services_Akismet($uri,
+						$akismet = new Services_Akismet2($uri,
 							$this->app->config->pinhole->akismet_key);
 
-						$akismet_comment = new Services_Akismet_Comment();
-						$akismet_comment->setAuthor($comment->fullname);
-						$akismet_comment->setAuthorEmail($comment->email);
-						$akismet_comment->setAuthorUri($comment->link);
-						$akismet_comment->setContent($comment->bodytext);
-						$akismet_comment->setPostPermalink($permalink);
+						$akismet_comment = $this->getAkismetComment($comment);
 
 						$akismet->submitSpam($akismet_comment);
 					} catch (Exception $e) {
@@ -99,15 +94,10 @@ class PinholeCommentAjaxServer extends SiteXMLRPCServer
 						$uri, $comment->photo->id);
 
 					try {
-						$akismet = new Services_Akismet($uri,
+						$akismet = new Services_Akismet2($uri,
 							$this->app->config->pinhole->akismet_key);
 
-						$akismet_comment = new Services_Akismet_Comment();
-						$akismet_comment->setAuthor($comment->fullname);
-						$akismet_comment->setAuthorEmail($comment->email);
-						$akismet_comment->setAuthorUri($comment->link);
-						$akismet_comment->setContent($comment->bodytext);
-						$akismet_comment->setPostPermalink($permalink);
+						$akismet_comment = $this->getAkismetComment($comment);
 
 						$akismet->submitFalsePositive($akismet_comment);
 					} catch (Exception $e) {
@@ -208,6 +198,24 @@ class PinholeCommentAjaxServer extends SiteXMLRPCServer
 		}
 
 		return true;
+	}
+
+	// }}}
+	// {{{ protected function getAkismetComment()
+
+	protected function getAkismetComment(SiteComment $comment)
+	{
+		return new Services_Akismet2_Comment(
+			array(
+				'comment_author'       => $comment->fullname,
+				'comment_author_email' => $comment->email,
+				'comment_author_url'   => $comment->link,
+				'comment_content'      => $comment->bodytext,
+				'permalink'            => $this->getPermalink($comment),
+				'user_ip'              => $comment->ip_address,
+				'user_agent'           => $comment->user_agent,
+			)
+		);
 	}
 
 	// }}}

@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Swat/SwatString.php';
+require_once 'Site/SiteCommentStatus.php';
+require_once 'Site/admin/SiteCommentStatusSlider.php';
 require_once 'Admin/exceptions/AdminNotFoundException.php';
 require_once 'Admin/exceptions/AdminNoAccessException.php';
 require_once 'Admin/pages/AdminDBEdit.php';
@@ -12,7 +14,6 @@ require_once 'Pinhole/PinholeTagList.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
 require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
-require_once 'Pinhole/admin/PinholeCommentStatusSlider.php';
 
 /**
  * Page for viewing photo details and editing
@@ -155,8 +156,8 @@ class PinholePhotoEdit extends AdminDBEdit
 		$status = $this->ui->getWidget('comment_status');
 
 		// open
-		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_OPEN,
-			PinholePhoto::getCommentStatusTitle(PinholePhoto::COMMENT_STATUS_OPEN));
+		$option = new SwatOption(SiteCommentStatus::OPEN,
+			PinholePhoto::getCommentStatusTitle(SiteCommentStatus::OPEN));
 
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
@@ -164,9 +165,9 @@ class PinholePhotoEdit extends AdminDBEdit
 			'this photo.'));
 
 		// moderated
-		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_MODERATED,
+		$option = new SwatOption(SiteCommentStatus::MODERATED,
 			PinholePhoto::getCommentStatusTitle(
-				PinholePhoto::COMMENT_STATUS_MODERATED));
+				SiteCommentStatus::MODERATED));
 
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
@@ -174,8 +175,8 @@ class PinholePhotoEdit extends AdminDBEdit
 			'photographer before being visible with this photo.'));
 
 		// locked
-		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_LOCKED,
-			PinholePhoto::getCommentStatusTitle(PinholePhoto::COMMENT_STATUS_LOCKED));
+		$option = new SwatOption(SiteCommentStatus::LOCKED,
+			PinholePhoto::getCommentStatusTitle(SiteCommentStatus::LOCKED));
 
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
@@ -183,8 +184,8 @@ class PinholePhotoEdit extends AdminDBEdit
 			'still visible with this photo.'));
 
 		// closed
-		$option = new SwatOption(PinholePhoto::COMMENT_STATUS_CLOSED,
-			PinholePhoto::getCommentStatusTitle(PinholePhoto::COMMENT_STATUS_CLOSED));
+		$option = new SwatOption(SiteCommentStatus::CLOSED,
+			PinholePhoto::getCommentStatusTitle(SiteCommentStatus::CLOSED));
 
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
@@ -194,20 +195,20 @@ class PinholePhotoEdit extends AdminDBEdit
 		if ($this->id === null) {
 			switch ($this->app->config->pinhole->default_comment_status) {
 			case 'open':
-				$status->value = PinholePhoto::COMMENT_STATUS_OPEN;
+				$status->value = SiteCommentStatus::OPEN;
 				break;
 
 			case 'moderated':
-				$status->value = PinholePhoto::COMMENT_STATUS_MODERATED;
+				$status->value = SiteCommentStatus::MODERATED;
 				break;
 
 			case 'locked':
-				$status->value = PinholePhoto::COMMENT_STATUS_LOCKED;
+				$status->value = SiteCommentStatus::LOCKED;
 				break;
 
 			case 'closed':
 			default:
-				$status->value = PinholePhoto::COMMENT_STATUS_CLOSED;
+				$status->value = SiteCommentStatus::CLOSED;
 				break;
 			}
 		}

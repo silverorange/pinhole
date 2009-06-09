@@ -4,13 +4,16 @@ require_once 'Date/Calc.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Site/dataobjects/SiteImage.php';
+require_once 'Site/dataobjects/SiteCommentWrapper.php';
+require_once 'Site/SiteCommentStatus.php';
+
+require_once 'Pinhole/dataobjects/PinholeComment.php';
 require_once 'Pinhole/dataobjects/PinholeImageSet.php';
 require_once 'Pinhole/dataobjects/PinholePhotoUploadSet.php';
 require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
 require_once 'Pinhole/exceptions/PinholeUploadException.php';
 require_once 'Pinhole/exceptions/PinholeProcessingException.php';
 
@@ -21,7 +24,7 @@ require_once 'Pinhole/exceptions/PinholeProcessingException.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhoto extends SiteImage
+class PinholePhoto extends SiteImage implements SiteCommentStatus
 {
 	// {{{ constants
 
@@ -54,28 +57,6 @@ class PinholePhoto extends SiteImage
 	const DATE_PART_MONTH    = 2;
 	const DATE_PART_DAY      = 4;
 	const DATE_PART_TIME     = 8;
-
-	/**
-	 * New comments are allowed, and are automatically show on the site as long
-	 * as they are not detected as spam.
-	 */
-	const COMMENT_STATUS_OPEN      = 0;
-
-	/**
-	 * New comments are allowed, but must be approved by an admin user before
-	 * being shown.
-	 */
-	const COMMENT_STATUS_MODERATED = 1;
-
-	/**
-	 * No new comments are allowed, but exisiting comments are shown.
-	 */
-	const COMMENT_STATUS_LOCKED    = 2;
-
-	/**
-	 * No new comments are allowed, and existing comments are no longer shown.
-	 */
-	const COMMENT_STATUS_CLOSED    = 3;
 
 	// }}}
 	// {{{ public properties
@@ -278,19 +259,19 @@ class PinholePhoto extends SiteImage
 	public static function getCommentStatusTitle($status)
 	{
 		switch ($status) {
-		case self::COMMENT_STATUS_OPEN :
+		case SiteCommentStatus::OPEN :
 			$title = Pinhole::_('Open');
 			break;
 
-		case self::COMMENT_STATUS_LOCKED :
+		case SiteCommentStatus::LOCKED :
 			$title = Pinhole::_('Locked');
 			break;
 
-		case self::COMMENT_STATUS_MODERATED :
+		case SiteCommentStatus::MODERATED :
 			$title = Pinhole::_('Moderated');
 			break;
 
-		case self::COMMENT_STATUS_CLOSED :
+		case SiteCommentStatus::CLOSED :
 			$title = Pinhole::_('Closed');
 			break;
 
@@ -308,14 +289,14 @@ class PinholePhoto extends SiteImage
 	public static function getCommentStatuses()
 	{
 		return array(
-			self::COMMENT_STATUS_OPEN =>
-				self::getCommentStatusTitle(self::COMMENT_STATUS_OPEN),
-			self::COMMENT_STATUS_MODERATED =>
-				self::getCommentStatusTitle(self::COMMENT_STATUS_MODERATED),
-			self::COMMENT_STATUS_LOCKED =>
-				self::getCommentStatusTitle(self::COMMENT_STATUS_LOCKED),
-			self::COMMENT_STATUS_CLOSED =>
-				self::getCommentStatusTitle(self::COMMENT_STATUS_CLOSED),
+			SiteCommentStatus::OPEN =>
+				self::getCommentStatusTitle(SiteCommentStatus::OPEN),
+			SiteCommentStatus::MODERATED =>
+				self::getCommentStatusTitle(SiteCommentStatus::MODERATED),
+			SiteCommentStatus::LOCKED =>
+				self::getCommentStatusTitle(SiteCommentStatus::LOCKED),
+			SiteCommentStatus::CLOSED =>
+				self::getCommentStatusTitle(SiteCommentStatus::CLOSED),
 		);
 	}
 
@@ -362,7 +343,7 @@ class PinholePhoto extends SiteImage
 			$this->db->quote(SiteComment::STATUS_PUBLISHED, 'integer'),
 			$this->db->quote(false, 'boolean'));
 
-		$wrapper = SwatDBClassMap::get('PinholeCommentWrapper');
+		$wrapper = SwatDBClassMap::get('SiteCommentWrapper');
 
 		if ($limit !== null) {
 			$this->db->setLimit($limit, $offset);
@@ -405,10 +386,18 @@ class PinholePhoto extends SiteImage
 
 	public function hasVisibleCommentStatus()
 	{
-		return ($this->comment_status == self::COMMENT_STATUS_OPEN ||
-			$this->comment_status == self::COMMENT_STATUS_MODERATED ||
-			($this->comment_status == self::COMMENT_STATUS_LOCKED &&
+		return ($this->comment_status == SiteCommentStatus::OPEN ||
+			$this->comment_status == SiteCommentStatus::MODERATED ||
+			($this->comment_status == SiteCommentStatus::LOCKED &&
 			$this->getVisibleCommentCount() > 0));
+	}
+
+	// }}}
+	// {{{ public function getCommentStatus()
+
+	public function getCommentStatus()
+	{
+		return $this->comment_status;
 	}
 
 	// }}}
@@ -1260,7 +1249,7 @@ class PinholePhoto extends SiteImage
 	/**
 	 * Loads comments for this photo, this never includes spam
 	 *
-	 * @return PinholeCommentWrapper
+	 * @return SiteCommentWrapper
 	 */
 	protected function loadComments()
 	{
@@ -1274,7 +1263,7 @@ class PinholePhoto extends SiteImage
 			$this->db->quote(false, 'boolean'));
 
 		return SwatDB::query($this->db, $sql,
-			SwatDBClassMap::get('PinholeCommentWrapper'));
+			SwatDBClassMap::get('SiteCommentWrapper'));
 	}
 
 	// }}}

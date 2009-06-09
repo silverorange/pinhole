@@ -1,87 +1,36 @@
 <?php
 
-require_once 'Swat/SwatDate.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/pages/AdminDBEdit.php';
-require_once 'NateGoSearch/NateGoSearch.php';
+require_once 'Site/admin/components/Comment/Edit.php';
 require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholeComment.php';
 require_once 'Pinhole/dataobjects/PinholePhotographerWrapper.php';
 
 /**
  * Page for editing comments
  *
  * @package   Pinhole
- * @copyright 2009 silverorange
+ * @copyright 2008 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeCommentEdit extends AdminDBEdit
+class PinholeCommentEdit extends SiteCommentEdit
 {
-	// {{{ protected properties
-
-	/**
-	 * @var string
-	 */
-	protected $ui_xml = 'Pinhole/admin/components/Comment/edit.xml';
-
-	/**
-	 * @var PinholeComment
-	 */
-	protected $comment;
-
-	// }}}
-
 	// init phase
 	// {{{ protected function initInternal()
 
 	protected function initInternal()
 	{
+		$this->ui_xml = 'Pinhole/admin/components/Comment/edit.xml';
+
 		parent::initInternal();
 
-		$this->ui->loadFromXML($this->ui_xml);
-
-		$this->initPinholeComment();
-
-		$photographers = array();
-
-		if ($this->id === null || $this->comment->photographer !== null) {
-			$this->ui->getWidget('photographer_field')->visible = true;
-
-			$instance_id = $this->app->getInstanceId();
-			$sql = sprintf('select PinholePhotographer.*
-				from PinholePhotographer
-				where PinholePhotographer.instance %s %s
-				order by fullname',
-				SwatDB::equalityOperator($instance_id),
-				$this->app->db->quote($instance_id, 'integer'));
-
-			$rs = SwatDB::query($this->app->db, $sql);
-
-			foreach ($rs as $row)
-				$photographers[$row->id] = $row->fullname;
-
-			$this->ui->getWidget('photographer')->addOptionsByArray(
-				$photographers);
-		}
-
-		if (count($photographers) > 0) {
-			$this->ui->getWidget('fullname_field')->visible = false;
-			$this->ui->getWidget('link_field')->visible     = false;
-			$this->ui->getWidget('email_field')->visible    = false;
-			$this->ui->getWidget('status_field')->visible   = false;
-		} else {
-			$this->ui->getWidget('photographer_field')->visible = false;
-		}
+		$this->photographers = $this->getPhotographers();
 	}
 
 	// }}}
-	// {{{ protected function initPinholeComment()
+	// {{{ protected function initComment()
 
-	protected function initPinholeComment()
+	protected function initComment()
 	{
-		$class_name = SwatDBClassMap::get('PinholeComment');
-		$this->comment = new $class_name();
-		$this->comment->setDatabase($this->app->db);
+		parent::initComment();
 
 		if ($this->id === null) {
 			$photo_id = $this->app->initVar('photo');
@@ -100,10 +49,36 @@ class PinholeCommentEdit extends AdminDBEdit
 			}
 
 			$this->comment->photo = $photo;
+		}
+	}
 
-		} elseif (!$this->comment->load($this->id, $this->app->getInstance())) {
-			throw new AdminNotFoundException(
-				sprintf('Comment with id ‘%s’ not found.', $this->id));
+	// }}}
+	// {{{ protected function getPhotographers()
+
+	protected function getPhotographers()
+	{
+		if ($this->id === null || $this->comment->photographer !== null) {
+			$photographer_id = ($this->comment->photographer === null) ?
+				0 : $this->comment->photographer->id;
+
+			$instance_id = $this->app->getInstanceId();
+			$sql = sprintf('select * from PinholePhotographer
+				where instance %s %s and (status = %s or id = %s)
+				order by fullname',
+				SwatDB::equalityOperator($instance_id),
+				$this->app->db->quote($instance_id, 'integer'),
+				$this->app->db->quote(
+					PinholePhotographer::STATUS_ENABLED, 'integer'),
+				$this->app->db->quote($photographer_id, 'integer'));
+
+			$rs =  SwatDB::query($this->app->db, $sql);
+
+			$photographers = array();
+			foreach ($rs as $photographer)
+				$photographers[$photographer->id] = $photographer->fullname;
+
+		} else {
+			return array();
 		}
 	}
 
@@ -114,55 +89,20 @@ class PinholeCommentEdit extends AdminDBEdit
 
 	protected function saveDBData()
 	{
-		$values = $this->ui->getValues(array(
-			'fullname',
-			'link',
-			'email',
-			'bodytext',
-			'status',
-			'photographer',
-		));
+		$photographer_id = $this->ui->getWidget('photographer')->value;
 
-		if ($this->comment->id === null) {
-			$now = new SwatDate();
-			$now->toUTC();
-			$this->comment->createdate   = $now;
-		}
-
-		if ($this->ui->getWidget('photographer_field')->visible) {
-			$photographer_id  = $values['photographer'];
+		if (count($this->photographers) > 0) {
 			$class_name = SwatDBClassMap::get('PinholePhotographer');
 			$photographer     = new $class_name();
 			$photographer->setDatabase($this->app->db);
-			if ($photographer->load($photographer_id, $this->app->getInstance())) {
+			if ($photographer->load(
+				$photographer_id, $this->app->getInstance())) {
+
 				$this->comment->photographer = $photographer;
 			}
-		} else {
-			$this->comment->fullname = $values['fullname'];
-			$this->comment->link     = $values['link'];
-			$this->comment->email    = $values['email'];
-			$this->comment->status   = $values['status'];
 		}
 
-		if ($this->comment->status === null) {
-			$this->comment->status = SiteComment::STATUS_PUBLISHED;
-		}
-
-		$this->comment->bodytext = $values['bodytext'];
-
-		if ($this->comment->isModified()) {
-			$this->comment->save();
-
-			$this->addToSearchQueue();
-
-			if (isset($this->app->memcache)) {
-				$this->app->memcache->flushNS('photos');
-			}
-
-			$message = new SwatMessage(Pinhole::_('Comment has been saved.'));
-
-			$this->app->messages->add($message);
-		}
+		parent::saveDBData();
 	}
 
 	// }}}
@@ -206,8 +146,6 @@ class PinholeCommentEdit extends AdminDBEdit
 
 	protected function addCommentToSearchQueue()
 	{
-		// this is automatically wrapped in a transaction because it is
-		// called in saveDBData()
 		$type = NateGoSearch::getDocumentType($this->app->db, 'comment');
 
 		if ($type === null)
@@ -229,6 +167,16 @@ class PinholeCommentEdit extends AdminDBEdit
 	}
 
 	// }}}
+	// {{{ protected function clearCache()
+
+	protected function clearCache()
+	{
+		if (isset($this->app->memcache)) {
+			$this->app->memcache->flushNS('photos');
+		}
+	}
+
+	// }}}
 
 	// build phase
 	// {{{ protected function buildInternal()
@@ -237,22 +185,26 @@ class PinholeCommentEdit extends AdminDBEdit
 	{
 		parent::buildInternal();
 
-		$statuses = SiteComment::getStatusArray();
-		$this->ui->getWidget('status')->addOptionsByArray($statuses);
-
 		$this->ui->getWidget('edit_form')->action = sprintf('%s?photo=%d',
 			$this->source, $this->comment->photo->id);
-	}
 
-	// }}}
-	// {{{ protected function loadDBData()
+		if (count($this->photographers) > 0) {
+			$this->ui->getWidget('photographer_field')->visible = true;
+			$this->ui->getWidget('fullname_field')->visible = false;
+			$this->ui->getWidget('link_field')->visible     = false;
+			$this->ui->getWidget('email_field')->visible    = false;
+			$this->ui->getWidget('status_field')->visible   = false;
 
-	protected function loadDBData()
-	{
-		$this->ui->setValues(get_object_vars($this->comment));
+			$this->ui->getWidget('photographer')->addOptionsByArray(
+				$photographers);
 
-		if ($this->comment->photographer !== null)
-			$this->ui->getWidget('photographer')->value = $this->comment->photographer->id;
+			if ($this->comment->photographer !== null)
+				$this->ui->getWidget('photographer')->value =
+					$this->comment->photographer->id;
+		}
+
+		$statuses = SiteComment::getStatusArray();
+		$this->ui->getWidget('status')->addOptionsByArray($statuses);
 	}
 
 	// }}}
@@ -271,8 +223,8 @@ class PinholeCommentEdit extends AdminDBEdit
 				Pinhole::_('Photos'), 'Photo'));
 
 			$this->navbar->addEntry(new SwatNavBarEntry(
-				$this->comment->photo->getTitle(),
-				sprintf('Photo/Comments?id=%s', $this->comment->photo->id)));
+				$this->comment->photo->getTitle(true),
+				sprintf('Photo/Details?id=%s', $this->comment->photo->id)));
 
 			if ($this->id === null)
 				$this->navbar->addEntry(new SwatNavBarEntry(

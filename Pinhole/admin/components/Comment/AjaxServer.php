@@ -1,10 +1,6 @@
 <?php
 
-require_once 'Site/pages/SiteXMLRPCServer.php';
-require_once 'Site/layouts/SiteXMLRPCServerLayout.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Pinhole/dataobjects/PinholeComment.php';
-require_once 'Services/Akismet2.php';
+require_once 'Site/admin/components/Comment/AjaxServer.php';
 
 /**
  * Performs actions on comments via AJAX
@@ -13,209 +9,24 @@ require_once 'Services/Akismet2.php';
  * @copyright 2008 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholeCommentAjaxServer extends SiteXMLRPCServer
+class PinholeCommentAjaxServer extends SiteCommentAjaxServer
 {
-	// {{{ public function spam()
+	// {{{ protected function getPermalink()
 
-	/**
-	 * Marks a comment as spam
-	 *
-	 * @param integer $comment_id the id of the comment to mark as spam.
-	 *
-	 * @return boolean true.
-	 */
-	public function spam($comment_id)
+	protected function getPermalink(SiteComment $comment)
 	{
-		$comment_class = SwatDBClassMap::get('PinholeComment');
-		$comment = new $comment_class();
-		$comment->setDatabase($this->app->db);
-		if ($comment->load($comment_id, $this->app->getInstance())) {
-			if (!$comment->spam) {
-
-				// submit spam to akismet
-				if ($this->app->config->pinhole->akismet_key !== null) {
-					$uri = $this->app->getFrontendBaseHref().
-						$this->app->config->pinhole->path;
-
-					$date = clone $comment->post->publish_date;
-					$date->convertTZ($this->app->default_time_zone);
-					$permalink = sprintf('%sphoto/%s',
-						$uri, $comment->photo->id);
-
-					try {
-						$akismet = new Services_Akismet2($uri,
-							$this->app->config->pinhole->akismet_key);
-
-						$akismet_comment = $this->getAkismetComment($comment);
-
-						$akismet->submitSpam($akismet_comment);
-					} catch (Exception $e) {
-					}
-				}
-
-				$comment->spam = true;
-				$comment->save();
-
-				if (isset($this->app->memcache)) {
-					$this->app->memcache->flushNS('photos');
-				}
-			}
-		}
-
-		return true;
+		return $this->app->getFrontendBaseHref().
+			$this->app->config->pinhole->path.'photo'.$comment->photo->id;
 	}
 
 	// }}}
-	// {{{ public function notSpam()
+	// {{{ protected function flushCache()
 
-	/**
-	 * Marks a comment as not spam
-	 *
-	 * @param integer $comment_id the id of the comment to mark as not spam.
-	 *
-	 * @return boolean true.
-	 */
-	public function notSpam($comment_id)
+	protected function flushCache()
 	{
-		$comment_class = SwatDBClassMap::get('PinholeComment');
-		$comment = new $comment_class();
-		$comment->setDatabase($this->app->db);
-		if ($comment->load($comment_id, $this->app->getInstance())) {
-			if ($comment->spam) {
-
-				// submit false positive to akismet
-				if ($this->app->config->pinhole->akismet_key !== null) {
-					$uri = $this->app->getFrontendBaseHref().
-						$this->app->config->pinhole->path;
-
-					$date = clone $comment->post->publish_date;
-					$date->convertTZ($this->app->default_time_zone);
-					$permalink = sprintf('%sphoto/%s',
-						$uri, $comment->photo->id);
-
-					try {
-						$akismet = new Services_Akismet2($uri,
-							$this->app->config->pinhole->akismet_key);
-
-						$akismet_comment = $this->getAkismetComment($comment);
-
-						$akismet->submitFalsePositive($akismet_comment);
-					} catch (Exception $e) {
-					}
-				}
-
-				$comment->spam = false;
-				$comment->save();
-
-				if (isset($this->app->memcache)) {
-					$this->app->memcache->flushNS('photos');
-				}
-			}
+		if (isset($this->app->memcache)) {
+			$this->app->memcache->flushNs('photos');
 		}
-
-		return true;
-	}
-
-	// }}}
-	// {{{ public function publish()
-
-	/**
-	 * Publishes a comment
-	 *
-	 * @param integer $comment_id the id of the comment to publish.
-	 *
-	 * @return boolean true.
-	 */
-	public function publish($comment_id)
-	{
-		$class_name = SwatDBClassMap::get('PinholeComment');
-		$comment = new $class_name();
-		$comment->setDatabase($this->app->db);
-		if ($comment->load($comment_id, $this->app->getInstance())) {
-			if ($comment->status !== SiteComment::STATUS_PUBLISHED) {
-				$comment->status = SiteComment::STATUS_PUBLISHED;
-				$comment->save();
-
-				if (isset($this->app->memcache)) {
-					$this->app->memcache->flushNS('photos');
-				}
-			}
-		}
-
-		return true;
-	}
-
-	// }}}
-	// {{{ public function unpublish()
-
-	/**
-	 * Unpublishes a comment
-	 *
-	 * @param integer $comment_id the id of the comment to unpublish.
-	 *
-	 * @return boolean true.
-	 */
-	public function unpublish($comment_id)
-	{
-		$class_name = SwatDBClassMap::get('PinholeComment');
-		$comment = new $class_name();
-		$comment->setDatabase($this->app->db);
-		if ($comment->load($comment_id, $this->app->getInstance())) {
-			if ($comment->status !== SiteComment::STATUS_UNPUBLISHED) {
-				$comment->status = SiteComment::STATUS_UNPUBLISHED;
-				$comment->save();
-
-				if (isset($this->app->memcache)) {
-					$this->app->memcache->flushNS('photos');
-				}
-			}
-		}
-
-		return true;
-	}
-
-	// }}}
-	// {{{ public function delete()
-
-	/**
-	 * Deletes a comment
-	 *
-	 * @param integer $comment_id the id of the comment to delete.
-	 *
-	 * @return boolean true.
-	 */
-	public function delete($comment_id)
-	{
-		$class_name = SwatDBClassMap::get('PinholeComment');
-		$comment = new $class_name();
-		$comment->setDatabase($this->app->db);
-		if ($comment->load($comment_id, $this->app->getInstance())) {
-			$comment->delete();
-
-			if (isset($this->app->memcache)) {
-				$this->app->memcache->flushNS('photos');
-			}
-		}
-
-		return true;
-	}
-
-	// }}}
-	// {{{ protected function getAkismetComment()
-
-	protected function getAkismetComment(SiteComment $comment)
-	{
-		return new Services_Akismet2_Comment(
-			array(
-				'comment_author'       => $comment->fullname,
-				'comment_author_email' => $comment->email,
-				'comment_author_url'   => $comment->link,
-				'comment_content'      => $comment->bodytext,
-				'permalink'            => $this->getPermalink($comment),
-				'user_ip'              => $comment->ip_address,
-				'user_agent'           => $comment->user_agent,
-			)
-		);
 	}
 
 	// }}}

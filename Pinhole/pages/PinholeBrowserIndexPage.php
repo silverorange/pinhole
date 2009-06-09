@@ -79,7 +79,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$view->model = $this->getPhotoTableStore();
 
 		$view->getGroup('publish_period')->visible =
-			(count($this->tag_list) == 0);
+			(count($this->tag_list) == 0 &&
+			$this->app->config->pinhole->browser_index_upload_dates);
 
 		if (count($this->tag_list) > 0) {
 			$this->layout->data->html_title.= $this->tag_list->getAsList();

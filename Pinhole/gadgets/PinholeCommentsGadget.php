@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Site/gadgets/SiteGadget.php';
+require_once 'Site/dataobjects/SiteCommentWrapper.php';
 require_once 'Swat/SwatString.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'SwatI18N/SwatI18NLocale.php';
@@ -61,7 +62,7 @@ class PinholeCommentsGadget extends SiteGadget
 	}
 
 	// }}}
-	// {{{ protected function getPhotoStats()
+	// {{{ protected function getComments()
 
 	protected function getComments()
 	{
@@ -95,7 +96,7 @@ class PinholeCommentsGadget extends SiteGadget
 		$this->app->db->setLimit($limit);
 
 		$comments = SwatDB::query($this->app->db, $sql,
-			SwatDBClassMap::get('PinholeCommentWrapper'));
+			SwatDBClassMap::get('SiteCommentWrapper'));
 
 		$this->app->addCacheValue($comments, $cache_key, 'photos');
 

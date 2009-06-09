@@ -4,6 +4,7 @@ require_once 'Swat/Swat.php';
 require_once 'SwatDB/SwatDBClassMap.php';
 require_once 'Site/Site.php';
 require_once 'Site/SiteGadgetFactory.php';
+require_once 'Site/SiteViewFactory.php';
 require_once 'XML/RPCAjax.php';
 
 /**
@@ -153,14 +154,13 @@ class Pinhole
 			'pinhole.photos_per_page' => 50,
 			'pinhole.header_image' => null,
 			'pinhole.browser_index_titles' => true,
+			'pinhole.browser_index_upload_dates' => true,
 
 			// Comments
-			// optional Wordpress API key for Akismet spam filtering.
-			'pinhole.akismet_key' => null,
+			'pinhole.default_comment_status' => null,
 			// tri-state: null = set per photo,
 			//            true/false = on/off for all photos
 			'pinhole.global_comment_status' => null,
-			'pinhole.default_comment_status' => null,
 
 			// Save upload form data
 			'pinhole.camera_time_zone' => null,
@@ -235,6 +235,11 @@ class Pinhole
 Pinhole::setupGettext();
 
 SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
+SwatDBClassMap::add('SiteComment', 'PinholeComment');
+
 SiteGadgetFactory::addPath('Pinhole/gadgets');
+
+SiteViewFactory::addPath('Pinhole/views');
+SiteViewFactory::registerView('comment', 'PinholeCommentView');
 
 ?>

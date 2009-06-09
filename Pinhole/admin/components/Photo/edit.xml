@@ -90,7 +90,7 @@
 				</widget>
 				<widget class="SwatGroupingFormField" id="comment_status_field">
 					<property name="title" translatable="yes">Comment Status</property>
-					<widget class="PinholeCommentStatusSlider" id="comment_status" />
+					<widget class="SiteCommentStatusSlider" id="comment_status" />
 				</widget>
 				<widget class="SwatGroupingFormField" id="tag_field">
 					<property name="title" translatable="yes">Photo Tags</property>

@@ -180,7 +180,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
-			'Comments can only be added by an photographer. Existing comments are '.
+			'Comments can only be added by a photographer. Existing comments are '.
 			'still visible with this photo.'));
 
 		// closed
@@ -189,7 +189,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		$status->addOption($option);
 		$status->addContextNote($option, Pinhole::_(
-			'Comments can only be added by an photographer. No comments are visible '.
+			'Comments can only be added by a photographer. No comments are visible '.
 			'with this photo.'));
 
 		if ($this->id === null) {

@@ -1124,7 +1124,9 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	{
 		$merged_tags = array();
 
-		$tag_fields = array('city', 'location', 'sub-location');
+		$tag_fields = array('city', 'location', 'sub-location', 'country',
+			'country-primarylocationname');
+
 		foreach ($tag_fields as $field) {
 			if (isset($meta_data[$field]) &&
 				strlen($meta_data[$field]->value)) {

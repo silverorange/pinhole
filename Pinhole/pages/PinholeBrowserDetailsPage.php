@@ -219,13 +219,13 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		}
 
 		if ($this->photo->description != '') {
+			// Set to text/xml for now pending review in ticket #1159.
 			$div = new SwatHtmlTag('div');
-			$div->setContent($this->photo->description);
+			$div->setContent($this->photo->description, 'text/xml');
 			$div->display();
 		}
 
 		$description = $this->ui->getWidget('description');
-		// Set to text/xml for now pending review in ticket #1159.
 		$description->content_type = 'text/xml';
 		$description->content = ob_get_clean();
 

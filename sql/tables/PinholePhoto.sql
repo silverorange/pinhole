@@ -34,6 +34,7 @@ create table PinholePhoto (
 	auto_publish boolean not null default false,
 	set_content_by_meta_data boolean not null default false,
 	set_tags_by_meta_data boolean not null default false,
+	auto_rotate boolean not null default true,
 
 	primary key(id)
 );

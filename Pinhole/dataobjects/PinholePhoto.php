@@ -184,6 +184,13 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 public $set_tags_by_meta_data;
 
 	/**
+	 * Auto-rotate when processing
+	 *
+	 * @var boolean
+	 */
+	 public $auto_rotate;
+
+	/**
 	 * For sale
 	 *
 	 * @var boolean
@@ -194,8 +201,6 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	// {{{ protected properties
 
 	protected $selectable_dimensions;
-
-	protected $auto_rotate = true;
 
 	// }}}
 
@@ -728,19 +733,6 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	// }}}
 
 	// save file
-	// {{{ public function setAutoRotate()
-
-	/**
-	 * Set whether or not to auto-rotate photos based on their meta-data
-	 *
-	 * @param boolean $rotate True to auto-rotate, false to leave as is.
-	 */
-	public function setAutoRotate($auto_rotate)
-	{
-		$this->auto_rotate = $auto_rotate;
-	}
-
-	// }}}
 	// {{{ public static function saveUploadedFile()
 
 	/**

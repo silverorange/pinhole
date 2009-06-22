@@ -168,6 +168,7 @@ class Pinhole
 			'pinhole.set_private_photos' => null,
 			'pinhole.set_content_by_meta_data' => null,
 			'pinhole.set_tags_by_meta_data' => null,
+			'pinhole.auto_rotate' => true,
 
 			'pinhole.ad_top' => '',
 			'pinhole.ad_bottom' => '',

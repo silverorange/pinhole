@@ -49,6 +49,12 @@
 						<property name="value" type="boolean">true</property>
 					</widget>
 				</widget>
+				<widget class="SwatFormField">
+					<property name="title">Auto-rotate photos</property>
+					<widget class="SwatCheckbox" id="auto_rotate">
+						<property name="value" type="boolean">true</property>
+					</widget>
+				</widget>
 			</widget>
 			<widget class="SwatFooterFormField">
 				<widget class="SwatButton" id="submit_button">

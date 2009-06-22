@@ -195,6 +195,8 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 
 	protected $selectable_dimensions;
 
+	protected $auto_rotate = true;
+
 	// }}}
 
 	// dataobject methods
@@ -726,6 +728,19 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	// }}}
 
 	// save file
+	// {{{ public function setAutoRotate()
+
+	/**
+	 * Set whether or not to auto-rotate photos based on their meta-data
+	 *
+	 * @param boolean $rotate True to auto-rotate, false to leave as is.
+	 */
+	public function setAutoRotate($auto_rotate)
+	{
+		$this->auto_rotate = $auto_rotate;
+	}
+
+	// }}}
 	// {{{ public static function saveUploadedFile()
 
 	/**
@@ -780,6 +795,64 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 			$files = array(basename($file) => $original_filename);
 
 		return $files;
+	}
+
+	// }}}
+	// {{{ protected function getNewImagick()
+
+	/**
+	 * Gets a new Imagick instance from a file
+	 *
+	 * @param string $image_file the image file to process.
+	 * @param SiteImageDimension $dimension the dimension to process.
+	 */
+	protected function getNewImagick($image_file,
+		SiteImageDimension $dimension)
+	{
+		$imagick = parent::getNewImagick($image_file, $dimension);
+
+		if ($this->auto_rotate) {
+			$this->autoRotateImage($image_file, $imagick);
+		}
+
+		return $imagick;
+	}
+
+	// }}}
+	// {{{ protected function autoRotateImage()
+
+	protected function autoRotateImage($image_file, Imagick $imagick)
+	{
+		$exif = exif_read_data($image_file);
+
+		if (!isset($exif['Orientation']))
+			return;
+
+		switch($exif['Orientation']) {
+		case 2: // Mirror horizontal
+			$imagick->transverseImage();
+			break;
+		case 3: //Rotate 180
+			$imagick->rotateImage(new ImagickPixel(), 180);
+			break;
+		case 4: // Mirror vertical
+			$imagick->transposeImage();
+			break;
+		case 5: // Mirror horizontal and rotate 270 CW
+			$imagick->transverseImage();
+			$imagick->rotateImage(new ImagickPixel(), 270);
+			break;
+		case 6: // Rotate 90 CW
+			$imagick->rotateImage(new ImagickPixel(), 90);
+			break;
+		case 7: // Mirror horizontal and rotate 90 CW
+			$imagick->transverseImage();
+			$imagick->rotateImage(new ImagickPixel(), 90);
+			break;
+		case 8: // Rotate 270 CW
+			$imagick->rotateImage(new ImagickPixel(), 270);
+			break;
+		}
 	}
 
 	// }}}

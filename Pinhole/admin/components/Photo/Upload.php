@@ -48,6 +48,7 @@ class PinholePhotoUpload extends AdminPage
 			'set_private_photos' => 'private',
 			'set_content_by_meta_data' => 'set_content_by_meta_data',
 			'set_tags_by_meta_data' => 'set_tags_by_meta_data',
+			'auto_rotate' => 'auto_rotate',
 		);
 
 		foreach ($this->config_ui_map as $config_name => $id) {
@@ -134,6 +135,8 @@ class PinholePhotoUpload extends AdminPage
 
 		$photo->set_tags_by_meta_data =
 			$this->ui->getWidget('set_tags_by_meta_data')->value;
+
+		$photo->auto_rotate = $this->ui->getWidget('auto_rotate')->value;
 
 		return $photo;
 	}

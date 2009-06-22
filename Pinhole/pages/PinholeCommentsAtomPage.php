@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Site/SiteCommentStatus';
 require_once 'Site/pages/SitePage.php';
 require_once 'Pinhole/dataobjects/PinholePhotographerWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
@@ -142,7 +143,7 @@ class PinholeCommentsAtomPage extends SitePage
 					and ImageSet.instance %s %s',
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
 			$this->app->db->quote(false, 'boolean'),
-			$this->app->db->quote(PinholePhoto::COMMENT_STATUS_CLOSED, 'integer'),
+			$this->app->db->quote(SiteCommentStatus::CLOSED, 'integer'),
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'));
 	}

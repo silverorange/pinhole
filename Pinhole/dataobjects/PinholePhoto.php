@@ -202,6 +202,11 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 
 	protected $selectable_dimensions;
 
+	/**
+	 * @var resource
+	 */
+	protected static $finfo = false;
+
 	// }}}
 
 	// dataobject methods
@@ -771,20 +776,17 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	/**
 	 * TODO: update documentation
 	 */
-	public static function parseFile($file, $original_filename = null)
+	public static function parseFile($file_path, $original_filename = null)
 	{
-		if (!file_exists($file))
+		if (!file_exists($file_path))
 			throw new PinholeProcessingException(
 				'File could not be found.');
 
-		$finfo = finfo_open(FILEINFO_MIME);
-		$mime_type = finfo_file($finfo, $file);
-
-		if (in_array($mime_type, self::getArchiveMimeTypes()))
-			$files = self::getArchivedFiles($file,
-				array_search($mime_type, self::getArchiveMimeTypes()));
-		else
-			$files = array(basename($file) => $original_filename);
+		if (($archive_type = self::getArchiveType($file_path)) === null) {
+			$files = array(basename($file_path) => $original_filename);
+		} else {
+			$files = self::getArchivedFiles($file_path, $archive_type);
+		}
 
 		return $files;
 	}
@@ -881,81 +883,91 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	}
 
 	// }}}
-	// {{{ protected static function getArchiveMimeTypes()
 
-	/**
-	 * Get an array of archive mime types
-	 *
-	 * @return array array of arhive mime types
-	 */
-	protected static function getArchiveMimeTypes()
-	{
-		return array(
-			'zip'  => 'application/x-zip',
-			'mac_zip'  => 'application/zip',
-		);
-	}
-
-	// }}}
-	// {{{ private static function getArchivedFiles()
+	// zip archive handling
+	// {{{ protected static function getArchivedFiles()
 
 	/**
 	 * Processes an array of files
 	 */
-	private static function getArchivedFiles($file, $type)
+	protected static function getArchivedFiles($file_path, $type)
 	{
 		$za = new ZipArchive();
 
-		if ($za->open($file) !== true) {
-			throw new PinholeProcessingException(sprintf(
-				'Error opening file archive  “%s”', $file));
+		if ($za->open($file_path) !== true) {
+			throw new SwatException(sprintf('Error opening file archive “%s”',
+				$file_path));
 		}
 
+		$dir = dirname($file_path);
+
 		$files = array();
-		$file_path = sys_get_temp_dir();
 
 		for ($i = 0; $i < $za->numFiles; $i++) {
 			$stat = $za->statIndex($i);
 
-			$filename = self::normalizeArchiveFileFilename($stat['name']);
-			$new_filename = uniqid('file');
+			$original_filename = self::normalizeArchiveFileFilename(
+				$stat['name']);
 
 			// ignore hidden files
-			if (preg_match('@(^\.|/\.)@', $filename) === 1) {
+			if (preg_match('@(^\.|/\.)@', $original_filename) === 1) {
 				continue;
 			}
 
 			// ignore directories
-			if (preg_match('@/$@', $filename) === 1) {
+			if (preg_match('@/$@', $original_filename) === 1) {
 				continue;
 			}
 
-			// get extension
-			if (strpos('.', $filename) !== false) {
-				$ext = strtolower(end(explode('.', $filename)));
-				$new_filename.= '.'.$ext;
+			// build temp filename
+			$filename = self::getTempFilename($original_filename);
+
+			// ignore certain common extensions
+			if (strpos($filename, '.') !== false) {
+				$ext = end(explode('.', $filename));
+				$ignore_extensions = array(
+					'db',      // e.g. thumbs.db
+					'exe',     // e.g. gallery.exe
+					'torrent',
+				);
+				if (in_array($ext, $ignore_extensions)) {
+					continue;
+				}
 			}
 
-			$files[$new_filename] = $filename;
+			$files[$filename] = $original_filename;
 
-			// extract file to temp dir
-			$za->renameIndex($i, $new_filename);
-			$za->extractTo($file_path, $new_filename);
+			// extract the file to the queue directory
+			$za->renameIndex($i, $filename);
+			$za->extractTo($dir, $filename);
 
 			// set file permissions
-			chmod($file_path.'/'.$new_filename, 0666);
+			chmod($dir.'/'.$filename, 0664);
+
+			// recurse into contained archives
+			$archive_path = $dir.'/'.$filename;
+			if (($archive_type = self::getArchiveType($archive_path)) !== null) {
+
+				$files = array_merge(
+					$files,
+					self::getArchivedFiles($archive_path, $archive_type)
+				);
+
+				// do not include the recursed archive in results
+				unset($files[$filename]);
+			}
 		}
 
 		$za->close();
 
 		// remove the zip file
-		unlink($file);
+		unlink($file_path);
 
 		return $files;
 	}
 
 	// }}}
-	// {{{ private static function normalizeArchiveFileFilename()
+	// {{{ protected static function normalizeArchiveFileFilename()
 
 	/**
 	 * Normalizes filenames in ZIP archives to UTF-8 encoding
@@ -969,11 +981,68 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 *
 	 * @return string
 	 */
-	private static function normalizeArchiveFileFilename($filename)
+	protected static function normalizeArchiveFileFilename($filename)
 	{
 		// if not UTF-8, convert from IBM CP 437
 		if (!SwatString::validateUtf8($filename)) {
 			$filename = iconv('CP437', 'UTF-8', $filename);
+		}
+
+		return $filename;
+	}
+
+	// }}}
+	// {{{ protected static function getArchiveMimeTypes()
+
+	/**
+	 * Get an array of archive mime types
+	 *
+	 * @return array array of arhive mime types
+	 */
+	protected static function getArchiveMimeTypes()
+	{
+		return array(
+			'zip'      => 'application/x-zip',
+			'mac_zip'  => 'application/zip',
+		);
+	}
+
+	// }}}
+	// {{{ protected static function getArchiveType()
+
+	protected static function getArchiveType($file_path)
+	{
+		$type = null;
+
+		if (self::$finfo === false) {
+			self::$finfo = finfo_open(FILEINFO_MIME);
+		}
+
+		if (self::$finfo !== false) {
+			$types     = self::getArchiveMimeTypes();
+			$mime_type = finfo_file(self::$finfo, $file_path);
+			$type      = array_search($mime_type, $types);
+
+			if ($type === false) {
+				$type = null;
+			}
+		}
+
+		return $type;
+	}
+
+	// }}}
+	// {{{ protected static function getTempFilename()
+
+	protected static function getTempFilename($original_filename)
+	{
+		// build temp filename
+		$filename = str_replace('.', '-', uniqid('file', true));
+
+		// get extension
+		if (strpos($original_filename, '.') !== false) {
+			$ext = strtolower(end(explode('.', $original_filename)));
+			$filename.= '.'.$ext;
 		}
 
 		return $filename;

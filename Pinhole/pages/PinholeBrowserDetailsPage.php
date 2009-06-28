@@ -105,6 +105,8 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				throw new SiteNotFoundException(sprintf(
 					'Photo does not belong to the current instance: %s.',
 					$this->app->getInstance()->shortname));
+			} elseif ($this->photo->status != PinholePhoto::STATUS_PUBLISHED) {
+				throw new SiteNotFoundException('Photo is not published yet.');
 			}
 		} else {
 			// photo was not found

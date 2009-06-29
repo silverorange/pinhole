@@ -286,59 +286,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	}
 
 	// }}}
-	// {{{ protected function buildMetaData()
-
-	protected function buildMetaData(SwatDetailsView $view)
-	{
-		$photo_meta_data = $this->photo->meta_data;
-		$field = $view->getField('meta_data');
-
-		$camera = null;
-		foreach ($this->photo->meta_data as $meta_data) {
-			if ($meta_data->shortname == 'model') {
-				$camera = $meta_data->value;
-			}
-		}
-
-		$camera_renderer = $field->getRenderer('meta_data_camera');
-
-		if ($camera === null)
-			$camera_renderer->visible = false;
-		else
-			$camera_renderer->text = sprintf(Pinhole::_('Taken with a %s'),
-				$camera).' | ';
-
-
-		$renderer = $field->getRenderer('meta_data_widget');
-		$widget = $renderer->getPrototypeWidget();
-
-		$widget->visible = (count($photo_meta_data) > 0);
-
-		$meta_data_view = $widget->getChild('meta_data_disclosure')->getChild('meta_data_view');
-
-		foreach ($photo_meta_data as $meta_data) {
-			$field = new SwatDetailsViewField();
-			$field->title = $meta_data->title;
-
-			if ($meta_data->machine_tag) {
-				$renderer = new SwatLinkCellRenderer();
-				$renderer->link = sprintf('%stag?%s',
-					$this->app->config->pinhole->path,
-					$meta_data->getURI());
-			} else {
-				$renderer = new SwatTextCellRenderer();
-			}
-
-			$renderer->text = PinholePhotoMetaDataBinding::getFormattedValue(
-				$meta_data->shortname, $meta_data->value);
-
-			$meta_data_view->appendField($field);
-			$field->addRenderer($renderer);
-		}
-
-	}
-
-	// }}}
 	// {{{ protected function buildPhotoNextPrev()
 
 	protected function buildPhotoNextPrev()
@@ -538,6 +485,60 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 		$view->getField('dimensions')->getFirstRenderer()->text =
 			implode(', ', $list);
+	}
+
+	// }}}
+	// {{{ protected function buildMetaData()
+
+	protected function buildMetaData(SwatDetailsView $view)
+	{
+		$photo_meta_data = $this->photo->meta_data;
+		$field = $view->getField('meta_data');
+
+		if (count($photo_meta_data) == 0)
+			$field->visible = false;
+
+		$camera = null;
+		foreach ($this->photo->meta_data as $meta_data) {
+			if ($meta_data->shortname == 'model') {
+				$camera = $meta_data->value;
+			}
+		}
+
+		$camera_renderer = $field->getRenderer('meta_data_camera');
+
+		if ($camera === null)
+			$camera_renderer->visible = false;
+		else
+			$camera_renderer->text = sprintf(Pinhole::_('Taken with a %s'),
+				$camera).' | ';
+
+
+		$renderer = $field->getRenderer('meta_data_widget');
+		$widget = $renderer->getPrototypeWidget();
+
+		$meta_data_view = $widget->getChild('meta_data_disclosure')->getChild('meta_data_view');
+
+		foreach ($photo_meta_data as $meta_data) {
+			$field = new SwatDetailsViewField();
+			$field->title = $meta_data->title;
+
+			if ($meta_data->machine_tag) {
+				$renderer = new SwatLinkCellRenderer();
+				$renderer->link = sprintf('%stag?%s',
+					$this->app->config->pinhole->path,
+					$meta_data->getURI());
+			} else {
+				$renderer = new SwatTextCellRenderer();
+			}
+
+			$renderer->text = PinholePhotoMetaDataBinding::getFormattedValue(
+				$meta_data->shortname, $meta_data->value);
+
+			$meta_data_view->appendField($field);
+			$field->addRenderer($renderer);
+		}
+
 	}
 
 	// }}}

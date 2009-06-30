@@ -73,13 +73,6 @@ class PinholeCommentsGadget extends SiteGadget
 		if ($value !== false)
 			return $value;
 
-		$sql = "select PinholeComment.*
-			from PinholeComment
-			inner join PinholePhoto on PinholeComment.photo = PinholePhoto.id
-			inner join ImageSet on ImageSet.id = PinholePhoto.image_set
-			where ImageSet.instance %s %s and PinholePhoto.status = %s
-			%s order by id desc";
-
 		if (!$this->app->session->isLoggedIn()) {
 			$private_where_clause = sprintf('and PinholePhoto.private = %s',
 				$this->app->db->quote(false, 'boolean'));
@@ -87,10 +80,22 @@ class PinholeCommentsGadget extends SiteGadget
 			$private_where_clause = '';
 		}
 
+		$sql = "select PinholeComment.*
+			from PinholeComment
+			inner join PinholePhoto on PinholeComment.photo = PinholePhoto.id
+			inner join ImageSet on ImageSet.id = PinholePhoto.image_set
+			where ImageSet.instance %s %s
+				and PinholePhoto.status = %s
+				and PinholeComment.spam = %s
+				and PinholeComment.status = %s
+			%s order by id desc";
+
 		$sql = sprintf($sql,
 			SwatDB::equalityOperator($this->app->getInstanceId()),
 			$this->app->db->quote($this->app->getInstanceId(), 'integer'),
 			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer'),
+			$this->app->db->quote(false, 'boolean'),
+			$this->app->db->quote(PinholeComment::STATUS_PUBLISHED, 'integer'),
 			$private_where_clause);
 
 		$this->app->db->setLimit($limit);

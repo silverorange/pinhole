@@ -21,11 +21,12 @@ class PinholeCommentDisplay extends SiteCommentDisplay
 		$header_div->open();
 
 		$anchor_tag = new SwatHtmlTag('a');
-		$anchor_tag->href = sprintf('Photo/Details?id=%s',
+		$anchor_tag->href = sprintf('Photo/Comments?id=%s',
 			$this->comment->photo->id);
 
-		$anchor_tag->setContent($this->comment->photo->getTitle());
-		echo sprintf(Pinhole::_('Comment on %s'), $anchor_tag);
+		$anchor_tag->setContent($this->comment->photo->getTitle(true));
+
+		printf(Pinhole::_('Comment on %s'), $anchor_tag);
 
 		$this->displayStatusSpan();
 

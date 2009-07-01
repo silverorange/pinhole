@@ -235,9 +235,6 @@ class Pinhole
 
 Pinhole::setupGettext();
 
-SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
-SwatDBClassMap::add('SiteComment', 'PinholeComment');
-
 SiteGadgetFactory::addPath('Pinhole/gadgets');
 
 SiteViewFactory::addPath('Pinhole/views');

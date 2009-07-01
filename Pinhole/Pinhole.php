@@ -238,6 +238,6 @@ Pinhole::setupGettext();
 SiteGadgetFactory::addPath('Pinhole/gadgets');
 
 SiteViewFactory::addPath('Pinhole/views');
-SiteViewFactory::registerView('comment', 'PinholeCommentView');
+SiteViewFactory::registerView('photo-comment', 'PinholeCommentView');
 
 ?>

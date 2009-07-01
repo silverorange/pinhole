@@ -11,6 +11,14 @@ require_once 'Site/SiteCommentUi.php';
  */
 class PinholeCommentUi extends SiteCommentUi
 {
+	// {{{ protected function getView()
+
+	protected function getView()
+	{
+		return SiteViewFactory::get($this->app, 'photo-comment');
+	}
+
+	// }}}
 	// {{{ protected function getComment()
 
 	protected function getComment()

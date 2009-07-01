@@ -632,7 +632,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$div_tag->class = 'photo-comments';
 				$div_tag->open();
 
-				$view = SiteViewFactory::get($this->app, 'comment');
+				$view = SiteViewFactory::get($this->app, 'photo-comment');
 				foreach ($comments as $comment) {
 					$view->display($comment);
 				}

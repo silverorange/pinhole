@@ -43,6 +43,22 @@ class PinholeCommentDisplay extends SiteCommentDisplay
 	}
 
 	// }}}
+	// {{{ protected function getView()
+
+	protected function getView()
+	{
+		if (self::$view === null && $this->app !== null) {
+			self::$view = SiteViewFactory::get($this->app, 'photo-comment');
+			self::$view->setPartMode('bodytext', SiteView::MODE_SUMMARY);
+			self::$view->setPartMode('permalink', SiteView::MODE_ALL, false);
+			self::$view->setPartMode('author', SiteView::MODE_ALL, false);
+			self::$view->setPartMode('link', SiteView::MODE_ALL, false);
+		}
+
+		return self::$view;
+	}
+
+	// }}}
 }
 
 ?>

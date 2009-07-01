@@ -4,10 +4,10 @@ require_once 'Date/Calc.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Site/dataobjects/SiteImage.php';
-require_once 'Site/dataobjects/SiteCommentWrapper.php';
 require_once 'Site/SiteCommentStatus.php';
 
 require_once 'Pinhole/dataobjects/PinholeComment.php';
+require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeImageSet.php';
 require_once 'Pinhole/dataobjects/PinholePhotoUploadSet.php';
 require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
@@ -355,7 +355,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 			$this->db->quote(SiteComment::STATUS_PUBLISHED, 'integer'),
 			$this->db->quote(false, 'boolean'));
 
-		$wrapper = SwatDBClassMap::get('SiteCommentWrapper');
+		$wrapper = SwatDBClassMap::get('PinholeCommentWrapper');
 
 		if ($limit !== null) {
 			$this->db->setLimit($limit, $offset);
@@ -1399,7 +1399,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 			$this->db->quote(false, 'boolean'));
 
 		return SwatDB::query($this->db, $sql,
-			SwatDBClassMap::get('SiteCommentWrapper'));
+			SwatDBClassMap::get('PinholeCommentWrapper'));
 	}
 
 	// }}}

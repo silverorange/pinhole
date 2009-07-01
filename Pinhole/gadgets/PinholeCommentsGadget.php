@@ -1,10 +1,10 @@
 <?php
 
 require_once 'Site/gadgets/SiteGadget.php';
-require_once 'Site/dataobjects/SiteCommentWrapper.php';
 require_once 'Swat/SwatString.php';
 require_once 'Swat/SwatHtmlTag.php';
 require_once 'SwatI18N/SwatI18NLocale.php';
+require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
 
 /**
  * Display the last X comments
@@ -101,7 +101,7 @@ class PinholeCommentsGadget extends SiteGadget
 		$this->app->db->setLimit($limit);
 
 		$comments = SwatDB::query($this->app->db, $sql,
-			SwatDBClassMap::get('SiteCommentWrapper'));
+			SwatDBClassMap::get('PinholeCommentWrapper'));
 
 		$this->app->addCacheValue($comments, $cache_key, 'photos');
 

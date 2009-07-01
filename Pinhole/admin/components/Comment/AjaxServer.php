@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Site/admin/components/Comment/AjaxServer.php';
+require_once 'Pinhole/dataobjects/PinholeComment.php';
 
 /**
  * Performs actions on comments via AJAX
@@ -26,6 +27,21 @@ class PinholeCommentAjaxServer extends SiteCommentAjaxServer
 	{
 		if (isset($this->app->memcache)) {
 			$this->app->memcache->flushNs('photos');
+		}
+	}
+
+	// }}}
+	// {{{ protected function getComment()
+
+	protected function getComment($comment_id)
+	{
+		$comment_class = SwatDBClassMap::get('PinholeComment');
+		$comment = new $comment_class();
+		$comment->setDatabase($this->app->db);
+		if ($comment->load($comment_id, $this->app->getInstance())) {
+			return $comment;
+		} else {
+			return null;
 		}
 	}
 

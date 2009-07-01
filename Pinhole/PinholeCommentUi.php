@@ -11,6 +11,15 @@ require_once 'Site/SiteCommentUi.php';
  */
 class PinholeCommentUi extends SiteCommentUi
 {
+	// {{{ protected function getComment()
+
+	protected function getComment()
+	{
+		$class_name = SwatDBClassMap::get('PinholeComment');
+		return new $class_name();
+	}
+
+	// }}}
 	// {{{ protected function getThankYouUri()
 
 	protected function getThankYouUri()

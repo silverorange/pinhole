@@ -83,6 +83,15 @@ class PinholeCommentEdit extends SiteCommentEdit
 	}
 
 	// }}}
+	// {{{ protected function getComment()
+
+	protected function getComment()
+	{
+		$class_name = SwatDBClassMap::get('PinholeComment');
+		return new $class_name();
+	}
+
+	// }}}
 
 	// process phase
 	// {{{ protected function saveDBData()

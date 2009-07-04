@@ -2,16 +2,16 @@ create table PinholePhoto (
 	-- Image table columns
 	id serial,
 	image_set integer not null references ImageSet(id) on delete cascade,
-	upload_set integer references PinholePhotoUploadSet(id) on delete cascade,
 
 	title varchar(255),
 	filename varchar(255),
 	original_filename varchar(255),
 	temp_filename varchar(255),
 	description text,
-	comment_status integer not null default 0,
 
 	-- Pinhole specific columns
+	upload_set integer references PinholePhotoUploadSet(id) on delete cascade,
+	comment_status integer not null default 0,
 	upload_date timestamp,
 	serialized_exif text,
 	photographer integer references PinholePhotographer(id) on delete set null,
@@ -30,6 +30,9 @@ create table PinholePhoto (
 	private boolean not null default false,
 	for_sale boolean not null default false,
 
+	gps_latitude float,
+	gps_longitude float,
+
 	-- import settings
 	auto_publish boolean not null default false,
 	set_content_by_meta_data boolean not null default false,
@@ -45,3 +48,5 @@ CREATE INDEX PinholePhoto_photo_date_index ON PinholePhoto(photo_date);
 CREATE INDEX PinholePhoto_status_index ON PinholePhoto(status);
 CREATE INDEX PinholePhoto_private_index ON PinholePhoto(private);
 CREATE INDEX PinholePhoto_for_sale_index ON PinholePhoto(for_sale);
+CREATE INDEX PinholePhoto_gps_latitude_index ON PinholePhoto(gps_latitude);
+CREATE INDEX PinholePhoto_gps_longitude_index ON PinholePhoto(gps_longitude);

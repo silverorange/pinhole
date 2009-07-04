@@ -197,6 +197,20 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 */
 	 public $for_sale;
 
+	/**
+	 * GPS Latitude
+	 *
+	 * @var float
+	 */
+	public $gps_latitude;
+
+	/**
+	 * GPS Longitude
+	 *
+	 * @var float
+	 */
+	public $gps_longitude;
+
 	// }}}
 	// {{{ protected properties
 
@@ -1209,6 +1223,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	protected function setContentByMetaData($meta_data)
 	{
 		$this->setPhotoDateByMetaData($meta_data);
+		$this->setGpsCoordinatesByMetaData($meta_data);
 
 		if ($this->set_content_by_meta_data) {
 			$this->setTitleByMetaData($meta_data);
@@ -1322,6 +1337,23 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	}
 
 	// }}}
+	// {{{ protected function setGpsCoordinatesByMetaData()
+
+	protected function setGpsCoordinatesByMetaData($meta_data)
+	{
+		$fields = array('gpslatitude', 'gpslongitude');
+		foreach ($fields as $field) {
+			if (isset($meta_data[$field])) {
+				$name = ($field == 'gpslatitude') ?
+					'gps_latitude' : 'gps_longitude';
+
+				$this->$name = $this->parseMetaDataGps(
+					$meta_data[$field]->value);
+			}
+		}
+	}
+
+	// }}}
 	// {{{ private function addMetaDataTag()
 
 	private function addMetaDataTag($title)
@@ -1375,6 +1407,32 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 		$date->toUTC();
 
 		return $date;
+	}
+
+	// }}}
+	// {{{ private function parseMetaDataGps()
+
+	private function parseMetaDataGps($gps_string)
+	{
+		$float = null;
+
+		// 11 deg 15' 18.00" E
+		$match = preg_match('/^([\d]+) deg ([\d]+)\' ([\d\.]+)" ([NWSE])/',
+			$gps_string, $regs);
+
+		error_log($gps_string);
+
+		if ($match) {
+			list($s, $degrees, $minutes, $seconds, $hemisphere) = $regs;
+
+			$float = $degrees + ((float) $minutes / 60) +
+				((float) $seconds / 3600);
+
+			if ($hemisphere == 'S' || $hemisphere == 'W')
+				$float = $float * -1;
+		}
+
+		return $float;
 	}
 
 	// }}}

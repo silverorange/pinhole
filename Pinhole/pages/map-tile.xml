@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<!-- This file can be loaded as a ui for a basic tile photo display on any site -->
+	<widget class="SwatTileView" id="photo_view">
+		<property name="classes[]">pinhole-tile-view</property>
+		<object class="SwatTile">
+			<object class="SiteImageCellRenderer">
+				<property name="image" type="data">photo</property>
+				<property name="image_dimension">thumb</property>
+				<property name="link" type="data">path</property>
+				<property name="link">%sphoto/%s</property>
+				<property name="link_value[0]" type="data">root_path</property>
+				<property name="link_value[1]" type="data">path</property>
+				<property name="classes[]">photo-tile</property>
+				<property name="display_title" type="data">display_title</property>
+			</object>
+		</object>
+	</widget>
+</swatml>

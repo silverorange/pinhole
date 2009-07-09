@@ -135,6 +135,7 @@ class PinholePageFactory extends SitePageFactory
 		return array(
 			'^(photo)/(\d+)/([\w\d*]+)$'  => 'PinholeBrowserDetailsPage',
 			'^(photo)/(\d+)$'             => 'PinholeBrowserDetailsPage',
+			'^(map)$'                     => 'PinholeBrowserMapPage',
 			'^(tag)$'                     => 'PinholeBrowserIndexPage',
 			'^(tags)$'                    => 'PinholeBrowserTagPage',
 			'^(tags)/(date)$'             => 'PinholeBrowserTagPage',

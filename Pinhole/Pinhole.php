@@ -156,6 +156,10 @@ class Pinhole
 			'pinhole.browser_index_titles' => true,
 			'pinhole.browser_index_upload_dates' => true,
 
+			// Google Maps
+			'pinhole.google_maps_admin_api_key' => null,
+			'pinhole.google_maps_api_key' => null,
+
 			// Comments
 			'pinhole.default_comment_status' => null,
 			// tri-state: null = set per photo,

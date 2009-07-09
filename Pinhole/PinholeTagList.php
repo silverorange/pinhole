@@ -101,6 +101,15 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private $show_private_photos = false;
 
 	/**
+	 * Optional select clause to use in place of the default select clause
+	 *
+	 * @var string
+	 *
+	 * @see PinholeTagList::setPhotoSelectClause()
+	 */
+	private $photo_select_clause = null;
+
+	/**
 	 * Additional where clause to apply to photos in this tag list
 	 *
 	 * This where clause is applied in addition to where clauses specified by
@@ -395,17 +404,9 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		$photos = $this->app->getCacheRecordset($key, $wrapper, 'photos');
 
 		if ($photos === false) {
-			$fields = array('PinholePhoto.id', 'PinholePhoto.title',
-				'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
-				'PinholePhoto.publish_date', 'PinholePhoto.image_set',
-				'PinholePhoto.filename', 'PinholePhoto.status');
-
-			if ($extra_fields !== null)
-				$fields = array_merge($fields, $extra_fields);
-
 			$sql = sprintf('select %s from PinholePhoto
 				inner join ImageSet on PinholePhoto.image_set = ImageSet.id',
-				implode(', ', $fields));
+				$this->getPhotoSelectClause($extra_fields));
 
 			$join_clauses = implode(' ', $this->getJoinClauses());
 			if ($join_clauses != '')
@@ -972,8 +973,46 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ protected function getPhotoSelectClause()
+
+	protected function getPhotoSelectClause(array $extra_fields = null)
+	{
+		$clause = '';
+
+		if ($this->photo_select_clause === null) {
+			$fields = array('PinholePhoto.id', 'PinholePhoto.title',
+				'PinholePhoto.original_filename', 'PinholePhoto.photo_date',
+				'PinholePhoto.publish_date', 'PinholePhoto.image_set',
+				'PinholePhoto.filename', 'PinholePhoto.status');
+
+			if ($extra_fields !== null)
+				$fields = array_merge($fields, $extra_fields);
+
+			$clause = implode(', ', $fields);
+		} else {
+			$clause = $this->photo_select_clause;
+		}
+
+		return $clause;
+	}
+
+	// }}}
 
 	// modifiers
+	// {{{ public function setPhotoSelectClause()
+
+	/**
+	 * Optionally override the default select clause
+	 *
+	 * @param string $select_clause Query select clause.
+	 */
+	public function setPhotoSelectClause($select_clause)
+	{
+		if (is_string($select_clause))
+			$this->photo_select_clause = $select_clause;
+	}
+
+	// }}}
 	// {{{ public function setPhotoWhereClause()
 
 	/**

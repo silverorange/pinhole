@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<!-- header -->
+	<widget class="SwatContainer" id="header_content">
+		<widget class="SwatDisplayableContainer" id="sub_hd">
+			<widget class="PinholeTagListView" id="tag_list_view" />
+		</widget>
+	</widget>
+
+	<!-- content -->
+	<widget class="SwatContainer" id="content">
+	</widget>
+</swatml>

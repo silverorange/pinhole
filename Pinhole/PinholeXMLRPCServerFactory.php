@@ -26,6 +26,7 @@ class PinholeXMLRPCServerFactory extends SiteXMLRPCServerFactory
 	{
 		return array(
 			'calendar-gadget' => 'PinholeCalendarGadgetServer',
+			'map-marker'      => 'PinholeMapMarkerServer',
 		);
 	}
 

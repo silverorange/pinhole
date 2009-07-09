@@ -125,6 +125,12 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/swat/styles/swat-tile-view.css'), Swat::PACKAGE_ID);
 
+		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
+			'packages/swat/javascript/swat-view.js'), Swat::PACKAGE_ID);
+
+		$this->layout->addHtmlHeadEntry(new SwatJavascriptHtmlHeadEntry(
+			'packages/swat/javascript/swat-tile-view.js'), Swat::PACKAGE_ID);
+
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/site/styles/site-image-cell-renderer.css'), Site::PACKAGE_ID);
 

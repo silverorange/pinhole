@@ -159,6 +159,9 @@ class Pinhole
 			// Google Maps
 			'pinhole.google_maps_admin_api_key' => null,
 			'pinhole.google_maps_api_key' => null,
+			'pinhole.map_last_latitude' => null,
+			'pinhole.map_last_longitude' => null,
+			'pinhole.map_last_zoom_level' => null,
 
 			// Comments
 			'pinhole.default_comment_status' => null,

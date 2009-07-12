@@ -1,8 +1,9 @@
-function PinholeMap(container_id, tag_list)
+function PinholeMap(container_id, tag_list, photo_id)
 {
 	this.container_id = container_id;
 	this.tag_list = tag_list;
 	this.markers = [];
+	this.photo_id = photo_id;
 
 	YAHOO.util.Event.addListener(window, 'load',
 		this.buildMap, this, true);
@@ -42,10 +43,9 @@ PinholeMap.prototype.buildMap = function()
 
 		for (var i = 0; i < this.markers.length; i++) {
 			var marker = this.markers[i];
+			var lat_lng = new GLatLng(marker.latitude, marker.longitude);
 
 			for (var j = 0; j < marker.photos.length; j++) {
-				var lat_lng = new GLatLng(marker.latitude, marker.longitude);
-
 				if (j == 0) {
 					var gmarker = new GMarker(lat_lng);
 					gmarker.photos = marker.photos;
@@ -54,6 +54,11 @@ PinholeMap.prototype.buildMap = function()
 						lat_lng, marker.photos);
 
 					GEvent.addListener(gmarker, "click", display_function);
+
+					if (marker.photos[j] == this.photo_id) {
+						open_photo_id = this.photo_id;
+						open_lat_lng = lat_lng;
+					}
 				} else {
 					var gmarker = new GMarker(lat_lng, { hide: true });
 					gmarker.photos = [];
@@ -61,6 +66,12 @@ PinholeMap.prototype.buildMap = function()
 
 				marker_display.push(gmarker);
 			}
+		}
+
+		if (open_photo_id && open_lat_lng) {
+			this.map.setCenter(open_lat_lng);
+			this.map.setZoom(12);
+			this.setMarkerContent(open_lat_lng, [open_photo_id]);
 		}
 
 		MarkerClusterer.single_click_callback = function(lat_lng, photos) {
@@ -140,11 +151,12 @@ PinholeMap.prototype.setMarkerContent = function(lat_lng, photos)
 
 // {{{ function PinholeMapMarker
 
-function PinholeMapMarker(latitude, longitude, photos)
+function PinholeMapMarker(latitude, longitude, photos, open)
 {
 	this.latitude  = latitude;
 	this.longitude = longitude;
 	this.photos = photos;
+	this.open = open;
 }
 
 // }}}

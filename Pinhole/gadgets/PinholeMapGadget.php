@@ -35,7 +35,7 @@ class PinholeMapGadget extends SiteGadget
 			$map = new PinholeStaticMapView();
 			$map->setTagList($tag_list);
 			$map->api_key = $this->app->config->pinhole->google_maps_api_key;
-			$map->width = 200;
+			$map->width = 250;
 			$map->height = 150;
 			$map->base = $this->app->config->pinhole->path.'map';
 			$map->display();

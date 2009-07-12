@@ -48,6 +48,13 @@
 						<property name="time_zone_format" type="constant">SwatDate::TZ_SHORT</property>
 					</object>
 				</object>
+				<object class="SwatDetailsViewField" id="map_link">
+					<property name="title">Location</property>
+					<object class="SwatLinkCellRenderer">
+						<property name="text">View this photo on a map.</property>
+						<property name="link" type="data">map_link</property>
+					</object>
+				</object>
 				<object class="SwatDetailsViewField" id="meta_data">
 					<property name="title">Photo Details</property>
 					<object class="SwatTextCellRenderer" id="meta_data_camera" />

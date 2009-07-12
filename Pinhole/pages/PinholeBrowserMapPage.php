@@ -23,6 +23,16 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 	}
 
 	// }}}
+	// {{{ protected function getArgumentMap()
+
+	protected function getArgumentMap()
+	{
+		return array(
+			'photo_id' => array(0, null),
+		);
+	}
+
+	// }}}
 	// {{{ protected function initTagList()
 
 	protected function initTagList()
@@ -77,9 +87,12 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 
 	protected function getInlineJavaScript()
 	{
-		$script = sprintf("var map_obj = new PinholeMap(%s, %s);\n",
+		$photo_id = $this->getArgument('photo_id');
+
+		$script = sprintf("var map_obj = new PinholeMap(%s, %s, %s);\n",
 			SwatString::quoteJavaScriptString('map'),
-			SwatString::quoteJavaScriptString($this->tag_list->__toString()));
+			SwatString::quoteJavaScriptString($this->tag_list->__toString()),
+			($photo_id !== null) ? $photo_id : null);
 
 		$photos = $this->tag_list->getPhotos('small',
 			array('gps_longitude', 'gps_latitude'));

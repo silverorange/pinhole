@@ -92,7 +92,7 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 		$script = sprintf("var map_obj = new PinholeMap(%s, %s, %s);\n",
 			SwatString::quoteJavaScriptString('map'),
 			SwatString::quoteJavaScriptString($this->tag_list->__toString()),
-			($photo_id !== null) ? $photo_id : null);
+			($photo_id !== null) ? $photo_id : 'null');
 
 		$photos = $this->tag_list->getPhotos('small',
 			array('gps_longitude', 'gps_latitude'));

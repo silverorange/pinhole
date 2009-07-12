@@ -1,0 +1,73 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
+<swatml>
+	<widget class="SwatMessageDisplay" id="message_display" />
+	<widget class="SwatFrameDisclosure" id="search_disclosure">
+		<property name="title" translatable="yes">Search Photos to Geo-Tag</property>
+		<property name="open" type="boolean">false</property>
+		<widget class="SwatForm" id="search_form">
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Keywords</property>
+				<widget class="SwatEntry" id="search_keywords" />
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Only Photos That Aren't Geo-Tagged</property>
+				<widget class="SwatCheckbox" id="search_non_geo_tagged" />
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Taken On or After</property>
+				<widget class="SwatDateEntry" id="search_start_date">
+					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Taken Before</property>
+				<widget class="SwatDateEntry" id="search_end_date">
+					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Status</property>
+				<widget class="SwatFlydown" id="search_status">
+					<property name="show_blank" type="boolean">true</property>
+					<property name="blank_title">All</property>
+				</widget>
+			</widget>
+			<widget class="SwatFormField">
+				<property name="title" translatable="yes">Tagged</property>
+				<widget class="PinholePhotoTagEntry" id="search_tags">
+					<property name="allow_adding_tags" type="boolean">false</property>
+				</widget>
+			</widget>
+			<widget class="SwatFooterFormField">
+				<widget class="SwatButton" id="submit_button">
+					<property name="title" translatable="yes">Search</property>
+				</widget>
+			</widget>
+		</widget>
+	</widget>
+	<widget class="SwatFrame" id="results_frame">
+		<property name="visible" type="boolean">false</property>
+		<widget class="SwatForm" id="index_form">
+			<widget class="SwatTileView" id="index_view">
+				<object class="SwatTile">
+					<object class="SiteImageCellRenderer">
+						<property name="image" type="data">photo</property>
+						<property name="image_dimension">thumb</property>
+						<property name="classes[]" type="data">class_name</property>
+						<property name="path_prefix">../</property>
+					</object>
+					<object class="SwatCheckboxCellRenderer" id="items">
+						<property name="value" type="data">photo.id</property>
+						<property name="title" translatable="yes">select</property>
+					</object>
+				</object>
+			</widget>
+			<widget class="AdminPagination" id="pager">
+				<property name="link">GeoTag/Search</property>
+				<property name="display_parts" type="constant">NEXT|PREV|POSITION</property>
+				<property name="page_size" type="integer">100</property>
+			</widget>
+		</widget>
+	</widget>
+</swatml>

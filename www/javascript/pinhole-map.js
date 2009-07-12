@@ -40,6 +40,8 @@ PinholeMap.prototype.buildMap = function()
 		}
 
 		var marker_display = [];
+		var open_photo_id = false;
+		var open_lat_lng = false;
 
 		for (var i = 0; i < this.markers.length; i++) {
 			var marker = this.markers[i];

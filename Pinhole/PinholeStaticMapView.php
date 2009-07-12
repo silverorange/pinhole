@@ -53,7 +53,7 @@ class PinholeStaticMapView extends SwatControl
 		$img_tag->width = $this->width;
 		$img_tag->height = $this->height;
 		$img_tag->src = sprintf('http://maps.google.com/staticmap?'.
-			'format=png8&sensor=false&maptype=mobile'.
+			'format=png8&sensor=false&maptype=roadmap'.
 			sprintf('&size=%sx%s', $this->width, $this->height).
 			sprintf('&center=%s,%s', $this->getCenterLatitude(),
 				$this->getCenterLongitude()).
@@ -136,7 +136,7 @@ class PinholeStaticMapView extends SwatControl
 	{
 		$info = $this->tag_list->getPhotoInfo();
 
-		return max(
+		return max(0.003, // 0.003 displays a better surrounding than 0
 			abs($info['max_latitude']) - $this->getCenterLatitude(),
 			abs($info['min_latitude']) - $this->getCenterLatitude(),
 			abs($info['max_longitude']) - $this->getCenterLongitude(),

@@ -137,10 +137,10 @@ class PinholeStaticMapView extends SwatControl
 		$info = $this->tag_list->getPhotoInfo();
 
 		return max(0.003, // 0.003 displays a better surrounding than 0
-			abs($info['max_latitude']) - $this->getCenterLatitude(),
-			abs($info['min_latitude']) - $this->getCenterLatitude(),
-			abs($info['max_longitude']) - $this->getCenterLongitude(),
-			abs($info['min_longitude']) - $this->getCenterLongitude()
+			abs($info['max_latitude'] - $this->getCenterLatitude()),
+			abs($info['min_latitude'] - $this->getCenterLatitude()),
+			abs($info['max_longitude'] - $this->getCenterLongitude()),
+			abs($info['min_longitude'] - $this->getCenterLongitude())
 		);
 	}
 

@@ -13,9 +13,21 @@ function PinholeMap(container_id, tag_list)
 PinholeMap.prototype.buildMap = function()
 {
 	if (GBrowserIsCompatible()) {
-		this.map = new GMap2(document.getElementById(this.container_id));
-		this.map.setUIToDefault();
+		var options = {
+			googleBarOptions: {
+				resultList: G_GOOGLEBAR_RESULT_LIST_SUPPRESS,
+				suppressInitialResultSelection: true
+			}
+		}
+
+		this.map = new GMap2(document.getElementById(
+			this.container_id, options));
+
+		var ui = this.map.getDefaultUI();
+		ui.controls.scalecontrol = false;
+		this.map.setUI(ui);
 		this.map.enableGoogleBar();
+
 		this.setCenter();
 
 		var self = this;

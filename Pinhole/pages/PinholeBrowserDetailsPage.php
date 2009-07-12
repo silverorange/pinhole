@@ -310,7 +310,23 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 
 	protected function getPhotoDetailsStore()
 	{
-		return new SwatDetailsStore($this->photo);
+		$store = new SwatDetailsStore($this->photo);
+
+		if ($this->photo->gps_latitude !== null &&
+			$this->photo->gps_longitude !== null) {
+
+			$store->map_link = sprintf('%smap/%s',
+				$this->app->config->pinhole->path,
+				$this->photo->id);
+
+			if (count($this->tag_list) > 0) {
+				$store->map_link.= '?'.$this->tag_list->__toString();
+			}
+		} else {
+			$store->map_link = null;
+		}
+
+		return $store;
 	}
 
 	// }}}
@@ -386,6 +402,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		$this->buildPhotoDate($view);
 		$this->buildTags($view);
 		$this->buildMetaData($view);
+		$this->buildMapLink($view);
 	}
 
 	// }}}
@@ -539,6 +556,16 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$field->addRenderer($renderer);
 		}
 
+	}
+
+	// }}}
+	// {{{ protected function buildMapLink()
+
+	protected function buildMapLink(SwatDetailsView $view)
+	{
+		$view->getField('map_link')->visible =
+			($this->photo->gps_latitude !== null &&
+			$this->photo->gps_longitude !== null);
 	}
 
 	// }}}

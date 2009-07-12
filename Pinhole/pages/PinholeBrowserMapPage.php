@@ -27,11 +27,7 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 
 	protected function initTagList()
 	{
-		$this->tag_list->setPhotoWhereClause(sprintf(
-			'PinholePhoto.status = %s
-			and PinholePhoto.gps_latitude is not null
-			and PinholePhoto.gps_longitude is not null',
-			$this->app->db->quote(PinholePhoto::STATUS_PUBLISHED, 'integer')));
+		$this->tag_list->setShowOnlyGeoTaggedPhotos(true);
 	}
 
 	// }}}
@@ -44,6 +40,17 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 		parent::buildInternal();
 
 		$this->buildLayout();
+	}
+
+	// }}}
+	// {{{ protected function buildTagListView()
+
+	protected function buildTagListView()
+	{
+		parent::buildTagListView();
+
+		if ($this->ui->hasWidget('tag_list_view'))
+			$this->ui->getWidget('tag_list_view')->base = 'map';
 	}
 
 	// }}}

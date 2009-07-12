@@ -68,6 +68,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 		$this->buildDateTagBrowser();
 		$this->buildPhotoPagination();
+		$this->buildGeoTagLink();
 
 		$view = $this->ui->getWidget('photo_view');
 		$view->model = $this->getPhotoTableStore();
@@ -116,6 +117,21 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		$pagination->link = $this->app->config->pinhole->path.'tag?';
 		$pagination->link.= str_replace('%', '%%', $tag_path);
 		$pagination->link.= 'page.number=%d';
+	}
+
+	// }}}
+	// {{{ protected function buildGeoTagLink()
+
+	protected function buildGeoTagLink()
+	{
+		if (!$this->ui->hasWidget('sidebar_map'))
+			return;
+
+		$map = $this->ui->getWidget('sidebar_map');
+		$map->setTagList($this->tag_list);
+		$map->base = $this->app->config->pinhole->path.'map';
+		$map->visible = ($this->tag_list->getGeoTaggedPhotoCount() > 0);
+		$map->api_key = $this->app->config->pinhole->google_maps_api_key;
 	}
 
 	// }}}

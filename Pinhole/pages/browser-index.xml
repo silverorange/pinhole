@@ -15,6 +15,11 @@
 		<widget class="SwatContentBlock" id="sub_tag_list_content">
 			<property name="content_type">text/xml</property>
 		</widget>
+		<widget class="PinholeStaticMapView" id="sidebar_map">
+			<property name="show_title" type="boolean">true</property>
+			<property name="width" type="integer">180</property>
+			<property name="height" type="integer">180</property>
+		</widget>
 	</widget>
 
 	<!-- content -->

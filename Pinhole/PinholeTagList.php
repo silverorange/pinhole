@@ -94,11 +94,18 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private $memcache;
 
 	/**
-     * Show private photos?
+     * show private photos?
 	 *
 	 * @var boolean
 	 */
 	private $show_private_photos = false;
+
+	/**
+     * show only geo-tagged photos?
+	 *
+	 * @var boolean
+	 */
+	private $show_only_geo_tagged_photos = false;
 
 	/**
 	 * Optional select clause to use in place of the default select clause
@@ -307,6 +314,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		if (!$this->show_private_photos)
 			$where_clauses[] = sprintf('(PinholePhoto.private = %s)',
 				$this->db->quote(false, 'boolean'));
+
+		if ($this->show_only_geo_tagged_photos) {
+			$where_clauses[] = sprintf('(PinholePhoto.gps_latitude is not null
+				and PinholePhoto.gps_longitude is not null)');
+		}
 
 		$where_clause = implode(' '.$operator.' ', $where_clauses);
 
@@ -574,7 +586,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				max(convertTZ(PinholePhoto.photo_date,
 					PinholePhoto.photo_time_zone)) as last_photo_date,
 				min(convertTZ(PinholePhoto.photo_date,
-					PinholePhoto.photo_time_zone)) as first_photo_date
+					PinholePhoto.photo_time_zone)) as first_photo_date,
+				sum(case when PinholePhoto.gps_latitude is not null
+					and PinholePhoto.gps_longitude is not null
+					then 1 else 0 end) as gps_photo_count,
+				max(PinholePhoto.gps_latitude) as max_latitude,
+				max(PinholePhoto.gps_longitude) as max_longitude,
+				min(PinholePhoto.gps_latitude) as min_latitude,
+				min(PinholePhoto.gps_longitude) as min_longitude
 			from PinholePhoto
 			inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
 
@@ -593,6 +612,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 		} else {
 			$this->photo_info_cache = array(
 				'count' => $row->photo_count,
+				'gps_count' => $row->gps_photo_count,
+				'max_latitude' => $row->max_latitude,
+				'max_longitude' => $row->max_longitude,
+				'min_latitude' => $row->min_latitude,
+				'min_longitude' => $row->min_longitude,
 				'start' => new SwatDate($row->first_photo_date),
 				'end'   => new SwatDate($row->last_photo_date),
 			);
@@ -898,6 +922,23 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getGeoTaggedPhotoCount()
+
+	/**
+	 * Gets the number of photos in this list that have gps data
+	 *
+	 * @return integer The number of photos with gps data
+	 */
+	public function getGeoTaggedPhotoCount()
+	{
+		$info = $this->getPhotoInfo();
+		if (count($info) > 0)
+			return $info['gps_count'];
+		else
+			return 0;
+	}
+
+	// }}}
 	// {{{ protected function setTagsByString()
 
 	/**
@@ -1073,6 +1114,19 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	public function setLoadTags($load_tags)
 	{
 		$this->load_tags = (boolean)$load_tags;
+	}
+
+	// }}}
+	// {{{ public function setShowOnlyGeoTaggedPhotos()
+
+	/**
+	 * Sets whether to only show geo-tagged photos 
+	 *
+	 * @param boolean $show_only_geo_tagged_photos
+	 */
+	public function setShowOnlyGeoTaggedPhotos($show_only_geo_tagged_photos)
+	{
+		$this->show_only_geo_tagged_photos = $show_only_geo_tagged_photos;
 	}
 
 	// }}}

@@ -56,14 +56,14 @@ PinholeMap.prototype.buildMap = function()
 						lat_lng, marker.photos);
 
 					GEvent.addListener(gmarker, "click", display_function);
-
-					if (marker.photos[j] == this.photo_id) {
-						open_photo_id = this.photo_id;
-						open_lat_lng = lat_lng;
-					}
 				} else {
 					var gmarker = new GMarker(lat_lng, { hide: true });
 					gmarker.photos = [];
+				}
+
+				if (marker.photos[j] == this.photo_id) {
+					open_photo_id = this.photo_id;
+					open_lat_lng = lat_lng;
 				}
 
 				marker_display.push(gmarker);

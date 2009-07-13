@@ -160,7 +160,7 @@ class PinholeMapMarkerServer extends SiteXMLRPCServer
 			$ds = new SwatDetailsStore();
 			$ds->photo = $photo;
 			$ds->root_path = $this->app->config->pinhole->path;
-			$ds->path = $photo->id;
+			$ds->path = 'photo/'.$photo->id;
 			if ($tag_list !== null)
 				$ds->path.= '?'.$tag_list;
 

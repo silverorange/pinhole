@@ -104,9 +104,9 @@ class PinholeStaticMapView extends SwatControl
 
 	protected function getMarkers()
 	{
-		// add the last 40 photos
+		// add the last 50 photos
 		$tag_list = clone $this->tag_list;
-		$tag_list->setPhotoRange(new SwatDBRange(40));
+		$tag_list->setPhotoRange(new SwatDBRange(50));
 		$tag_list->setShowOnlyGeoTaggedPhotos(true);
 
 		$photos = $tag_list->getPhotos(null,

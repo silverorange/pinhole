@@ -57,7 +57,8 @@ class PinholeStaticMapView extends SwatControl
 			sprintf('&size=%sx%s', $this->width, $this->height).
 			sprintf('&center=%s,%s', $this->getCenterLatitude(),
 				$this->getCenterLongitude()).
-			sprintf('&span=%1$s,%1$s', $this->getSpan()).
+			sprintf('&span=%s,%s', $this->getSpanLatitude(),
+				$this->getSpanLongitude()).
 			sprintf('&markers=%s', implode('|', $this->getMarkers())).
 			sprintf('&key=%s', $this->api_key));
 
@@ -103,8 +104,9 @@ class PinholeStaticMapView extends SwatControl
 
 	protected function getMarkers()
 	{
+		// add the last 40 photos
 		$tag_list = clone $this->tag_list;
-		$tag_list->setPhotoRange(new SwatDBRange(50));
+		$tag_list->setPhotoRange(new SwatDBRange(40));
 		$tag_list->setShowOnlyGeoTaggedPhotos(true);
 
 		$photos = $tag_list->getPhotos(null,
@@ -130,15 +132,26 @@ class PinholeStaticMapView extends SwatControl
 	}
 
 	// }}}
-	// {{{ protected function getSpan()
+	// {{{ protected function getSpanLatitude()
 
-	protected function getSpan()
+	protected function getSpanLatitude()
 	{
 		$info = $this->tag_list->getPhotoInfo();
 
 		return max(0.003, // 0.003 displays a better surrounding than 0
-			abs($info['max_latitude'] - $this->getCenterLatitude()),
-			abs($info['min_latitude'] - $this->getCenterLatitude()),
+			abs($info['max_latitude']  - $this->getCenterLatitude()),
+			abs($info['min_latitude']  - $this->getCenterLatitude())
+		);
+	}
+
+	// }}}
+	// {{{ protected function getSpanLongitude()
+
+	protected function getSpanLongitude()
+	{
+		$info = $this->tag_list->getPhotoInfo();
+
+		return max(0.003, // 0.003 displays a better surrounding than 0
 			abs($info['max_longitude'] - $this->getCenterLongitude()),
 			abs($info['min_longitude'] - $this->getCenterLongitude())
 		);

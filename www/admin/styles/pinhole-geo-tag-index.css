@@ -1,0 +1,28 @@
+#search_iframe {
+	width: 36%;
+	height: 600px;
+	margin: 0;
+	float: left;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	border-bottom: 1px solid #999;
+}
+
+#map_frame {
+	float: left;
+	border: 1px solid #999;
+	width: 60%;
+	height: 600px;
+	padding: 1em;
+	margin: 0;
+}
+
+#map_frame form {
+	margin: 0;
+	height: 40px;
+}
+
+#map {
+	border: 1px solid #999;
+	height: 560px;
+}

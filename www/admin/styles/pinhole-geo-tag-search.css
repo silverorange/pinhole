@@ -1,0 +1,11 @@
+#search_keywords {
+	width: 90%;
+}
+
+div.geo-tagged {
+	border: 1px solid #090;
+}
+
+div.geo-tagged div {
+	border: 0;
+}

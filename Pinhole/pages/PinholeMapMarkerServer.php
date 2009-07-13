@@ -201,7 +201,7 @@ class PinholeMapMarkerServer extends SiteXMLRPCServer
 				$box['min_longitude'] == $box['max_longitude']) {
 
 				$a_tag->href = sprintf('tag?gps.latitude=%s/gps.longitude=%s',
-					$min_latitude, $min_longitude);
+					$box['min_latitude'], $box['min_longitude']);
 			} else {
 				$a_tag->href = sprintf('tag?gps.box=%sx%s|%sx%s',
 					$box['max_latitude'], $box['min_longitude'],

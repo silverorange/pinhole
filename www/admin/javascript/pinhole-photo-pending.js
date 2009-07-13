@@ -141,25 +141,27 @@ if (typeof Pinhole.page == 'undefined') {
 
 	proto.displayNewTag = function(tag)
 	{
+		var tag_component = Pinhole.page.PendingPhotosPage.tag_component;
+
 		var div_tag = document.createElement('div');
 		div_tag.appendChild(document.createTextNode(tag.title + ' ('));
 
 		var a_tag = document.createElement('a');
-		a_tag.href = this.tag_component + '/Details?id=' + tag.id;
+		a_tag.href = tag_component + '/Details?id=' + tag.id;
 		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.edit_tag_text;
 		div_tag.appendChild(a_tag);
 
 		div_tag.appendChild(document.createTextNode(', '));
 
 		var a_tag = document.createElement('a');
-		a_tag.href = this.tag_component + '/Merge?id=' + tag.id;
+		a_tag.href = tag_component + '/Merge?id=' + tag.id;
 		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.merge_tag_text;
 		div_tag.appendChild(a_tag);
 
 		div_tag.appendChild(document.createTextNode(', '));
 
 		var a_tag = document.createElement('a');
-		a_tag.href = this.tag_component + '/Delete?id=' + tag.id;
+		a_tag.href = tag_component + '/Delete?id=' + tag.id;
 		a_tag.innerHTML = Pinhole.page.PendingPhotosPage.delete_tag_text;
 		div_tag.appendChild(a_tag);
 

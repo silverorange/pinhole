@@ -37,6 +37,7 @@
 				<property name="title" translatable="yes">Tagged</property>
 				<widget class="PinholePhotoTagEntry" id="search_tags">
 					<property name="allow_adding_tags" type="boolean">false</property>
+					<property name="show_archived_tags" type="boolean">true</property>
 				</widget>
 			</widget>
 			<widget class="SwatFooterFormField">

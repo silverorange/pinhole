@@ -14,6 +14,11 @@ require_once 'Pinhole/tags/PinholeTag.php';
  */
 class PinholePhotoTagEntry extends SiteTagEntry
 {
+	// {{{ public properties
+
+	public $show_archived_tags = false;
+
+	// }}}
 	// {{{ private properties
 
 	/**
@@ -30,13 +35,19 @@ class PinholePhotoTagEntry extends SiteTagEntry
 	{
 		$instance_id = $this->app->getInstanceId();
 		$tag_array = array();
+		$where_clause = '';
+
+		if (!$this->show_archived_tags) {
+			$where_clause.= sprintf(' and archived = %s',
+				$this->app->db->quote(false, 'boolean'));
+		}
 
 		$sql = sprintf('select * from PinholeTag
-			where instance %s %s and archived = %s
+			where instance %s %s %s
 			order by title',
 			SwatDB::equalityOperator($instance_id),
 			$this->app->db->quote($instance_id, 'integer'),
-			$this->app->db->quote(false, 'boolean'));
+			$where_clause);
 
 		$tags = SwatDB::query($this->app->db, $sql,
 			'PinholeTagDataObjectWrapper');

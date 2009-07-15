@@ -94,8 +94,7 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 			SwatString::quoteJavaScriptString($this->tag_list->__toString()),
 			($photo_id !== null) ? $photo_id : 'null');
 
-		$photos = $this->tag_list->getPhotos('small',
-			array('gps_longitude', 'gps_latitude'));
+		$photos = $this->tag_list->getGpsData();
 
 		$markers = array();
 

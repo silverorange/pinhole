@@ -447,6 +447,47 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	}
 
 	// }}}
+	// {{{ public function getGpsData()
+
+	/**
+	 * Gets just the GPS data for a set of photos
+	 *
+	 * @return SwatDBRecordsetWrapper the gps coordinates for the photos in
+	 *                                this list.
+	 */
+	public function getGpsData()
+	{
+		$photos = false;
+
+		$wrapper = 'SwatDBRecordsetWrapper';
+
+		$args = func_get_args();
+		$key = $this->getCacheKey(__FUNCTION__, $args);
+		$photos = $this->app->getCacheRecordset($key, $wrapper, 'photos');
+
+		if ($photos === false) {
+			$sql = 'select PinholePhoto.id, PinholePhoto.gps_latitude,
+					PinholePhoto.gps_longitude
+				from PinholePhoto
+				inner join ImageSet on PinholePhoto.image_set = ImageSet.id';
+
+			$join_clauses = implode(' ', $this->getJoinClauses());
+			if ($join_clauses != '')
+				$sql.= ' '.$join_clauses.' ';
+
+			$where_clause = $this->getWhereClause();
+			if ($where_clause != '')
+				$sql.= ' where '.$where_clause;
+
+			$photos = SwatDB::query($this->db, $sql);
+
+			$this->app->addCacheRecordset($photos, $key, 'photos');
+		}
+
+		return $photos;
+	}
+
+	// }}}
 	// {{{ public function getPhotoCount()
 
 	/**

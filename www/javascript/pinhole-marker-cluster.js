@@ -84,13 +84,13 @@ function MarkerClusterer(map, opt_markers, opt_opts) {
   var maxZoom_ = null;
   var me_ = this;
   var gridSize_ = 60;
-  var sizes = [53, 56, 66, 78, 90];
+  var sizes = [53, 56, 66];
   var styles_ = [];
   var leftMarkers_ = [];
   var mcfn_ = null;
 
   var i = 0;
-  for (i = 1; i <= 5; ++i) {
+  for (i = 1; i <= 3; ++i) {
     styles_.push({
       'url': "http://gmaps-utility-library.googlecode.com/svn/trunk/markerclusterer/images/m" + i + ".png",
       'height': sizes[i - 1],

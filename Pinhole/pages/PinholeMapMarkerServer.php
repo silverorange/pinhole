@@ -209,7 +209,7 @@ class PinholeMapMarkerServer extends SiteXMLRPCServer
 			}
 
 			if ($tag_list !== null)
-				$a_tag->href.= $tag_list;
+				$a_tag->href.= '/'.$tag_list;
 
 			$a_tag->display();
 		}

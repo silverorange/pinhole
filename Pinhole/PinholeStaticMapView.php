@@ -108,6 +108,7 @@ class PinholeStaticMapView extends SwatControl
 		$tag_list = clone $this->tag_list;
 		$tag_list->setPhotoRange(new SwatDBRange(50));
 		$tag_list->setShowOnlyGeoTaggedPhotos(true);
+		$tag_list->setPhotoOrderByClause('random()');
 
 		$photos = $tag_list->getPhotos(null,
 			array('gps_latitude', 'gps_longitude'));

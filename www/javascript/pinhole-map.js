@@ -31,14 +31,6 @@ PinholeMap.prototype.buildMap = function()
 
 		this.setCenter();
 
-		var self = this;
-		getMarkerDisplayFunction = function(lat_lng, photos)
-		{
-			return function() {
-				self.setMarkerContent(lat_lng, photos);
-			}
-		}
-
 		var marker_display = [];
 		var open_photo_id = false;
 		var open_lat_lng = false;
@@ -49,13 +41,7 @@ PinholeMap.prototype.buildMap = function()
 
 			for (var j = 0; j < marker.photos.length; j++) {
 				if (j == 0) {
-					var gmarker = new GMarker(lat_lng);
-					gmarker.photos = marker.photos;
-
-					var display_function = getMarkerDisplayFunction(
-						lat_lng, marker.photos);
-
-					GEvent.addListener(gmarker, "click", display_function);
+					var gmarker = this.getGMarker(marker);
 				} else {
 					var gmarker = new GMarker(lat_lng, { hide: true });
 					gmarker.photos = [];
@@ -72,7 +58,7 @@ PinholeMap.prototype.buildMap = function()
 
 		if (open_photo_id && open_lat_lng) {
 			this.map.setCenter(open_lat_lng);
-			this.map.setZoom(12);
+			this.map.setZoom(15);
 			this.setMarkerContent(open_lat_lng, [open_photo_id]);
 		}
 
@@ -82,6 +68,37 @@ PinholeMap.prototype.buildMap = function()
 
 		var markerClusterer = new MarkerClusterer(this.map, marker_display);
 	}
+}
+
+// }}}
+// {{{ PinholeMap.prototype.getGMarker
+
+PinholeMap.prototype.getGMarker = function(marker)
+{
+	var lat_lng = new GLatLng(marker.latitude, marker.longitude);
+
+	gicon = new GIcon(G_DEFAULT_ICON);
+	gicon.image = 'images/photos/tiny/0b7dcfa44e124afaa1f252d0bb3af1fff4118575.jpg';
+	gicon.iconSize = new GSize(50, 50);
+	gicon.shadowSize  = new GSize(50, 50);
+
+	var gmarker = new GMarker(lat_lng, {icon: gicon});
+	gmarker.photos = marker.photos;
+
+	var self = this;
+	getMarkerDisplayFunction = function(lat_lng, photos)
+	{
+		return function() {
+			self.setMarkerContent(lat_lng, photos);
+		}
+	}
+
+	var display_function = getMarkerDisplayFunction(
+		lat_lng, marker.photos);
+
+	GEvent.addListener(gmarker, "click", display_function);
+
+	return gmarker;
 }
 
 // }}}

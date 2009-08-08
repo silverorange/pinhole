@@ -62,6 +62,7 @@ PinholeMap.prototype.buildMap = function()
 			this.setMarkerContent(open_lat_lng, [open_photo_id]);
 		}
 
+		var self = this;
 		MarkerClusterer.single_click_callback = function(lat_lng, photos) {
 			self.setMarkerContent(lat_lng, photos);
 		};

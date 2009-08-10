@@ -41,11 +41,8 @@ class PinholePhotoProcessor
 	 *
 	 * @return PinholePhoto The processed photo
 	 */
-	public function processPhoto($photo)
+	public function processPhoto(PinholePhoto $photo)
 	{
-		if (!($photo instanceof PinholePhoto))
-			$photo = $this->getPhoto($photo);
-
 		if ($photo->id !== null && !$photo->isProcessed()) {
 			try {
 				$this->executeProcessing($photo);
@@ -62,31 +59,6 @@ class PinholePhotoProcessor
 			$this->clearCache($photo);
 			$this->addToSearchQueue($photo);
 		}
-
-		return $photo;
-	}
-
-	// }}}
-	// {{{ protected function getPhoto()
-
-	protected function getPhoto($id)
-	{
-		$class_name = SwatDBClassMap::get('PinholePhoto');
-		$photo = new $class_name();
-		$photo->setDatabase($this->app->db);
-		$photo->load($id);
-
-		$instance_id = $this->app->getInstanceId();
-
-		if ($photo->id === null) {
-			throw new SiteNotFoundException('Photo '.$id.' not found');
-		} elseif ($photo->image_set->instance !== null &&
-			$photo->image_set->instance->id !== $instance_id) {
-			throw new SiteNotFoundException('Photo '.$id.' accessed from the '.
-				'wrong instance');
-		}
-
-		return $photo;
 	}
 
 	// }}}
@@ -94,7 +66,6 @@ class PinholePhotoProcessor
 
 	protected function executeProcessing(PinholePhoto $photo)
 	{
-		$photo->setFileBase('../../photos');
 		$photo->process($this->getFilePath($photo));
 
 		if ($photo->auto_publish)

@@ -37,8 +37,11 @@ class PinholePhotoProcessorServer extends AdminXMLRPCServer
 	 */
 	public function processPhoto($id)
 	{
+		$photo = $this->getPhoto($id);
+		$photo->setFileBase('../../photos');
+
 		$processor = new PinholePhotoProcessor($this->app);
-		$photo = $processor->processPhoto($id);
+		$processor->processPhoto($photo);
 		return $this->getResponse($photo);
 	}
 
@@ -86,6 +89,29 @@ class PinholePhotoProcessorServer extends AdminXMLRPCServer
 			$response[] = array('id' => $tag->id, 'title' => $tag->title);
 
 		return $response;
+	}
+
+	// }}}
+	// {{{ protected function getPhoto()
+
+	protected function getPhoto($id)
+	{
+		$class_name = SwatDBClassMap::get('PinholePhoto');
+		$photo = new $class_name();
+		$photo->setDatabase($this->app->db);
+		$photo->load($id);
+
+		$instance_id = $this->app->getInstanceId();
+
+		if ($photo->id === null) {
+			throw new SiteNotFoundException('Photo '.$id.' not found');
+		} elseif ($photo->image_set->instance !== null &&
+			$photo->image_set->instance->id !== $instance_id) {
+			throw new SiteNotFoundException('Photo '.$id.' accessed from the '.
+				'wrong instance');
+		}
+
+		return $photo;
 	}
 
 	// }}}

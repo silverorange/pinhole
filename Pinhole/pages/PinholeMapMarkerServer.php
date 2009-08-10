@@ -152,8 +152,6 @@ class PinholeMapMarkerServer extends SiteXMLRPCServer
 	private function displayPhotoGrid(PinholePhotoWrapper $photos, $tag_list,
 		array $box)
 	{
-		echo '<div class="marker_content">';
-
 		$ui = new SwatUI();
 		$ui->loadFromXml(dirname(__FILE__).'/map-tile.xml');
 
@@ -205,17 +203,16 @@ class PinholeMapMarkerServer extends SiteXMLRPCServer
 				$a_tag->href = sprintf('tag?gps.latitude=%s/gps.longitude=%s',
 					$box['min_latitude'], $box['min_longitude']);
 			} else {
-				$a_tag->href = sprintf(
-					'javascript:PinholeMap.loadMarkerContent("%s/gps.box=%sx%s|%sx%s/page.number=2")',
-					$tag_list,
+				$a_tag->href = sprintf('tag?gps.box=%sx%s|%sx%s',
 					$box['max_latitude'], $box['min_longitude'],
 					$box['min_latitude'], $box['max_longitude']);
 			}
 
+			if ($tag_list !== null)
+				$a_tag->href.= '/'.$tag_list;
+
 			$a_tag->display();
 		}
-
-		echo '</div>';
 	}
 
 	// }}}

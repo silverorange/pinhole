@@ -188,7 +188,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 *
 	 * @var boolean
 	 */
-	 public $auto_rotate;
+	 public $auto_rotate = true;
 
 	/**
 	 * For sale

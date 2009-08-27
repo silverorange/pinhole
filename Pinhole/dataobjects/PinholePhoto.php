@@ -1420,8 +1420,6 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 		$match = preg_match('/^([\d]+) deg ([\d]+)\' ([\d\.]+)" ([NWSE])/',
 			$gps_string, $regs);
 
-		error_log($gps_string);
-
 		if ($match) {
 			list($s, $degrees, $minutes, $seconds, $hemisphere) = $regs;
 

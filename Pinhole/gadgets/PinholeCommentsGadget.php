@@ -49,8 +49,8 @@ class PinholeCommentsGadget extends SiteGadget
 				$a_tag->display();
 
 				$div_tag = new SwatHtmlTag('div');
-				$div_tag->setContent(SwatString::condense(
-					SwatString::ellipsizeRight($comment->bodytext, 100)));
+				$div_tag->setContent(SwatString::ellipsizeRight(
+					SwatString::condense($comment->bodytext), 100));
 
 				$div_tag->display();
 

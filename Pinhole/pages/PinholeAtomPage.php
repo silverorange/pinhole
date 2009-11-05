@@ -94,9 +94,9 @@ class PinholeAtomPage extends SitePage
 		$dimension->setDatabase($this->app->db);
 		$dimension->loadByShortname('photos', $shortname);
 
-		if ($dimension === null || !$dimension->selectable)
+		if ($dimension === null)
 			throw new SiteNotFoundException(sprintf('Dimension “%s” is not '.
-				'a selectable photo dimension', $shortname));
+				'valid', $shortname));
 
 		return $dimension;
 	}

@@ -820,47 +820,10 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 		$imagick = parent::getNewImagick($image_file, $dimension);
 
 		if ($this->auto_rotate) {
-			$this->autoRotateImage($image_file, $imagick);
+			self::autoRotateImage($imagick);
 		}
 
 		return $imagick;
-	}
-
-	// }}}
-	// {{{ protected function autoRotateImage()
-
-	protected function autoRotateImage($image_file, Imagick $imagick)
-	{
-		$exif = exif_read_data($image_file);
-
-		if (!isset($exif['Orientation']))
-			return;
-
-		switch($exif['Orientation']) {
-		case 2: // Mirror horizontal
-			$imagick->transverseImage();
-			break;
-		case 3: //Rotate 180
-			$imagick->rotateImage(new ImagickPixel(), 180);
-			break;
-		case 4: // Mirror vertical
-			$imagick->transposeImage();
-			break;
-		case 5: // Mirror horizontal and rotate 270 CW
-			$imagick->transverseImage();
-			$imagick->rotateImage(new ImagickPixel(), 270);
-			break;
-		case 6: // Rotate 90 CW
-			$imagick->rotateImage(new ImagickPixel(), 90);
-			break;
-		case 7: // Mirror horizontal and rotate 90 CW
-			$imagick->transverseImage();
-			$imagick->rotateImage(new ImagickPixel(), 90);
-			break;
-		case 8: // Rotate 270 CW
-			$imagick->rotateImage(new ImagickPixel(), 270);
-			break;
-		}
 	}
 
 	// }}}
@@ -894,6 +857,55 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 
 		$dimension->max_width = $max_width;
 		$dimension->max_height = $max_height;
+	}
+
+	// }}}
+	// {{{ protected static function autoRotateImage()
+
+	protected static function autoRotateImage(Imagick $imagick)
+	{
+		$valid_types = array('tif', 'tiff', 'jpeg', 'jpg');
+		$type = strtolower($imagick->getImageFormat());
+		if (!in_array($type, $valid_types))
+			return false;
+
+		$orientation = $imagick->getImageOrientation();
+		$rotated = true;
+
+		switch($orientation) {
+		case Imagick::ORIENTATION_TOPRIGHT:
+			// Mirror horizontal
+			$imagick->flopImage();
+			break;
+		case Imagick::ORIENTATION_BOTTOMRIGHT:
+			// Rotate 180
+			$imagick->rotateImage(new ImagickPixel(), 180);
+			break;
+		case Imagick::ORIENTATION_BOTTOMLEFT:
+			// Mirror vertical
+			$imagick->flipImage();
+			break;
+		case Imagick::ORIENTATION_LEFTTOP:
+			// Mirror horizontal and rotate 270 CW
+			$imagick->transverseImage();
+			break;
+		case Imagick::ORIENTATION_RIGHTTOP:
+			// Rotate 90 CW
+			$imagick->rotateImage(new ImagickPixel(), 90);
+			break;
+		case Imagick::ORIENTATION_RIGHTBOTTOM:
+			// Mirror horizontal and rotate 90 CW
+			$imagick->transposeImage();
+			break;
+		case Imagick::ORIENTATION_LEFTBOTTOM:
+			// Rotate 270 CW
+			$imagick->rotateImage(new ImagickPixel(), 270);
+			break;
+		default:
+			$rotated = false;
+		}
+
+		return $rotated;
 	}
 
 	// }}}

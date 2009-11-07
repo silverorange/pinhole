@@ -31,7 +31,7 @@ class PinholeAtomPage extends SitePage
 	/**
 	 * @var string
 	 */
-	protected $default_dimension = 'large';
+	protected $default_dimension = 'small';
 
 	/**
 	 * @var integer

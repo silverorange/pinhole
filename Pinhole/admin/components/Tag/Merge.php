@@ -72,12 +72,10 @@ class PinholeTagMerge extends AdminDBConfirmation
 		parent::processDBData();
 
 		$tags = $this->ui->getWidget('dst_tag')->getSelectedTagArray();
-		$dst_tag_name = key($tags);
-		$id = SwatDB::queryOne($this->app->db, sprintf('select id
-			from PinholeTag where name = %s',
-			$this->app->db->quote($dst_tag_name, 'text')));
 
-		$dst_tag = $this->getTag($id);
+		$dst_tag = new PinholeTagDataObject();
+		$dst_tag->setDatabase($this->app->db);
+		$dst_tag->loadByName(key($tags), $this->app->getInstance());
 
 		// delete intersection tagged photos
 		$sql = sprintf('delete from pinholephototagbinding where tag = %s
@@ -101,8 +99,9 @@ class PinholeTagMerge extends AdminDBConfirmation
 		$this->source_tag->delete();
 
 		$this->app->messages->add(new SwatMessage(
-			sprintf(Pinhole::_('“%s” has been merged'),
-			$this->source_tag->title)));
+			sprintf(Pinhole::_('“%s” has been merged into “%s”'),
+			$this->source_tag->title,
+			$dst_tag->title)));
 	}
 
 	// }}}

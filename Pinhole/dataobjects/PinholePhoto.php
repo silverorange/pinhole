@@ -211,6 +211,13 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 */
 	public $gps_longitude;
 
+	/**
+	 * DAV Uploaded
+	 *
+	 * @var boolean
+	 */
+	public $dav_upload;
+
 	// }}}
 	// {{{ protected properties
 
@@ -739,11 +746,17 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 		$class_name = SwatDBClassMap::get('PinholePhotoDimensionBinding');
 		$binding = new $class_name();
 		$binding->setDatabase($this->db);
-		$binding->photo = $this->id;
-		$binding->dimension = $dimension->id;
-		$binding->image_type = $dimension->default_type->id;
-		$binding->width = $imagick->getImageWidth();
-		$binding->height = $imagick->getImageHeight();
+		$binding->width      = $imagick->getImageWidth();
+		$binding->height     = $imagick->getImageHeight();
+		$binding->photo      = $this->id;
+		$binding->dimension  = $dimension->id;
+		$binding->filesize  = $imagick->getImageSize();
+		$binding->image_type =
+			$this->getDimensionImageType($imagick, $dimension);
+
+		$resolution = $imagick->getImageResolution();
+		$binding->dpi  = intval($resolution['x']);
+
 		$binding->save();
 
 		$this->dimension_bindings->add($binding);

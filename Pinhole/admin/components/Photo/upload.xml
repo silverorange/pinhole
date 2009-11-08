@@ -67,11 +67,11 @@
 			</widget>
 		</widget>
 	</widget>
-	<widget class="AdminNote" id="metadata_note">
+	<widget class="AdminNote" id="upload_note">
 		<property name="content_type">text/xml</property>
 		<property name="content" translatable="yes"><![CDATA[
 <p>Pinhole can process most common image types. Either upload your photos individually, or include multiple photos in a zip archive file.</p>
-<p><strong>NEW!</strong> Pinhole now respects the 'orientation' flag for photos and will auto-rotate photos if required.</p>
+<p>Pinhole now respects the 'orientation' flag for photos and will auto-rotate photos if required.</p>
 <p>Photo titles, descriptions, and tags can also be imported via photo meta-data. Most popular photo management tools will embed this information for you. The fields are mapped as follows:<ul><li><strong>title</strong> = 'object' or 'headline'</li><li><strong>description</strong> = 'description' or 'caption-abstract'</li><li><strong>tags</strong> = 'city', 'location', 'sub-location', 'country', 'country-primarylocationname', and 'subject' or 'keywords'</li></ul></p>]]></property>
 	</widget>
 </swatml>

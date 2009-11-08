@@ -140,6 +140,7 @@ class Pinhole
 
 			// Whether or not site is enabled
 			'site.enabled' => true,
+			'site.auth_realm' => null,
 
 			// Whether or not search engines can index the site
 			'pinhole.search_engine_indexable' => true,
@@ -171,11 +172,19 @@ class Pinhole
 
 			// Save upload form data
 			'pinhole.camera_time_zone' => null,
-			'pinhole.set_pending' => null,
-			'pinhole.set_private_photos' => null,
-			'pinhole.set_content_by_meta_data' => null,
-			'pinhole.set_tags_by_meta_data' => null,
+			'pinhole.set_pending' => true,
+			'pinhole.set_private_photos' => false,
+			'pinhole.set_content_by_meta_data' => true,
+			'pinhole.set_tags_by_meta_data' => true,
 			'pinhole.auto_rotate' => true,
+
+			// Web-Dav upload settings
+			'pinhole.dav_photo_time_zone' => null,
+			'pinhole.dav_set_pending' => true,
+			'pinhole.dav_set_private_photos' => false,
+			'pinhole.dav_set_content_by_meta_data' => true,
+			'pinhole.dav_set_tags_by_meta_data' => true,
+			'pinhole.dav_auto_rotate' => true,
 
 			'pinhole.ad_top' => '',
 			'pinhole.ad_bottom' => '',

@@ -49,7 +49,18 @@ $package->addMaintainer('lead', 'nrf', 'Nathan Fredrickson', 'nathan@silverorang
 $package->addMaintainer('lead', 'gauthierm', 'Mike Gauthier', 'mike@silverorange.com');
 $package->addMaintainer('lead', 'nick', 'Nick Burka', 'nick@silverorange.com');
 
-$package->addReplacement('Pinhole/Pinhole.php', 'pear-config', '@DATA-DIR@', 'data_dir');
+$package->addReplacement(
+	'Pinhole/Pinhole.php',
+	'pear-config',
+	'@data-dir@',
+	'data_dir');
+
+$package->addReplacement(
+	'Pinhole/pages/PinholeWebDavServerPage.php',
+	'pear-config',
+	'@data-dir@',
+	'data_dir'
+);
 
 $package->setPhpDep('5.1.5');
 $package->setPearinstallerDep('1.4.0');

@@ -37,7 +37,6 @@ class PinholeWebDavServerPage extends SitePage
 
 			$auth->requireLogin();
 			echo Pinhole::_('Authentication required')."\n";
-			exit();
 		}
 
 		// create directory for account and object tree for dav server
@@ -50,13 +49,13 @@ class PinholeWebDavServerPage extends SitePage
 
 		// don't save temp files in the database
 		$tempFilePlugin = new Sabre_DAV_TemporaryFileFilterPlugin(
-			dirname(__FILE__).'/../dav/temp');
+			$this->getDataDir('dav/temp'));
 
 		$server->addPlugin($tempFilePlugin);
 
 		// set up lock plugin
 		$lockBackend = new Sabre_DAV_Locks_Backend_FS(
-			dirname(__FILE__).'/../dav/locks');
+			$this->getDataDir('dav/locks'));
 
 		$lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
 		$server->addPlugin($lockPlugin);
@@ -88,6 +87,28 @@ class PinholeWebDavServerPage extends SitePage
 		}
 
 		return $base_uri;
+	}
+
+	// }}}
+	// {{{ protected function getDataDir()
+
+	protected function getDataDir($path)
+	{
+		$data_dir = '@data-dir@';
+
+		if ($data_dir[0] == '@') {
+			$data_dir = dirname(__FILE__).'/../../../data';
+		} else {
+			$data_dir.= DIRECTORY_SEPARATOR.'Shot';
+		}
+
+		$data_dir.= '/'.$path;
+
+		if (!file_exists($data_dir)) {
+			mkdir($data_dir, 0770, true);
+		}
+
+		return $data_dir;
 	}
 
 	// }}}

@@ -2,7 +2,7 @@
 
 require_once 'PEAR/PackageFileManager2.php';
 
-$version = '1.2.44';
+$version = '1.2.45';
 $notes = <<<EOT
 see ChangeLog
 EOT;
@@ -25,6 +25,7 @@ $result = $package->setOptions(
 			'www' => 'data',
 			'demo' => 'data',
 			'sql' => 'data',
+			'dav' => 'data',
 		),
 	)
 );

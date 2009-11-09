@@ -11,6 +11,7 @@ create table PinholePhoto (
 
 	-- Pinhole specific columns
 	upload_set integer references PinholePhotoUploadSet(id) on delete cascade,
+	dav_upload boolean not null default false,
 	comment_status integer not null default 0,
 	upload_date timestamp,
 	serialized_exif text,

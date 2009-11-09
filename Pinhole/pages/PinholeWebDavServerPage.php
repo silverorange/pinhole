@@ -50,13 +50,13 @@ class PinholeWebDavServerPage extends SitePage
 
 		// don't save temp files in the database
 		$tempFilePlugin = new Sabre_DAV_TemporaryFileFilterPlugin(
-			dirname(__FILE__).'/../../system/dav/temp');
+			dirname(__FILE__).'/../dav/temp');
 
 		$server->addPlugin($tempFilePlugin);
 
 		// set up lock plugin
 		$lockBackend = new Sabre_DAV_Locks_Backend_FS(
-			dirname(__FILE__).'/../../system/dav/locks');
+			dirname(__FILE__).'/../dav/locks');
 
 		$lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
 		$server->addPlugin($lockPlugin);

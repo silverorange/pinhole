@@ -32,7 +32,6 @@ class PinholeAdminSessionModule extends AdminSessionModule
 				$password);
 
 			$this->user->save();
-			echo 'saved new ha1'; exit;
 		}
 
 		return $logged_in;

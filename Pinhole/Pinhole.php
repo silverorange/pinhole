@@ -251,6 +251,11 @@ class Pinhole
 
 Pinhole::setupGettext();
 
+// require here to prevent "Class __PHP_Incomplete_Class has no unserializer" errors
+require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
+SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
+SwatDBClassMap::add('AdminUser', 'PinholeAdminUser');
+
 SiteGadgetFactory::addPath('Pinhole/gadgets');
 
 SiteViewFactory::addPath('Pinhole/views');

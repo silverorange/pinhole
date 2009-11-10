@@ -5,8 +5,6 @@ require_once 'Sabre.autoload.php';
 require_once 'Pinhole/PinholeDavDirectory.php';
 require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
 
-ini_set('log_errors', 1);
-
 /**
  * Web Dav Server Page
  *
@@ -28,7 +26,6 @@ class PinholeWebDavServerPage extends SitePage
 
 		// authenticate and get correct user
 		$email = $auth->getUsername();
-
 		$class_name = SwatDBClassMap::get('PinholeAdminUser');
 		$user = new $class_name();
 		$user->setDatabase($this->app->db);
@@ -37,6 +34,7 @@ class PinholeWebDavServerPage extends SitePage
 
 			$auth->requireLogin();
 			echo Pinhole::_('Authentication required')."\n";
+			exit;
 		}
 
 		// create directory for account and object tree for dav server
@@ -99,7 +97,7 @@ class PinholeWebDavServerPage extends SitePage
 		if ($data_dir[0] == '@') {
 			$data_dir = dirname(__FILE__).'/../../../data';
 		} else {
-			$data_dir.= DIRECTORY_SEPARATOR.'Shot';
+			$data_dir.= DIRECTORY_SEPARATOR.'Pinhole';
 		}
 
 		$data_dir.= '/'.$path;

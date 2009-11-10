@@ -4,6 +4,7 @@ require_once 'Site/SiteMultipleInstanceModule.php';
 require_once 'Site/SiteMemcacheModule.php';
 require_once 'Admin/AdminApplication.php';
 require_once 'Pinhole/Pinhole.php';
+require_once 'Pinhole/admin/PinholeAdminSessionModule.php';
 
 /**
  * Web application class for an administering Pinhole
@@ -57,6 +58,7 @@ class PinholeAdminApplication extends AdminApplication
 		$modules = parent::getDefaultModuleList();
 		$modules['instance'] = 'SiteMultipleInstanceModule';
 		$modules['memcache'] = 'SiteMemcacheModule';
+		$modules['session']  = 'PinholeAdminSessionModule';
 
 		return $modules;
 	}
@@ -87,10 +89,10 @@ class PinholeAdminApplication extends AdminApplication
 	 */
 	protected function configure(SiteConfigModule $config)
 	{
-		parent::configure($config);
-
 		$this->addComponentIncludePath('Pinhole/admin/components', 'Pinhole');
 		$this->addComponentIncludePath('Site/admin/components', 'Site');
+
+		parent::configure($config);
 
 		if (isset($config->exceptions->log_location))
 			SwatException::setLogger(new SiteExceptionLogger(

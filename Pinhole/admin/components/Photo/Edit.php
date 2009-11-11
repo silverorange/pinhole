@@ -472,6 +472,8 @@ class PinholePhotoEdit extends AdminDBEdit
 		$this->buildPendingCount();
 		$this->buildSiteLinks();
 
+		$this->ui->getWidget('edit_frame')->title = null;
+
 		$toolbar = $this->ui->getWidget('toolbar');
 		$toolbar->setToolLinkValues($this->photo->id);
 	}

@@ -833,7 +833,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 		$imagick = parent::getNewImagick($image_file, $dimension);
 
 		if ($this->auto_rotate) {
-			self::autoRotateImage($imagick);
+			self::autoRotateImage($image_file, $imagick);
 		}
 
 		return $imagick;
@@ -875,14 +875,16 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	// }}}
 	// {{{ protected static function autoRotateImage()
 
-	protected static function autoRotateImage(Imagick $imagick)
+	protected static function autoRotateImage($image_file, Imagick $imagick)
 	{
-		$valid_types = array('tif', 'tiff', 'jpeg', 'jpg');
-		$type = strtolower($imagick->getImageFormat());
-		if (!in_array($type, $valid_types))
-			return false;
+		$orientation = exec(sprintf('exiftool -Orientation -n -S -t %s',
+			escapeshellarg($image_file)));
 
-		$orientation = $imagick->getImageOrientation();
+		if (!ctype_digit($orientation))
+			return;
+		else
+			$orientation = intval($orientation);
+
 		$rotated = true;
 
 		switch($orientation) {

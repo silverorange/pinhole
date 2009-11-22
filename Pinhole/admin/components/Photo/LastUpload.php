@@ -105,9 +105,9 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 		if (count($this->unprocessed_photos) > 0) {
 			$this->ui->getWidget('processing_message_content')->content =
 				sprintf(Pinhole::ngettext(
-					count($this->unprocessed_photos),
 					'You have one photo waiting to be processed',
-					'You have %s photos waiting to be processed'),
+					'You have %s photos waiting to be processed',
+					count($this->unprocessed_photos)),
 					count($this->unprocessed_photos));
 		}
 

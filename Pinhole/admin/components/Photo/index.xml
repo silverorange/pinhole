@@ -2,34 +2,50 @@
 <!DOCTYPE swatml SYSTEM "http://swat.silverorange.com/swatml1.dtd">
 <swatml>
 	<widget class="SwatMessageDisplay" id="message_display" />
-	<widget class="SwatFrameDisclosure" id="search_disclosure">
-		<property name="title" translatable="yes">Search Photos</property>
-		<property name="open" type="boolean">false</property>
+	<widget class="SwatFrame" id="results_frame">
+		<property name="title" translatable="yes">Photos</property>
+		<widget class="SwatToolbar" id="toolbar">
+			<widget class="SwatToolLink">
+				<property name="title" translatable="yes">Upload Photos</property>
+				<property name="link">Photo/Upload</property>
+				<property name="stock_id">create</property>
+			</widget>
+			<widget class="SwatToolLink" id="geo_tag_link">
+				<property name="title" translatable="yes">Geo-Tag Photos</property>
+				<property name="link">GeoTag</property>
+			</widget>
+		</widget>
 		<widget class="SwatForm" id="search_form">
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Keywords</property>
-				<widget class="SwatEntry" id="search_keywords" />
-			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Taken On or After</property>
-				<widget class="SwatDateEntry" id="search_start_date">
-					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+			<widget class="SwatDisplayableContainer">
+				<property name="classes[]">search-row</property>
+				<widget class="SwatFormField" id="search_keywords_field">
+					<property name="title" translatable="yes">Keywords</property>
+					<widget class="SwatEntry" id="search_keywords" />
+				</widget>
+				<widget class="SwatFormField" id="search_status_field">
+					<property name="title" translatable="yes">Status</property>
+					<widget class="SwatFlydown" id="search_status">
+						<property name="show_blank" type="boolean">true</property>
+						<property name="blank_title">All</property>
+					</widget>
 				</widget>
 			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Taken Before</property>
-				<widget class="SwatDateEntry" id="search_end_date">
-					<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+			<widget class="SwatDisplayableContainer">
+				<property name="classes[]">search-row</property>
+				<widget class="SwatFormField" id="search_start_date_field">
+					<property name="title" translatable="yes">Taken On or After</property>
+					<widget class="SwatDateEntry" id="search_start_date">
+						<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+					</widget>
+				</widget>
+				<widget class="SwatFormField" id="search_end_date_field">
+					<property name="title" translatable="yes">Taken Before</property>
+					<widget class="SwatDateEntry" id="search_end_date">
+						<property name="display_parts" type="constant">DAY|MONTH|YEAR|CALENDAR</property>
+					</widget>
 				</widget>
 			</widget>
-			<widget class="SwatFormField">
-				<property name="title" translatable="yes">Status</property>
-				<widget class="SwatFlydown" id="search_status">
-					<property name="show_blank" type="boolean">true</property>
-					<property name="blank_title">All</property>
-				</widget>
-			</widget>
-			<widget class="SwatFormField">
+			<widget class="SwatFormField" id="search_tags_field">
 				<property name="title" translatable="yes">Tagged</property>
 				<widget class="PinholePhotoTagEntry" id="search_tags">
 					<property name="allow_adding_tags" type="boolean">false</property>
@@ -42,10 +58,6 @@
 				</widget>
 			</widget>
 		</widget>
-	</widget>
-	<widget class="SwatFrame" id="results_frame">
-		<property name="title" translatable="yes">Photos</property>
-		<property name="visible" type="boolean">false</property>
 		<widget class="SwatContentBlock" id="results_message" />
 
 		<widget class="SwatForm" id="index_form">

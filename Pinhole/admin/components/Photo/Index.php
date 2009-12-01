@@ -86,9 +86,6 @@ class PinholePhotoIndex extends AdminSearch
 
 		$pager = $this->ui->getWidget('pager');
 		$pager->process();
-
-		if ($this->hasSearch())
-			$this->ui->getWidget('search_disclosure')->open = true;
 	}
 
 	// }}}
@@ -108,27 +105,19 @@ class PinholePhotoIndex extends AdminSearch
 	}
 
 	// }}}
-	// {{{ protected function hasSearch()
 
-	protected function hasSearch()
+	// build phase
+	// {{{ protected function buildInternal()
+
+	protected function buildInternal()
 	{
-		$keywords   = trim($this->ui->getWidget('search_keywords')->value);
-		$start_date = $this->ui->getWidget('search_start_date')->value;
-		$end_date   = $this->ui->getWidget('search_end_date')->value;
-		$tags       = $this->ui->getWidget('search_tags')->getSelectedTagArray();
-		$status     = $this->ui->getWidget('search_status')->value;
+		parent::buildInternal();
 
-
-		return ($keywords != ''
-			|| $start_date != null
-			|| $end_date != null
-			|| count($tags)
-			|| $status != null);
+		$this->ui->getWidget('geo_tag_link')->visible =
+			($this->app->config->pinhole->google_maps_api_key !== null);
 	}
 
 	// }}}
-
-	// build phase
 	// {{{ protected function getWhereClause()
 
 	protected function getWhereClause()
@@ -232,8 +221,6 @@ class PinholePhotoIndex extends AdminSearch
 		$wrapper_class = SwatDBClassMap::get('PinholePhotoWrapper');
 		$photos = SwatDB::query($this->app->db, $sql, $wrapper_class);
 
-		$this->ui->getWidget('results_frame')->visible = true;
-
 		$store = new SwatTableStore();
 
 		if (count($photos) != 0) {
@@ -311,6 +298,11 @@ class PinholePhotoIndex extends AdminSearch
 	public function finalize()
 	{
 		parent::finalize();
+
+		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
+			'packages/pinhole/admin/styles/pinhole-photo-index.css',
+			Pinhole::PACKAGE_ID));
+
 		$this->layout->addHtmlHeadEntry(new SwatStyleSheetHtmlHeadEntry(
 			'packages/pinhole/admin/styles/pinhole-photo-tile.css',
 			Pinhole::PACKAGE_ID));

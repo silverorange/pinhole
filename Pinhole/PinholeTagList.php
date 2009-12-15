@@ -452,14 +452,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	/**
 	 * Gets just the GPS data for a set of photos
 	 *
-	 * @return SwatDBRecordsetWrapper the gps coordinates for the photos in
-	 *                                this list.
+	 * @return SwatDBDefaultRecordsetWrapper the gps coordinates for the
+	 *                                       photos in this list.
 	 */
 	public function getGpsData()
 	{
 		$args = func_get_args();
 		$key = $this->getCacheKey(__FUNCTION__, $args);
-		$wrapper = 'PinholePhotoWrapper';
+		$wrapper = 'SwatDBDefaultRecordsetWrapper';
 		$photos = $this->app->getCacheRecordset($key, $wrapper, 'photos');
 
 		if ($photos === false) {

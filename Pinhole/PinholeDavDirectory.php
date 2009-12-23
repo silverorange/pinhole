@@ -2,7 +2,7 @@
 
 require_once 'Sabre.autoload.php';
 require_once 'Pinhole/PinholePhotoProcessor.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeSimplePhotoWrapper.php';
 require_once dirname(__FILE__).'/PinholeDavFile.php';
 
 /**
@@ -258,7 +258,7 @@ class PinholeDavDirectory implements Sabre_DAV_IDirectory
 		$photos = SwatDB::query(
 			$this->app->db,
 			$sql,
-			SwatDBClassMap::get('PinholePhotoWrapper')
+			SwatDBClassMap::get('PinholeSimplePhotoWrapper')
 		);
 
 		return $photos;

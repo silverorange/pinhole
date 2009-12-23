@@ -164,10 +164,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		else
 			$tag_path = '?'.$this->tag_list->__toString();
 
-		$this->app->timer->startCheckpoint('getPhotos');
 		$photos = $this->tag_list->getPhotos('thumbnail');
-		$this->app->timer->endCheckpoint('getPhotos');
-		$this->app->timer->display(); exit;
 
 		// throw exception or else tags that have only private photos would be
 		// exposed.

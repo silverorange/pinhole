@@ -9,6 +9,7 @@ require_once 'Swat/exceptions/SwatInvalidClassException.php';
 require_once 'Site/dataobjects/SiteInstance.php';
 require_once 'Pinhole/PinholeTagFactory.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
+require_once 'Pinhole/dataobjects/PinholeSimplePhotoWrapper.php';
 require_once 'Pinhole/dataobjects/PinholePhotoThumbnailWrapper.php';
 require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
 require_once 'Pinhole/tags/PinholeTag.php';
@@ -406,6 +407,8 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	{
 		if ($dimension_shortname == 'thumbnail')
 			$wrapper = SwatDBClassMap::get('PinholePhotoThumbnailWrapper');
+		elseif ($dimension_shortname === false)
+			$wrapper = SwatDBClassMap::get('PinholeSimplePhotoWrapper');
 		else
 			$wrapper = SwatDBClassMap::get('PinholePhotoWrapper');
 

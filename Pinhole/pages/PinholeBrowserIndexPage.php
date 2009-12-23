@@ -55,6 +55,26 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			$this->tag_list->remove($tag);
 
 		$this->tag_list->setPhotoRange($range);
+
+		if (count($this->tag_list) == 0) {
+			if ($this->app->config->pinhole->browser_index_upload_dates) {
+				// if grouped by upload date, order photos reverse
+				// chronologically by day uploaded, and then by photo date
+				// chronologically. This makes browsing easier as they're
+				// grouped by upload, but are easily browsable in chronological
+				// order
+				$this->tag_list->setPhotoOrderByClause(
+					"date_trunc('day', convertTZ(PinholePhoto.publish_date,
+						PinholePhoto.photo_time_zone)) desc,
+					coalesce(PinholePhoto.photo_date,
+						PinholePhoto.upload_date)");
+			} else {
+				// otherwise order simply by photo date reverse chronologically
+				$this->tag_list->setPhotoOrderByClause(
+					"coalesce(PinholePhoto.photo_date,
+						PinholePhoto.upload_date) desc");
+			}
+		}
 	}
 
 	// }}}
@@ -144,7 +164,10 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		else
 			$tag_path = '?'.$this->tag_list->__toString();
 
+		$this->app->timer->startCheckpoint('getPhotos');
 		$photos = $this->tag_list->getPhotos('thumbnail');
+		$this->app->timer->endCheckpoint('getPhotos');
+		$this->app->timer->display(); exit;
 
 		// throw exception or else tags that have only private photos would be
 		// exposed.

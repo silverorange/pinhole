@@ -155,13 +155,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 				(string) $this->tag_list));
 		}
 
-		$cache_key = 'PinholeBrowserIndexPage.table_store.'.
-			$this->cache_key;
-
-		$store = $this->app->getCacheValue($cache_key, 'photos');
-		if ($store !== false)
-			return $store;
-
 		$store = new SwatTableStore();
 
 		foreach ($photos as $photo) {
@@ -199,8 +192,6 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 			$store->add($ds);
 		}
-
-		$this->app->addCacheValue($store, $cache_key, 'photos');
 
 		return $store;
 	}

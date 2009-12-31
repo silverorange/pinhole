@@ -56,6 +56,13 @@ class PinholePhotoActionsProcessor
 
 			break;
 
+		case 'time':
+			$this->page->app->replacePage('Photo/Time');
+			$this->page->app->getPage()->setItems($view->getSelection(),
+				$view->isExtendedCheckAllSelected());
+
+			break;
+
 		case 'private':
 			if ($ui->getWidget('passphrase')->value !== null) {
 				$this->page->app->config->pinhole->passphrase =

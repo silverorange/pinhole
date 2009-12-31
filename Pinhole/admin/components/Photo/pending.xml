@@ -62,6 +62,9 @@
 					<property name="title" translatable="yes">add tags…</property>
 					<widget class="PinholePhotoTagEntry" id="tags" />
 				</widget>
+				<widget class="SwatActionItem" id="time">
+					<property name="title" translatable="yes">adjust date/time/time-zone…</property>
+				</widget>
 				<widget class="SwatActionItemDivider" />
 				<widget class="SwatActionItem" id="private">
 					<property name="title" translatable="yes">set as private</property>

@@ -95,6 +95,9 @@
 						<property name="show_blank" type="boolean">false</property>
 					</widget>
 				</widget>
+				<widget class="SwatActionItem" id="time">
+					<property name="title" translatable="yes">adjust date/time/time-zone…</property>
+				</widget>
 				<widget class="SwatActionItemDivider" />
 				<widget class="SwatActionItem" id="private">
 					<property name="title" translatable="yes">set as private</property>

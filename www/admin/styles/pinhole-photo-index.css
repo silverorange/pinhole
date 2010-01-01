@@ -1,0 +1,17 @@
+#search_keywords_field {
+	float: left;
+	margin-right: 1em;
+}
+
+#search_start_date_field {
+	float: left;
+	margin-right: 1em;
+}
+
+#search_form .search-row {
+	clear: left;
+}
+
+#search_form {
+	margin-bottom: 1em;
+}

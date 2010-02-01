@@ -167,6 +167,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 
 			$now = new SwatDate();
 			$now->convertTZbyID($this->app->config->date->time_zone);
+			$now->clearTime();
 
 			if (count($this->tag_list) == 0) {
 				$publish_date = $photo->publish_date;

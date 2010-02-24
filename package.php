@@ -21,11 +21,12 @@ $result = $package->setOptions(
 		'baseinstalldir'    => '/',
 		'packagedirectory'  => './',
 		'dir_roles'         => array(
-			'Pinhole' => 'php',
-			'www' => 'data',
-			'demo' => 'data',
-			'sql' => 'data',
-			'dav' => 'data',
+			'Pinhole'      => 'php',
+			'www'          => 'data',
+			'demo'         => 'data',
+			'sql'          => 'data',
+			'dav'          => 'data',
+			'dependencies' => 'data',
 		),
 	)
 );

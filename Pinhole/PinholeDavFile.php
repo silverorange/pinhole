@@ -94,13 +94,8 @@ class PinholeDavFile implements Sabre_DAV_IFile
 	 */
 	public function put($data)
 	{
-		if ($this->photo->temp_filename === null) {
-			$path = $this->photo->getOriginalFileUri(
-				$this->app->config->amazon->photo_bucket);
-		} else {
-			$path = sprintf('%s/%s', sys_get_temp_dir(),
-				$this->photo->temp_filename);
-		}
+		$path = sprintf('%s/%s', sys_get_temp_dir(),
+			$this->photo->temp_filename);
 
 		file_put_contents($path, $data);
 

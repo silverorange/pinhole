@@ -210,7 +210,7 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 		$tag = new $class_name();
 		$tag->setDatabase($this->db);
 
-		if ($tag->loadByName($shortname))
+		if ($tag->loadByName($shortname, $this->instance))
 			if ($tag->id !== $this->id)
 				$valid = false;
 

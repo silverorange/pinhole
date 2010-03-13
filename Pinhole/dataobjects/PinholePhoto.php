@@ -1406,7 +1406,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 		} else {
 			$tag_obj = new PinholeTagDataObject();
 			$tag_obj->setDatabase($this->db);
-			$tag_obj->instance = $instance_id;
+			$tag_obj->setInstance($this->image_set->instance);
 			$tag_obj->title = $title;
 			$tag_obj->save();
 		}

@@ -5,6 +5,7 @@ require_once 'Swat/SwatDetailsStore.php';
 require_once 'Swat/SwatUI.php';
 require_once 'Site/pages/SiteXMLRPCServer.php';
 require_once 'Site/exceptions/SiteNotFoundException.php';
+require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
 /**
  * Handles XML-RPC requests from the map page

@@ -98,11 +98,15 @@ class PinholeInstanceDataObject extends SwatDBDataObject
 		$id_ref = $id_field->name;
 		$id = $this->$id_ref;
 
+		$instance_id = ($this->instance === null) ? null :
+			$this->instance->id;
+
 		if ($id !== null) {
 			$sql = sprintf('delete from %s
-				where %s = %s and instance = %s',
+				where %s = %s and instance %s %s',
 				$this->table, $id_field->name, $id,
-				$this->db->quote($this->instance->id, 'integer'));
+				SwatDB::equalityOperator($instance_id),
+				$this->db->quote($instance_id, 'integer'));
 
 			SwatDB::exec($this->db, $sql);
 		}

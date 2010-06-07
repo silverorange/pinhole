@@ -104,11 +104,13 @@ abstract class PinholeBrowserPage extends SitePage
 				// chronologically. This makes browsing easier as they're
 				// grouped by upload, but are easily browsable in chronological
 				// order
-				$this->tag_list->setPhotoOrderByClause(
-					"date_trunc('day', convertTZ(PinholePhoto.publish_date,
-						PinholePhoto.photo_time_zone)) desc,
+				$this->tag_list->setPhotoOrderByClause(sprintf(
+					"date_trunc('day', ".
+					"convertTZ(PinholePhoto.publish_date, %s)) desc,
 					coalesce(PinholePhoto.photo_date,
-						PinholePhoto.upload_date)");
+						PinholePhoto.upload_date)",
+					$this->app->db->quote(
+						$this->app->config->date->time_zone, 'text')));
 			} else {
 				// otherwise order simply by photo date reverse chronologically
 				$this->tag_list->setPhotoOrderByClause(

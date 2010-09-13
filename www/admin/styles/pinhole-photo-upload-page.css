@@ -7,3 +7,12 @@
 	float: left;
 }
 
+.swat-footer-form-field .swat-button {
+	float: left;
+	width: 125px;
+}
+
+.swat-footer-form-field .swat-form-field-checkbox {
+	margin-left: 140px;
+	padding: 4px 0;
+}

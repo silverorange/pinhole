@@ -371,7 +371,7 @@ class PinholePhotoEdit extends AdminDBEdit
 
 		// turns the date back into UTC
 		$photo_date = new SwatDate($values['photo_date']);
-		$photo_date->setTZbyID($this->photo->photo_time_zone);
+		$photo_date->setTZById($this->photo->photo_time_zone);
 		$photo_date->toUTC();
 
 		$this->photo->title = $values['title'];
@@ -563,7 +563,7 @@ class PinholePhotoEdit extends AdminDBEdit
 		// sets the date to the set timezone
 		$converted_date = $this->photo->photo_date;
 		if ($converted_date !== null)
-			$converted_date->convertTZbyID($this->photo->photo_time_zone);
+			$converted_date->convertTZById($this->photo->photo_time_zone);
 
 		$this->ui->getWidget('photo_date')->value = $converted_date;
 	}

@@ -166,8 +166,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 				$this->app->config->pinhole->browser_index_titles;
 
 			$now = new SwatDate();
-			$now->convertTZbyID($this->app->config->date->time_zone);
-			$now->clearTime();
+			$now->convertTZById($this->app->config->date->time_zone);
+			$now->setTime(0, 0, 0);
 
 			if (count($this->tag_list) == 0) {
 				$publish_date = $photo->publish_date;
@@ -175,7 +175,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 				$publish_date->convertTZbyID(
 					$this->app->config->date->time_zone);
 
-				$days_past = $now->dateDiff($publish_date, false);
+				$days_past = $now->diff($publish_date)->days;
 				if ($days_past <= 1)
 					$period = Pinhole::_('Today');
 				elseif ($days_past <= 2)
@@ -184,7 +184,8 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 					$period = sprintf(Pinhole::_('%d Days Ago'),
 						floor($days_past));
 				else
-					$period = $publish_date->format(SwatDate::DF_DATE_LONG);
+					$period = $publish_date->formatLikeIntl(
+						SwatDate::DF_DATE_LONG);
 
 				$ds->publish_period = sprintf(Pinhole::_('Added %s'), $period);
 			} else {

@@ -107,9 +107,9 @@ class PinholeMetaTag extends PinholeAbstractMachineTag
 	// {{{ public function getWhereClause()
 
 	/**
-	 * Gets the SQL where clause for this date tag
+	 * Gets the SQL where clause for this meta tag
 	 *
-	 * @return string the SQL where clause for this date tag.
+	 * @return string the SQL where clause for this meta tag.
 	 */
 	public function getWhereClause()
 	{

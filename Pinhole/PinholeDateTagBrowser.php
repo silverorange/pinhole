@@ -193,13 +193,15 @@ class PinholeDateTagBrowser extends SwatControl
 		for ($i = $year_start; $i <= $year_end; $i++) {
 			$date->setYear($i);
 
-			$tag_string = sprintf('date.year=%s', $date->format('%Y'));
+			$tag_string = sprintf('date.year=%s',
+				$date->formatLikeIntl('yyyy'));
+
 			$tag_list->add($tag_string);
 
 			if ($selected_year === $i) {
 				$span_tag = new SwatHtmlTag('span');
 				$span_tag->class = 'selected';
-				$span_tag->setContent($date->format('%Y'));
+				$span_tag->setContent($date->formatLikeIntl('yyyy'));
 				$span_tag->display();
 			} elseif (array_key_exists($i, $photos)) {
 				$a_tag = new SwatHtmlTag('a');
@@ -208,11 +210,11 @@ class PinholeDateTagBrowser extends SwatControl
 					'1 photo', '%s photos', $photos[$i]),
 					SwatString::numberFormat($photos[$i]));
 
-				$a_tag->setContent($date->format('%Y'));
+				$a_tag->setContent($date->formatLikeIntl('yyyy'));
 				$a_tag->display();
 			} else {
 				$span_tag = new SwatHtmlTag('span');
-				$span_tag->setContent($date->format('%Y'));
+				$span_tag->setContent($date->formatLikeIntl('yyyy'));
 				$span_tag->display();
 			}
 
@@ -258,7 +260,7 @@ class PinholeDateTagBrowser extends SwatControl
 
 		// create base tag list that new date.month tags will be added to
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
-		$tag_list->add(sprintf('date.year=%s', $date->format('%Y')));
+		$tag_list->add(sprintf('date.year=%s', $date->formatLikeIntl('yyyy')));
 		$photos = $tag_list->getPhotoCountByDate('month');
 
 		// display date.month tags for each month
@@ -268,15 +270,15 @@ class PinholeDateTagBrowser extends SwatControl
 
 		for ($i = 1; $i <= 12; $i++) {
 			$date->setMonth($i);
-			$key = $date->format('%Y-%m');
+			$key = $date->formatLikeIntl('yyyy-MM');
 
-			$tag_string = sprintf('date.month=%s', $date->format('%m'));
+			$tag_string = sprintf('date.month=%s', $date->formatLikeIntl('MM'));
 			$tag_list->add($tag_string);
 
 			if ($selected_month === $i) {
 				$span_tag = new SwatHtmlTag('span');
 				$span_tag->class = 'selected';
-				$span_tag->setContent($date->format('%B'));
+				$span_tag->setContent($date->formatLikeIntl('MMMM'));
 				$span_tag->display();
 			} elseif (array_key_exists($key, $photos)) {
 				$a_tag = new SwatHtmlTag('a');
@@ -285,11 +287,11 @@ class PinholeDateTagBrowser extends SwatControl
 					'1 photo', '%s photos', $photos[$key]),
 					SwatString::numberFormat($photos[$key]));
 
-				$a_tag->setContent($date->format('%B'));
+				$a_tag->setContent($date->formatLikeIntl('MMMM'));
 				$a_tag->display();
 			} else {
 				$span_tag = new SwatHtmlTag('span');
-				$span_tag->setContent($date->format('%B'));
+				$span_tag->setContent($date->formatLikeIntl('MMMM'));
 				$span_tag->display();
 			}
 
@@ -336,8 +338,8 @@ class PinholeDateTagBrowser extends SwatControl
 
 		// create base tag list that new date.month tags will be added to
 		$tag_list = $this->tag_list->filter(array('PinholeDateTag'));
-		$tag_list->add(sprintf('date.year=%s', $date->format('%Y')));
-		$tag_list->add(sprintf('date.month=%s', $date->format('%m')));
+		$tag_list->add(sprintf('date.year=%s', $date->formatLikeIntl('yyyy')));
+		$tag_list->add(sprintf('date.month=%s', $date->formatLikeIntl('MM')));
 		$photos = $tag_list->getPhotoCountByDate('day');
 
 		// Filter again since the day list uses date.date tags instead of
@@ -352,14 +354,16 @@ class PinholeDateTagBrowser extends SwatControl
 		$days_in_month = $date->getDaysInMonth();
 		for ($i = 1; $i <= $days_in_month; $i++) {
 			$date->setDay($i);
-			$key = $date->format('%Y-%m-%d');
+			$key = $date->formatLikeIntl('yyyy-MM-dd');
 
-			$tag_string = sprintf('date.date=%s', $date->format('%Y-%m-%d'));
+			$tag_string = sprintf('date.date=%s',
+				$date->formatLikeIntl('yyyy-MM-dd'));
+
 			$tag_list->add($tag_string);
 
 			if ($selected_day === $i) {
 				$span_tag = new SwatHtmlTag('span');
-				$span_tag->setContent($date->format('%d'));
+				$span_tag->setContent($date->formatLikeIntl('dd'));
 				$span_tag->class = 'selected';
 				$span_tag->display();
 			} elseif (array_key_exists($key, $photos)) {
@@ -369,11 +373,11 @@ class PinholeDateTagBrowser extends SwatControl
 					'1 photo', '%s photos', $photos[$key]),
 					SwatString::numberFormat($photos[$key]));
 
-				$a_tag->setContent($date->format('%d'));
+				$a_tag->setContent($date->formatLikeIntl('dd'));
 				$a_tag->display();
 			} else {
 				$span_tag = new SwatHtmlTag('span');
-				$span_tag->setContent($date->format('%d'));
+				$span_tag->setContent($date->formatLikeIntl('dd'));
 				$span_tag->display();
 			}
 

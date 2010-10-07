@@ -31,10 +31,8 @@ class PinholeCalendarGadgetServer extends SiteXMLRPCServer
 	public function getCalendar($year, $month)
 	{
 		$date = new SwatDate();
-		$date->setYear($year);
-		$date->setMonth($month);
-		$date->setDay(1);
-		$date->clearTime();
+		$date->setDate($year, $month, 1);
+		$date->setTime(0, 0, 0);
 
 		ob_start();
 		PinholeCalendarGadget::displayCalendarMonth($this->app, $date);

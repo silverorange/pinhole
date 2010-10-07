@@ -537,18 +537,18 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 			$group_by_parts[] = 'day';
 			$group_by_parts[] = 'month';
 			$group_by_parts[] = 'year';
-			$date_format = '%Y-%m-%d';
+			$date_format = 'yyyy-MM-dd';
 			break;
 
 		case 'month' :
 			$group_by_parts[] = 'month';
 			$group_by_parts[] = 'year';
-			$date_format = '%Y-%m';
+			$date_format = 'yyyy-MM';
 			break;
 
 		case 'year' :
 			$group_by_parts[] = 'year';
-			$date_format = '%Y';
+			$date_format = 'yyyy';
 			break;
 		}
 
@@ -593,7 +593,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 				continue;
 
 			$date = new SwatDate($row->photo_date);
-			$dates[$date->format($date_format)] = $row->photo_count;
+			$dates[$date->formatLikeIntl($date_format)] = $row->photo_count;
 		}
 
 		$this->app->addCacheValue($dates, $cache_key, 'photos');

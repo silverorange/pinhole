@@ -11,7 +11,7 @@ require_once 'SwatI18N/SwatI18NLocale.php';
  * Displays a list of years photos were taken on
  *
  * @package   Pinhole
- * @copyright 2008 silverorange
+ * @copyright 2008-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeDateBrowserGadget extends SiteGadget
@@ -36,7 +36,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 
 		if (isset($this->app->memcache)) {
 			$cache_key = sprintf('PinholeDateBrowserGadget.getContent.%s.%s',
-				$date->format('%m/%Y'),
+				$date->formatLikeIntl('mm/yyyy'),
 				$this->app->session->isLoggedIn() ? 'private' : 'public');
 
 			$container = $this->app->memcache->getNs('photos', $cache_key);

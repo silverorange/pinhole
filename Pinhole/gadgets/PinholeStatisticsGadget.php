@@ -36,13 +36,13 @@ class PinholeStatisticsGadget extends SiteGadget
 					'<a href="%stag?date.date=%s">%s</a>'),
 				$locale->formatNumber($stats->photo_count),
 				$this->app->config->pinhole->path,
-				$first_date->format('%Y-%m-%d'),
-				$first_date->format(SwatDate::DF_DATE)), 'text/xml');
+				$first_date->formatLikeIntl('yyyy-MM-dd'),
+				$first_date->formatLikeIntl(SwatDate::DF_DATE)), 'text/xml');
 
 			$li_tag->display();
 
-			$days = $last_date->dateDiff($first_date);
-			$avg = round(((float) $stats->photo_count / (float) $days), 2);
+			$days = $last_date->diff($first_date)->days;
+			$avg = round(((float)$stats->photo_count / (float)$days), 2);
 			$li_tag = new SwatHtmlTag('li');
 			$li_tag->setContent(sprintf(
 				Pinhole::_('Approximately %s photos have been uploaded '.
@@ -55,8 +55,8 @@ class PinholeStatisticsGadget extends SiteGadget
 				Pinhole::_('Last photo uploaded on '.
 					'<a href="%stag?date=%s">%s</a>'),
 				$this->app->config->pinhole->path,
-				$last_date->format('%Y-%m-%d'),
-				$last_date->format(SwatDate::DF_DATE)), 'text/xml');
+				$last_date->formatLikeIntl('yyyy-MM-dd'),
+				$last_date->formatLikeIntl(SwatDate::DF_DATE)), 'text/xml');
 
 			$li_tag->display();
 

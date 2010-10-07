@@ -181,7 +181,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	protected function displayByDateAdded(PinholeTagList $tag_list)
 	{
 		$now = new SwatDate();
-		$now->convertTZbyID($this->app->config->date->time_zone);
+		$now->convertTZById($this->app->config->date->time_zone);
 
 		$store = new SwatTableStore();
 
@@ -190,10 +190,10 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 			$ds->tag = $tag;
 
 			$tag_date = $tag->getDataObject()->first_modified;
-			$tag_date->convertTZbyID(
+			$tag_date->convertTZById(
 				$this->app->config->date->time_zone);
 
-			$days_past = $now->dateDiff($tag_date, false);
+			$days_past = $now->diff($tag_date)->days;
 
 			if ($days_past <= 1)
 				$ds->date_part = Pinhole::_('Today');

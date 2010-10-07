@@ -24,7 +24,7 @@ class PinholePhotoUploadSet extends SwatDBDataObject
 	/**
 	 * The date this set was created
 	 *
-	 * @var Date
+	 * @var SwatDate
 	 */
 	public $createdate;
 

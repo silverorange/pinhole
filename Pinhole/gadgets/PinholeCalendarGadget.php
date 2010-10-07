@@ -38,9 +38,9 @@ class PinholeCalendarGadget extends SiteGadget
 			'class="pinhole-calendar-gadget-container">';
 
 		$date = new SwatDate();
-		$date->convertTZbyID($this->app->config->date->time_zone);
+		$date->convertTZById($this->app->config->date->time_zone);
 		$date->setDay(1);
-		$date->clearTime();
+		$date->setTime(0, 0, 0);
 
 		echo '<div class="pinhole-calendar-gadget-head">';
 		echo '<a class="pinhole-calendar-gadget-prev" '.
@@ -73,9 +73,9 @@ class PinholeCalendarGadget extends SiteGadget
 		SwatDate $date)
 	{
 		$a_tag = new SwatHtmlTag('a');
-		$a_tag->setContent($date->format('%B, %Y'));
+		$a_tag->setContent($date->formatLikeIntl('MMMM, yyyy'));
 		$a_tag->title = sprintf('View photos taken during %s',
-			$date->format('%B, %Y'));
+			$date->formatLikeIntl('MMMM, yyyy'));
 
 		$a_tag->href = sprintf('%stag?date.month=%s/date.year=%s',
 			$app->config->pinhole->path,
@@ -83,7 +83,7 @@ class PinholeCalendarGadget extends SiteGadget
 			$date->getYear());
 
 		$h4 = new SwatHtmlTag('h4');
-		$h4->setContent((string) $a_tag, 'text/xml');
+		$h4->setContent((string)$a_tag, 'text/xml');
 		$h4->display();
 	}
 
@@ -96,7 +96,7 @@ class PinholeCalendarGadget extends SiteGadget
 		if (isset($app->memcache)) {
 			$cache_key = sprintf('PinholeCalendarGadget.%s.%s.%s',
 				'displayCalendarBody',
-				$date->getDate(),
+				$date->getISO8601(),
 				$app->session->isLoggedIn() ? 'private' : 'public');
 
 			$body = $app->memcache->getNs('photos', $cache_key);
@@ -112,14 +112,12 @@ class PinholeCalendarGadget extends SiteGadget
 
 		echo '<table>';
 
-		$wd = new Date();
-		$wd->setDay(1);
-		$wd->setMonth(1);
-		$wd->setYear(1995);
+		$wd = new SwatDate();
+		$wd->setDate(1995, 1, 1);
 
 		echo '<tr class="days-of-week">';
 		for ($i = 1; $i <= 7; $i++) {
-			echo '<td>'.$wd->format('%a').'</td>';
+			echo '<td>'.$wd->formatLikeIntl('eee').'</td>';
 			$wd->setDay($i + 1);
 		}
 		echo '</tr>';
@@ -145,7 +143,7 @@ class PinholeCalendarGadget extends SiteGadget
 						'<a href="%stag?date.date=%s" '.
 						'title="%s %s">%s</a></td>',
 						$app->config->pinhole->path,
-						$current_date->format('%Y-%m-%d'),
+						$current_date->formatLikeIntl('yyyy-MM-dd'),
 						$locale->formatNumber($day_count[$day]),
 						Pinhole::ngettext('Photo', 'Photos', $day_count[$day]),
 						$day);
@@ -175,7 +173,7 @@ class PinholeCalendarGadget extends SiteGadget
 	{
 		if (isset($app->memcache)) {
 			$cache_key = sprintf('PinholeCalendarGadget.count.%s.%s',
-				$date->format('%Y-%m'),
+				$date->formatLikeIntl('yyyy-MM'),
 				$app->session->isLoggedIn() ? 'private' : 'public');
 
 			$count = $app->memcache->getNs('photos', $cache_key);
@@ -199,12 +197,7 @@ class PinholeCalendarGadget extends SiteGadget
 				PinholePhoto.photo_time_zone))";
 
 		$end_date = clone $date;
-		if ($end_date->getMonth() == 12) {
-			$end_date->setMonth(1);
-			$end_date->setYear($end_date->getYear() + 1);
-		} else {
-			$end_date->setMonth($end_date->getMonth() + 1);
-		}
+		$end_date->addMonths(1);
 
 		if (!$app->session->isLoggedIn()) {
 			$private_where_clause = sprintf('and PinholePhoto.private = %s',

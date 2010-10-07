@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Date/Calc.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Pinhole/Pinhole.php';
 require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
@@ -100,7 +99,7 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		switch ($this->name) {
 		case 'date':
 			$date = new SwatDate($this->value);
-			$title = $date->format(SwatDate::DF_DATE);
+			$title = $date->formatLikeIntl(SwatDate::DF_DATE);
 			break;
 
 		case 'week':
@@ -113,30 +112,29 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 				$start_date->addDays($days);
 			} else {
 				$date = new SwatDate($this->value);
-				$start_date = new SwatDate(Date_Calc::beginOfWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
+				$date->subtractDays($date->getDayOfWeek());
 			}
 			$title = sprintf(Pinhole::_('Week of %s'),
-				$start_date->format(SwatDate::DF_DATE));
+				$start_date->formatLikeIntl(SwatDate::DF_DATE));
 
 			break;
 
 		case 'year':
 			$date = new SwatDate();
 			$date->setYear($this->value);
-			$title = $date->format('%Y');
+			$title = $date->formatLikeIntl('yyyy');
 			break;
 
 		case 'month':
 			$date = new SwatDate();
 			$date->setMonth($this->value);
-			$title = $date->format('%B');
+			$title = $date->formatLikeIntl('MMMM');
 			break;
 
 		case 'day':
 			$date = new SwatDate();
 			$date->setDay($this->value);
-			$title = $date->format('%d');
+			$title = $date->formatLikeIntl('dd');
 			break;
 
 		default:
@@ -162,13 +160,11 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			$date = new SwatDate();
 			list($year, $month, $day) =
 				sscanf($this->value, "%d-%d-%d");
-			$date->setYear($year);
-			$date->setMonth($month);
-			$date->setDay($day);
+			$date->setDate($year, $month, $day);
 
 			// only matching the date, time and time zone of reference
 			// date are irrelevant
-			$date->clearTime();
+			$date->setTime(0, 0, 0);
 
 			// don't compare times
 			$where = sprintf(
@@ -187,21 +183,23 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 				$start_date->setMonth(1);
 				$start_date->setDay(1);
 				$start_date->addDays($days);
-				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
-					$start_date->getDay(), $start_date->getMonth(),
-					$start_date->getYear()));
-			} else {
-				$date = new SwatDate($this->value);
-				$start_date = new SwatDate(Date_Calc::beginOfWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
 
-				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
+				// beginning of next week
+				$end_date = clone $start_date;
+				$end_date->addDays(7 - $end_date->getDayOfWeek());
+			} else {
+				// beginning of current week
+				$start_date = new SwatDate($this->value);
+				$start_date->subtractDays($start_date->getDayOfWeek());
+
+				// beginning of next week
+				$end_date = new SwatDate($this->value);
+				$end_date->addDays(7 - $end_date->getDayOfWeek());
 			}
 
 			// database content is always UTC
-			$start_date->clearTime();
-			$end_date->clearTime();
+			$start_date->setTime(0, 0, 0);
+			$end_date->setTime(0, 0, 0);
 			$start_date->toUTC();
 			$end_date->toUTC();
 
@@ -263,10 +261,10 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 			$date = new SwatDate($this->value);
 
 			// database content is always UTC
-			$date->clearTime();
+			$date->setTime(0, 0, 0);
 			$date->toUTC();
 
-			$applies = (Date::compare($photo->photo_date, $date) == 0);
+			$applies = (SwatDate::compare($photo->photo_date, $date) == 0);
 			break;
 
 		case 'week':
@@ -277,44 +275,47 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 				$start_date->setMonth(1);
 				$start_date->setDay(1);
 				$start_date->addDays($days);
-				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
-					$start_date->getDay(), $start_date->getMonth(),
-					$start_date->getYear()));
-			} else {
-				$date = new SwatDate($this->value);
-				$start_date = new SwatDate(Date_Calc::beginOfWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
 
-				$end_date = new SwatDate(Date_Calc::beginOfNextWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
+				// beginning of next week
+				$end_date = clone $start_date;
+				$end_date->addDays(7 - $end_date->getDayOfWeek());
+			} else {
+				// beginning of week
+				$start_date = new SwatDate($this->value);
+				$start_date->subtractDays($start_date->getDayOfWeek());
+
+				// beginning of next week
+				$end_date = new SwatDate($this->value);
+				$end_date->addDays(7 - $end_date->getDayOfWeek());
 			}
 
 			// database content is always UTC
-			$start_date->clearTime();
-			$end_date->clearTime();
+			$start_date->setTime(0, 0, 0);
+			$end_date->setTime(0, 0, 0);
 			$start_date->toUTC();
 			$end_date->toUTC();
 
-			$applies = ((Date::compare($photo->photo_date, $start_date) >= 0) &&
-				(Date::compare($photo->photo_date, $end_date) <= 0));
+			$applies = (
+				(SwatDate::compare($photo->photo_date, $start_date) >= 0) &&
+				(SwatDate::compare($photo->photo_date, $end_date) <= 0));
 
 			break;
 
 		case 'year':
 			$local_photo_date = clone $photo->photo_date;
-			$local_photo_date->convertTZbyID($photo->photo_time_zone);
+			$local_photo_date->convertTZById($photo->photo_time_zone);
 			$applies = ($local_photo_date->getYear() == $this->value);
 			break;
 
 		case 'month':
 			$local_photo_date = clone $photo->photo_date;
-			$local_photo_date->convertTZbyID($photo->photo_time_zone);
+			$local_photo_date->convertTZById($photo->photo_time_zone);
 			$applies = ($local_photo_date->getMonth() == $this->value);
 			break;
 
 		case 'day':
 			$local_photo_date = clone $photo->photo_date;
-			$local_photo_date->convertTZbyID($photo->photo_time_zone);
+			$local_photo_date->convertTZById($photo->photo_time_zone);
 			$applies = ($local_photo_date->getDay() == $this->value);
 			break;
 
@@ -342,18 +343,19 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		switch ($this->name) {
 		case 'date':
 			$date = new SwatDate($this->value);
-			$value = $date->getNextDay()->format('%Y-%m-%d');
+			$date->addDays(1);
+			$value = $date->formatLikeIntl('yyyy-MM-dd');
 			break;
 
 		case 'week':
 			if (ctype_digit($this->value)) {
 				$value = ($this->value < 52) ? $this->value + 1 : null;
 			} else {
-				$date = new SwatDate($this->value);
-				$start_date = new SwatDate(Date_Calc::beginOfNextWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
+				// beginning of next week
+				$start_date = new SwatDate($this->value);
+				$start_date->addDays(7 - $start_date->getDayOfWeek());
 
-				$value = $start_date->format('%Y-%m-%d');
+				$value = $start_date->formatLikeIntl('yyyy-MM-dd');
 			}
 
 			break;
@@ -402,18 +404,19 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 		switch ($this->name) {
 		case 'date':
 			$date = new SwatDate($this->value);
-			$value = $date->getPrevDay()->format('%Y-%m-%d');
+			$date->subtractDays(1);
+			$value = $date->formatLikeIntl('yyyy-MM-dd');
 			break;
 
 		case 'week':
 			if (ctype_digit($this->value)) {
 				$value = ($this->value > 1) ? $this->value - 1 : null;
 			} else {
-				$date = new SwatDate($this->value);
-				$start_date = new SwatDate(Date_Calc::beginOfPrevWeek(
-					$date->getDay(), $date->getMonth(), $date->getYear()));
+				// beginning of previous week
+				$start_date = new SwatDate($this->value);
+				$start_date->subtractDays(7 + $start_date->getDayOfWeek());
 
-				$value = $start_date->format('%Y-%m-%d');
+				$value = $start_date->formatLikeIntl('yyyy-MM-dd');
 			}
 
 			break;

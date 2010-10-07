@@ -10,7 +10,7 @@ require_once 'Pinhole/admin/PinholeAdminSessionModule.php';
  * Web application class for an administering Pinhole
  *
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeAdminApplication extends AdminApplication
@@ -110,7 +110,7 @@ class PinholeAdminApplication extends AdminApplication
 		$this->setSecureBaseUri($config->uri->secure_base.'admin/');
 		$this->cookie->setSalt($config->cookies->salt);
 		$this->default_time_zone =
-			new Date_TimeZone($config->date->time_zone);
+			new HotDateTimeZone($config->date->time_zone);
 
 		$this->default_locale = $config->i18n->locale;
 

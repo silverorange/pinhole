@@ -416,7 +416,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$photo_date->visible = false;
 		} else {
 			$date = new SwatDate($this->photo->photo_date);
-			$date->convertTZByID($this->photo->photo_time_zone);
+			$date->convertTZById($this->photo->photo_time_zone);
 
 			$date_links = $photo_date->getRenderer('date_links');
 			$date_links->content_type = 'text/xml';
@@ -426,9 +426,9 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				'<a href="tag?date.week=%1$s-%2$s-%3$s">week</a>, '.
 				'<a href="tag?date.month=%2$s/date.year=%1$s">month</a>, '.
 				'<a href="tag?date.year=%1$s">year</a>)'),
-				$date->format('%Y'),
-				$date->format('%m'),
-				$date->format('%d'));
+				$date->formatLikeIntl('yyyy'),
+				$date->formatLikeIntl('MM'),
+				$date->formatLikeIntl('dd'));
 		}
 	}
 

@@ -188,12 +188,12 @@ class PinholeDavDirectory implements Sabre_DAV_IDirectory
 		$time = 0;
 
 		foreach ($this->photos as $photo) {
-			$time = max($photo->upload_date->getTime(), $time);
+			$time = max($photo->upload_date->getTimestamp(), $time);
 		}
 
 		if ($time == 0) {
 			$date = new SwatDate();
-			$time = $date->getTime();
+			$time = $date->getTimestamp();
 		}
 
 		return $time;
@@ -237,7 +237,7 @@ class PinholeDavDirectory implements Sabre_DAV_IDirectory
 	{
 		// load the photos uploaded in the last day
 		$date = new SwatDate();
-		$date->addDays(-1);
+		$date->subtractDays(1);
 		$date->toUTC();
 
 		$instance_id = ($this->app->getInstance() === null) ?

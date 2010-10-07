@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Date/Calc.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Site/dataobjects/SiteImage.php';
@@ -66,7 +65,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 *
 	 * The date the photo was uploaded
 	 *
-	 * @var Date
+	 * @var SwatDate
 	 */
 	public $upload_date;
 
@@ -94,7 +93,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 *
 	 * The date the photo was taken.
 	 *
-	 * @var Date
+	 * @var SwatDate
 	 */
 	public $photo_date;
 
@@ -113,7 +112,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	 * The date the photo's status was published. See
 	 * {@link PinholePhoto::publish()}
 	 *
-	 * @var Date
+	 * @var SwatDate
 	 */
 	public $publish_date;
 
@@ -1357,7 +1356,7 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 
 		if ($this->photo_date !== null) {
 			if ($this->camera_time_zone !== null)
-				$this->photo_date->setTZByID($this->camera_time_zone);
+				$this->photo_date->setTZById($this->camera_time_zone);
 
 			$this->photo_date->toUTC();
 		}
@@ -1423,11 +1422,11 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 			sscanf($date_string, "%d:%d:%d %d:%d:%d");
 
 		$date = new SwatDate();
-		$error = $date->setDayMonthYear($day, $month, $year);
+		$error = $date->setDate($year, $month, $day);
 		if (PEAR::isError($error))
 			return null;
 
-		$error = $date->setHourMinuteSecond($hour, $minute, $second);
+		$error = $date->setTime($hour, $minute, $second);
 		if (PEAR::isError($error))
 			return null;
 

@@ -41,7 +41,7 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	/**
 	 * 
 	 *
-	 * @var Date
+	 * @var SwatDate
 	 */
 	public $createdate;
 
@@ -77,14 +77,14 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	/**
 	 * First modified
 	 *
-	 * @var Date
+	 * @var SwatDate
 	 */
 	public $first_modified;
 
 	/**
 	 * Last modified
 	 *
-	 * @var Date
+	 * @var SwatDate
 	 */
 	public $last_modified;
 

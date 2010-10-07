@@ -4,7 +4,7 @@ require_once 'Admin/pages/AdminDBConfirmation.php';
 require_once 'Swat/SwatTableStore.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
-require_once 'Date/TimeZone.php';
+require_once 'HotDate/HotDateTimeZone.php';
 require_once 'Admin/AdminListDependency.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
@@ -12,7 +12,7 @@ require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
  * Page for modifying date/time/time-zone of photos
  *
  * @package   Pinhole
- * @copyright 2009 silverorange
+ * @copyright 2009-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhotoTime extends AdminDBConfirmation
@@ -89,16 +89,18 @@ class PinholePhotoTime extends AdminDBConfirmation
 	{
 		$item_list = $this->getItemList('integer');
 
-		$photo_tz = new Date_TimeZone(
+		$date = new SwatDate();
+
+		$photo_tz = new HotDateTimeZone(
 			$this->ui->getWidget('photo_time_zone')->value);
 
-		$camera_tz = new Date_TimeZone(
+		$camera_tz = new HotDateTimeZone(
 			$this->ui->getWidget('camera_time_zone')->value);
 
-		$photo_offset = $photo_tz->getRawOffset();
-		$camera_offset = $camera_tz->getRawOffset();
+		$photo_offset = $photo_tz->getOffset($date);
+		$camera_offset = $camera_tz->getOffset($date);
 
-		$offset_ms = $photo_offset - $camera_offset;
+		$offset_s = $photo_offset - $camera_offset;
 		$instance_id = $this->app->getInstanceId();
 
 		$sql = sprintf('update PinholePhoto set photo_time_zone = %s,
@@ -106,9 +108,9 @@ class PinholePhotoTime extends AdminDBConfirmation
 				+ interval %s, %s)
 			where PinholePhoto.image_set in (
 				select id from ImageSet where instance %s %s)',
-			$this->app->db->quote($photo_tz->getID(), 'text'),
-			$this->app->db->quote($offset_ms.' milliseconds', 'text'),
-			$this->app->db->quote($photo_tz->getID(), 'text'),
+			$this->app->db->quote($photo_tz->getName(), 'text'),
+			$this->app->db->quote($offset_s.' seconds', 'text'),
+			$this->app->db->quote($photo_tz->getName(), 'text'),
 				SwatDB::equalityOperator($instance_id),
 				$this->app->db->quote($instance_id, 'integer'));
 

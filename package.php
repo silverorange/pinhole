@@ -2,7 +2,7 @@
 
 require_once 'PEAR/PackageFileManager2.php';
 
-$version = '1.2.57';
+$version = '1.2.58';
 $notes = <<<EOT
 see ChangeLog
 EOT;
@@ -70,7 +70,6 @@ $package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', 
 $package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com', '1.3.42');
 $package->addPackageDepWithChannel('required', 'MDB2', 'pear.php.net', '2.2.2');
 $package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.6');
-$package->addPackageDepWithChannel('required', 'AtomFeed', 'pear.silverorange.com', '1.0.3');
 $package->addPackageDepWithChannel('required', 'NateGoSearch', 'pear.silverorange.com', '1.0.19');
 $package->addPackageDepWithChannel('optional', 'Services_Akismet2', 'pear.php.net', '0.2.0');
 $package->addExtensionDep('required', 'imagick', '2.0.0');

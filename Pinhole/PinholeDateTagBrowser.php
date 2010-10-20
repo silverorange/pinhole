@@ -252,8 +252,7 @@ class PinholeDateTagBrowser extends SwatControl
 
 		// get selected month if it exists
 		if ($start_date->getMonth() == $end_date->getMonth()) {
-			// use intval() to fix a PEAR::Date bug
-			$selected_month = intval($start_date->getMonth());
+			$selected_month = $start_date->getMonth();
 		} else {
 			$selected_month = null;
 		}
@@ -330,8 +329,7 @@ class PinholeDateTagBrowser extends SwatControl
 
 		// get selected day if it exists
 		if ($start_date->getDay() == $end_date->getDay()) {
-			// use intval() to fix a PEAR::Date bug
-			$selected_day = intval($start_date->getDay());
+			$selected_day = $start_date->getDay();
 		} else {
 			$selected_day = null;
 		}

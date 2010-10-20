@@ -34,7 +34,7 @@ class PinholePhotoUpload extends AdminPage
 		$camera_time_zone = $this->app->config->pinhole->camera_time_zone;
 
 		$time_zone = ($camera_time_zone === null) ?
-			$this->app->default_time_zone->getID() : $camera_time_zone;
+			$this->app->default_time_zone->getName() : $camera_time_zone;
 
 		$this->ui->getWidget('photo_time_zone')->value = $time_zone;
 		$this->ui->getWidget('camera_time_zone')->value = $time_zone;

@@ -117,7 +117,7 @@ class PinholeCalendarGadget extends SiteGadget
 
 		echo '<tr class="days-of-week">';
 		for ($i = 1; $i <= 7; $i++) {
-			echo '<td>'.$wd->formatLikeIntl('eee').'</td>';
+			echo '<td>'.$wd->formatLikeIntl('EEE').'</td>';
 			$wd->setDay($i + 1);
 		}
 		echo '</tr>';

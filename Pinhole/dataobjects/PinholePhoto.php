@@ -3,7 +3,7 @@
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Site/dataobjects/SiteImage.php';
-require_once 'Site/SiteCommentStatus.php';
+require_once 'Site/SiteCommentable.php';
 
 require_once 'Pinhole/dataobjects/PinholeComment.php';
 require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
@@ -20,10 +20,10 @@ require_once 'Pinhole/exceptions/PinholeProcessingException.php';
  * A dataobject class for photos
  *
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class PinholePhoto extends SiteImage implements SiteCommentStatus
+class PinholePhoto extends SiteImage implements SiteCommentable
 {
 	// {{{ constants
 
@@ -427,9 +427,29 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	// }}}
 	// {{{ public function getCommentStatus()
 
+	/**
+	 * Part of the {@link SiteCommentStatus} interface
+	 *
+	 * @return integer the comment status of this photo.
+	 */
 	public function getCommentStatus()
 	{
 		return $this->comment_status;
+	}
+
+	// }}}
+	// {{{ public function addComment()
+
+	/**
+	 * Adds a comment to this photo
+	 *
+	 * Part of the {@link SiteCommentable} interface.
+	 *
+	 * @param SiteComment $comment the comment to add.
+	 */
+	public function addComment(SiteComment $comment)
+	{
+		$this->comments->add($comment);
 	}
 
 	// }}}
@@ -496,18 +516,21 @@ class PinholePhoto extends SiteImage implements SiteCommentStatus
 	/**
 	 * Gets the title of this photo
 	 *
-	 * @param boolean $show_filename Whether to show the photo's filename if
-	 *                                no title is set.
+	 * Part of the {@link SiteCommentable} interface.
 	 *
-	 * @return string the title of this photo. If this photo has no title then
-	 *                 the original filename is returned.
+	 * @param boolean $show_filename optional. Whether to show the photo's
+	 *                                filename if no title is set. Defaults to
+	 *                                false.
+	 *
+	 * @return string the title of this photo.
 	 */
 	public function getTitle($show_filename = false)
 	{
 		$title = $this->title;
 
-		if ($this->title === null && $show_filename)
+		if ($this->title === null && $show_filename) {
 			$title = $this->original_filename;
+		}
 
 		return $title;
 	}

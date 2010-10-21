@@ -111,8 +111,8 @@ class PinholeDateTag extends PinholeAbstractMachineTag
 				$start_date->setDay(1);
 				$start_date->addDays($days);
 			} else {
-				$date = new SwatDate($this->value);
-				$date->subtractDays($date->getDayOfWeek());
+				$start_date = new SwatDate($this->value);
+				$start_date->subtractDays($date->getDayOfWeek());
 			}
 			$title = sprintf(Pinhole::_('Week of %s'),
 				$start_date->formatLikeIntl(SwatDate::DF_DATE));

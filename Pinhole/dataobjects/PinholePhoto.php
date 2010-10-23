@@ -1084,6 +1084,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 		if (self::$finfo !== false) {
 			$types     = self::getArchiveMimeTypes();
 			$mime_type = finfo_file(self::$finfo, $file_path);
+			$mime_type = array_shift(explode(';', $mime_type));
 			$type      = array_search($mime_type, $types);
 
 			if ($type === false) {
@@ -1186,7 +1187,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	}
 
 	// }}}
-	// {{{ protected function processInternal()
+	// {{{ protected function prepareForProcessing()
 
 	/**
 	 * Processes the image
@@ -1196,9 +1197,9 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	 *
 	 * @param string $image_file the image file to process
 	 */
-	protected function processInternal($image_file)
+	protected function prepareForProcessing($image_file)
 	{
-		parent::processInternal($image_file);
+		parent::prepareForProcessing($image_file);
 
 		$meta_data = self::getMetaDataFromFile($image_file);
 		$this->saveMetaDataInternal($meta_data);
@@ -1364,13 +1365,14 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 	protected function setPhotoDateByMetaData($meta_data)
 	{
+		$now = new SwatDate();
 		$date_fields = array('createdate', 'datetimeoriginal');
 		foreach ($date_fields as $field) {
 			if (isset($meta_data[$field])) {
 				$photo_date = $this->parseMetaDataDate(
 					$meta_data[$field]->value);
 
-				if ($photo_date !== null && $photo_date->isPast()) {
+				if ($photo_date !== null && $photo_date->before($now)) {
 					$this->photo_date = $photo_date;
 					break;
 				}

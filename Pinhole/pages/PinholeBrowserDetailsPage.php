@@ -476,13 +476,13 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$span_tag->display();
 			} else {
 				$a_tag = new SwatHtmlTag('a');
-				$a_tag->href = $this->app->config->pinhole->path;
 
-				if ($dimension->shortname == 'original')
-					$a_tag->href.= $this->photo->getUri('original');
-				else
-					$a_tag->href.= 'photo/'.$this->photo->id.'/'.
-						$dimension->shortname;
+				if ($dimension->shortname == 'original') {
+					$a_tag->href = $this->photo->getUri('original');
+				} else {
+					$a_tag->href = $this->app->config->pinhole->path.
+						'photo/'.$this->photo->id.'/'.$dimension->shortname;
+				}
 
 				if (count($this->tag_list) > 0)
 					$a_tag->href.= '?'.$this->tag_list->__toString();

@@ -831,7 +831,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 			throw new PinholeProcessingException(
 				'File could not be found.');
 
-		if (($archive_type = self::getArchiveType($file_path)) === null) {
+		if (($archive_type = self::getArchiveType($file_path)) === false) {
 			$files = array(basename($file_path) => $original_filename);
 		} else {
 			$files = self::getArchivedFiles($file_path, $archive_type);
@@ -1009,8 +1009,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 			// recurse into contained archives
 			$archive_path = $dir.'/'.$filename;
-			if (($archive_type = self::getArchiveType($archive_path)) !== null) {
-
+			$archive_type = self::getArchiveType($archive_path);
+			if ($archive_type !== false) {
 				$files = array_merge(
 					$files,
 					self::getArchivedFiles($archive_path, $archive_type)
@@ -1075,23 +1075,29 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 	protected static function getArchiveType($file_path)
 	{
-		$type = null;
+		$type = false;
 
-		if (self::$finfo === false) {
-			self::$finfo = finfo_open(FILEINFO_MIME);
+		if (extension_loaded('fileinfo')) {
+			// Use the fileinfo extension if available.
+
+			// PHP >= 5.3.0 supports returning only the mimetype
+			// without returning the encoding. See
+			// http://us3.php.net/manual/en/fileinfo.constants.php for
+			// details.
+			$mime_constant = (defined('FILEINFO_MIME_TYPE')) ?
+				FILEINFO_MIME_TYPE : FILEINFO_MIME;
+
+			$finfo = new finfo($mime_constant);
+			$mime_type = reset(explode(';', $finfo->file($file_path)));
+
+		} elseif (function_exists('mime_content_type')) {
+			// Fall back to mime_content_type() if available.
+			$mime_type = mime_content_type($file_path);
 		}
 
-		if (self::$finfo !== false) {
-			$types     = self::getArchiveMimeTypes();
-			$mime_type = finfo_file(self::$finfo, $file_path);
-			$mime_type = array_shift(explode(';', $mime_type));
-			$type      = array_search($mime_type, $types);
-
-			if ($type === false) {
-				$type = null;
-			}
-		}
-
+		$types = self::getArchiveMimeTypes();
+		$type = array_search($mime_type, $types);
+		var_dump($type); echo '<hr>';
 		return $type;
 	}
 

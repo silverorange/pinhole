@@ -1097,7 +1097,6 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 		$types = self::getArchiveMimeTypes();
 		$type = array_search($mime_type, $types);
-		var_dump($type); echo '<hr>';
 		return $type;
 	}
 

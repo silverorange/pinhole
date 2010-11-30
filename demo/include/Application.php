@@ -5,6 +5,7 @@ require_once 'Pinhole/layouts/PinholeLayout.php';
 require_once 'Site/SiteWebApplication.php';
 require_once 'Site/SiteConfigModule.php';
 require_once 'Site/SiteDatabaseModule.php';
+require_once 'Site/SiteAnalyticsModule.php';
 require_once 'Site/SiteErrorLogger.php';
 require_once 'Site/SiteExceptionLogger.php';
 require_once 'Swat/exceptions/SwatException.php';
@@ -18,7 +19,7 @@ SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
  * Pinhole-based demo gallery
  *
  * @package   PinholeDemo
- * @copyright 2007 silverorange
+ * @copyright 2007-2010 silverorange
  */
 class Application extends SiteWebApplication
 {
@@ -67,7 +68,7 @@ class Application extends SiteWebApplication
 
 			$page = new PinholeExceptionPage($this, $layout);
 			break;
-			
+
 		default:
 			require_once '../include/PageFactory.php';
 			$factory = PageFactory::instance();
@@ -85,8 +86,9 @@ class Application extends SiteWebApplication
 	protected function getDefaultModuleList()
 	{
 		return array(
-			'config'   => 'SiteConfigModule',
-			'database' => 'SiteDatabaseModule',
+			'config'    => 'SiteConfigModule',
+			'database'  => 'SiteDatabaseModule',
+			'analytics' => 'SiteAnalyticsModule',
 		);
 	}
 
@@ -122,6 +124,8 @@ class Application extends SiteWebApplication
 		$this->setSecureBaseUri($config->uri->secure_base);
 		$this->default_time_zone =
 			new Date_TimeZone($config->date->time_zone);
+
+		$this->analytics->setGoogleAccount($config->analytics->google_account);
 	}
 
 	// }}}

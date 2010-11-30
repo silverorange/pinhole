@@ -3,8 +3,8 @@
 require_once 'Site/layouts/SiteLayout.php';
 
 /**
- * @package   Gallery
- * @copyright 2008 silverorange
+ * @package   Pinhole
+ * @copyright 2008-2010 silverorange
  */
 abstract class PinholeLayout extends SiteLayout
 {
@@ -25,25 +25,9 @@ abstract class PinholeLayout extends SiteLayout
 
 	protected function displayGoogleAnalytics()
 	{
-		$google_account = $this->app->config->analytics->google_account;
-
-		if ($google_account !== null) {
-			$src = ($this->app->isSecure()) ?
-				'https://ssl.google-analytics.com/urchin.js' :
-				'http://www.google-analytics.com/urchin.js';
-
-			$script_tag = new SwatHtmlTag('script');
-			$script_tag->type = 'text/javascript';
-			$script_tag->src = $src;
-			$script_tag->setContent('');
-			$script_tag->display();
-
-			$javascript = sprintf(
-				"_uacct = '%s';\n".
-				"urchinTracker();",
-				$google_account);
-
-			Swat::displayInlineJavaScript($javascript);
+		$js = $this->app->analytics->getGoogleAnalyticsInlineJavascript();
+		if ($js != null) {
+			Swat::displayInlineJavaScript($js);
 		}
 	}
 

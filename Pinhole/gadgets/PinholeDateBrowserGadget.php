@@ -51,6 +51,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 			$content = new SwatContentBlock();
 			$content->content =
 				Pinhole::_('No photos have been uploaded yet.');
+
 			$container->add($content);
 
 			return $container;
@@ -73,6 +74,9 @@ class PinholeDateBrowserGadget extends SiteGadget
 		$end_date = new SwatDate($months->getByIndex($index)->photo_date);
 		$end_year = $end_date->getYear();
 
+		$date = new SwatDate();
+		$date->clearTime();
+
 		for ($year = $start_year; $year >= $end_year; $year--) {
 			$year_count = 0;
 
@@ -87,7 +91,7 @@ class PinholeDateBrowserGadget extends SiteGadget
 			for ($i = 1; $i <= 12; $i++) {
 				echo '<li class="clearfix"><div>';
 
-				$date->setMonth($i);
+				$date->setDate($year, $i, 1);
 
 				if (isset($months_array[$year.'/'.$i])) {
 					$a_tag = new SwatHtmlTag('a');

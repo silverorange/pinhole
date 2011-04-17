@@ -1,13 +1,12 @@
 <?php
 
-
 require_once 'Swat/SwatUI.php';
 require_once 'SwatDB/SwatDB.php';
 require_once 'Site/pages/SiteExceptionPage.php';
 
 /**
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2011 silverorange
  */
 class PinholeExceptionPage extends SiteExceptionPage
 {
@@ -28,24 +27,18 @@ class PinholeExceptionPage extends SiteExceptionPage
 	}
 
 	// }}}
-	// {{{ protected function display()
-
-	protected function display($status)
-	{
-		parent::display($status);
-	}
-
-	// }}}
 	// {{{ protected function getSuggestions()
 
 	protected function getSuggestions()
 	{
 		return array(
-		Pinhole::_('If you typed the URL, check to make sure it is spelled correctly.'),
-		Pinhole::_('You can <a href="tag">browse by tag</a> to find what you\'re looking for.'),
+			Pinhole::_(
+				'If you typed the URL, check to make sure it is spelled '.
+				'correctly.'),
+			Pinhole::_(
+				'You can <a href="tag">browse by tag</a> to find what '.
+				'you\'re looking for.'),
 		);
-
-		return $suggestions;
 	}
 
 	// }}}

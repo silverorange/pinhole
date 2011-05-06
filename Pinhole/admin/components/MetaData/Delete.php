@@ -33,9 +33,8 @@ class PinholeMetaDataDelete extends AdminDBDelete
 
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
 			'One metadata section has been deleted.',
-			'%d metadata sections have been deleted.', $num),
-			SwatString::numberFormat($num)),
-			SwatMessage::NOTIFICATION);
+			'%s metadata sections have been deleted.', $num),
+			SwatString::numberFormat($num)));
 
 		$this->app->messages->add($message);
 	}

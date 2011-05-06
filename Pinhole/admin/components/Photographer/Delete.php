@@ -33,9 +33,8 @@ class PinholePhotographerDelete extends AdminDBDelete
 
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
 			'One photographer has been deleted.',
-			'%d photographers have been deleted.', $num),
-			SwatString::numberFormat($num)),
-			SwatMessage::NOTIFICATION);
+			'%s photographers have been deleted.', $num),
+			SwatString::numberFormat($num)));
 
 		$this->app->messages->add($message);
 	}

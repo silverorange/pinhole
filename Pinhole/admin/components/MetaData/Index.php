@@ -49,8 +49,8 @@ class PinholeMetaDataIndex extends AdminIndex
 				'boolean:visible', true, 'id', $view->getSelection());
 
 			$message = new SwatMessage(sprintf(Admin::ngettext(
-				"%d detail has been enabled.",
-				"%d details have been enabled.", $num),
+				'One detail has been enabled.',
+				'%s details have been enabled.', $num),
 				SwatString::numberFormat($num)));
 
 			break;
@@ -61,8 +61,8 @@ class PinholeMetaDataIndex extends AdminIndex
 				$view->getSelection());
 
 			$message = new SwatMessage(sprintf(Admin::ngettext(
-				"%d detail has been disabled.",
-				"%d details have been disabled.", $num),
+				'One detail has been disabled.',
+				'%s details have been disabled.', $num),
 				SwatString::numberFormat($num)));
 
 			break;
@@ -72,8 +72,8 @@ class PinholeMetaDataIndex extends AdminIndex
 				'boolean:machine_tag', true, 'id', $view->getSelection());
 
 			$message = new SwatMessage(sprintf(Admin::ngettext(
-				"%d machine tag has been enabled.",
-				"%d machine tags have been enabled.", $num),
+				'One machine tag has been enabled.',
+				'%s machine tags have been enabled.', $num),
 				SwatString::numberFormat($num)));
 
 			break;
@@ -84,8 +84,8 @@ class PinholeMetaDataIndex extends AdminIndex
 				$view->getSelection());
 
 			$message = new SwatMessage(sprintf(Admin::ngettext(
-				"%d machine tag has been disabled.",
-				"%d machine tags have been disabled.", $num),
+				'One machine tag has been disabled.',
+				'%s machine tags have been disabled.', $num),
 				SwatString::numberFormat($num)));
 
 			break;

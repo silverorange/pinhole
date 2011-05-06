@@ -61,8 +61,7 @@ class PinholeCommentDelete extends AdminDBDelete
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
 			'One comment has been deleted.',
 			'%s comments have been deleted.', $num),
-			SwatString::numberFormat($num)),
-			SwatMessage::NOTIFICATION);
+			SwatString::numberFormat($num)));
 
 		$this->app->messages->add($message);
 	}

@@ -37,8 +37,8 @@ class PinholeTagDelete extends AdminDBDelete
 			$this->app->memcache->flushNs('photos');
 
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
-			'One tag has been deleted.', '%d tags have been deleted.',
-			$num), SwatString::numberFormat($num)), SwatMessage::NOTIFICATION);
+			'One tag has been deleted.', '%s tags have been deleted.',
+			$num), SwatString::numberFormat($num)));
 
 		$this->app->messages->add($message);
 	}

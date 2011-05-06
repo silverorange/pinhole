@@ -74,7 +74,7 @@ class PinholeTagEdit extends AdminDBEdit
 		} elseif (!$this->validateShortname($name)) {
 			$message = new SwatMessage(
 				Pinhole::_('Tag name already exists and must be unique.'),
-				SwatMessage::ERROR);
+				'error');
 
 			$this->ui->getWidget('name')->addMessage($message);
 		}

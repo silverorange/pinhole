@@ -73,8 +73,8 @@ class PinholePhotoTime extends AdminDBConfirmation
 		}
 
 		$message = new SwatMessage(sprintf(Pinhole::ngettext(
-			'One photo has been updated.', '%d photos have been updated.',
-			$num), SwatString::numberFormat($num)), SwatMessage::NOTIFICATION);
+			'One photo has been updated.', '%s photos have been updated.',
+			$num), SwatString::numberFormat($num)));
 
 		$this->app->messages->add($message);
 

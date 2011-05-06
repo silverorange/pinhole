@@ -48,7 +48,7 @@ class PinholeMetaDataIndex extends AdminIndex
 			SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
 				'boolean:visible', true, 'id', $view->getSelection());
 
-			$message = new SwatMessage(sprintf(Admin::ngettext(
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'One detail has been enabled.',
 				'%s details have been enabled.', $num),
 				SwatString::numberFormat($num)));
@@ -60,7 +60,7 @@ class PinholeMetaDataIndex extends AdminIndex
 				'boolean:visible', false, 'id',
 				$view->getSelection());
 
-			$message = new SwatMessage(sprintf(Admin::ngettext(
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'One detail has been disabled.',
 				'%s details have been disabled.', $num),
 				SwatString::numberFormat($num)));
@@ -71,7 +71,7 @@ class PinholeMetaDataIndex extends AdminIndex
 			SwatDB::updateColumn($this->app->db, 'PinholeMetaData',
 				'boolean:machine_tag', true, 'id', $view->getSelection());
 
-			$message = new SwatMessage(sprintf(Admin::ngettext(
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'One machine tag has been enabled.',
 				'%s machine tags have been enabled.', $num),
 				SwatString::numberFormat($num)));
@@ -83,7 +83,7 @@ class PinholeMetaDataIndex extends AdminIndex
 				'boolean:machine_tag', false, 'id',
 				$view->getSelection());
 
-			$message = new SwatMessage(sprintf(Admin::ngettext(
+			$message = new SwatMessage(sprintf(Pinhole::ngettext(
 				'One machine tag has been disabled.',
 				'%s machine tags have been disabled.', $num),
 				SwatString::numberFormat($num)));

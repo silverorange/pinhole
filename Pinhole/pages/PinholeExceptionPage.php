@@ -8,7 +8,7 @@ require_once 'Site/pages/SiteExceptionPage.php';
  * @package   Pinhole
  * @copyright 2007-2011 silverorange
  */
-class PinholeExceptionPage extends SiteExceptionPage
+class PinholeExceptionPage extends SiteXhtmlExceptionPage
 {
 	// init phase
 	// {{{ public function init()

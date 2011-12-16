@@ -1,5 +1,6 @@
 <?php
 
+require_once 'XML/RPCAjax.php';
 require_once 'Pinhole/admin/components/Photo/Pending.php';
 
 /**
@@ -236,6 +237,8 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 		parent::finalize();
 
 		if (count($this->unprocessed_photos) > 0) {
+			$this->layout->addHtmlHeadEntrySet(XML_RPCAjax::getHtmlHeadEntrySet());
+
 			$yui = new SwatYUI(array('dom', 'animation', 'event'));
 			$this->layout->addHtmlHeadEntrySet($yui->getHtmlHeadEntrySet());
 

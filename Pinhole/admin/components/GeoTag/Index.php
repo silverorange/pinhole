@@ -2,6 +2,7 @@
 
 require_once 'Swat/SwatYUI.php';
 require_once 'Admin/pages/AdminPage.php';
+require_once 'XML/RPCAjax.php';
 
 /**
  * Index page for geo-tagging
@@ -84,6 +85,8 @@ class PinholeGeoTagIndex extends AdminPage
 	public function finalize()
 	{
 		parent::finalize();
+
+		$this->layout->addHtmlHeadEntrySet(XML_RPCAjax::getHtmlHeadEntrySet());
 
 		$yui = new SwatYUI(array('dom', 'event'));
 		$this->layout->addHtmlHeadEntrySet($yui->getHtmlHeadEntrySet());

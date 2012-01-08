@@ -1295,7 +1295,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 	protected function setTitleByMetaData($meta_data)
 	{
-		$title_fields = array('object', 'headline');
+		$title_fields = array('object', 'objectname', 'headline');
 		foreach ($title_fields as $field) {
 			if (isset($meta_data[$field]) &&
 					strlen($meta_data[$field]->value)) {

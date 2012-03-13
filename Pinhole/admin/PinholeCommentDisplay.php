@@ -7,7 +7,7 @@ require_once 'Site/admin/SiteCommentDisplay.php';
  * delete and mark as spam
  *
  * @package   Pinhole
- * @copyright 2008 silverorange
+ * @copyright 2008-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeCommentDisplay extends SiteCommentDisplay
@@ -25,19 +25,9 @@ class PinholeCommentDisplay extends SiteCommentDisplay
 			$this->comment->photo->id);
 
 		$anchor_tag->setContent($this->comment->photo->getTitle(true));
-
 		printf(Pinhole::_('Comment on %s'), $anchor_tag);
 
 		$this->displayStatusSpan();
-
-		echo ' - ';
-
-		$anchor_tag = new SwatHtmlTag('a');
-		$anchor_tag->href = sprintf('Comment/Edit?id=%s',
-			$this->comment->id);
-
-		$anchor_tag->setContent(Pinhole::_('Edit'));
-		$anchor_tag->display();
 
 		$header_div->close();
 	}
@@ -47,15 +37,15 @@ class PinholeCommentDisplay extends SiteCommentDisplay
 
 	protected function getView()
 	{
-		if (self::$view === null && $this->app !== null) {
-			self::$view = SiteViewFactory::get($this->app, 'photo-comment');
-			self::$view->setPartMode('bodytext', SiteView::MODE_SUMMARY);
-			self::$view->setPartMode('permalink', SiteView::MODE_ALL, false);
-			self::$view->setPartMode('author', SiteView::MODE_ALL, false);
-			self::$view->setPartMode('link', SiteView::MODE_ALL, false);
+		if ($this->view === null && $this->app !== null) {
+			$this->view = SiteViewFactory::get($this->app, 'photo-comment');
+			$this->view->setPartMode('bodytext', SiteView::MODE_SUMMARY);
+			$this->view->setPartMode('permalink', SiteView::MODE_ALL, false);
+			$this->view->setPartMode('author', SiteView::MODE_ALL, false);
+			$this->view->setPartMode('link', SiteView::MODE_ALL, false);
 		}
 
-		return self::$view;
+		return $this->view;
 	}
 
 	// }}}

@@ -17,8 +17,8 @@
 	padding: 0.2em 0;
 }
 
-* html .swat-tile a span.title {
-	cursor: pointer; /* for Ie6 */
+.ie6 .swat-tile a span.title {
+	cursor: pointer;
 }
 
 .swat-tile label {
@@ -60,7 +60,7 @@
 	position: relative;
 }
 
-* html .swat-tile .photo-wrapper {
+.ie6 .swat-tile .photo-wrapper {
 	display: block;
 }
 
@@ -69,7 +69,8 @@
 	margin: 0 auto;
 }
 
-/* {{{ label icons */
+
+/* label icons */
 
 .private label {
 	background: #eee url(../images/private.png) no-repeat 100px 5px;
@@ -94,5 +95,3 @@
 .published-private label:hover {
 	background: #d3d7cf url(../images/published-private.png) no-repeat 80px 5px;
 }
-
-/* }}} */

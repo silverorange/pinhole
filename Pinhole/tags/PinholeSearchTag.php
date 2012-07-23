@@ -26,7 +26,7 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	/**
 	 * The namespace of the search machine tag
 	 */
-	const NAMESPACE = 'search';
+	const NS = 'search';
 
 	// }}}
 	// {{{ private propeties
@@ -260,7 +260,7 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	 */
 	protected function getNamespace()
 	{
-		return self::NAMESPACE;
+		return self::NS;
 	}
 
 	// }}}

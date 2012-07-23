@@ -23,7 +23,7 @@ class PinholeGpsTag extends PinholeAbstractMachineTag
 	/**
 	 * The namespace of the gps machine tag
 	 */
-	const NAMESPACE = 'gps';
+	const NS = 'gps';
 
 	// }}}
 	// {{{ private propeties
@@ -221,7 +221,7 @@ class PinholeGpsTag extends PinholeAbstractMachineTag
 	 */
 	protected function getNamespace()
 	{
-		return self::NAMESPACE;
+		return self::NS;
 	}
 
 	// }}}

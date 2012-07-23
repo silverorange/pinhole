@@ -15,7 +15,7 @@ class PinholeAttributeTag extends PinholeAbstractMachineTag
 	/**
 	 * The namespace of the meta machine tag
 	 */
-	const NAMESPACE = 'attribute';
+	const NS = 'attribute';
 
 	// }}}
 	// {{{ private propeties
@@ -159,7 +159,7 @@ class PinholeAttributeTag extends PinholeAbstractMachineTag
 	 */
 	protected function getNamespace()
 	{
-		return self::NAMESPACE;
+		return self::NS;
 	}
 
 	// }}}

@@ -26,7 +26,7 @@ class PinholePageTag extends PinholeAbstractMachineTag
 	/**
 	 * The namespace of the page machine tag
 	 */
-	const NAMESPACE = 'page';
+	const NS = 'page';
 
 	// }}}
 	// {{{ private properties
@@ -176,7 +176,7 @@ class PinholePageTag extends PinholeAbstractMachineTag
 		}
 
 		if ($value !== null) {
-			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
+			$string = sprintf('%s.%s=%s', self::NS, $this->name, $value);
 			$tag = new PinholeDateTag();
 			if ($tag->parse($string, $this->db) !== false) {
 				$returned_tag = $tag;
@@ -212,7 +212,7 @@ class PinholePageTag extends PinholeAbstractMachineTag
 		}
 
 		if ($value !== null) {
-			$string = sprintf('%s.%s=%s', self::NAMESPACE, $this->name, $value);
+			$string = sprintf('%s.%s=%s', self::NS, $this->name, $value);
 			$tag = new PinholePageTag();
 			if ($tag->parse($string, $this->db) !== false) {
 				$returned_tag = $tag;
@@ -232,7 +232,7 @@ class PinholePageTag extends PinholeAbstractMachineTag
 	 */
 	protected function getNamespace()
 	{
-		return self::NAMESPACE;
+		return self::NS;
 	}
 
 	// }}}

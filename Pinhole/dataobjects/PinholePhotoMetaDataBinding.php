@@ -150,7 +150,7 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 			// check for common denominators for values like: 0.66666667
 			for ($i = 2; $i <= 600; $i++) {
 				$trunc = (round($decimals * $i, 3));
-				if ((int) $trunc == $trunc) {
+				if ((int)$trunc == $trunc) {
 					$numerator = $trunc;
 					$denominator = $i;
 					break;

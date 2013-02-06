@@ -9,7 +9,7 @@ require_once 'SwatI18N/SwatI18NLocale.php';
  * Displays some statistics about the current gallery
  *
  * @package   Pinhole
- * @copyright 2008 silverorange
+ * @copyright 2008-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeStatisticsGadget extends SiteGadget
@@ -80,7 +80,7 @@ class PinholeStatisticsGadget extends SiteGadget
 				$li_tag = new SwatHtmlTag('li');
 				$li_tag->setContent(sprintf(
 					Pinhole::_('The most popular tag “%s” has %s photos'),
-					(string) $a_tag,
+					(string)$a_tag,
 					$locale->formatNumber($tag_stats->popular_tag_count)),
 					'text/xml');
 

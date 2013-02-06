@@ -7,7 +7,7 @@ require_once 'Pinhole/tags/PinholePageTag.php';
 
 /**
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeBrowserIndexPage extends PinholeBrowserPage
@@ -152,7 +152,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 			count($photos) == 0) {
 			throw new SiteNotFoundException(sprintf(
 				'There are no photos in the current tag intersection: %s.',
-				(string) $this->tag_list));
+				(string)$this->tag_list));
 		}
 
 		$store = new SwatTableStore();

@@ -6,7 +6,7 @@ require_once 'Pinhole/tags/PinholePageTag.php';
 
 /**
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeBrowserMapPage extends PinholeBrowserPage
@@ -116,8 +116,8 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 		foreach ($markers as $marker) {
 			$script.= sprintf(
 				"map_obj.addMarker(new PinholeMapMarker(%s, %s, [%s]));\n",
-				(float) $marker->latitude,
-				(float) $marker->longitude,
+				(float)$marker->latitude,
+				(float)$marker->longitude,
 				implode(', ', $marker->photos));
 		}
 

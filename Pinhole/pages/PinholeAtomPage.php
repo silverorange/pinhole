@@ -14,7 +14,7 @@ require_once 'XML/Atom/Entry.php';
  * Photos are displayed reverse-chronologically based on their publish-date.
  *
  * @package   Pinhole
- * @copyright 2008 silverorange
+ * @copyright 2008-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeAtomPage extends SitePage
@@ -188,7 +188,7 @@ class PinholeAtomPage extends SitePage
 		// Feed paging. See IETF RFC 5005.
 		$total_photos = $this->tag_list->getPhotoCount();
 
-		$tag_string = (string) $this->tag_list;
+		$tag_string = (string)$this->tag_list;
 		if ($tag_string != '')
 			$tag_string.= '/';
 
@@ -239,7 +239,7 @@ class PinholeAtomPage extends SitePage
 	protected function getEntry(PinholePhoto $photo)
 	{
 		$cache_key = sprintf('PinholeAtomPage.entry.%s.%s.%s.%s',
-			(string) $this->tag_list, $photo->id,
+			(string)$this->tag_list, $photo->id,
 			$this->dimension->shortname,
 			$this->app->session->isLoggedIn() ? 'private' : 'public');
 

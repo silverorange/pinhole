@@ -16,7 +16,7 @@ require_once 'Pinhole/dataobjects/PinholeComment.php';
 
 /**
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeBrowserDetailsPage extends PinholeBrowserPage
@@ -442,7 +442,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 			$a_tag = new SwatHtmlTag('a');
 			$a_tag->href = $this->app->config->pinhole->path.'tag?'.$tag->name;
 			$a_tag->setContent($tag->title);
-			$tag_array[] = (string) $a_tag;
+			$tag_array[] = (string)$a_tag;
 		}
 
 		if (count($tag_array) > 0) {

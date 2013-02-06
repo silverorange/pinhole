@@ -9,7 +9,7 @@ require_once 'Math/FractionOp.php';
  * A dataobject class for photo meta data
  *
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhotoMetaDataBinding extends SwatDBDataObject
@@ -82,9 +82,9 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 	{
 		switch ($name) {
 		case 'aperture' :
-			return sprintf('ƒ/%s', (float) $value);
+			return sprintf('ƒ/%s', (float)$value);
 		case 'focallength' :
-			return sprintf('%s mm', (float) $value);
+			return sprintf('%s mm', (float)$value);
 		case 'exposurecompensation' :
 			$fraction = self::formatAsFraction($value);
 			if ($fraction === null)
@@ -110,9 +110,9 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 	{
 		$values = explode('/', $value);
 		if (count($values) == 2 && $values[1] > 0)
-			$seconds = ((float) $values[0]) / ((float) $values[1]);
+			$seconds = ((float)$values[0]) / ((float)$values[1]);
 		else
-			$seconds = (float) $value;
+			$seconds = (float)$value;
 
 		$locale = SwatI18NLocale::get();
 

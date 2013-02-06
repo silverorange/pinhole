@@ -285,10 +285,10 @@ class PinholeGpsTag extends PinholeAbstractMachineTag
 
 		if (count($matches) == 5) {
 			$box = array(
-				'max_latitude'  => (float) $matches[1][0],
-				'min_longitude' => (float) $matches[2][0],
-				'min_latitude'  => (float) $matches[3][0],
-				'max_longitude' => (float) $matches[4][0],
+				'max_latitude'  => (float)$matches[1][0],
+				'min_longitude' => (float)$matches[2][0],
+				'min_latitude'  => (float)$matches[3][0],
+				'max_longitude' => (float)$matches[4][0],
 			);
 		}
 

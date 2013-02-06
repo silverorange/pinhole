@@ -20,7 +20,7 @@ require_once 'Pinhole/exceptions/PinholeProcessingException.php';
  * A dataobject class for photos
  *
  * @package   Pinhole
- * @copyright 2007-2010 silverorange
+ * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhoto extends SiteImage implements SiteCommentable
@@ -1173,8 +1173,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 			if (preg_match('/(?<numerator>[\d-]+)\/(?<denominator>\d+)/',
 				$value, $regs)) {
 
-				return (((float) $regs['numerator'] /
-					(float) $regs['denominator']));
+				return (((float)$regs['numerator'] /
+					(float)$regs['denominator']));
 			}
 		case 'focallength' :
 			if (strpos($value, 'mm')) {
@@ -1479,8 +1479,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 		if ($match) {
 			list($s, $degrees, $minutes, $seconds, $hemisphere) = $regs;
 
-			$float = $degrees + ((float) $minutes / 60) +
-				((float) $seconds / 3600);
+			$float = $degrees + ((float)$minutes / 60) +
+				((float)$seconds / 3600);
 
 			if ($hemisphere == 'S' || $hemisphere == 'W')
 				$float = $float * -1;

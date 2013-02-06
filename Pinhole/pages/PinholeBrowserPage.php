@@ -8,7 +8,7 @@ require_once 'Pinhole/PinholeTagList.php';
 
 /**
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 abstract class PinholeBrowserPage extends SitePage
@@ -58,7 +58,7 @@ abstract class PinholeBrowserPage extends SitePage
 		$this->tag_list = new PinholeTagList($this->app, $tags,
 			$this->app->session->isLoggedIn());
 
-		$this->cache_key = get_class($this).'.'.((string) $this->tag_list).'.'.
+		$this->cache_key = get_class($this).'.'.((string)$this->tag_list).'.'.
 			($this->app->session->isLoggedIn() ? 'private' : 'public');
 	}
 

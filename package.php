@@ -66,7 +66,7 @@ $package->addReplacement(
 $package->setPhpDep('5.1.5');
 $package->setPearinstallerDep('1.4.0');
 $package->addPackageDepWithChannel('required', 'Swat', 'pear.silverorange.com', '1.4.57');
-$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.5.3');
+$package->addPackageDepWithChannel('required', 'Site', 'pear.silverorange.com', '1.6.18');
 $package->addPackageDepWithChannel('required', 'Admin', 'pear.silverorange.com', '1.3.42');
 $package->addPackageDepWithChannel('required', 'MDB2', 'pear.php.net', '2.2.2');
 $package->addPackageDepWithChannel('required', 'Yui', 'pear.silverorange.com', '1.0.6');

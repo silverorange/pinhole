@@ -10,18 +10,17 @@ require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
  * Page to manage pending comments on photos
  *
  * @package   Pinhole
- * @copyright 2008-2009 silverorange
+ * @copyright 2008-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeCommentIndex extends SiteCommentIndex
 {
 	// init phase
-	// {{{ protected function initInternal()
+	// {{{ protected function getTable()
 
-	protected function initInternal()
+	protected function getTable()
 	{
-		$this->table = 'PinholeComment';
-		parent::initInternal();
+		return 'PinholeComment';
 	}
 
 	// }}}

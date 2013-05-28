@@ -8,7 +8,7 @@ require_once 'Pinhole/dataobjects/PinholePhotographerWrapper.php';
  * Page for editing comments
  *
  * @package   Pinhole
- * @copyright 2008 silverorange
+ * @copyright 2008-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholeCommentEdit extends SiteCommentEdit
@@ -18,11 +18,17 @@ class PinholeCommentEdit extends SiteCommentEdit
 
 	protected function initInternal()
 	{
-		$this->ui_xml = 'Pinhole/admin/components/Comment/edit.xml';
-
 		parent::initInternal();
 
 		$this->photographers = $this->getPhotographers();
+	}
+
+	// }}}
+	// {{{ protected function getUiXml()
+
+	protected function getUiXml()
+	{
+		return 'Pinhole/admin/components/Comment/edit.xml';
 	}
 
 	// }}}

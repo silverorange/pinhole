@@ -4,7 +4,6 @@ require_once 'Admin/pages/AdminDBConfirmation.php';
 require_once 'Swat/SwatTableStore.php';
 require_once 'Swat/SwatDetailsStore.php';
 require_once 'SwatDB/SwatDB.php';
-require_once 'HotDate/HotDateTimeZone.php';
 require_once 'Admin/AdminListDependency.php';
 require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
 
@@ -12,7 +11,7 @@ require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
  * Page for modifying date/time/time-zone of photos
  *
  * @package   Pinhole
- * @copyright 2009-2010 silverorange
+ * @copyright 2009-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class PinholePhotoTime extends AdminDBConfirmation
@@ -91,10 +90,10 @@ class PinholePhotoTime extends AdminDBConfirmation
 
 		$date = new SwatDate();
 
-		$photo_tz = new HotDateTimeZone(
+		$photo_tz = new DateTimeZone(
 			$this->ui->getWidget('photo_time_zone')->value);
 
-		$camera_tz = new HotDateTimeZone(
+		$camera_tz = new DateTimeZone(
 			$this->ui->getWidget('camera_time_zone')->value);
 
 		$photo_offset = $photo_tz->getOffset($date);

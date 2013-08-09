@@ -9,6 +9,7 @@ An open-source web-based photo gallery built using
 Documentation
 -------------
  * [Installation Guide](https://github.com/silverorange/pinhole/wiki/Installation-Guide)
+ * [API Documentation](http://docs.silverorange.com/pinhole/package-summary.html)
  * [Design Proposal for Admin](https://github.com/silverorange/pinhole/wiki/Admin-Front-Page-Design)
 
 Features

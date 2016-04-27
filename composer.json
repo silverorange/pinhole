@@ -44,7 +44,7 @@
 		"pear/services_akismet2": "Filter spam from comments."
 	},
 	"autoload": {
-		"file": [ "autoload.php" ]
+		"files": [ "autoload.php" ]
 	},
 	"include-path": [
 		"./"

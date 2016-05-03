@@ -35,7 +35,6 @@
 		"silverorange/atom_feed": "^2.0.1",
 		"silverorange/mdb2": "^2.4.1",
 		"silverorange/nate_go_search": "^1.0.35",
-		"silverorange/silverorange_autoloader": "*",
 		"silverorange/site": "^2.1.45",
 		"silverorange/swat": "^2.2.10",
 		"silverorange/yui": "^1.0.11"
@@ -44,7 +43,7 @@
 		"pear/services_akismet2": "Filter spam from comments."
 	},
 	"autoload": {
-		"files": [ "autoload.php" ]
+		"classmap": [ "Pinhole/" ]
 	},
 	"include-path": [
 		"./"

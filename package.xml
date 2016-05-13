@@ -25,10 +25,10 @@
   <email>nick@silverorange.com</email>
   <active>yes</active>
  </lead>
- <date>2016-04-28</date>
- <time>16:13:15</time>
+ <date>2016-05-13</date>
+ <time>12:32:28</time>
  <version>
-  <release>2.0.3</release>
+  <release>2.0.4</release>
   <api>0.0.1</api>
  </version>
  <stability>
@@ -332,7 +332,6 @@ see ChangeLog
      <file name="pinhole-tag-list-view.css" role="data" />
     </dir> <!-- /www/styles -->
    </dir> <!-- /www -->
-   <file name="autoload.php" role="php" />
    <file name="ChangeLog" role="data" />
    <file name="composer.json" role="data" />
    <file name="README.md" role="data" />
@@ -396,14 +395,14 @@ see ChangeLog
  <changelog>
   <release>
    <version>
-    <release>2.0.3</release>
+    <release>2.0.4</release>
     <api>0.0.1</api>
    </version>
    <stability>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2016-04-28</date>
+   <date>2016-05-13</date>
    <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
    <notes>
 see ChangeLog

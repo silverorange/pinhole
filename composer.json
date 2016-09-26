@@ -35,7 +35,7 @@
 		"silverorange/atom_feed": "^2.0.1",
 		"silverorange/mdb2": "^2.4.1",
 		"silverorange/nate_go_search": "^1.0.35",
-		"silverorange/site": "^3.0.0",
+		"silverorange/site": "^4.0.0",
 		"silverorange/swat": "^2.2.10",
 		"silverorange/yui": "^1.0.11"
 	},

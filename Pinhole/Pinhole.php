@@ -1,17 +1,10 @@
 <?php
 
-require_once 'Swat/Swat.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'Site/Site.php';
-require_once 'Site/SiteGadgetFactory.php';
-require_once 'Site/SiteViewFactory.php';
-require_once 'XML/RPCAjax.php';
-
 /**
  * Container for package wide static methods
  *
  * @package   Pinhole
- * @copyright 2007 silverorange
+ * @copyright 2007-2017 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 class Pinhole
@@ -31,12 +24,22 @@ class Pinhole
 	const GETTEXT_DOMAIN = 'pinhole';
 
 	// }}}
+	// {{{ private properties
+
+	/**
+	 * Whether or not this package is initialized
+	 *
+	 * @var boolean
+	 */
+	private static $is_initialized = false;
+
+	// }}}
 	// {{{ public static function _()
 
 	/**
 	 * Translates a phrase
 	 *
-	 * This is an alias for {@link Pinhole::gettext()}.
+	 * This is an alias for {@link self::gettext()}.
 	 *
 	 * @param string $message the phrase to be translated.
 	 *
@@ -44,7 +47,7 @@ class Pinhole
 	 */
 	public static function _($message)
 	{
-		return Pinhole::gettext($message);
+		return self::gettext($message);
 	}
 
 	// }}}
@@ -62,7 +65,7 @@ class Pinhole
 	 */
 	public static function gettext($message)
 	{
-		return dgettext(Pinhole::GETTEXT_DOMAIN, $message);
+		return dgettext(self::GETTEXT_DOMAIN, $message);
 	}
 
 	// }}}
@@ -90,7 +93,7 @@ class Pinhole
 	 */
 	public static function ngettext($singular_message, $plural_message, $number)
 	{
-		return dngettext(Pinhole::GETTEXT_DOMAIN,
+		return dngettext(self::GETTEXT_DOMAIN,
 			$singular_message, $plural_message, $number);
 	}
 
@@ -99,8 +102,8 @@ class Pinhole
 
 	public static function setupGettext()
 	{
-		bindtextdomain(Pinhole::GETTEXT_DOMAIN, '@DATA-DIR@/Pinhole/locale');
-		bind_textdomain_codeset(Pinhole::GETTEXT_DOMAIN, 'UTF-8');
+		bindtextdomain(self::GETTEXT_DOMAIN, '@DATA-DIR@/Pinhole/locale');
+		bind_textdomain_codeset(self::GETTEXT_DOMAIN, 'UTF-8');
 	}
 
 	// }}}
@@ -247,18 +250,42 @@ class Pinhole
 	}
 
 	// }}}
+	// {{{ public static function init()
+
+	public static function init()
+	{
+		if (self::$is_initialized) {
+			return;
+		}
+
+		Swat::init();
+		Site::init();
+		Admin::init();
+
+		self::setupGettext();
+
+		SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
+		SwatDBClassMap::add('AdminUser', 'PinholeAdminUser');
+
+		SiteGadgetFactory::addPath('Pinhole/gadgets');
+
+		SiteViewFactory::addPath('Pinhole/views');
+		SiteViewFactory::registerView('photo-comment', 'PinholeCommentView');
+
+		self::$is_initialized = true;
+	}
+
+	// }}}
+	// {{{ private function __construct()
+
+	/**
+	 * Prevent instantiation of this static class
+	 */
+	private function __construct()
+	{
+	}
+
+	// }}}
 }
-
-Pinhole::setupGettext();
-
-// require here to prevent "Class __PHP_Incomplete_Class has no unserializer" errors
-require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
-SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
-SwatDBClassMap::add('AdminUser', 'PinholeAdminUser');
-
-SiteGadgetFactory::addPath('Pinhole/gadgets');
-
-SiteViewFactory::addPath('Pinhole/views');
-SiteViewFactory::registerView('photo-comment', 'PinholeCommentView');
 
 ?>

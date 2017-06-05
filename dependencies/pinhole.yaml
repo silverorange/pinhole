@@ -50,5 +50,3 @@ Pinhole:
     packages/pinhole/admin/styles/pinhole-photo-time.css:
     packages/pinhole/admin/styles/pinhole-photo-upload-page.css:
     packages/pinhole/admin/styles/pinhole-tag-photo-order.css:
-
-# vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2:

@@ -66,8 +66,5 @@
 	},
 	"autoload": {
 		"classmap": [ "Pinhole/" ]
-	},
-	"include-path": [
-		"./"
-	]
+	}
 }

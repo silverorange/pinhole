@@ -1,13 +1,5 @@
 <?php
 
-require_once 'Site/gadgets/SiteGadget.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatDisclosure.php';
-require_once 'Swat/SwatContentBlock.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
-require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
-
 /**
  * Displays some statistics about the current gallery
  *

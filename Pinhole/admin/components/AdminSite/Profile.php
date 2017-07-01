@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Admin/components/AdminSite/Profile.php';
-
 /**
  * Edit page for the current admin user profile
  *

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
-
 /**
  * A dataobject class for photographers
  *

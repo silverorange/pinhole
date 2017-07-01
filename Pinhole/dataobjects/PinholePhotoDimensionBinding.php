@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Site/dataobjects/SiteImageDimensionBinding.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-
 /**
  * A dataobject class for photo-dimension bindings
  *

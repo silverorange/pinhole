@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Site/SiteNateGoSearchIndexer.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-
 /**
  * Pinhole search indexer application for NateGoSearch
  *

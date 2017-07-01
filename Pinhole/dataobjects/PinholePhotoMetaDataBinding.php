@@ -1,10 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'SwatDB/SwatDBDataObject.php';
-require_once 'Math/Fraction.php';
-require_once 'Math/FractionOp.php';
-
 /**
  * A dataobject class for photo meta data
  *

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Sabre.autoload.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-
 /**
  * SabreDav WebDAV file adapter for PinholePhoto objects
  *

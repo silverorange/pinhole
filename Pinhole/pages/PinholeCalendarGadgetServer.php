@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Site/pages/SiteXMLRPCServer.php';
-require_once 'Site/exceptions/SiteNotFoundException.php';
-require_once 'Pinhole/gadgets/PinholeCalendarGadget.php';
-
 /**
  * Handles XML-RPC requests from the pinhole calendar gadget
  *

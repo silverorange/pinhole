@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Site/gadgets/SiteGadget.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-
 /**
  * Displays a calendar of the last month of photos
  *

@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Site/SiteTagEntry.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/tags/PinholeTag.php';
-
 /**
  * Control for selecting multiple tags from a list of tags
  *

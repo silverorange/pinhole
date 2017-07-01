@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatLinkHtmlHeadEntry.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/PinholeTagList.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange

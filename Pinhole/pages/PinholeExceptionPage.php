@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Swat/SwatUI.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Site/pages/SiteExceptionPage.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007-2011 silverorange

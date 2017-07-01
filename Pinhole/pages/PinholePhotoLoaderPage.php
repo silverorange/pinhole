@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Site/pages/SitePage.php';
-require_once 'Site/exceptions/SiteNotFoundException.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange

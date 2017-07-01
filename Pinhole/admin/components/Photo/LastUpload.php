@@ -1,8 +1,5 @@
 <?php
 
-require_once 'XML/RPCAjax.php';
-require_once 'Pinhole/admin/components/Photo/Pending.php';
-
 /**
  * Pending photos page
  *
@@ -67,7 +64,6 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 		         javascript.
 		*/
 
-		require_once 'Pinhole/PinholePhotoProcessor.php';
 		$processor = new PinholePhotoProcessor($this->app);
 
 		foreach ($this->unprocessed_photos as $photo) {

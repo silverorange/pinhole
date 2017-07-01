@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Admin/AdminSessionModule.php';
-
 /**
  * Web application module for sessions
  *

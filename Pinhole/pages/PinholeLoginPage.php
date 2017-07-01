@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Swat/SwatUI.php';
-require_once 'Site/pages/SitePage.php';
-
 /**
  * Page for logging in with a passphrase
  *

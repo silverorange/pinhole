@@ -1,21 +1,5 @@
 <?php
 
-require_once 'Swat/SwatDate.php';
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Site/dataobjects/SiteImage.php';
-require_once 'Site/SiteCommentable.php';
-
-require_once 'Pinhole/dataobjects/PinholeComment.php';
-require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeImageSet.php';
-require_once 'Pinhole/dataobjects/PinholePhotoUploadSet.php';
-require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoDimensionBindingWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBindingWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/exceptions/PinholeUploadException.php';
-require_once 'Pinhole/exceptions/PinholeProcessingException.php';
-
 /**
  * A dataobject class for photos
  *
@@ -682,10 +666,6 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 	public function getTagsAsTagList(SiteApplication $app)
 	{
-		// require statements are here to prevent circular dependency issues
-		require_once 'Pinhole/tags/PinholeTag.php';
-		require_once 'Pinhole/PinholeTagList.php';
-
 		$tag_list = new PinholeTagList($this->app);
 		foreach ($this->tags as $tag)
 			$tag_list->add(new PinholeTag($this->image_set->instance, $tag));
@@ -1549,9 +1529,6 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 	protected function loadTags()
 	{
-		// require statement is here to prevent circular dependency issues
-		require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-
 		$sql = sprintf('select * from PinholeTag where id in (
 			select tag from PinholePhotoTagBinding where photo = %s)
 				order by PinholeTag.title',

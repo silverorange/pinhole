@@ -1,13 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminSearch.php';
-require_once 'Admin/AdminSearchClause.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/tags/PinholeTag.php';
-
 /**
  * Search page for tags
  *

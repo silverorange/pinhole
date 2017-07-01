@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
-
 /**
  * A dataobject for the meta-data contained in photos
  *

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Site/dataobjects/SiteImageDimension.php';
-require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
-
 /**
  * A dataobject class for dimensions
  *

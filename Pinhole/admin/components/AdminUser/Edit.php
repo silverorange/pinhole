@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Admin/components/AdminUser/Edit.php';
-
 /**
  * Edit page for AdminUsers component
  *

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Site/layouts/SiteLayout.php';
-
 /**
  * @package   Pinhole
  * @copyright 2008-2010 silverorange

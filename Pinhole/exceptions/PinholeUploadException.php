@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Pinhole/exceptions/PinholeException.php';
-
 /**
  * An exception when uploading a file
  *

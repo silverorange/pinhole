@@ -1,16 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminSearch.php';
-require_once 'Admin/AdminSearchClause.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'NateGoSearch/NateGoSearchQuery.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
-require_once 'include/PinholePhotoActionsProcessor.php';
-
 /**
  * Index page for photographs
  *

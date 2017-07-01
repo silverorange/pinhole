@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/pages/AdminDBEdit.php';
-require_once 'Pinhole/dataobjects/PinholeMetaData.php';
-
 /**
  * Page for editing metadata
  *

@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Site/admin/components/Comment/Edit.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholePhotographerWrapper.php';
-
 /**
  * Page for editing comments
  *

@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Site/gadgets/SiteGadget.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
-require_once 'Pinhole/PinholeSubTagListView.php';
-
 /**
  * Displays a list of tags
  *

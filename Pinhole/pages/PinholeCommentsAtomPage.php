@@ -1,12 +1,5 @@
 <?php
 
-require_once 'Site/SiteCommentStatus.php';
-require_once 'Site/pages/SitePage.php';
-require_once 'Pinhole/dataobjects/PinholePhotographerWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'XML/Atom/Entry.php';
-
 /**
  * Displays an Atom feed of all recent comments in reverse chronological order
  *

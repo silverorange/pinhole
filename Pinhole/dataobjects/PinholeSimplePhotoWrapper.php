@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-
 /**
  * A simple recordset wrapper class for PinholePhoto objects that doesn't load
  * image dimension data. Don't use this if you want to display photos.

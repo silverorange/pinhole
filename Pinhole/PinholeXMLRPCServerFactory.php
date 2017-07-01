@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Site/SiteXMLRPCServerFactory.php';
-
 /**
  * @package   Pinhole
  * @copyright 2008 silverorange

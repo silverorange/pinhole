@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-
 /**
  * @package   Pinhole
  * @copyright 2008 silverorange

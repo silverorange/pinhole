@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Swat/SwatUI.php';
-require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
-require_once 'Site/pages/SitePage.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/PinholeTagList.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007-2013 silverorange

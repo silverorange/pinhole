@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminPage.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/exceptions/AdminNoAccessException.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-
 /**
  * Page for loading photos
  *

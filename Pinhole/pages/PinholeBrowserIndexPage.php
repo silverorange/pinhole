@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Pinhole/pages/PinholeBrowserPage.php';
-require_once 'Pinhole/tags/PinholePageTag.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007-2013 silverorange

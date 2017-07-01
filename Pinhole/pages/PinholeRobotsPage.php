@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Site/pages/SitePage.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange

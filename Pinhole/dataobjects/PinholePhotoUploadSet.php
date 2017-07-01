@@ -1,8 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDBDataObject.php';
-require_once 'Site/dataobjects/SiteInstance.php';
-
 /**
  * A simple dataobject for grouping uploaded photos
  *

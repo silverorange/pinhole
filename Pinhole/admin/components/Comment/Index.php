@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Site/admin/components/Comment/Index.php';
-require_once 'Pinhole/admin/PinholeCommentDisplay.php';
-require_once 'Pinhole/dataobjects/PinholePhotographerWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
-
 /**
  * Page to manage pending comments on photos
  *

@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Swat/SwatDate.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
-require_once 'Pinhole/tags/PinholeIterableTag.php';
-
 /**
  * Machine tag for dates
  *

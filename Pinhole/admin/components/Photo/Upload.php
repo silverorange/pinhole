@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminPage.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholeImageSet.php';
-require_once 'Pinhole/dataobjects/PinholePhotoUploadSet.php';
-require_once dirname(__FILE__).'/include/PinholePhotoUploader.php';
-
 /**
  * Page for uploading photos
  *

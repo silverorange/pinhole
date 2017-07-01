@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
-
 /**
  * Machine tag for gps data
  *

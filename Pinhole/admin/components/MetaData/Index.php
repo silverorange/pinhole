@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminIndex.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Swat/SwatDetailsView.php';
-
 /**
  * Index page for metadata
  *

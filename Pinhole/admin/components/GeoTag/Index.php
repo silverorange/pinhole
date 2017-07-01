@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Swat/SwatYUI.php';
-require_once 'Admin/pages/AdminPage.php';
-require_once 'XML/RPCAjax.php';
-
 /**
  * Index page for geo-tagging
  *

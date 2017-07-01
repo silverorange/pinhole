@@ -1,19 +1,6 @@
 <?php
 
-@include_once 'PackageConfig.php';
-if (class_exists('PackageConfig')) {
-	PackageConfig::addPackage('swat');
-	PackageConfig::addPackage('site');
-	PackageConfig::addPackage('admin');
-	PackageConfig::addPackage('pinhole');
-}
-
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Site/SiteExceptionLogger.php';
-require_once 'Swat/SwatError.php';
-require_once 'Site/SiteErrorLogger.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/admin/PinholeAdminApplication.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 $app = new PinholeAdminApplication('pinholedemoadmin');
 $config_filename = dirname(__FILE__).'/../../demo.ini';

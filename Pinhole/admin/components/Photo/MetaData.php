@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminIndex.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Swat/SwatDetailsView.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-
 /**
  * Index page for metadata
  *

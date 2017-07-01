@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminPage.php';
-
 /**
  * Admin front-page that redirects to photos tool
  *

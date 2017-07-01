@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholeMetaData.php';
-require_once 'Pinhole/dataobjects/PinholePhotoMetaDataBinding.php';
-require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange

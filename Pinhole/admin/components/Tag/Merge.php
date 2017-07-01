@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminDBConfirmation.php';
-require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
-
 /**
  * @package   Pinhole
  * @copyright 2009 silverorange

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDBDataObject.php';
-require_once 'Site/dataobjects/SiteInstance.php';
-
 /**
  * A specialized data-object for objects that are instance-specific
  *

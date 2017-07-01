@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Site/SiteCommentUi.php';
-
 /**
  * Pinhole comment UI
  *

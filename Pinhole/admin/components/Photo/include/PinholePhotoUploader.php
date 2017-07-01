@@ -1,16 +1,5 @@
 <?php
 
-require_once 'Pinhole/Pinhole.php';
-
-require_once 'Swat/SwatForm.php';
-require_once 'Swat/SwatFileEntry.php';
-require_once 'Swat/SwatProgressBar.php';
-require_once 'Swat/SwatButton.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/exceptions/SwatException.php';
-
-require_once 'XML/RPCAjax.php';
-
 /**
  * Widget for uploading photo files asynchronously with an upload progress bar
  *

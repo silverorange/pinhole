@@ -64,7 +64,7 @@ class PinholeTagIndex extends AdminSearch
 	 *                             from.
 	 * @param SwatActions $actions the actions list widget.
 	 */
-	protected function processActions(SwatTableView $view, SwatActions $actions)
+	protected function processActions(SwatView $view, SwatActions $actions)
 	{
 		switch ($actions->selected->id) {
 		case 'delete':

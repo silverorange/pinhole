@@ -11,7 +11,7 @@ class PinholePhotoIndex extends AdminSearch
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/index.xml';
+	protected $ui_xml = __DIR__.'/index.xml';
 	protected $where_clause;
 	protected $join_clause;
 	protected $order_by_clause;

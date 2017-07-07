@@ -22,7 +22,7 @@ abstract class PinholeBrowserPage extends SitePage
 	/**
 	 * @var string
 	 */
-	protected $search_ui_xml = 'Pinhole/pages/browser-search.xml';
+	protected $search_ui_xml = __DIR__.'/browser-search.xml';
 
 	/**
 	 * @var string

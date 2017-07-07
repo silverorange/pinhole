@@ -44,7 +44,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	) {
 		parent::__construct($app, $layout, $arguments);
 
-		$this->ui_xml = 'Pinhole/pages/browser-details.xml';
+		$this->ui_xml = __DIR__.'/browser-details.xml';
 
 		$this->createPhoto($this->getArgument('photo_id'));
 	}

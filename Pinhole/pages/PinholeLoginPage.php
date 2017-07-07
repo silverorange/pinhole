@@ -14,7 +14,7 @@ class PinholeLoginPage extends SitePage
 	/**
 	 * @var string
 	 */
-	protected $ui_xml = 'Pinhole/pages/login.xml';
+	protected $ui_xml = __DIR__.'/login.xml';
 
 	protected $ui;
 

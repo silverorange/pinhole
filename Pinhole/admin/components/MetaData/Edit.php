@@ -11,7 +11,7 @@ class PinholeMetaDataEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/MetaData/edit.xml';
+	protected $ui_xml = __DIR__.'/edit.xml';
 
 	/**
 	 * @var PinholeMetaData

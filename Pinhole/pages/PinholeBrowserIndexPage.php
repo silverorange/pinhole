@@ -23,7 +23,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		array $arguments = array()
 	) {
 		parent::__construct($app, $layout, $arguments);
-		$this->ui_xml = 'Pinhole/pages/browser-index.xml';
+		$this->ui_xml = __DIR__.'/browser-index.xml';
 	}
 
 	// }}}

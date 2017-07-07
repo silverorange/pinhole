@@ -11,7 +11,7 @@ class PinholePhotoComments extends AdminIndex
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/comments.xml';
+	protected $ui_xml = __DIR__.'/comments.xml';
 
 	/**
 	 * @var PinholePhoto

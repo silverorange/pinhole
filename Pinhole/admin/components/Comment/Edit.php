@@ -24,7 +24,7 @@ class PinholeCommentEdit extends SiteCommentEdit
 
 	protected function getUiXml()
 	{
-		return 'Pinhole/admin/components/Comment/edit.xml';
+		return __DIR__.'/edit.xml';
 	}
 
 	// }}}

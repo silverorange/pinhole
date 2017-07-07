@@ -21,7 +21,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	) {
 		parent::__construct($app, $layout, $arguments);
 
-		$this->ui_xml = 'Pinhole/pages/browser-tag.xml';
+		$this->ui_xml = __DIR__.'/browser-tag.xml';
 		$this->display_type = $this->getArgument('display_type');
 	}
 

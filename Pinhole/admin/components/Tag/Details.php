@@ -11,7 +11,7 @@ class PinholeTagDetails extends AdminIndex
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Tag/details.xml';
+	protected $ui_xml = __DIR__.'/details.xml';
 	protected $id;
 
 	// }}}

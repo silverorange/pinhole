@@ -12,7 +12,7 @@ class PinholePhotoMetaData extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Photo/meta-data.xml';
+		__DIR__.'/meta-data.xml';
 
 	/**
 	 * @var PinholePhoto

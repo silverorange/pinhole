@@ -11,7 +11,7 @@ class PinholeTagEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Tag/edit.xml';
+	protected $ui_xml = __DIR__.'/edit.xml';
 
 	/**
 	 * @var PinholeTag

@@ -11,7 +11,7 @@ class PinholePhotoUpload extends AdminPage
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/upload.xml';
+	protected $ui_xml = __DIR__.'/upload.xml';
 	protected $config_ui_map = array();
 
 	// }}}

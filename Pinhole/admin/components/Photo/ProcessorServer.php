@@ -11,7 +11,7 @@ class PinholePhotoProcessorServer extends AdminXMLRPCServer
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/pending.xml';
+	protected $ui_xml = __DIR__.'/pending.xml';
 
 	// }}}
 

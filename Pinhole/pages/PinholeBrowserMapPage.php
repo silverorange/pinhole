@@ -15,7 +15,7 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 		array $arguments = array()
 	) {
 		parent::__construct($app, $layout, $arguments);
-		$this->ui_xml = 'Pinhole/pages/browser-map.xml';
+		$this->ui_xml = __DIR__.'/browser-map.xml';
 	}
 
 	// }}}

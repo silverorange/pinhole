@@ -11,7 +11,7 @@ class PinholeGeoTagSearch extends AdminSearch
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/GeoTag/search.xml';
+	protected $ui_xml = __DIR__.'/search.xml';
 	protected $where_clause;
 	protected $join_clause;
 	protected $order_by_clause;

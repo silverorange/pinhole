@@ -19,7 +19,7 @@ class PinholeTagMerge extends AdminDBConfirmation
 
 	protected function initInternal()
 	{
-		$this->ui_xml = dirname(__FILE__).'/merge.xml';
+		$this->ui_xml = __DIR__.'/merge.xml';
 
 		parent::initInternal();
 

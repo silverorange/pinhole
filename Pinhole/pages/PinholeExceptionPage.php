@@ -14,8 +14,7 @@ class PinholeExceptionPage extends SiteXhtmlExceptionPage
 		parent::init();
 
 		$search_ui = new SwatUI();
-		$search_ui->loadFromXML(
-			dirname(__FILE__).'/browser-search.xml');
+		$search_ui->loadFromXML(__DIR__.'/browser-search.xml');
 
 		$this->layout->startCapture('search_content');
 		$search_ui->display();

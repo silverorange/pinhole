@@ -18,7 +18,7 @@ class PinholePhotoDelete extends AdminDBDelete
 
 		// override default xml
 		$this->ui = new AdminUI();
-		$this->ui->loadFromXML(dirname(__FILE__).'/delete.xml');
+		$this->ui->loadFromXML(__DIR__.'/delete.xml');
 	}
 
 	// }}}

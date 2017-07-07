@@ -18,7 +18,7 @@ class PinholePhotoTime extends AdminDBConfirmation
 
 		// override default xml
 		$this->ui = new AdminUI();
-		$this->ui->loadFromXML(dirname(__FILE__).'/time.xml');
+		$this->ui->loadFromXML(__DIR__.'/time.xml');
 	}
 
 	// }}}

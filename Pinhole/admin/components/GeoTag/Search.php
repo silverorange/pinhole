@@ -55,8 +55,7 @@ class PinholeGeoTagSearch extends AdminSearch
 
 	protected function createLayout()
 	{
-		return new SiteLayout($this->app,
-			'Pinhole/admin/components/GeoTag/search-layout.php');
+		return new SiteLayout($this->app, PinholeGeoTagSearchTemplate::class);
 	}
 
 	// }}}

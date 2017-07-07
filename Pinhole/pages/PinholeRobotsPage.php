@@ -47,8 +47,7 @@ class PinholeRobotsPage extends SitePage
 
 	protected function createLayout()
 	{
-		return new SiteLayout($this->app,
-			'../layouts/xhtml/blank.php');
+		return new SiteLayout($this->app, SiteBlankTemplate::class);
 	}
 
 	// }}}

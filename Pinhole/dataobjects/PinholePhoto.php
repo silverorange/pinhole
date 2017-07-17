@@ -807,7 +807,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 		$file = $_FILES[$name];
 
-		explode('.', $file['name']);
+		$parts = explode('.', $file['name']);
 		$ext = strtolower(end($parts));
 
 		$filename = uniqid('file').'.'.$ext;
@@ -1112,7 +1112,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 		$filename = str_replace('.', '-', uniqid('file', true));
 
 		// get extension
-		if (strpos($original_filenaexplode('.', $original_filename)me, '.') !== false) {
+		if (strpos($original_filename, '.') !== false) {
 			$parts = explode('.', $original_filename);
 			$ext = strtolower(end($parts));
 			$filename.= '.'.$ext;

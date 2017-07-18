@@ -807,7 +807,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 		$file = $_FILES[$name];
 
-		$ext = strtolower(end(explode('.', $file['name'])));
+		$parts = explode('.', $file['name']);
+		$ext = strtolower(end($parts));
 
 		$filename = uniqid('file').'.'.$ext;
 		$file_path = sprintf('%s/%s',
@@ -987,7 +988,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 			// ignore certain common extensions
 			if (strpos($filename, '.') !== false) {
-				$ext = end(explode('.', $filename));
+				$parts = explode('.', $filename);
+				$ext = end($parts);
 				$ignore_extensions = array(
 					'db',      // e.g. thumbs.db
 					'exe',     // e.g. gallery.exe
@@ -1088,7 +1090,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 				FILEINFO_MIME_TYPE : FILEINFO_MIME;
 
 			$finfo = new finfo($mime_constant);
-			$mime_type = reset(explode(';', $finfo->file($file_path)));
+			$parts = explode(';', $finfo->file($file_path));
+			$mime_type = reset($parts);
 
 		} elseif (function_exists('mime_content_type')) {
 			// Fall back to mime_content_type() if available.
@@ -1110,7 +1113,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 
 		// get extension
 		if (strpos($original_filename, '.') !== false) {
-			$ext = strtolower(end(explode('.', $original_filename)));
+			$parts = explode('.', $original_filename);
+			$ext = strtolower(end($parts));
 			$filename.= '.'.$ext;
 		}
 

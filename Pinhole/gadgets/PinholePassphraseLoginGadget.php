@@ -23,7 +23,6 @@ class PinholePassphraseLoginGadget extends SiteGadget
 			$this->app->config->pinhole->passphrase == '')
 			return;
 
-
 		parent::displayTitle();
 	}
 

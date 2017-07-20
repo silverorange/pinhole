@@ -77,7 +77,7 @@ class PinholeCommentEdit extends SiteCommentEdit
 					PinholePhotographer::STATUS_ENABLED, 'integer'),
 				$this->app->db->quote($photographer_id, 'integer'));
 
-			$rs =  SwatDB::query($this->app->db, $sql);
+			$rs = SwatDB::query($this->app->db, $sql);
 
 			$photographers = array();
 			foreach ($rs as $photographer)

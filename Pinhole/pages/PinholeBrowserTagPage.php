@@ -366,7 +366,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		// TODO: maybe move this to SwatString
 		$string = htmlentities($string, ENT_COMPAT, 'UTF-8');
 		$string = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde);/',
-			'$1',$string);
+			'$1', $string);
 		return html_entity_decode($string);
 	}
 

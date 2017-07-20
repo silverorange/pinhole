@@ -211,7 +211,7 @@ class Pinhole
 		$pinhole_base_href = $app->config->pinhole->path;
 
 		$set->addEntry(new SwatLinkHtmlHeadEntry($pinhole_base_href.'feed',
-			'alternate','application/atom+xml', 'Feed'));
+			'alternate', 'application/atom+xml', 'Feed'));
 
 		return $set;
 	}

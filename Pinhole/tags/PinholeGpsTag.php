@@ -68,7 +68,7 @@ class PinholeGpsTag extends PinholeAbstractMachineTag
 		if (count($parts) > 0 &&
 			$this->isValid($parts['name'], $parts['value'])) {
 
-			$this->name =  $parts['name'];
+			$this->name = $parts['name'];
 			$this->value = $parts['value'];
 
 			$valid = true;

@@ -43,8 +43,7 @@ class PinholeMetaDataEdit extends AdminDBEdit
 		$this->metadata->setDatabase($this->app->db);
 		$this->metadata->instance = $this->app->getInstance();
 
-		if ($this->id === null) {
-		} else {
+		if ($this->id !== null) {
 			if (!$this->metadata->load($this->id))
 				throw new AdminNotFoundException(
 					sprintf(Pinhole::_('MetaData with id “%s” not found.'),

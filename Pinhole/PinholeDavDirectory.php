@@ -145,7 +145,7 @@ class PinholeDavDirectory implements Sabre_DAV_IDirectory
 
 		if ($file === null) {
 			throw new Sabre_DAV_Exception_FileNotFound(
-				'Photo with name "' . $name . '" does not exist.');
+				'Photo with name "'.$name.'" does not exist.');
 		}
 
 		return $file;

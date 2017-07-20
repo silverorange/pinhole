@@ -177,7 +177,7 @@ class PinholeTagEdit extends AdminDBEdit
 			$edit = $this->navbar->popEntry();
 			$this->navbar->addEntry(new SwatNavBarEntry($this->tag->title,
 				$this->getComponentName().'/Details?id='.$this->id));
-	
+
 			$this->navbar->addEntry($edit);
 		}
 	}

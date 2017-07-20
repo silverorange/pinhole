@@ -3,7 +3,7 @@
 require_once 'Pinhole/exceptions/PinholeException.php';
 
 /**
- * An exception when processing a file 
+ * An exception when processing a file
  *
  * @package   Pinhole
  * @copyright 2006-2007 silverorange

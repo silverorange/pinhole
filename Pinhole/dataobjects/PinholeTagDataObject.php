@@ -25,21 +25,21 @@ class PinholeTagDataObject extends PinholeInstanceDataObject
 	public $id;
 
 	/**
-	 * 
+	 *
 	 *
 	 * @var string
 	 */
 	public $name;
 
 	/**
-	 * 
+	 *
 	 *
 	 * @var string
 	 */
 	public $title;
 
 	/**
-	 * 
+	 *
 	 *
 	 * @var SwatDate
 	 */

@@ -145,4 +145,5 @@ class PinholeMetaDataIndex extends AdminIndex
 	// }}}
 
 }
+
 ?>

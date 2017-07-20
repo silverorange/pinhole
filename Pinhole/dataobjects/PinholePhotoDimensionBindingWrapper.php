@@ -13,7 +13,7 @@ require_once 'PinholePhotoDimensionBinding.php';
  * @see       PinholePhotoDimensionBinding
  */
 class PinholePhotoDimensionBindingWrapper extends
-	SiteImageDimensionBindingWrapper
+ SiteImageDimensionBindingWrapper
 {
 	// {{{ protected function getImageDimensionBindingClassName()
 

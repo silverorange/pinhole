@@ -152,7 +152,7 @@ class PinholePhotoUpload extends AdminPage
 			if (is_bool($value))
 				$value = ($value) ? '1' : '0';
 
-			$this->app->config->pinhole->$config_name = $value;
+			$this->app->config->pinhole->{$config_name} = $value;
 
 			$config_paths[] = 'pinhole.'.$config_name;
 		}

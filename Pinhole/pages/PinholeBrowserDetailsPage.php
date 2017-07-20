@@ -268,7 +268,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 				$this->layout->data->html_title.= ')';
 		}
 
-
 		if ($this->photo->description != '')
 			$this->layout->data->meta_description.=
 				(($this->layout->data->meta_description == '') ? '' : ' ').
@@ -529,7 +528,6 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 		else
 			$camera_renderer->text = sprintf(Pinhole::_('Taken with a %s'),
 				$camera).' | ';
-
 
 		$renderer = $field->getRenderer('meta_data_widget');
 		$widget = $renderer->getPrototypeWidget();

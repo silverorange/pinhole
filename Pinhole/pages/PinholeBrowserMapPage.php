@@ -154,7 +154,6 @@ class PinholeBrowserMapPage extends PinholeBrowserPage
 		$this->layout->addHtmlHeadEntrySet(
 			XML_RPCAjax::getHtmlHeadEntrySet());
 
-
 		$this->layout->startCapture('html_head_entries');
 		echo "\n\n<!-- head entries for Google Maps -->\n";
 

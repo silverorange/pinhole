@@ -14,22 +14,16 @@ class PinholeMetaData extends PinholeInstanceDataObject
 	// {{{ public properties
 
 	/**
-	 * 
-	 *
 	 * @var integer
 	 */
 	public $id;
 
 	/**
-	 * 
-	 *
 	 * @var string
 	 */
 	public $shortname;
 
 	/**
-	 * 
-	 *
 	 * @var string
 	 */
 	public $title;

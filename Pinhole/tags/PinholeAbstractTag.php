@@ -325,7 +325,7 @@ abstract class PinholeAbstractTag implements SwatDBRecordable
 	 * Deletes this tag from the database
 	 *
 	 * After this tag is deleted from the database it still exists as a PHP
-	 * object. 
+	 * object.
 	 *
 	 * Not all tag types can be deleted. If this tag can not be deleted, this
 	 * this method does nothing.

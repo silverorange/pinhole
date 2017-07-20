@@ -214,7 +214,6 @@ class PinholeCalendarGadget extends SiteGadget
 			$app->db->quote($end_date->getDate(), 'date'),
 			$private_where_clause);
 
-
 		$days = SwatDB::query($app->db, $sql);
 
 		$day_count = array();

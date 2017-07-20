@@ -53,7 +53,7 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	/**
 	 * Parses this search tag from a tag string
 	 *
-	 * @param string $string the tag string to parse. 
+	 * @param string $string the tag string to parse.
 	 * @param MDB2_Driver_Common $db the database connection used to parse the
 	 *                            tag string.
 	 * @param SiteInstance the site instance used to parse the tag string.
@@ -71,7 +71,7 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 		if (count($parts) > 0 &&
 			$this->isValid($parts['name'], $parts['value'])) {
 
-			$this->name =  $parts['name'];
+			$this->name = $parts['name'];
 			$this->value = $parts['value'];
 
 			$valid = true;

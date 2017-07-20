@@ -37,7 +37,8 @@ class PinholeCommentIndex extends SiteCommentIndex
 	protected function getCommentCount()
 	{
 		$sql = 'select count(1) from PinholeComment
-			left outer join PinholePhotographer on PinholeComment.photographer = PinholePhotographer.id
+			left outer join PinholePhotographer on
+			PinholeComment.photographer = PinholePhotographer.id
 			where '.$this->getWhereClause();
 
 		return SwatDB::queryOne($this->app->db, $sql);
@@ -50,7 +51,8 @@ class PinholeCommentIndex extends SiteCommentIndex
 	{
 		$sql = sprintf(
 			'select PinholeComment.* from PinholeComment
-			left outer join PinholePhotographer on PinholeComment.photographer = PinholePhotographer.id
+			left outer join PinholePhotographer on
+			PinholeComment.photographer = PinholePhotographer.id
 			where %s
 			order by createdate desc',
 			$this->getWhereClause());

@@ -47,7 +47,7 @@ class PinholeComment extends SiteComment
 
 			$instance_id  = ($instance === null) ? null : $instance->id;
 			if ($instance_id !== null) {
-				$sql.=sprintf(' and ImageSet.instance %s %s',
+				$sql.= sprintf(' and ImageSet.instance %s %s',
 					SwatDB::equalityOperator($instance_id),
 					$this->db->quote($instance_id, 'integer'));
 			}

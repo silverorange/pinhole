@@ -95,14 +95,14 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	private $memcache;
 
 	/**
-     * show private photos?
+	 * show private photos?
 	 *
 	 * @var boolean
 	 */
 	private $show_private_photos = false;
 
 	/**
-     * show only geo-tagged photos?
+	 * show only geo-tagged photos?
 	 *
 	 * @var boolean
 	 */
@@ -1160,7 +1160,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	// {{{ public function setShowOnlyGeoTaggedPhotos()
 
 	/**
-	 * Sets whether to only show geo-tagged photos 
+	 * Sets whether to only show geo-tagged photos
 	 *
 	 * @param boolean $show_only_geo_tagged_photos
 	 */

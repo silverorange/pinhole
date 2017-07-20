@@ -57,3 +57,5 @@ class PinholePhotoTagServer extends SitePage
 
 	// }}}
 }
+
+?>

@@ -147,7 +147,7 @@ abstract class PinholeBrowserPage extends SitePage
 		try {
 			$form = $this->ui->getWidget('search_form');
 			if ($form->isSubmitted()) {
-				$keywords= $this->ui->getWidget('keywords')->value;
+				$keywords = $this->ui->getWidget('keywords')->value;
 
 				$keyword_tag = ($keywords === null) ? '' : sprintf(
 					'search.keywords=%s', urlencode($keywords));
@@ -291,7 +291,6 @@ abstract class PinholeBrowserPage extends SitePage
 			$a_tag->display();
 
 			$div_tag->close();
-
 
 			$this->ui->getWidget('sub_tag_list_content')->content =
 				ob_get_clean();

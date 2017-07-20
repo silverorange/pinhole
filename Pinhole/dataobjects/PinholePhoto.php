@@ -141,7 +141,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	 *
 	 * @var string
 	 */
-	 public $photo_time_zone;
+	public $photo_time_zone;
 
 	/**
 	 * Time-zone of the camera
@@ -152,49 +152,49 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	 *
 	 * @var string
 	 */
-	 public $camera_time_zone;
+	public $camera_time_zone;
 
 	/**
 	 * Private
 	 *
 	 * @var boolean
 	 */
-	 public $private;
+	public $private;
 
 	/**
 	 * Auto-publish
 	 *
 	 * @var boolean
 	 */
-	 public $auto_publish;
+	public $auto_publish;
 
 	/**
 	 * Set content by meta-data when processing
 	 *
 	 * @var boolean
 	 */
-	 public $set_content_by_meta_data;
+	public $set_content_by_meta_data;
 
 	/**
 	 * Set tags by meta-data when processing
 	 *
 	 * @var boolean
 	 */
-	 public $set_tags_by_meta_data;
+	public $set_tags_by_meta_data;
 
 	/**
 	 * Auto-rotate when processing
 	 *
 	 * @var boolean
 	 */
-	 public $auto_rotate = true;
+	public $auto_rotate = true;
 
 	/**
 	 * For sale
 	 *
 	 * @var boolean
 	 */
-	 public $for_sale;
+	public $for_sale;
 
 	/**
 	 * GPS Latitude
@@ -832,7 +832,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 			throw new PinholeProcessingException(
 				'File could not be found.');
 
-		if (($archive_type = self::getArchiveType($file_path)) === false) {
+		$archive_type = self::getArchiveType($file_path);
+		if ($archive_type === false) {
 			$files = array(basename($file_path) => $original_filename);
 		} else {
 			$files = self::getArchivedFiles($file_path, $archive_type);

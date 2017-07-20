@@ -25,7 +25,7 @@ class PinholePhotographer extends PinholeInstanceDataObject
 	const STATUS_ARCHIVED = 1;
 
 	/*
-     * Hide the photographer in both the admin and the front-end
+	 * Hide the photographer in both the admin and the front-end
 	 */
 	const STATUS_DISABLED = 2;
 

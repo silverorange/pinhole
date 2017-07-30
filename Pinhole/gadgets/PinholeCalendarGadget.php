@@ -69,9 +69,10 @@ class PinholeCalendarGadget extends SiteGadget
 	// }}}
 	// {{{ public static function displayCalendarMonth()
 
-	public static function displayCalendarMonth(SiteWebApplication $app,
-		SwatDate $date)
-	{
+	public static function displayCalendarMonth(
+		SiteWebApplication $app,
+		SwatDate $date
+	) {
 		$a_tag = new SwatHtmlTag('a');
 		$a_tag->setContent($date->formatLikeIntl('MMMM, yyyy'));
 		$a_tag->title = sprintf('View photos taken during %s',
@@ -90,9 +91,10 @@ class PinholeCalendarGadget extends SiteGadget
 	// }}}
 	// {{{ public static function displayCalendarBody()
 
-	public static function displayCalendarBody(SiteWebApplication $app,
-		SwatDate $date)
-	{
+	public static function displayCalendarBody(
+		SiteWebApplication $app,
+		SwatDate $date
+	) {
 		if (isset($app->memcache)) {
 			$cache_key = sprintf('PinholeCalendarGadget.%s.%s.%s',
 				'displayCalendarBody',
@@ -169,8 +171,9 @@ class PinholeCalendarGadget extends SiteGadget
 	// {{{ public static function getPhotoCountPerDay()
 
 	public static function getPhotoCountPerDay(
-		SiteWebApplication $app, SwatDate $date)
-	{
+		SiteWebApplication $app,
+		SwatDate $date
+	) {
 		if (isset($app->memcache)) {
 			$cache_key = sprintf('PinholeCalendarGadget.count.%s.%s',
 				$date->formatLikeIntl('yyyy-MM'),

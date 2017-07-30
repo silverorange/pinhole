@@ -97,9 +97,10 @@ class PinholeTag extends PinholeAbstractTag
 	 *                                           specified, an empty tag is
 	 *                                           created.
 	 */
-	public function __construct(SiteInstance $instance = null,
-		PinholeTagDataObject $data_object = null)
-	{
+	public function __construct(
+		SiteInstance $instance = null,
+		PinholeTagDataObject $data_object = null
+	) {
 		parent::__construct();
 
 		if ($data_object === null) {
@@ -132,9 +133,11 @@ class PinholeTag extends PinholeAbstractTag
 	 * @return boolean true if the tag string could be parsed and false if the
 	 *                  tag string could not be parsed.
 	 */
-	public function parse($string, MDB2_Driver_Common $db,
-		SiteInstance $instance = null)
-	{
+	public function parse(
+		$string,
+		MDB2_Driver_Common $db,
+		SiteInstance $instance = null
+	) {
 		$valid = false;
 
 		$this->data_object = new PinholeTagDataObject();

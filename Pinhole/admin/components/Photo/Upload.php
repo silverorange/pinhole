@@ -107,9 +107,12 @@ class PinholePhotoUpload extends AdminPage
 	 * @param string $file The file path to the image file
 	 * @param string $original_filename The original name of the file
 	 */
-	protected function getTempPhoto(PinholePhotoUploadSet $upload_set,
-		SiteImageSet $image_set, $filename, $original_filename)
-	{
+	protected function getTempPhoto(
+		PinholePhotoUploadSet $upload_set,
+		SiteImageSet $image_set,
+		$filename,
+		$original_filename
+	) {
 		$class_name = SwatDBClassMap::get('PinholePhoto');
 		$photo = new $class_name();
 		$photo->setDatabase($this->app->db);

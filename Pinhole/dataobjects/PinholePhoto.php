@@ -538,9 +538,10 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	// }}}
 	// {{{ public function addTagsByName()
 
-	public function addTagsByName(array $tag_names,
-		$clear_existing_tags = false)
-	{
+	public function addTagsByName(
+		array $tag_names,
+		$clear_existing_tags = false
+	) {
 		$this->checkDB();
 
 		$instance_id = ($this->image_set->instance === null) ? null :
@@ -762,9 +763,10 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	 * @param Imagick $imagick the imagick instance to work with.
 	 * @param SiteImageDimension $dimension the image's dimension.
 	 */
-	protected function saveDimensionBinding(Imagick $imagick,
-		SiteImageDimension $dimension)
-	{
+	protected function saveDimensionBinding(
+		Imagick $imagick,
+		SiteImageDimension $dimension
+	) {
 		$class_name = SwatDBClassMap::get('PinholePhotoDimensionBinding');
 		$binding = new $class_name();
 		$binding->setDatabase($this->db);
@@ -851,9 +853,10 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	 * @param string $image_file the image file to process.
 	 * @param SiteImageDimension $dimension the dimension to process.
 	 */
-	protected function getNewImagick($image_file,
-		SiteImageDimension $dimension)
-	{
+	protected function getNewImagick(
+		$image_file,
+		SiteImageDimension $dimension
+	) {
 		$imagick = parent::getNewImagick($image_file, $dimension);
 
 		if ($this->auto_rotate) {
@@ -872,9 +875,10 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	 * @param Imagick $imagick the imagick instance to work with.
 	 * @param SiteImageDimension $dimension the dimension to process.
 	 */
-	protected function fitToDimension(Imagick $imagick,
-		SiteImageDimension $dimension)
-	{
+	protected function fitToDimension(
+		Imagick $imagick,
+		SiteImageDimension $dimension
+	) {
 		$max_width = $dimension->max_width;
 		$max_height = $dimension->max_height;
 

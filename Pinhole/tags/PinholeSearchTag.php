@@ -61,9 +61,11 @@ class PinholeSearchTag extends PinholeAbstractMachineTag
 	 * @return boolean true if the tag string could be parsed and false if the
 	 *                  tag string could not be parsed.
 	 */
-	public function parse($string, MDB2_Driver_Common $db,
-		SiteInstance $instance = null)
-	{
+	public function parse(
+		$string,
+		MDB2_Driver_Common $db,
+		SiteInstance $instance = null
+	) {
 		$this->setDatabase($db);
 		$this->setInstance($instance);
 

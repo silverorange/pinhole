@@ -38,9 +38,11 @@ abstract class PinholeBrowserPage extends SitePage
 	// }}}
 	// {{{ public function __construct()
 
-	public function __construct(SiteApplication $app, SiteLayout $layout = null,
-		array $arguments = array())
-	{
+	public function __construct(
+		SiteApplication $app,
+		SiteLayout $layout = null,
+		array $arguments = array()
+	) {
 		parent::__construct($app, $layout, $arguments);
 
 		$tags = SiteApplication::initVar('tags');
@@ -300,9 +302,10 @@ abstract class PinholeBrowserPage extends SitePage
 	// }}}
 	// {{{ protected function getSubTagList()
 
-	protected function getSubTagList(SwatDBRange $range = null,
-		$order_by_clause = null)
-	{
+	protected function getSubTagList(
+		SwatDBRange $range = null,
+		$order_by_clause = null
+	) {
 		if (count($this->tag_list) > 0) {
 			$sub_tag_list = $this->tag_list->getSubTagsByPopularity(
 				$range, $order_by_clause);

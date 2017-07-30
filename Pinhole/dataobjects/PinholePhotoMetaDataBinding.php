@@ -141,7 +141,7 @@ class PinholePhotoMetaDataBinding extends SwatDBDataObject
 
 		$fraction = new Math_Fraction($decimals);
 		// needs the @ because it doesn't handle references properly
-		@$fraction = Math_FractionOp::simplify($fraction);
+		$fraction = @Math_FractionOp::simplify($fraction);
 
 		$numerator = $fraction->getNum();
 		$denominator = $fraction->getDen();

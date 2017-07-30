@@ -22,9 +22,11 @@ class PinholePhotoLoaderPage extends SitePage
 	// init phase
 	// {{{ public function __construct()
 
-	public function __construct(SiteApplication $app, SiteLayout $layout,
-		array $arguments)
-	{
+	public function __construct(
+		SiteApplication $app,
+		SiteLayout $layout,
+		array $arguments
+	) {
 		parent::__construct($app, $layout, $arguments);
 
 		$this->photo = $this->getPhoto($this->getArgument('filename'));

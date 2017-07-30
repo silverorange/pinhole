@@ -16,9 +16,10 @@ class PinholePhotoWrapper extends SiteImageWrapper
 {
 	// {{{ public function __construct()
 
-	public function __construct(MDB2_Result_Common $rs = null,
-		array $options = array())
-	{
+	public function __construct(
+		MDB2_Result_Common $rs = null,
+		array $options = array()
+	) {
 		$this->binding_table = 'PinholePhotoDimensionBinding';
 		$this->binding_table_image_field = 'photo';
 

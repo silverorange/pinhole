@@ -33,9 +33,11 @@ class PinholeCommentsAtomPage extends SitePage
 	// }}}
 	// {{{ public function __construct()
 
-	public function __construct(SiteWebApplication $app, SiteLayout $layout,
-		array $arguments = array())
-	{
+	public function __construct(
+		SiteWebApplication $app,
+		SiteLayout $layout,
+		array $arguments = array()
+	) {
 		$layout = new SiteLayout($app, 'Site/layouts/xhtml/atom.php');
 
 		parent::__construct($app, $layout, $arguments);

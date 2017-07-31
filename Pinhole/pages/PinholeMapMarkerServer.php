@@ -150,9 +150,11 @@ class PinholeMapMarkerServer extends SiteXMLRPCServer
 	// }}}
 	// {{{ private function displayPhotoGrid()
 
-	private function displayPhotoGrid(PinholePhotoWrapper $photos, $tag_list,
-		array $box)
-	{
+	private function displayPhotoGrid(
+		PinholePhotoWrapper $photos,
+		$tag_list,
+		array $box
+	) {
 		$ui = new SwatUI();
 		$ui->loadFromXml(dirname(__FILE__).'/map-tile.xml');
 

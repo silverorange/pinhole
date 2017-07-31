@@ -71,9 +71,11 @@ class PinholeTagFactory
 	 * @return PinholeAbstractTag the parsed tag object or null if the given
 	 *                             string could not be parsed.
 	 */
-	public static function get($string, MDB2_Driver_Common $db = null,
-		SiteInstance $instance = null)
-	{
+	public static function get(
+		$string,
+		MDB2_Driver_Common $db = null,
+		SiteInstance $instance = null
+	) {
 		if ($db === null &&
 			self::$default_database instanceof MDB2_Driver_Common) {
 			$db = self::$default_database;

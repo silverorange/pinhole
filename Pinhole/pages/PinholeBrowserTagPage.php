@@ -19,9 +19,11 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	// }}}
 	// {{{ public function __construct()
 
-	public function __construct(SiteApplication $app, SiteLayout $layout,
-		array $arguments)
-	{
+	public function __construct(
+		SiteApplication $app,
+		SiteLayout $layout,
+		array $arguments
+	) {
 		parent::__construct($app, $layout, $arguments);
 
 		$this->ui_xml = 'Pinhole/pages/browser-tag.xml';
@@ -346,9 +348,10 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	// }}}
 	// {{{ protected static function sortTagsByTitle()
 
-	protected static function sortTagsByTitle(PinholeTag $tag_a,
-		PinholeTag $tag_b)
-	{
+	protected static function sortTagsByTitle(
+		PinholeTag $tag_a,
+		PinholeTag $tag_b
+	) {
 		$al = strtolower($tag_a->title);
 		$bl = strtolower($tag_b->title);
 

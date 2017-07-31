@@ -60,9 +60,10 @@ class PinholeCommentUi extends SiteCommentUi
 	// }}}
 	// {{{ protected function setCommentPost()
 
-	protected function setCommentPost(SiteComment $comment,
-		SiteCommentStatus $post)
-	{
+	protected function setCommentPost(
+		SiteComment $comment,
+		SiteCommentStatus $post
+	) {
 		$comment->photo = $post;
 	}
 

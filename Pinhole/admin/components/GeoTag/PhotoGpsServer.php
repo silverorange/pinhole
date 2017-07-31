@@ -23,9 +23,12 @@ class PinholeGeoTagPhotoGpsServer extends AdminXMLRPCServer
 	 *
 	 * @return array The photo ids that were updated.
 	 */
-	public function setPhotoGpsData(array $photo_ids, $latitude, $longitude,
-		$zoom_level)
-	{
+	public function setPhotoGpsData(
+		array $photo_ids,
+		$latitude,
+		$longitude,
+		$zoom_level
+	) {
 		$instance_id = $this->app->getInstanceId();
 
 		$sql = sprintf('update PinholePhoto set

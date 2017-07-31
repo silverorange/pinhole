@@ -181,9 +181,11 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 * @param boolen $show_private_photos Whether or not to load photos marked
 	 *                                 as private. Default is to not show them.
 	 */
-	public function __construct(SiteApplication $app, $tag_list_string = null,
-		$show_private_photos = false)
-	{
+	public function __construct(
+		SiteApplication $app,
+		$tag_list_string = null,
+		$show_private_photos = false
+	) {
 		$this->app = $app;
 		$this->setDatabase($this->app->db);
 		$this->db->loadModule('Datatype', null, true);
@@ -402,9 +404,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @return PinholePhotoWrapper the photos of this tag list.
 	 */
-	public function getPhotos($dimension_shortname = null,
-		array $extra_fields = null)
-	{
+	public function getPhotos(
+		$dimension_shortname = null,
+		array $extra_fields = null
+	) {
 		if ($dimension_shortname == 'thumbnail')
 			$wrapper = SwatDBClassMap::get('PinholePhotoThumbnailWrapper');
 		elseif ($dimension_shortname === false)
@@ -826,9 +829,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @see PinholeTagList::getPhotos()
 	 */
-	public function getSubTags(SwatDBRange $range = null,
-		$order_by_clause = null)
-	{
+	public function getSubTags(
+		SwatDBRange $range = null,
+		$order_by_clause = null
+	) {
 		$tag_data_objects = $this->getSubTagDataObjects($range,
 			$order_by_clause);
 
@@ -865,9 +869,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @see PinholeTagList::getSubTags()
 	 */
-	public function getSubTagsByPopularity(SwatDBRange $range = null,
-		$order_by_clause = null)
-	{
+	public function getSubTagsByPopularity(
+		SwatDBRange $range = null,
+		$order_by_clause = null
+	) {
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
 		$value = $this->app->getCacheValue($cache_key, 'photos');
@@ -1877,9 +1882,10 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 	 *
 	 * @return PinholeTagDataObjectWrapper
 	 */
-	private function getSubTagDataObjects(SwatDBRange $range = null,
-		$order_by_clause = null)
-	{
+	private function getSubTagDataObjects(
+		SwatDBRange $range = null,
+		$order_by_clause = null
+	) {
 		$args = func_get_args();
 		$cache_key = $this->getCacheKey(__FUNCTION__, $args);
 		$value = $this->app->getCacheRecordset($cache_key,

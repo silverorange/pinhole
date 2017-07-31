@@ -58,9 +58,11 @@ class PinholeAtomPage extends SitePage
 	 * @param SiteLayout $layout
 	 * @param string $dimension_shortname
 	 */
-	public function __construct(SiteWebApplication $app, SiteLayout $layout,
-		array $arguments = array())
-	{
+	public function __construct(
+		SiteWebApplication $app,
+		SiteLayout $layout,
+		array $arguments = array()
+	) {
 		$layout = new SiteLayout($app, 'Site/layouts/xhtml/atom.php');
 
 		parent::__construct($app, $layout, $arguments);
@@ -297,9 +299,10 @@ class PinholeAtomPage extends SitePage
 	// }}}
 	// {{{ protected function getPhotoContent()
 
-	protected function getPhotoContent(PinholePhoto $photo,
-		PinholeImageDimension $dimension)
-	{
+	protected function getPhotoContent(
+		PinholePhoto $photo,
+		PinholeImageDimension $dimension
+	) {
 		ob_start();
 
 		$div_tag = new SwatHtmlTag('div');

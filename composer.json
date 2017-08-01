@@ -51,7 +51,7 @@
 		"silverorange/nate_go_search": "^2.0.0",
 		"silverorange/site": "^5.0.0",
 		"silverorange/swat": "^3.0.0",
-		"silverorange/yui": "^2.0.0"
+		"silverorange/yui": "^1.0.12"
 	},
 	"require-dev": {
 		"silverorange/coding-standard": "^0.6.0"

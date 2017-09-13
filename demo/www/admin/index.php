@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__.'/../../vendor/autoload.php';
 
 $app = new PinholeAdminApplication('pinholedemoadmin');
 $config_filename = dirname(__FILE__).'/../../demo.ini';

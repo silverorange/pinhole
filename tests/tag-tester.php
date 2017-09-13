@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ .'/vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 $dsn = 'pgsql://php@192.168.0.26/gallery?sslmode=disable';
 $connection = MDB2::connect($dsn);

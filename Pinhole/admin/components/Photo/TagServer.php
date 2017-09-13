@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Swat/Swat.php';
-require_once 'Site/pages/SitePage.php';
-
 /**
  *
  * @package   Pinhole
@@ -52,7 +49,7 @@ class PinholePhotoTagServer extends SitePage
 
 	protected function createLayout()
 	{
-		return new SiteLayout($this->app, 'Pinhole/layouts/xhtml/blank.php');
+		return new SiteLayout($this->app, SiteBlankTemplate::class);
 	}
 
 	// }}}

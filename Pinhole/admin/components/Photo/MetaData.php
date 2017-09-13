@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminIndex.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Swat/SwatDetailsView.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-
 /**
  * Index page for metadata
  *
@@ -17,7 +12,7 @@ class PinholePhotoMetaData extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Photo/meta-data.xml';
+		__DIR__.'/meta-data.xml';
 
 	/**
 	 * @var PinholePhoto

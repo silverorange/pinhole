@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Swat/SwatControl.php';
-require_once 'Pinhole/PinholeTagList.php';
-require_once 'MDB2.php';
-
 /**
  * A control to browse photos by date tags
  *

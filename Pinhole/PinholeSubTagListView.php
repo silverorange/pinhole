@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Swat/SwatControl.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/PinholeTagList.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange

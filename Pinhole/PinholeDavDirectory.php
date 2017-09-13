@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Sabre.autoload.php';
-require_once 'Pinhole/PinholePhotoProcessor.php';
-require_once 'Pinhole/dataobjects/PinholeSimplePhotoWrapper.php';
-require_once dirname(__FILE__).'/PinholeDavFile.php';
-
 /**
  * SabreDav WebDAV directory adapter for a PinholePhotoWrapper
  *

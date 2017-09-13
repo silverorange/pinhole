@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Admin/dataobjects/AdminUser.php';
-
 /**
  * An admin user
  *

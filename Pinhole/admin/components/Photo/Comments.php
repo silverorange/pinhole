@@ -1,16 +1,5 @@
 <?php
 
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Site/admin/SiteCommentVisibilityCellRenderer.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/exceptions/AdminNoAccessException.php';
-require_once 'Admin/pages/AdminIndex.php';
-require_once 'NateGoSearch/NateGoSearch.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
-
 /**
  * Page for managing a photo's comments
  *
@@ -22,7 +11,7 @@ class PinholePhotoComments extends AdminIndex
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/comments.xml';
+	protected $ui_xml = __DIR__.'/comments.xml';
 
 	/**
 	 * @var PinholePhoto

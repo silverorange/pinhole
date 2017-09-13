@@ -17,7 +17,6 @@ $args = $_SERVER['argv'];
 array_shift($args);
 $process->dsn = array_shift($args);
 
-
 foreach ($args as $arg) {
 	if (substr($arg, -3) === 'sql')
 		$process->addFile($arg);

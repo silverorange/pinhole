@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Site/gadgets/SiteGadget.php';
-require_once 'Pinhole/PinholeStaticMapView.php';
-
 /**
  * Displays a map of geo-tagged photos
  *

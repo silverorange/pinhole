@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Pinhole/tags/PinholeAbstractTag.php';
-
 /**
  * Base class for machine tags
  *

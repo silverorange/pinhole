@@ -1,14 +1,6 @@
 <?php
 
-require_once 'PackageConfig.php';
-
-PackageConfig::addPackage('pinhole', 'work-gauthierm');
-PackageConfig::addPackage('swat', 'work-gauthierm');
-PackageConfig::addPackage('site', 'work-gauthierm');
-
-require_once 'MDB2.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Pinhole/PinholeTagFactory.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 $dsn = 'pgsql://php@192.168.0.26/gallery?sslmode=disable';
 $connection = MDB2::connect($dsn);
@@ -77,8 +69,6 @@ test_tag('christmas2001'); // test regular tag
 
 // TagList tests
 
-require_once 'Pinhole/PinholeTagList.php';
-
 echo "\nTagList Tests:\n\n";
 
 $tag_list = new PinholeTagList($connection,
@@ -98,8 +88,6 @@ $end_time = microtime(true);
 echo "\ntotal time: ", ($end_time - $start_time) * 1000, "ms\n";
 
 /*
-require_once 'Pinhole/dataobjects/PinholeTagWrapper.php';
-
 $sql = 'select * from PinholeTag limit 10';
 $tags = SwatDB::query($connection, $sql, 'PinholeTagWrapper');
 foreach ($tags as $tag) {

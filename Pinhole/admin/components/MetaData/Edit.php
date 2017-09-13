@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/pages/AdminDBEdit.php';
-require_once 'Pinhole/dataobjects/PinholeMetaData.php';
-
 /**
  * Page for editing metadata
  *
@@ -15,7 +11,7 @@ class PinholeMetaDataEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/MetaData/edit.xml';
+	protected $ui_xml = __DIR__.'/edit.xml';
 
 	/**
 	 * @var PinholeMetaData

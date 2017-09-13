@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Site/dataobjects/SiteImageSet.php';
-require_once 'Site/dataobjects/SiteInstance.php';
-require_once 'Pinhole/dataobjects/PinholeImageDimensionWrapper.php';
-
 /**
  * A dataobject class for image sets with instance
  *

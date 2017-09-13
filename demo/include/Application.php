@@ -1,18 +1,5 @@
 <?php
 
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/layouts/PinholeLayout.php';
-require_once 'Site/SiteWebApplication.php';
-require_once 'Site/SiteConfigModule.php';
-require_once 'Site/SiteDatabaseModule.php';
-require_once 'Site/SiteAnalyticsModule.php';
-require_once 'Site/SiteErrorLogger.php';
-require_once 'Site/SiteExceptionLogger.php';
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/SwatError.php';
-require_once 'Swat/SwatForm.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-
 SwatDBClassMap::addPath(dirname(__FILE__).'/dataobjects');
 
 /**
@@ -54,7 +41,6 @@ class Application extends SiteWebApplication
 
 		switch ($tag) {
 		case 'httperror':
-			require_once 'Site/pages/SiteHttpErrorPage.php';
 			$layout = new PinholeLayout($this,
 				'Pinhole/layouts/xhtml/default.php');
 
@@ -62,7 +48,6 @@ class Application extends SiteWebApplication
 			break;
 
 		case 'exception':
-			require_once 'Pinhole/pages/PinholeExceptionPage.php';
 			$layout = new PinholeLayout($this,
 				'Pinhole/layouts/xhtml/default.php');
 
@@ -70,7 +55,6 @@ class Application extends SiteWebApplication
 			break;
 
 		default:
-			require_once '../include/PageFactory.php';
 			$factory = PageFactory::instance();
 			$page = $factory->resolvePage($this, $source);
 			break;

@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Pinhole/tags/PinholeAbstractTag.php';
-require_once 'Site/dataobjects/SiteInstance.php';
-require_once 'MDB2.php';
-
 /**
  * Tag factory
  *
@@ -152,9 +148,6 @@ class PinholeTagFactory
 
 		// check if it is a user tag
 		if ($return === null && $namespace === null) {
-			if (!class_exists('PinholeTag'))
-				require_once 'Pinhole/tags/PinholeTag.php';
-
 			$return = 'PinholeTag';
 		}
 
@@ -177,23 +170,6 @@ class PinholeTagFactory
 
 		// try to load machine tag class definition
 		if ($return === null) {
-			$include_paths = explode(':', get_include_path());
-
-			$filenames = array(
-				sprintf('Pinhole/tags/Pinhole%sTag.php', ucfirst($namespace)),
-				sprintf('include/tags/%sTag.php', ucfirst($namespace)),
-			);
-
-			foreach ($filenames as $filename) {
-				foreach ($include_paths as $include_path) {
-					$file_path = $include_path.'/'.$filename;
-					if (file_exists($file_path)) {
-						require_once $file_path;
-						break 2;
-					}
-				}
-			}
-
 			foreach ($class_names as $class_name) {
 				if (class_exists($class_name)) {
 					// cache tag class

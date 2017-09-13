@@ -1,17 +1,5 @@
 <?php
 
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Swat/SwatNavBar.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Admin/pages/AdminIndex.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Pinhole/PinholeTagList.php';
-require_once 'Pinhole/tags/PinholeTag.php';
-require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
-require_once 'Pinhole/admin/components/Photo/include/PinholePhotoActionsProcessor.php';
-
 /**
  * Details page for tags
  *
@@ -23,7 +11,7 @@ class PinholeTagDetails extends AdminIndex
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Tag/details.xml';
+	protected $ui_xml = __DIR__.'/details.xml';
 	protected $id;
 
 	// }}}

@@ -1,12 +1,5 @@
 <?php
 
-require_once 'Site/SiteCommentStatus.php';
-require_once 'Site/pages/SitePage.php';
-require_once 'Pinhole/dataobjects/PinholePhotographerWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeCommentWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'XML/Atom/Entry.php';
-
 /**
  * Displays an Atom feed of all recent comments in reverse chronological order
  *
@@ -38,7 +31,7 @@ class PinholeCommentsAtomPage extends SitePage
 		SiteLayout $layout,
 		array $arguments = array()
 	) {
-		$layout = new SiteLayout($app, 'Site/layouts/xhtml/atom.php');
+		$layout = new SiteLayout($app, SiteAtomTemplate::class);
 
 		parent::__construct($app, $layout, $arguments);
 	}

@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminPage.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/exceptions/AdminNoAccessException.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-
 /**
  * Page for loading photos
  *
@@ -84,8 +79,7 @@ class PinholePhotoLoader extends AdminPage
 
 	protected function createLayout()
 	{
-		return new SiteLayout($this->app,
-			'Pinhole/layouts/xhtml/blank.php');
+		return new SiteLayout($this->app, SiteBlankTemplate::class);
 	}
 
 	// }}}

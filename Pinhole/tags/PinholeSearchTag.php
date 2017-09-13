@@ -1,10 +1,5 @@
 <?php
 
-require_once 'NateGoSearch/NateGoSearch.php';
-require_once 'NateGoSearch/NateGoSearchQuery.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/tags/PinholeAbstractMachineTag.php';
-
 /**
  * Machine tag for performing searches on photos
  *

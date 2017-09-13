@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Site/pages/SitePage.php';
-require_once 'Sabre.autoload.php';
-require_once 'Pinhole/PinholeDavDirectory.php';
-require_once 'Pinhole/dataobjects/PinholeAdminUser.php';
-
 /**
  * Web Dav Server Page
  *

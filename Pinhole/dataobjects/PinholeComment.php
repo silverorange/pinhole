@@ -1,11 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDBDataObject.php';
-require_once 'Swat/SwatString.php';
-require_once 'Site/dataobjects/SiteComment.php';
-require_once 'Pinhole/dataobjects/PinholePhotographer.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-
 /**
  * A comment on a Pinhole Photo
  *

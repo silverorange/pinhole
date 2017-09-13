@@ -1,8 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDBRecordsetWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeImageDimension.php';
-
 /**
  * A recordset wrapper class for PinholeImageDimension objects
  *

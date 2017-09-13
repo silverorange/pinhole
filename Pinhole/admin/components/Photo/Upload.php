@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminPage.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholeImageSet.php';
-require_once 'Pinhole/dataobjects/PinholePhotoUploadSet.php';
-require_once dirname(__FILE__).'/include/PinholePhotoUploader.php';
-
 /**
  * Page for uploading photos
  *
@@ -17,7 +11,7 @@ class PinholePhotoUpload extends AdminPage
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/upload.xml';
+	protected $ui_xml = __DIR__.'/upload.xml';
 	protected $config_ui_map = array();
 
 	// }}}

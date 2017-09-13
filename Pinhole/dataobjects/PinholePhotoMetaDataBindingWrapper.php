@@ -1,10 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'SwatDB/SwatDBRecordsetWrapper.php';
-require_once 'PinholePhoto.php';
-require_once 'PinholePhotoMetaDataBinding.php';
-
 /**
  * A recordset wrapper class for PinholePhoto objects
  *

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'PinholePhotoWrapper.php';
-
 /**
  * A recordset wrapper class for PinholePhoto objects that pre-loads only the
  * thumbnail dimension for efficiency

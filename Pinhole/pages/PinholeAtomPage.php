@@ -1,13 +1,5 @@
 <?php
 
-require_once 'Site/pages/SitePage.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Pinhole/PinholeTagList.php';
-require_once 'Pinhole/tags/PinholePageTag.php';
-require_once 'Pinhole/dataobjects/PinholeImageDimension.php';
-require_once 'XML/Atom/Feed.php';
-require_once 'XML/Atom/Entry.php';
-
 /**
  * Displays an Atom feed of photos
  *
@@ -63,7 +55,7 @@ class PinholeAtomPage extends SitePage
 		SiteLayout $layout,
 		array $arguments = array()
 	) {
-		$layout = new SiteLayout($app, 'Site/layouts/xhtml/atom.php');
+		$layout = new SiteLayout($app, SiteAtomTemplate::class);
 
 		parent::__construct($app, $layout, $arguments);
 

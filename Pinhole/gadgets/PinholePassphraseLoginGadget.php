@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Site/gadgets/SiteGadget.php';
-require_once 'Swat/SwatFormField.php';
-require_once 'Swat/SwatForm.php';
-require_once 'Swat/SwatPasswordEntry.php';
-require_once 'Swat/SwatButton.php';
-
 /**
  * Displays a form for logging into a gallery
  *

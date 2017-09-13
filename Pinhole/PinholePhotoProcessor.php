@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'NateGoSearch/NateGoSearch.php';
-
 /**
  * Centralized way to process photos
  *

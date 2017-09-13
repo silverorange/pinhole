@@ -1,12 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDB.php';
-require_once 'Swat/SwatDate.php';
-require_once 'NateGoSearch/NateGoSearch.php';
-require_once 'Admin/pages/AdminDBEdit.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
-
 /**
  * Edit page for tags
  *
@@ -18,7 +11,7 @@ class PinholeTagEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Tag/edit.xml';
+	protected $ui_xml = __DIR__.'/edit.xml';
 
 	/**
 	 * @var PinholeTag

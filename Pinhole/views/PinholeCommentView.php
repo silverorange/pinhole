@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Site/views/SiteCommentView.php';
-
 /**
  * View for Pinhole comment objects
  *

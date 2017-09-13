@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Site/SitePageFactory.php';
-
 /**
  * Resolves and creates pages
  *

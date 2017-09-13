@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminDBConfirmation.php';
-require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObject.php';
-
 /**
  * @package   Pinhole
  * @copyright 2009 silverorange
@@ -23,7 +19,7 @@ class PinholeTagMerge extends AdminDBConfirmation
 
 	protected function initInternal()
 	{
-		$this->ui_xml = dirname(__FILE__).'/merge.xml';
+		$this->ui_xml = __DIR__.'/merge.xml';
 
 		parent::initInternal();
 

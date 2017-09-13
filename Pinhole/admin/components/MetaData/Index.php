@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminIndex.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Swat/SwatDetailsView.php';
-
 /**
  * Index page for metadata
  *
@@ -16,7 +12,7 @@ class PinholeMetaDataIndex extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/MetaData/index.xml';
+		__DIR__.'/index.xml';
 
 	// }}}
 

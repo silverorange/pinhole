@@ -1,19 +1,5 @@
 <?php
 
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Swat/SwatDetailsViewField.php';
-require_once 'Swat/SwatTextCellRenderer.php';
-require_once 'Swat/SwatLinkCellRenderer.php';
-require_once 'Swat/SwatDate.php';
-require_once 'Swat/SwatString.php';
-require_once 'Site/SiteViewFactory.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/PinholeCommentUi.php';
-require_once 'Pinhole/pages/PinholeBrowserPage.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholeComment.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007-2013 silverorange
@@ -58,7 +44,7 @@ class PinholeBrowserDetailsPage extends PinholeBrowserPage
 	) {
 		parent::__construct($app, $layout, $arguments);
 
-		$this->ui_xml = 'Pinhole/pages/browser-details.xml';
+		$this->ui_xml = __DIR__.'/browser-details.xml';
 
 		$this->createPhoto($this->getArgument('photo_id'));
 	}

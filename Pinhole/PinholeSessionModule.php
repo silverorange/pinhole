@@ -1,14 +1,5 @@
 <?php
 
-require_once 'Site/SiteSessionModule.php';
-require_once 'Site/SiteDatabaseModule.php';
-require_once 'Site/exceptions/SiteException.php';
-require_once 'Site/dataobjects/SiteAccount.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Swat/SwatForm.php';
-require_once 'Swat/SwatString.php';
-
 /**
  * Web application module for sessions with passphrases.
  *

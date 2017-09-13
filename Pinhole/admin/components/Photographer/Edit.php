@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/pages/AdminDBEdit.php';
-require_once 'Pinhole/dataobjects/PinholePhotographer.php';
-
 /**
  * Page for editing a photographer
  *
@@ -16,7 +12,7 @@ class PinholePhotographerEdit extends AdminDBEdit
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Photographer/edit.xml';
+		__DIR__.'/edit.xml';
 
 	/**
 	 * @var PinholePhotographer

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'SwatDB/SwatDBRecordsetWrapper.php';
-require_once 'PinholePhotographer.php';
-
 /**
  * A recordset wrapper class for PinholePhotographer objects
  *

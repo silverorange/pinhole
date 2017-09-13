@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminIndex.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Pinhole/dataobjects/PinholePhotographer.php';
-
 /**
  * Index page for photographers
  *
@@ -16,7 +12,7 @@ class PinholePhotographerIndex extends AdminIndex
 	// {{{ protected properties
 
 	protected $ui_xml =
-		'Pinhole/admin/components/Photographer/index.xml';
+		__DIR__.'/index.xml';
 
 	// }}}
 

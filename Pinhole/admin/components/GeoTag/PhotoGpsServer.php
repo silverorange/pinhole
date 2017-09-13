@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Admin/pages/AdminXMLRPCServer.php';
-
 /**
  * @package   Pinhole
  * @copyright 2009 silverorange

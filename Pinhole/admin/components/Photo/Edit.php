@@ -1,20 +1,5 @@
 <?php
 
-require_once 'Swat/SwatString.php';
-require_once 'Site/SiteCommentStatus.php';
-require_once 'Site/admin/SiteCommentStatusSlider.php';
-require_once 'Admin/exceptions/AdminNotFoundException.php';
-require_once 'Admin/exceptions/AdminNoAccessException.php';
-require_once 'Admin/pages/AdminDBEdit.php';
-require_once 'NateGoSearch/NateGoSearch.php';
-require_once 'Pinhole/dataobjects/PinholePhotographer.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Pinhole/PinholeTagList.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/tags/PinholeTag.php';
-require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
-
 /**
  * Page for viewing photo details and editing
  *
@@ -26,7 +11,7 @@ class PinholePhotoEdit extends AdminDBEdit
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/edit.xml';
+	protected $ui_xml = __DIR__.'/edit.xml';
 
 	/**
 	 * @var PinholePhoto

@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Swat/SwatUI.php';
-require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
-require_once 'Site/pages/SitePage.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/PinholeTagList.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007-2013 silverorange
@@ -28,7 +22,7 @@ abstract class PinholeBrowserPage extends SitePage
 	/**
 	 * @var string
 	 */
-	protected $search_ui_xml = 'Pinhole/pages/browser-search.xml';
+	protected $search_ui_xml = __DIR__.'/browser-search.xml';
 
 	/**
 	 * @var string

@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Pinhole/pages/PinholeBrowserPage.php';
-require_once 'Pinhole/tags/PinholePageTag.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007-2013 silverorange
@@ -28,7 +23,7 @@ class PinholeBrowserIndexPage extends PinholeBrowserPage
 		array $arguments = array()
 	) {
 		parent::__construct($app, $layout, $arguments);
-		$this->ui_xml = 'Pinhole/pages/browser-index.xml';
+		$this->ui_xml = __DIR__.'/browser-index.xml';
 	}
 
 	// }}}

@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Site/SiteMultipleInstanceModule.php';
-require_once 'Site/SiteMemcacheModule.php';
-require_once 'Admin/AdminApplication.php';
-require_once 'Pinhole/Pinhole.php';
-require_once 'Pinhole/admin/PinholeAdminSessionModule.php';
-
 /**
  * Web application class for an administering Pinhole
  *

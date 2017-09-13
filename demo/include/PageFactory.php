@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Pinhole/PinholePageFactory.php';
-require_once 'Pinhole/layouts/PinholeLayout.php';
-
 /**
  * @package   PinholeDemo
  * @copyright 2007 silverorange

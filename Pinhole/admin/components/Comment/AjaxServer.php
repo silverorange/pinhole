@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Site/admin/components/Comment/AjaxServer.php';
-require_once 'Pinhole/dataobjects/PinholeComment.php';
-
 /**
  * Performs actions on comments via AJAX
  *

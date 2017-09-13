@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Swat/SwatTableStore.php';
-require_once 'Pinhole/pages/PinholeBrowserPage.php';
-require_once 'Pinhole/tags/PinholePageTag.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
@@ -26,7 +21,7 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	) {
 		parent::__construct($app, $layout, $arguments);
 
-		$this->ui_xml = 'Pinhole/pages/browser-tag.xml';
+		$this->ui_xml = __DIR__.'/browser-tag.xml';
 		$this->display_type = $this->getArgument('display_type');
 	}
 

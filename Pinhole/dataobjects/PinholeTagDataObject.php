@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Pinhole/dataobjects/PinholeInstanceDataObject.php';
-require_once 'Swat/SwatDate.php';
-
 /**
  * An internal dataobject class for tags
  *

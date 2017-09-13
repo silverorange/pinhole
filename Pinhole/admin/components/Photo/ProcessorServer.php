@@ -1,15 +1,6 @@
 <?php
 
-require_once 'Pinhole/PinholePhotoProcessor.php';
-require_once 'Pinhole/dataobjects/PinholePhoto.php';
-require_once 'Admin/pages/AdminXMLRPCServer.php';
-require_once 'NateGoSearch/NateGoSearch.php';
-
 // for the UI
-require_once 'Swat/SwatTableStore.php';
-require_once 'Swat/SwatDetailsStore.php';
-require_once 'Admin/AdminUI.php';
-require_once 'Pinhole/admin/PinholePhotoTagEntry.php';
 
 /**
  * @package   Pinhole
@@ -20,7 +11,7 @@ class PinholePhotoProcessorServer extends AdminXMLRPCServer
 {
 	// {{{ protected properties
 
-	protected $ui_xml = 'Pinhole/admin/components/Photo/pending.xml';
+	protected $ui_xml = __DIR__.'/pending.xml';
 
 	// }}}
 

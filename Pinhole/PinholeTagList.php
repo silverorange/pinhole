@@ -1,19 +1,5 @@
 <?php
 
-require_once 'MDB2.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'SwatDB/SwatDBRange.php';
-require_once 'SwatDB/SwatDBRecordable.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Site/dataobjects/SiteInstance.php';
-require_once 'Pinhole/PinholeTagFactory.php';
-require_once 'Pinhole/dataobjects/PinholePhotoWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeSimplePhotoWrapper.php';
-require_once 'Pinhole/dataobjects/PinholePhotoThumbnailWrapper.php';
-require_once 'Pinhole/dataobjects/PinholeTagDataObjectWrapper.php';
-require_once 'Pinhole/tags/PinholeTag.php';
-
 /**
  * A list of tag objects
  *

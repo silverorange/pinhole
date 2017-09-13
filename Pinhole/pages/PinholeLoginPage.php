@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Swat/SwatUI.php';
-require_once 'Site/pages/SitePage.php';
-
 /**
  * Page for logging in with a passphrase
  *
@@ -17,7 +14,7 @@ class PinholeLoginPage extends SitePage
 	/**
 	 * @var string
 	 */
-	protected $ui_xml = 'Pinhole/pages/login.xml';
+	protected $ui_xml = __DIR__.'/login.xml';
 
 	protected $ui;
 

@@ -1,12 +1,5 @@
 <?php
 
-require_once 'Admin/pages/AdminDBOrder.php';
-require_once 'Admin/AdminUI.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'Pinhole/tags/PinholeTag.php';
-require_once 'Pinhole/PinholeTagList.php';
-require_once 'Swat/SwatImageDisplay.php';
-
 /**
  * Order page for PinholePhotos
  *

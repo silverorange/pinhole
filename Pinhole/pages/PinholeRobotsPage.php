@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Site/pages/SitePage.php';
-
 /**
  * @package   Pinhole
  * @copyright 2007 silverorange
@@ -49,8 +47,7 @@ class PinholeRobotsPage extends SitePage
 
 	protected function createLayout()
 	{
-		return new SiteLayout($this->app,
-			'../layouts/xhtml/blank.php');
+		return new SiteLayout($this->app, SiteBlankTemplate::class);
 	}
 
 	// }}}

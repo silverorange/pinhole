@@ -58,11 +58,11 @@ class PinholePhotoLastUpload extends PinholePhotoPending
 
 	protected function processPhotos()
 	{
-		/* NOTE: this only normally runs if the user doesn't have javacript
-		         enabled or doesn't support ajax. Otherwise, the processing
-		         form is hidden and in-line processing calls are handled via
-		         javascript.
-		*/
+		/*
+		 * NOTE: This only normally runs if the user doesn't have JavaScript
+		 * enabled or doesn't support ajax. Otherwise, the processing form
+		 * is hidden and in-line processing calls are handled via JavaScript.
+		 */
 
 		$processor = new PinholePhotoProcessor($this->app);
 

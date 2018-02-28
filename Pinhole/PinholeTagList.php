@@ -203,7 +203,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		// strip leading slash
 		if ($string != '')
-			$string = substr($string, 1);
+			$string = mb_substr($string, 1);
 
 		return $string;
 	}
@@ -259,7 +259,7 @@ class PinholeTagList implements Iterator, Countable, SwatDBRecordable
 
 		// normalize
 		foreach ($join_clauses as &$join_clause) {
-			$join_clause = strtolower($join_clause);
+			$join_clause = mb_strtolower($join_clause);
 			$join_clause = preg_replace('/\s+/', ' ', $join_clause);
 		}
 

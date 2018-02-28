@@ -790,7 +790,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 		$file = $_FILES[$name];
 
 		$parts = explode('.', $file['name']);
-		$ext = strtolower(end($parts));
+		$ext = mb_strtolower(end($parts));
 
 		$filename = uniqid('file').'.'.$ext;
 		$file_path = sprintf('%s/%s',
@@ -972,7 +972,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 			$filename = self::getTempFilename($original_filename);
 
 			// ignore certain common extensions
-			if (strpos($filename, '.') !== false) {
+			if (mb_strpos($filename, '.') !== false) {
 				$parts = explode('.', $filename);
 				$ext = end($parts);
 				$ignore_extensions = array(
@@ -1097,9 +1097,9 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 		$filename = str_replace('.', '-', uniqid('file', true));
 
 		// get extension
-		if (strpos($original_filename, '.') !== false) {
+		if (mb_strpos($original_filename, '.') !== false) {
 			$parts = explode('.', $original_filename);
-			$ext = strtolower(end($parts));
+			$ext = mb_strtolower(end($parts));
 			$filename.= '.'.$ext;
 		}
 
@@ -1134,7 +1134,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 				continue;
 
 			$meta_data = new PinholePhotoMetaDataBinding();
-			$meta_data->shortname = strtolower($ret[0]);
+			$meta_data->shortname = mb_strtolower($ret[0]);
 			$meta_data->value = self::normalizeMetaDataValue(
 				$meta_data->shortname, $ret[1]);
 
@@ -1166,7 +1166,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 					(float)$regs['denominator']));
 			}
 		case 'focallength' :
-			if (strpos($value, 'mm')) {
+			if (mb_strpos($value, 'mm') !== false) {
 				$value = trim(str_replace('mm', '', $value));
 			}
 
@@ -1224,8 +1224,8 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 			$where_clause);
 
 		foreach ($meta_data as $data) {
-			$shortname = substr($data->shortname, 0, 255);
-			$title = substr($data->title, 0, 255);
+			$shortname = mb_substr($data->shortname, 0, 255);
+			$title = mb_substr($data->title, 0, 255);
 
 			if (mb_check_encoding($data->value, 'UTF-8')) {
 				$value = $data->value;
@@ -1234,7 +1234,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 				$value = iconv('ISO-8859-1', 'UTF-8', $data->value);
 			}
 
-			$value = substr($value, 0, 255);
+			$value = mb_substr($value, 0, 255);
 
 			if (!in_array($shortname, $existing_meta_data)) {
 				$meta_data_id = SwatDB::insertRow($this->db,
@@ -1286,9 +1286,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	{
 		$title_fields = array('object', 'objectname', 'headline');
 		foreach ($title_fields as $field) {
-			if (isset($meta_data[$field]) &&
-					strlen($meta_data[$field]->value)) {
-
+			if (isset($meta_data[$field]) && $meta_data[$field]->value != '') {
 				$this->title = $meta_data[$field]->value;
 				break;
 			}
@@ -1302,8 +1300,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 	{
 		$description_fields = array('description', 'caption-abstract');
 		foreach ($description_fields as $field) {
-			if (isset($meta_data[$field]) &&
-				strlen($meta_data[$field]->value)) {
+			if (isset($meta_data[$field]) && $meta_data[$field]->value != '') {
 				$this->description = $meta_data[$field]->value;
 				break;
 			}
@@ -1321,8 +1318,7 @@ class PinholePhoto extends SiteImage implements SiteCommentable
 			'country-primarylocationname');
 
 		foreach ($tag_fields as $field) {
-			if (isset($meta_data[$field]) &&
-				strlen($meta_data[$field]->value)) {
+			if (isset($meta_data[$field]) && $meta_data[$field]->value != '') {
 				$merged_tags[] = $meta_data[$field]->value;
 			}
 		}

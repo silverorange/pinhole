@@ -241,8 +241,11 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 	{
 		$grouped_tags = array();
 		foreach ($tag_list as $tag) {
-			$entity = strtoupper($this->convertAccents(
-				substr($tag->title, 0, 1)));
+			$entity = mb_strtoupper(
+				$this->convertAccents(
+					mb_substr($tag->title, 0, 1)
+				)
+			);
 
 			if (is_numeric($entity))
 				$entity = Pinhole::_('0 - 9');
@@ -347,8 +350,8 @@ class PinholeBrowserTagPage extends PinholeBrowserPage
 		PinholeTag $tag_a,
 		PinholeTag $tag_b
 	) {
-		$al = strtolower($tag_a->title);
-		$bl = strtolower($tag_b->title);
+		$al = mb_strtolower($tag_a->title);
+		$bl = mb_strtolower($tag_b->title);
 
 		if ($al === $bl)
 			return 0;

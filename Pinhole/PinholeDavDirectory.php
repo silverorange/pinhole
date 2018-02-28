@@ -55,7 +55,7 @@ class PinholeDavDirectory implements Sabre_DAV_IDirectory
 	public function createFile($original_filename, $data = null)
 	{
 		$parts = explode('.', $original_filename);
-		$ext = strtolower(end($parts));
+		$ext = mb_strtolower(end($parts));
 		$filename = uniqid('file').'.'.$ext;
 
 		$file_path = sprintf('%s/%s',

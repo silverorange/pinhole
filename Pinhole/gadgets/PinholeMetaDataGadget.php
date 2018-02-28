@@ -193,8 +193,8 @@ class PinholeMetaDataGadget extends SiteGadget
 			$al = floatval($a->value);
 			$bl = floatval($b->value);
 		} else {
-			$al = strtolower($a->value);
-			$bl = strtolower($b->value);
+			$al = mb_strtolower($a->value);
+			$bl = mb_strtolower($b->value);
 		}
 
 		if ($al == $bl) {

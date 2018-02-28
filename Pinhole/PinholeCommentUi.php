@@ -31,7 +31,7 @@ class PinholeCommentUi extends SiteCommentUi
 	protected function getThankYouUri()
 	{
 		// skip the first GET var to keep from conflicting with tags
-		if (strpos($this->source, '?') === false)
+		if (mb_strpos($this->source, '?') === false)
 			return $this->source.'?&'.self::THANK_YOU_ID;
 		else
 			return $this->source.'&'.self::THANK_YOU_ID;

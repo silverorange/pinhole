@@ -39,7 +39,7 @@ class PinholePhotoTagServer extends SitePage
 		}
 
 		$encoded = json_encode($results);
-		$encoded = substr($encoded, 1, strlen($encoded) - 2);
+		$encoded = mb_substr($encoded, 1, mb_strlen($encoded) - 2);
 
 		echo '{"ResultSet":{"Result" :['.$encoded.']}}';
 	}

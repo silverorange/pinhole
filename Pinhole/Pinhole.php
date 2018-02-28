@@ -241,7 +241,7 @@ class Pinhole
 			// Display ad if referers only is off OR if there is a referer and
 			// it does not start with the app base href.
 			if (!$app->config->pinhole->ad_referers_only || ($referer !== null &&
-				strncmp($referer, $base_href, strlen($base_href)) != 0)) {
+				strncmp($referer, $base_href, mb_strlen($base_href)) != 0)) {
 				echo '<div class="ad">';
 				echo $app->config->pinhole->$type_name;
 				echo '</div>';

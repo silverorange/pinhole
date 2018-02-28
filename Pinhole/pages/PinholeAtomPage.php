@@ -189,7 +189,7 @@ class PinholeAtomPage extends SitePage
 		$uri = sprintf('%sfeed/%s%s%s',
 			$this->getPinholeBaseHref(),
 			$this->dimension->shortname,
-			(strlen($tag_string) > 0) ? '?' : '',
+			(mb_strlen($tag_string) > 0) ? '?' : '',
 			$tag_string);
 
 		$this->feed->addLink($uri,
